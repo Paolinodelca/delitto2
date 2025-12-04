@@ -1,1 +1,96 @@
 Prova 2 di gioco con delitto
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<title>Delitto in Villa – Interrogatorio</title>
+<style>
+    body { font-family: Arial; padding: 20px; background:#f5f5f5; }
+    .suspect-btn { padding:10px; margin:5px; font-size:16px; cursor:pointer; }
+    #response { white-space: pre-wrap; background:white; padding:10px; margin-top:15px; }
+</style>
+</head>
+<body>
+
+<h1>Delitto in Villa</h1>
+<p>Scegli un sospettato da interrogare:</p>
+
+<button class="suspect-btn" onclick="selectSuspect('maggiordomo')">Maggiordomo</button>
+<button class="suspect-btn" onclick="selectSuspect('madre')">Madre della vittima</button>
+<button class="suspect-btn" onclick="selectSuspect('giardiniere')">Giardiniere</button>
+
+<hr>
+
+<h2>Interroga il sospettato</h2>
+
+<input id="question" type="text" placeholder="Scrivi la tua domanda..." style="width:80%;padding:8px;">
+<button onclick="ask()" style="padding:8px;">Invia</button>
+
+<div id="response"></div>
+
+<script>
+let currentSuspect = "maggiordomo";
+
+function selectSuspect(name) {
+    currentSuspect = name;
+    document.getElementById("response").textContent =
+        "Hai selezionato " + name + ". Fai una domanda.";
+}
+
+// FUNZIONE PRINCIPALE
+async function ask() {
+    const question = document.getElementById("question").value;
+    if (!question) return;
+
+    const output = document.getElementById("response");
+    output.textContent = "Sto pensando...";
+
+    try {
+        const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer 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"
+            //    "Authorization": "Bearer YOUR_API_KEY_HERE"
+
+            },
+            body: JSON.stringify({
+                //model: "gpt-oss-7b-q8_0",
+                //model: "gpt-oss:20b",
+                //gpt-oss:20b
+                model: "llama-4-scout"
+                messages: [
+                    {
+                        role: "system",
+                        content:
+                            "Interpretazione: sei " + currentSuspect +
+                            ". Parli come lui. Hai un segreto da nascondere e rispondi in modo ambiguo ma realistico."
+                    },
+                    { role: "user", content: question }
+                ]
+            })
+        });
+
+        const text = await resp.text();
+        let data;
+
+        try { data = JSON.parse(text); }
+        catch { output.textContent = "Risposta non JSON:\n" + text; return; }
+
+        console.log("JSON:", data);
+
+        if (!data.choices || !data.choices[0]) {
+            output.textContent = "Errore API:\n" + JSON.stringify(data, null, 2);
+            return;
+        }
+
+        output.textContent = data.choices[0].message.content;
+
+    } catch (err) {
+        output.textContent = "Errore JS: " + err.message;
+    }
+}
+</script>
+
+</body>
+</html>
