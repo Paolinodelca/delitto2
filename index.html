@@ -5,9 +5,10 @@ Prova 2 di gioco con delitto
 <meta charset="UTF-8">
 <title>Delitto in Villa – Interrogatorio</title>
 <style>
-    body { font-family: Arial; padding: 20px; background:#f5f5f5; }
+    body { font-family: Arial; padding: 20px; background:#f4f4f4; }
     .suspect-btn { padding:10px; margin:5px; font-size:16px; cursor:pointer; }
-    #response { white-space: pre-wrap; background:white; padding:10px; margin-top:15px; }
+    #response { white-space: pre-wrap; background:white; padding:10px; margin-top:15px; border-radius:6px; }
+    #status { font-style: italic; color:#555; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -23,91 +24,126 @@ Prova 2 di gioco con delitto
 
 <h2>Interroga il sospettato</h2>
 
-<input id="question" type="text" placeholder="Scrivi la tua domanda..." style="width:80%;padding:8px;">
+<input id="question" type="text" placeholder="Scrivi la tua domanda..." style="width:75%;padding:8px;">
 <button onclick="ask()" style="padding:8px;">Invia</button>
 
+<div id="status"></div>
 <div id="response"></div>
 
 <script>
+const API_KEY = "Bearer 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";  
+const MODEL = "llama-3.1-8b-instant";
+
+// Memoria indipendente per ciascun sospettato:
+let memory = {
+    maggiordomo: [],
+    madre: [],
+    giardiniere: []
+};
+
 let currentSuspect = "maggiordomo";
 
+const characterPrompts = {
+    maggiordomo: `
+        Sei il Maggiordomo. Nome: **Alfredo Bellini**.
+        Personalità: controllato, servile, leggermente ansioso.
+        Segreto: nascondi informazioni per proteggere qualcun altro.
+        Tono: forbito, educato, lievemente teatrale.
+        Obiettivo: sembrare collaborativo, ma confondere l'investigatore quando serve.
+        Regia: descrivi micro-gesti, cambi di postura, sguardi, nervosismo.
+    `,
+    madre: `
+        Sei la Madre della vittima. Nome: **Eleonora Vismara**.
+        Personalità: elegante, drammatica, orgogliosa.
+        Segreto: hai avuto un litigio feroce con tuo figlio poche ore prima del delitto.
+        Tono: emotivo, oscillante tra fragilità e autorità.
+        Obiettivo: apparire come vittima, mai come possibile colpevole.
+        Regia: mostra tensioni emotive, sguardi persi, improvvisi slanci melodrammatici.
+    `,
+    giardiniere: `
+        Sei il Giardiniere. Nome: **Pietro Luraschi**.
+        Personalità: schivo, diretto, poco a suo agio con la polizia.
+        Segreto: nascondi traffici minori e incontri clandestini vicino alla serra.
+        Tono: asciutto, concreto, talvolta ruvido.
+        Obiettivo: evitare implicazioni, non lasciar trapelare le sue attività.
+        Regia: movimenti manuali, abitudini nervose, occhi che evitano il contatto.
+    `
+};
+
+// Cambia sospettato
 function selectSuspect(name) {
     currentSuspect = name;
     document.getElementById("response").textContent =
-        "Hai selezionato " + name + ". Fai una domanda.";
+        "Hai selezionato: " + name.toUpperCase() + ". Puoi iniziare l'interrogatorio.";
+    document.getElementById("status").textContent = "";
 }
 
-function generateSystemPrompt() {
-    return `
-Sei un personaggio all’interno di un giallo intitolato "Delitto in Villa".
-Interpreti PERFETTAMENTE il ruolo di ${currentSuspect}.
-
-Regole del personaggio:
-– rispondi SEMPRE in italiano corretto, chiaro e con frasi ben costruite.
-– non essere mai banale: risposte brevi ma dense.
-– mantieni un tono coerente con il tuo ruolo (es. il maggiordomo è formale e controllato, la madre è emotiva, il giardiniere è brusco).
-– nascondi un segreto, quindi rispondi in modo ambiguo e leggermente elusivo.
-– non rivelare mai la verità troppo presto.
-– ogni risposta deve aggiungere un piccolo dettaglio realistico: un gesto, uno sguardo, un ricordo.
-– NON inventare fatti impossibili o assurdi.
-– NON uscire mai dal personaggio.
-Correggi automaticamente errori grammaticali e formulazioni goffe.
-
-`;
-}
-
-    
-// FUNZIONE PRINCIPALE
+// Funzione principale
 async function ask() {
     const question = document.getElementById("question").value;
     if (!question) return;
 
+    const status = document.getElementById("status");
     const output = document.getElementById("response");
-    output.textContent = "Sto pensando...";
+
+    status.textContent = "Il sospettato riflette...";
+    output.textContent = "";
+
+    // Costruzione conversazione con memoria
+    const messages = [
+        {
+            role: "system",
+            content: `
+            Stai interpretando un personaggio in un giallo investigativo.
+            Mantieni coerenza narrativa e caratteriale.
+            Usa regia cinematografica (gesti, sguardi, tensioni).
+            Non rivelare mai tutto immediatamente.
+            Personaggio attuale:
+            ${characterPrompts[currentSuspect]}
+            `
+        }
+    ];
+
+    // Memoria del sospettato (dialoghi precedenti)
+    memory[currentSuspect].forEach(msg => messages.push(msg));
+
+    // Nuova domanda dell'investigatore
+    messages.push({ role: "user", content: question });
 
     try {
         const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer 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"
+                "Authorization": "Bearer " + API_KEY
             },
-       
             body: JSON.stringify({
-                //model: "llama-4-scout",
-               // model: "llama-3.1-8b-instant",
-               //model: "groq-llama-3.1-8b-instant",
-                //model: "llama3-8b-8192",
-                model: "llama-3.1-8b-instant",
-                messages: [
-                    {
-                        role: "system",
-                        content:
-                            "Interpretazione: sei " + currentSuspect +
-                            ". Parli come lui. Hai un segreto da nascondere e rispondi in modo ambiguo ma realistico."
-                    },
-                    { role: "user", content: question }
-                ]
+                model: MODEL,
+                messages: messages,
+                temperature: 0.7
             })
         });
 
-        const text = await resp.text();
-        let data;
-
-        try { data = JSON.parse(text); }
-        catch { output.textContent = "Risposta non JSON:\n" + text; return; }
-
-        console.log("JSON:", data);
+        const data = await resp.json();
+        console.log(data);
 
         if (!data.choices || !data.choices[0]) {
             output.textContent = "Errore API:\n" + JSON.stringify(data, null, 2);
+            status.textContent = "";
             return;
         }
 
-        output.textContent = data.choices[0].message.content;
+        const answer = data.choices[0].message.content;
+        output.textContent = answer;
+        status.textContent = "";
+
+        // Aggiorna memoria del sospettato
+        memory[currentSuspect].push({ role: "user", content: question });
+        memory[currentSuspect].push({ role: "assistant", content: answer });
 
     } catch (err) {
         output.textContent = "Errore JS: " + err.message;
+        status.textContent = "";
     }
 }
 </script>
@@ -115,3 +151,10 @@ async function ask() {
 </body>
 </html>
 
+               
+
+
+//"Authorization": "Bearer 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"
+           
+              //  model: "llama-3.1-8b-instant",
+               
