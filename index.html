@@ -2,199 +2,267 @@ Prova 3 di gioco con delitto: avanzamento 3
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <title>Interrogatorio AI – Versione Groq</title>
-  <style>
+<meta charset="UTF-8">
+<title>Delitto in Villa – Interrogatorio Avanzato</title>
+<style>
     body {
-      font-family: Arial, sans-serif;
-      background: #222;
-      color: #eee;
-      margin: 0;
-      padding: 0;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        display: flex;
+        background: #eee;
     }
-    #container {
-      max-width: 900px;
-      margin: 20px auto;
-      background: #333;
-      padding: 20px;
-      border-radius: 10px;
+
+    /* SIDEBAR */
+    #sidebar {
+        width: 330px;
+        background: #222;
+        color: white;
+        padding: 20px;
+        height: 100vh;
+        overflow-y: auto;
     }
-    .row { margin-bottom: 20px; }
-    textarea {
-      width: 100%;
-      height: 120px;
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-      resize: vertical;
-      font-size: 15px;
+
+    #sidebar h2 {
+        margin-top: 0;
     }
-    select, input {
-      padding: 8px;
-      border-radius: 6px;
-      border: none;
-      width: 100%;
+
+    .input-block {
+        margin-bottom: 15px;
     }
-    button {
-      padding: 10px;
-      width: 100%;
-      background: #4CAF50;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
+
+    .input-block input, .input-block textarea, select {
+        width: 100%;
+        padding: 6px;
+        margin-top: 5px;
     }
-    #output {
-      white-space: pre-wrap;
-      background: #111;
-      padding: 15px;
-      border-radius: 8px;
-      min-height: 150px;
+
+    #main {
+        flex-grow: 1;
+        padding: 20px;
     }
-  </style>
+
+    .suspect-btn {
+        padding: 10px;
+        margin: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #response {
+        margin-top: 20px;
+        padding: 15px;
+        background: white;
+        min-height: 120px;
+        white-space: pre-wrap;
+    }
+</style>
 </head>
 
 <body>
-<div id="container">
-  <h2>Simulatore di Interrogatorio AI</h2>
 
-  <div class="row">
-    <label>API Key Groq</label>
-    <input type="password" id="apiKey" placeholder="Inserisci la tua API Key Groq">
-  </div>
+<!-- SIDEBAR: TOOLBOX AVANZATO -->
+<div id="sidebar">
+    <h2>🛠️ Strumenti</h2>
 
-  <div class="row">
-    <label>Seleziona sospettato</label>
-    <select id="sospettato">
-      <option value="">-- scegli --</option>
-      <option value="marco">Marco – il vicino sospettoso</option>
-      <option value="anna">Anna – la collega troppo perfetta</option>
-      <option value="luca">Luca – il fratello nervoso</option>
-    </select>
-  </div>
+    <div class="input-block">
+        <label>API Key Groq</label>
+        <input id="apiKey" type="password" placeholder="incolla qui la tua API key…">
+    </div>
 
-  <div class="row">
-    <label>Domanda dell’ispettore</label>
-    <textarea id="domanda"></textarea>
-  </div>
+    <hr style="margin:20px 0;">
 
-  <button onclick="inviaDomanda()">Interroga</button>
+    <h3>🎭 Gestione Sospettati</h3>
 
-  <h3>Risposta:</h3>
-  <div id="output"></div>
+    <div class="input-block">
+        <label>Seleziona sospettato</label>
+        <select id="suspectSelector"></select>
+    </div>
+
+    <div class="input-block">
+        <label>Ruolo / Personalità</label>
+        <textarea id="s_personality" rows="4"></textarea>
+    </div>
+
+    <div class="input-block">
+        <label>Alibi / Info segrete</label>
+        <textarea id="s_backstory" rows="4"></textarea>
+    </div>
+
+    <button onclick="saveSuspectData()">💾 Salva Profilo</button>
+
+    <hr style="margin:20px 0;">
+
+    <h3>🧠 Memoria</h3>
+    <button onclick="clearMemory()">❌ Reset memoria</button>
+
 </div>
 
+
+<!-- MAIN AREA -->
+<div id="main">
+    <h1>Delitto in Villa – Interrogatorio</h1>
+
+    <p>Scegli un sospettato:</p>
+    <div id="suspectButtons"></div>
+
+    <hr>
+
+    <h2>Fai una domanda</h2>
+    <input id="question" type="text" style="width:70%;padding:10px;" placeholder="Scrivi la domanda…">
+    <button onclick="ask()" style="padding:10px;">Invia</button>
+
+    <div id="response"></div>
+</div>
+
+
 <script>
-/* ------------------------------------------------------------------
-   PROFILI DEI PERSONAGGI – puoi arricchirli quando vuoi
--------------------------------------------------------------------*/
-const profili = {
-  marco: `
-    Marco ha 45 anni, vive da solo, carattere irascibile ma controllato.
-    La sua casa è di fronte al luogo del delitto.
-    Dice di aver sentito rumori, ma non è chiaro l’orario.
-    In tasca aveva uno scontrino per guanti in lattice.
-  `,
-  anna: `
-    Anna è una collega della vittima.
-    Elegante, precisa, estremamente ordinata.
-    Dice di essere stata a casa a leggere.
-    Nel suo borsone sono stati trovati documenti strappati.
-  `,
-  luca: `
-    Luca è il fratello minore della vittima.
-    Personalità impulsiva, a volte aggressiva.
-    Avevano litigato due giorni fa per una questione di soldi.
-    Sul tavolo di Luca c’era una ricevuta per un coltello da cucina.
-  `
+/* -----------------------------
+   PERSONAGGI INIZIALI
+--------------------------------*/
+let suspects = {
+    "maggiordomo": {
+        name: "Maggiordomo",
+        personality: "Distaccato, preciso, molto controllato.",
+        backstory: "Dice di essere stato in cucina ma ha un taglio sospetto sul polso."
+    },
+    "madre": {
+        name: "Madre",
+        personality: "Elegante, protettiva, tende a manipolare.",
+        backstory: "Trovata vicino alla biblioteca poco dopo il delitto."
+    },
+    "giardiniere": {
+        name: "Giardiniere",
+        personality: "Ruvido ma sincero. Conosce molti segreti della villa.",
+        backstory: "Era nel parco, afferma di aver visto qualcuno correre."
+    }
 };
 
+let conversationMemory = [];
+let currentSuspect = "maggiordomo";
 
-/* ------------------------------------------------------------------
-   MEMORIA DEL DIALOGO
--------------------------------------------------------------------*/
-let memoria = [];
+function init() {
+    const sel = document.getElementById("suspectSelector");
+    const btns = document.getElementById("suspectButtons");
 
+    for (let key in suspects) {
+        let s = suspects[key];
 
-/* ------------------------------------------------------------------
-   FUNZIONE PRINCIPALE DI CHIAMATA A GROQ
-   (corretta, testata, funzionante)
--------------------------------------------------------------------*/
-async function callGroq(apiKey, messages) {
-  const endpoint = "https://api.groq.com/openai/v1/chat/completions";
+        // aggiunge pulsanti principali
+        let b = document.createElement("button");
+        b.className = "suspect-btn";
+        b.textContent = s.name;
+        b.onclick = () => loadSuspect(key);
+        btns.appendChild(b);
 
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      //model: "llama3-70b-8192",
-      model: "llama-3.1-8b-instant",
-      messages: messages,
-      temperature: 0.8,
-      max_tokens: 600
-    })
-  });
+        // aggiunge al selector del toolbox
+        let opt = document.createElement("option");
+        opt.value = key;
+        opt.textContent = s.name;
+        sel.appendChild(opt);
+    }
 
-  if (!response.ok) {
-    const err = await response.text();
-    throw new Error("Errore Groq: " + err);
-  }
+    loadSuspect("maggiordomo");
+}
 
-  const data = await response.json();
-  return data.choices[0].message.content;
+function loadSuspect(key) {
+    currentSuspect = key;
+    const s = suspects[key];
+
+    document.getElementById("suspectSelector").value = key;
+    document.getElementById("s_personality").value = s.personality;
+    document.getElementById("s_backstory").value = s.backstory;
+
+    document.getElementById("response").textContent =
+        "Hai selezionato " + s.name + ". Puoi iniziare l'interrogatorio.";
+}
+
+function saveSuspectData() {
+    let key = document.getElementById("suspectSelector").value;
+    suspects[key].personality = document.getElementById("s_personality").value;
+    suspects[key].backstory = document.getElementById("s_backstory").value;
+
+    alert("Profilo aggiornato.");
+}
+
+function clearMemory() {
+    conversationMemory = [];
+    document.getElementById("response").textContent = "Memoria cancellata.";
 }
 
 
-/* ------------------------------------------------------------------
-   GESTIONE DELLE DOMANDE E RISPOSTE
--------------------------------------------------------------------*/
-async function inviaDomanda() {
+/* -----------------------------
+   CHIAMATA A GROQ
+--------------------------------*/
+async function ask() {
+    const apiKey = document.getElementById("apiKey").value;
+    if (!apiKey) {
+        alert("Inserisci la API Key!");
+        return;
+    }
 
-  const apiKey = document.getElementById("apiKey").value.trim();
-  const persona = document.getElementById("sospettato").value;
-  const domanda = document.getElementById("domanda").value.trim();
-  const output = document.getElementById("output");
+    const question = document.getElementById("question").value;
+    if (!question) return;
 
-  if (!apiKey) return output.innerText = "Errore: devi inserire la API key.";
-  if (!persona) return output.innerText = "Errore: devi selezionare un sospettato.";
-  if (!domanda) return output.innerText = "Scrivi prima una domanda.";
+    const output = document.getElementById("response");
+    output.textContent = "Sto pensando…";
 
-  output.innerText = "Attendere...";
+    const s = suspects[currentSuspect];
 
-  try {
+    let systemPrompt =
+        `Sei il sospettato: ${s.name}.
+Personalità: ${s.personality}.
+Informazioni segrete: ${s.backstory}.
+Il dialogo deve essere coerente, realistico, e con tensione narrativa.
+Mantieni continuità usando la memoria conversazionale seguente.`;
 
-    const contesto = `
-    Sei ${persona}. Ecco il tuo profilo:
-    ${profili[persona]}
-    Devi rispondere all'ispettore in modo coerente, naturale, realistico.
-    Mantieni la tua personalità e non uscire dal ruolo.
-    `;
+    // memoria conversazionale AI
+    let memoryMessages = conversationMemory.map(m => ({role: m.role, content: m.content}));
 
-    memoria.push({ role: "user", content: domanda });
-
-    const messaggi = [
-      { role: "system", content: contesto },
-      ...memoria
+    const fullMessages = [
+        { role: "system", content: systemPrompt },
+        ...memoryMessages,
+        { role: "user", content: question }
     ];
 
-    const risposta = await callGroq(apiKey, messaggi);
+    try {
+        const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + apiKey
+            },
+            body: JSON.stringify({
+                model: "llama-3.1-8b-instant",
+                messages: fullMessages,
+                temperature: 0.7,
+                max_tokens: 250
+            })
+        });
 
-    memoria.push({ role: "assistant", content: risposta });
+        const data = await resp.json();
 
-    output.innerText = risposta;
+        if (!data.choices || !data.choices[0]) {
+            output.textContent = "Errore: " + JSON.stringify(data, null, 2);
+            return;
+        }
 
-  } catch (e) {
-    output.innerText = "Errore: " + e.message;
-  }
+        let ai = data.choices[0].message.content;
+        output.textContent = ai;
+
+        conversationMemory.push({role: "user", content: question});
+        conversationMemory.push({role: "assistant", content: ai});
+
+    } catch (err) {
+        output.textContent = "Errore: " + err.message;
+    }
 }
+
+init();
 </script>
 
 </body>
 </html>
+
 
 //"Authorization": "Bearer gsk_Yn6sh0pF8Er4kN7mcZrlWGdyb3FYlSrmDTtcNa3Z7eOLCjgmGw4X0"
            
