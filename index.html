@@ -1,157 +1,638 @@
-Prova 2 di gioco con delitto
+Prova 3 di gioco con delitto: avanzamento 3
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<title>Delitto in Villa – Interrogatorio</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Delitto in Villa — Pannello</title>
 <style>
-    body { font-family: Arial; padding: 20px; background:#f4f4f4; }
-    .suspect-btn { padding:10px; margin:5px; font-size:16px; cursor:pointer; }
-    #response { white-space: pre-wrap; background:white; padding:10px; margin-top:15px; border-radius:6px; }
-    #status { font-style: italic; color:#555; margin-top:10px; }
+  :root{--bg:#f4f4f6;--card:#fff;--muted:#666;--accent:#2b6cb0}
+  body{font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);margin:0;padding:20px;color:#222}
+  header{display:flex;gap:20px;align-items:center;justify-content:space-between}
+  h1{margin:0;font-size:20px}
+  .row{display:flex;gap:12px;align-items:center}
+  .col{display:flex;flex-direction:column;gap:8px}
+  .card{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .controls{display:flex;gap:8px;flex-wrap:wrap}
+  button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer}
+  button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+  input,select,textarea{padding:8px;border-radius:8px;border:1px solid #ddd;width:100%;box-sizing:border-box}
+  #main{display:grid;grid-template-columns:320px 1fr 360px;gap:16px;margin-top:16px}
+  #left,#center,#right{min-height:200px}
+  #suspectsList{display:flex;flex-direction:column;gap:8px}
+  .suspect-item{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:8px;border-radius:8px;border:1px solid #eee;cursor:pointer}
+  .suspect-item.active{border-color:var(--accent);background:linear-gradient(90deg,rgba(43,108,176,.06),transparent)}
+  #chatWindow{height:420px;overflow:auto;padding:10px;border-radius:8px;border:1px solid #e6e6e6;background:#fff}
+  .msg{margin:8px 0;padding:10px;border-radius:8px;max-width:78%}
+  .msg.user{background:#dbeafe;margin-left:auto}
+  .msg.bot{background:#fff;border:1px solid #eee}
+  .meta{font-size:12px;color:var(--muted)}
+  footer{margin-top:12px;display:flex;gap:8px;align-items:center}
+  .small{font-size:12px;color:var(--muted)}
+  #builderModal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:20px}
+  #builder{width:100%;max-width:1000px;background:var(--card);padding:16px;border-radius:12px;max-height:90vh;overflow:auto}
+  .two-cols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .inline{display:flex;gap:8px;align-items:center}
+  .exportBtn{background:#2d3748;color:#fff}
+  .danger{background:#c53030}
+  #logs{font-family:monospace;font-size:12px;max-height:160px;overflow:auto;background:#0f1724;color:#e6eef8;padding:8px;border-radius:6px}
+  @media(max-width:1100px){#main{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
-<h1>Delitto in Villa</h1>
-<p>Scegli un sospettato da interrogare:</p>
+<header>
+  <div>
+    <h1>Delitto in Villa — Engine</h1>
+    <div class="small">Ambiente: <span id="envMode">dev</span></div>
+  </div>
+  <div class="row controls">
+    <button onclick="openBuilder()">Apri Narrative Builder</button>
+    <button onclick="resetAll()" class="ghost">Reset locale</button>
+    <button onclick="exportCase()" class="ghost">Esporta case</button>
+    <button onclick="importCase()">Importa case</button>
+  </div>
+</header>
 
-<button class="suspect-btn" onclick="selectSuspect('maggiordomo')">Maggiordomo</button>
-<button class="suspect-btn" onclick="selectSuspect('madre')">Madre della vittima</button>
-<button class="suspect-btn" onclick="selectSuspect('giardiniere')">Giardiniere</button>
+<div id="main">
+  <!-- LEFT: lista sospettati + mini-case -->
+  <div id="left" class="col">
+    <div class="card">
+      <strong>Info caso</strong>
+      <div id="caseSummary" class="small" style="margin-top:8px">Carica o apri il Narrative Builder per definire il caso.</div>
+    </div>
 
-<hr>
+    <div class="card" style="margin-top:12px">
+      <strong>Sospettati</strong>
+      <div id="suspectsList" style="margin-top:8px"></div>
+      <div style="margin-top:10px" class="inline">
+        <input id="newSuspectName" placeholder="Nuovo sospettato (id breve)" />
+        <button onclick="addSuspect()">Aggiungi</button>
+      </div>
+    </div>
 
-<h2>Interroga il sospettato</h2>
+    <div class="card" style="margin-top:12px">
+      <strong>Opzioni API</strong>
+      <div class="small" style="margin-bottom:8px">Endpoint (per deploy su Vercel lascia '/api/chat'):</div>
+      <input id="apiEndpoint" placeholder="/api/chat" value="/api/chat" />
+      <div class="small" style="margin-top:8px">Se stai sviluppando localmente e vuoi usare direttamente Groq (NON raccomandato), puoi inserire qui una API key di sviluppo (lascia vuoto prima del deploy):</div>
+      <input id="frontendKey" placeholder="FRONTEND_API_KEY (dev only)" />
+      <div style="margin-top:8px" class="inline">
+        <select id="modelSelect">
+          <option value="llama-3.1-8b-instant">llama-3.1-8b-instant</option>
+          <option value="llama-3.1-70b-versatile">llama-3.1-70b-versatile</option>
+        </select>
+        <input id="temp" type="number" min="0" max="1" step="0.1" value="0.7" style="width:80px" />
+      </div>
+    </div>
+  </div>
 
-<input id="question" type="text" placeholder="Scrivi la tua domanda..." style="width:75%;padding:8px;">
-<button onclick="ask()" style="padding:8px;">Invia</button>
+  <!-- CENTER: chat -->
+  <div id="center" class="col">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><strong>Interrogatorio</strong> — <span id="activeSuspectLabel">Nessuno</span></div>
+        <div class="small">Memoria: <span id="memCount">0</span> messaggi</div>
+      </div>
 
-<div id="status"></div>
-<div id="response"></div>
+      <div id="chatWindow" style="margin-top:12px"></div>
+
+      <footer style="margin-top:12px">
+        <input id="userInput" placeholder="Scrivi la domanda o usa microfono..." />
+        <button onclick="sendQuestion()">Invia</button>
+        <button onclick="toggleTTS()" class="ghost" id="ttsBtn">TTS</button>
+        <button onclick="toggleRec()" class="ghost" id="recBtn">Speech</button>
+      </footer>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <strong>Direttore (system prompt)</strong>
+      <div class="small" style="margin-top:6px">Modifica qui il testo guida che definisce tono, regole e regia (viene combinato col profilo del personaggio e con la memoria).</div>
+      <textarea id="directorPrompt" rows="4"></textarea>
+      <div style="margin-top:8px" class="inline">
+        <button onclick="resetDirector()">Ripristina default</button>
+        <button onclick="previewSystem()" class="ghost">Anteprima sistema</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: builder rapido / logs -->
+  <div id="right" class="col">
+    <div class="card">
+      <strong>Dettagli sospettato</strong>
+      <div id="suspectDetails" style="margin-top:8px" class="small">Seleziona un sospettato per vedere i dettagli.</div>
+      <div style="margin-top:8px">
+        <button onclick="revealContradiction()" class="ghost">Cerca contraddizioni</button>
+        <button onclick="declareGuilty()" class="danger">Dichiara colpevole</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <strong>Log & Debug</strong>
+      <div id="logs" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Narrative Builder Modal -->
+<div id="builderModal">
+  <div id="builder">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3>Narrative Builder</h3>
+      <div>
+        <button onclick="closeBuilder()" class="ghost">Chiudi</button>
+        <button onclick="saveCase()" style="margin-left:8px">Salva</button>
+      </div>
+    </div>
+
+    <div style="margin-top:12px" class="two-cols">
+      <div>
+        <label class="small">Informazioni caso (JSON)</label>
+        <textarea id="caseJson" rows="18"></textarea>
+        <div style="margin-top:8px" class="inline">
+          <button onclick="loadExample()">Carica esempio</button>
+          <button onclick="clearCase()" class="ghost">Svuota</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="small">Editor personaggi (JSON)</label>
+        <textarea id="charactersJson" rows="18"></textarea>
+        <div style="margin-top:8px" class="inline">
+          <button onclick="syncFromJson()">Applica</button>
+          <button onclick="downloadCase()" class="ghost">Download</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:12px" class="small">Suggerimento: salva spesso. I dati verranno memorizzati in <code>localStorage</code>.</div>
+  </div>
+</div>
 
 <script>
-const API_KEY = "Bearer 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";  
-const MODEL = "llama-3.1-8b-instant";
+/* -------------------------
+   CONFIG (modifica se serve)
+   ------------------------- */
+const DEFAULT_CASE_KEY = "delitto_case_v1";
+const DEFAULT_MODEL = "llama-3.1-8b-instant";
 
-// Memoria indipendente per ciascun sospettato:
-let memory = {
-    maggiordomo: [],
-    madre: [],
-    giardiniere: []
+/* FRONTEND_API_KEY: solo per sviluppo locale.
+   Meglio lasciare vuoto e usare il proxy /api/chat (Vercel).
+   Se lo imposti, attenzione: NON caricarlo su repo pubblico. */
+const FRONTEND_API_KEY = "Bearer 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"; // se vuoi testare davanti, metti la key qui (dev only!)
+
+/* -------------------------
+   Stato runtime
+   ------------------------- */
+let state = {
+  caseData: null,
+  suspects: [],            // array di ids
+  memory: {},              // memoria per sospettato: {id: [{role,content}, ...]}
+  current: null,
+  ttsEnabled: false,
+  recognition: null,
+  isRecording: false
 };
 
-let currentSuspect = "maggiordomo";
+/* -------------------------
+   UTIL: log
+   ------------------------- */
+function logDebug(...args){ const el=document.getElementById("logs"); el.innerText = (new Date()).toLocaleTimeString()+" | "+args.join(" ")+"\n" + el.innerText; }
 
-const characterPrompts = {
-    maggiordomo: `
-        Sei il Maggiordomo. Nome: **Alfredo Bellini**.
-        Personalità: controllato, servile, leggermente ansioso.
-        Segreto: nascondi informazioni per proteggere qualcun altro.
-        Tono: forbito, educato, lievemente teatrale.
-        Obiettivo: sembrare collaborativo, ma confondere l'investigatore quando serve.
-        Regia: descrivi micro-gesti, cambi di postura, sguardi, nervosismo.
-    `,
-    madre: `
-        Sei la Madre della vittima. Nome: **Eleonora Vismara**.
-        Personalità: elegante, drammatica, orgogliosa.
-        Segreto: hai avuto un litigio feroce con tuo figlio poche ore prima del delitto.
-        Tono: emotivo, oscillante tra fragilità e autorità.
-        Obiettivo: apparire come vittima, mai come possibile colpevole.
-        Regia: mostra tensioni emotive, sguardi persi, improvvisi slanci melodrammatici.
-    `,
-    giardiniere: `
-        Sei il Giardiniere. Nome: **Pietro Luraschi**.
-        Personalità: schivo, diretto, poco a suo agio con la polizia.
-        Segreto: nascondi traffici minori e incontri clandestini vicino alla serra.
-        Tono: asciutto, concreto, talvolta ruvido.
-        Obiettivo: evitare implicazioni, non lasciar trapelare le sue attività.
-        Regia: movimenti manuali, abitudini nervose, occhi che evitano il contatto.
-    `
-};
-
-// Cambia sospettato
-function selectSuspect(name) {
-    currentSuspect = name;
-    document.getElementById("response").textContent =
-        "Hai selezionato: " + name.toUpperCase() + ". Puoi iniziare l'interrogatorio.";
-    document.getElementById("status").textContent = "";
+/* -------------------------
+   Narrative Builder
+   ------------------------- */
+function openBuilder(){
+  document.getElementById("builderModal").style.display = "flex";
+  const c = localStorage.getItem(DEFAULT_CASE_KEY);
+  if(c){
+    try{
+      const obj = JSON.parse(c);
+      document.getElementById("caseJson").value = JSON.stringify(obj.case||{},null,2);
+      document.getElementById("charactersJson").value = JSON.stringify(obj.characters||{},null,2);
+    }catch(e){}
+  } else {
+    document.getElementById("caseJson").value = "{}";
+    document.getElementById("charactersJson").value = "{}";
+  }
 }
-
-// Funzione principale
-async function ask() {
-    const question = document.getElementById("question").value;
-    if (!question) return;
-
-    const status = document.getElementById("status");
-    const output = document.getElementById("response");
-
-    status.textContent = "Il sospettato riflette...";
-    output.textContent = "";
-
-    // Costruzione conversazione con memoria
-    const messages = [
-        {
-            role: "system",
-            content: `
-            Stai interpretando un personaggio in un giallo investigativo.
-            Mantieni coerenza narrativa e caratteriale.
-            Usa regia cinematografica (gesti, sguardi, tensioni).
-            Non rivelare mai tutto immediatamente.
-            Personaggio attuale:
-            ${characterPrompts[currentSuspect]}
-            `
-        }
-    ];
-
-    // Memoria del sospettato (dialoghi precedenti)
-    memory[currentSuspect].forEach(msg => messages.push(msg));
-
-    // Nuova domanda dell'investigatore
-    messages.push({ role: "user", content: question });
-
-    try {
-        const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + API_KEY
-            },
-            body: JSON.stringify({
-                model: MODEL,
-                messages: messages,
-                temperature: 0.7
-            })
-        });
-
-        const data = await resp.json();
-        console.log(data);
-
-        if (!data.choices || !data.choices[0]) {
-            output.textContent = "Errore API:\n" + JSON.stringify(data, null, 2);
-            status.textContent = "";
-            return;
-        }
-
-        const answer = data.choices[0].message.content;
-        output.textContent = answer;
-        status.textContent = "";
-
-        // Aggiorna memoria del sospettato
-        memory[currentSuspect].push({ role: "user", content: question });
-        memory[currentSuspect].push({ role: "assistant", content: answer });
-
-    } catch (err) {
-        output.textContent = "Errore JS: " + err.message;
-        status.textContent = "";
+function closeBuilder(){ document.getElementById("builderModal").style.display="none"; }
+function saveCase(){
+  try{
+    const caseObj = JSON.parse(document.getElementById("caseJson").value || "{}");
+    const chars = JSON.parse(document.getElementById("charactersJson").value || "{}");
+    const pkg = { case: caseObj, characters: chars };
+    localStorage.setItem(DEFAULT_CASE_KEY, JSON.stringify(pkg));
+    loadCaseFromStorage();
+    closeBuilder();
+    logDebug("Case salvato");
+  }catch(e){
+    alert("JSON non valido: " + e.message);
+  }
+}
+function loadExample(){
+  const example = {
+    case: {
+      title: "Delitto in Villa - Demo",
+      victim: "Lord Mariano Alvarès",
+      time_of_death: "2025-11-30T22:15:00",
+      location: "Studio della Villa Alvarès",
+      circumstances: "Stanza chiusa dall'interno, oggetto contundente"
+    },
+    characters: {
+      maggiordomo: {
+        nome: "Ernesto",
+        ruolo: "Maggiordomo",
+        personalita: "controllato, servile, leggermente ansioso",
+        background: "Lavora per la famiglia da 30 anni",
+        alibi: "Dice di aver riordinato la cucina dalle 21:30 alle 22:00",
+        inventory: ["guanti cerati"],
+        secrets: ["sapeva del testamento modificato"]
+      },
+      madre: {
+        nome: "Clara Alvarès",
+        ruolo: "Nipote",
+        personalita: "emotiva, impulsiva",
+        background: "Ambita erede litigiosa",
+        alibi: "Era in giardino a parlare al telefono",
+        inventory: ["collana sporca"],
+        secrets: ["ha preso dei documenti dal cassetto"]
+      },
+      giardiniere: {
+        nome: "Luca Ferri",
+        ruolo: "Giardiniere",
+        personalita: "ruvido, riservato",
+        background: "Lavora alla villa da anni",
+        alibi: "Sostiene di essere tornato solo dopo le 22:30",
+        inventory: ["torcia"],
+        secrets: ["appuntamento segreto nella serra"]
+      }
     }
+  };
+  document.getElementById("caseJson").value = JSON.stringify(example.case,null,2);
+  document.getElementById("charactersJson").value = JSON.stringify(example.characters,null,2);
 }
+
+/* -------------------------
+   Load / Save case
+   ------------------------- */
+function loadCaseFromStorage(){
+  const raw = localStorage.getItem(DEFAULT_CASE_KEY);
+  if(!raw) {
+    state.caseData = null;
+    renderCaseSummary();
+    return;
+  }
+  try{
+    const parsed = JSON.parse(raw);
+    state.caseData = parsed.case || {};
+    // populate characters
+    const chars = parsed.characters || {};
+    const ids = Object.keys(chars);
+    state.suspects = ids.slice();
+    state.memory = {};
+    ids.forEach(id => state.memory[id] = []); // empty memory per person
+    state.characters = chars;
+    renderSuspects();
+    renderCaseSummary();
+    logDebug("Case caricato con", ids.length, "sospettati");
+  }catch(e){
+    console.error(e);
+  }
+}
+function renderCaseSummary(){
+  const c = state.caseData;
+  const el = document.getElementById("caseSummary");
+  if(!c){ el.innerText = "Nessun case caricato."; return; }
+  el.innerHTML = `<strong>${c.title||"(Titolo non definito)"}</strong><br>
+    Vittima: ${c.victim||"-"}<br>
+    Quando: ${c.time_of_death||"-"}<br>
+    Dove: ${c.location||"-"}`;
+}
+function renderSuspects(){
+  const el = document.getElementById("suspectsList"); el.innerHTML="";
+  state.suspects.forEach(id=>{
+    const info = state.characters?.[id] || {nome:id};
+    const div = document.createElement("div");
+    div.className = "suspect-item" + (state.current===id ? " active" : "");
+    div.innerHTML = `<div>
+        <strong>${info.nome||id}</strong><div class="meta">${info.ruolo||""} • ${info.personalita||""}</div></div>
+      <div style="display:flex;gap:6px">
+        <button class="ghost" onclick="openDetails('${id}', event)">Dettagli</button>
+        <button onclick="selectSuspect('${id}', event)">Interroga</button>
+      </div>`;
+    el.appendChild(div);
+  });
+}
+
+/* -------------------------
+   Suspect interaction
+   ------------------------- */
+function addSuspect(){
+  const id = document.getElementById("newSuspectName").value.trim();
+  if(!id) return alert("Inserisci id semplice (es: nome senza spazi).");
+  if(state.suspects.includes(id)) return alert("Id già esistente.");
+  state.suspects.push(id);
+  state.characters = state.characters || {};
+  state.characters[id] = { nome: id, ruolo: "", personalita: "" };
+  state.memory[id] = [];
+  renderSuspects();
+  document.getElementById("newSuspectName").value="";
+  logDebug("Sospettato aggiunto:", id);
+}
+
+function openDetails(id, ev){
+  if(ev) ev.stopPropagation();
+  const info = state.characters?.[id] || {};
+  document.getElementById("suspectDetails").innerHTML = 
+    `<div><strong>${info.nome||id}</strong></div>
+     <div class="small" style="margin-top:6px">${info.ruolo||""} • ${info.personalita||""}</div>
+     <div style="margin-top:8px"><strong>Alibi</strong><div class="small">${info.alibi||"-"}</div></div>
+     <div style="margin-top:8px"><strong>Segreti</strong><div class="small">${(info.secrets||[]).join(", ")||"-"}</div></div>
+     <div style="margin-top:8px"><strong>Inventario</strong><div class="small">${(info.inventory||[]).join(", ")||"-"}</div></div>
+     <div style="margin-top:8px"><button onclick="exportCharacter('${id}')">Esporta personaggio</button></div>`;
+}
+
+function exportCharacter(id){
+  const blob = new Blob([JSON.stringify(state.characters[id]||{},null,2)],{type:"application/json"});
+  const a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=id+".json"; a.click();
+}
+
+/* -------------------------
+   Director prompt
+   ------------------------- */
+const DEFAULT_DIRECTOR = `Sei il 'regista' del giallo. Mantieni coerenza, regia e tono.
+Regole:
+- Rispondi sempre in italiano corretto.
+- Mantieni il tono coerente con il personaggio.
+- Aggiungi micro-gesti e dettagli fisici per migliorare la scena.
+- Non rivelare subito informazioni critiche; lascia emergere contraddizioni se pressato.
+- Rendi le risposte plausibili e non contraddittorie con i fatti canonici del case.
+`;
+
+function resetDirector(){ document.getElementById("directorPrompt").value = DEFAULT_DIRECTOR; }
+
+function previewSystem(){
+  alert(document.getElementById("directorPrompt").value);
+}
+
+/* -------------------------
+   Core: select & send
+   ------------------------- */
+function selectSuspect(id, ev){
+  if(ev) ev.stopPropagation();
+  if(!state.suspects.includes(id)) return alert("Sospettato non trovato");
+  state.current = id;
+  document.getElementById("activeSuspectLabel").innerText = (state.characters?.[id]?.nome || id);
+  renderSuspects();
+  renderChatWindow();
+  document.getElementById("memCount").innerText = (state.memory[id]||[]).length;
+}
+
+function renderChatWindow(){
+  const win = document.getElementById("chatWindow"); win.innerHTML="";
+  const mem = state.memory[state.current] || [];
+  mem.forEach(item=>{
+    const d = document.createElement("div");
+    d.className = "msg " + (item.role==="user" ? "user" : "bot");
+    d.innerHTML = `<div class="meta">${item.role}</div><div>${item.content}</div>`;
+    win.appendChild(d);
+  });
+  win.scrollTop = win.scrollHeight;
+}
+
+/* Robust response parsing helper */
+function parseApiResponse(data){
+  // Try OpenAI style
+  if(data?.choices && data.choices[0]){
+    return data.choices[0].message?.content ?? data.choices[0].text ?? null;
+  }
+  // Groq sometimes returns output array
+  if(data?.output && Array.isArray(data.output) && data.output.length){
+    const out = data.output[0];
+    if(typeof out === "string") return out;
+    if(out?.content && Array.isArray(out.content) && out.content[0]) return out.content[0].text || out.content[0].message || null;
+    if(out?.text) return out.text;
+  }
+  // fallback
+  if(typeof data === "string") return data;
+  return null;
+}
+
+/* prepare system prompt */
+function buildSystemPrompt(){
+  const director = document.getElementById("directorPrompt").value || DEFAULT_DIRECTOR;
+  const char = state.characters?.[state.current] || {};
+  const canon = state.caseData || {};
+  const charBlock = `
+Personaggio: ${char.nome || state.current}
+Ruolo: ${char.ruolo || ""}
+Tratti: ${char.personalita || ""}
+Background: ${char.background || ""}
+Segreti: ${(char.secrets||[]).join(", ")}
+Alibi: ${char.alibi || ""}
+Inventario: ${(char.inventory||[]).join(", ")}
+Fatti canonici: Vittima=${canon.victim||"-"}, Dove=${canon.location||"-"}, Quando=${canon.time_of_death||"-"}.
+`;
+  return director + "\n" + charBlock + "\nRegole: Rispondi in italiano, usa regia, non ammettere colpe se non forzato, mantieni coerenza.";
+}
+
+/* send question to API */
+async function sendQuestion(){
+  if(!state.current) return alert("Seleziona un sospettato.");
+  const q = document.getElementById("userInput").value.trim();
+  if(!q) return;
+  // push user to memory immediately
+  state.memory[state.current].push({role:"user", content:q});
+  renderChatWindow();
+  document.getElementById("userInput").value="";
+  document.getElementById("memCount").innerText = state.memory[state.current].length;
+
+  const system = buildSystemPrompt();
+  const messages = [{role:"system", content: system}, ...state.memory[state.current]];
+
+  // Prepare API call: choose either local proxy or direct Groq with frontend key (dev only)
+  const endpoint = document.getElementById("apiEndpoint").value || "/api/chat";
+  const frontendKey = document.getElementById("frontendKey").value || FRONTEND_API_KEY;
+  const model = document.getElementById("modelSelect").value || DEFAULT_MODEL;
+  const temp = parseFloat(document.getElementById("temp").value) || 0.7;
+
+  logDebug("Invio messaggi:", messages.length, "endpoint:", endpoint, "model:", model);
+
+  try {
+    // decide body and headers: if endpoint starts with "http" or is /api/chat
+    const headers = {"Content-Type":"application/json"};
+    if(frontendKey && (endpoint.startsWith("http://") || endpoint.startsWith("https://"))){
+      headers["Authorization"] = "Bearer " + frontendKey;
+    }
+
+    const body = {
+      model: model,
+      messages: messages,
+      temperature: temp
+    };
+
+    const resp = await fetch(endpoint, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body)
+    });
+
+    const text = await resp.text();
+    logDebug("Raw response length:", text.length);
+    let data;
+    try { data = JSON.parse(text); } catch(e){ data = text; }
+
+    const answer = parseApiResponse(data);
+    if(!answer){
+      const raw = typeof data === "string" ? data : JSON.stringify(data,null,2);
+      state.memory[state.current].push({role:"assistant", content:"(Errore: risposta non valida) " + raw});
+      renderChatWindow();
+      document.getElementById("memCount").innerText = state.memory[state.current].length;
+      logDebug("API error:", raw);
+      return;
+    }
+
+    // push assistant answer into memory and render
+    state.memory[state.current].push({role:"assistant", content:answer});
+    renderChatWindow();
+    document.getElementById("memCount").innerText = state.memory[state.current].length;
+
+    // optional TTS
+    if(state.ttsEnabled) speak(answer);
+
+  } catch(err){
+    logDebug("Fetch error:", err.message || err);
+    state.memory[state.current].push({role:"assistant", content:"(Errore di rete) " + err.message});
+    renderChatWindow();
+    document.getElementById("memCount").innerText = state.memory[state.current].length;
+  }
+}
+
+/* -------------------------
+   TTS & Speech recognition
+   ------------------------- */
+function toggleTTS(){
+  state.ttsEnabled = !state.ttsEnabled;
+  document.getElementById("ttsBtn").innerText = state.ttsEnabled ? "TTS ON" : "TTS";
+}
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "it-IT";
+  // pick a voice similar to gender by hint (optional)
+  const voices = speechSynthesis.getVoices();
+  if(voices.length) u.voice = voices.find(v => v.lang.startsWith("it")) || voices[0];
+  u.rate = 1;
+  speechSynthesis.speak(u);
+}
+
+function toggleRec(){
+  if(!("webkitSpeechRecognition" in window) && !("SpeechRecognition" in window)) {
+    alert("SpeechRecognition non supportato in questo browser.");
+    return;
+  }
+  if(state.isRecording){ stopRec(); return; }
+  const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  state.recognition = new Rec();
+  state.recognition.lang = "it-IT";
+  state.recognition.interimResults = false;
+  state.recognition.onresult = (ev) => {
+    const t = ev.results[0][0].transcript;
+    document.getElementById("userInput").value = t;
+  };
+  state.recognition.onend = ()=> { state.isRecording=false; document.getElementById("recBtn").innerText="Speech"; };
+  state.recognition.start();
+  state.isRecording=true;
+  document.getElementById("recBtn").innerText="Stop";
+}
+function stopRec(){ if(state.recognition) state.recognition.stop(); state.isRecording=false; document.getElementById("recBtn").innerText="Speech"; }
+
+/* -------------------------
+   Utilities: import/export/reset
+   ------------------------- */
+function exportCase(){
+  const data = localStorage.getItem(DEFAULT_CASE_KEY);
+  if(!data) return alert("Nessun case da esportare.");
+  const blob = new Blob([data], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "case.json"; a.click();
+}
+function importCase(){
+  const input = document.createElement("input"); input.type="file"; input.accept="application/json";
+  input.onchange = e => {
+    const f = e.target.files[0];
+    if(!f) return;
+    const r = new FileReader();
+    r.onload = () => { localStorage.setItem(DEFAULT_CASE_KEY, r.result); loadCaseFromStorage(); alert("Case importato"); };
+    r.readAsText(f);
+  };
+  input.click();
+}
+function downloadCase(){
+  exportCase();
+}
+function clearCase(){ localStorage.removeItem(DEFAULT_CASE_KEY); loadCaseFromStorage(); }
+function resetAll(){ if(confirm("Reset locale e rimuovi case?")){ localStorage.removeItem(DEFAULT_CASE_KEY); state = {caseData:null, suspects:[], memory:{}, current:null}; renderSuspects(); renderCaseSummary(); document.getElementById("chatWindow").innerHTML=""; } }
+
+/* -------------------------
+   Contradiction search (simple heuristic)
+   ------------------------- */
+function revealContradiction(){
+  if(!state.current) return alert("Seleziona un sospettato.");
+  const mem = state.memory[state.current] || [];
+  const answers = mem.filter(m=>m.role==="assistant").map(m=>m.content.toLowerCase()).join(" ");
+  const userQs = mem.filter(m=>m.role==="user").map(m=>m.content.toLowerCase()).join(" ");
+  // naive heuristic: check repeated claims that conflict (simpler: look for time strings)
+  if(answers.includes("ero a") && answers.includes("ero in cucina") && answers.includes("ero in giardino")){
+    alert("Possibile contraddizione nelle posizioni dichiarate.");
+  } else {
+    alert("Nessuna contraddizione evidente (heuristic basic).");
+  }
+}
+
+/* -------------------------
+   Guilty declaration (simple)
+   ------------------------- */
+function declareGuilty(){
+  if(!state.current) return alert("Seleziona un sospettato.");
+  const reason = prompt("Inserisci motivo per cui lo ritieni colpevole:");
+  if(!reason) return;
+  logDebug("Dichiarato colpevole:", state.current, "Motivo:", reason);
+  alert("Hai dichiarato colpevole: " + (state.characters[state.current]?.nome || state.current) + "\nMotivo: " + reason);
+}
+
+/* -------------------------
+   Sync JSON editor -> runtime
+   ------------------------- */
+function syncFromJson(){
+  try{
+    const chars = JSON.parse(document.getElementById("charactersJson").value || "{}");
+    state.characters = chars;
+    // ensure memory keys
+    state.suspects = Object.keys(chars);
+    state.suspects.forEach(id=> state.memory[id] = state.memory[id] || []);
+    renderSuspects();
+    closeBuilder();
+    logDebug("Characters applicati", Object.keys(chars).length);
+  }catch(e){ alert("JSON non valido: " + e.message); }
+}
+
+/* -------------------------
+   init
+   ------------------------- */
+(function init(){
+  resetDirector();
+  loadCaseFromStorage();
+  document.getElementById("modelSelect").value = DEFAULT_MODEL;
+  document.getElementById("envMode").innerText = FRONTEND_API_KEY ? "dev (key in pagina)" : "dev (proxy recommended)";
+  logDebug("Engine pronto");
+})();
 </script>
 
 </body>
 </html>
 
-               
 
 
 //"Authorization": "Bearer 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"
