@@ -118,8 +118,9 @@ if (SpeechRecognition) {
     recognition.onresult = (event) => {
         const text = event.results[0][0].transcript;
         sendMessage(text);
-        ask();
+        
         micBtn.classList.remove("listening");
+        ask();
     };
 
     recognition.onend = () => {
