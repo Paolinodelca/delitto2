@@ -79,7 +79,8 @@ async function sendMessage(text) {
             "Authorization": "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"
         },
         body: JSON.stringify({
-            model: "gpt-4o-mini",
+           //model: "gpt-4o-mini",
+             model: "llama-3.1-8b-instant",
             messages: [{ role: "user", content: text }]
         })
     });
