@@ -1,190 +1,546 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Assistant Minimal</title>
-
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Delitto in Villa — Engine completo</title>
 <style>
-    body {
-        font-family: sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        height: 100vh;
-    }
-    #chat {
-        flex: 1;
-        padding: 10px;
-        overflow-y: auto;
-    }
-    #inputArea {
-        display: flex;
-        border-top: 1px solid #ccc;
-    }
-    #userInput {
-        flex: 1;
-        padding: 10px;
-        border: none;
-        font-size: 16px;
-    }
-    #sendBtn, #micBtn {
-        padding: 10px 15px;
-        font-size: 20px;
-        border: none;
-        background: #eee;
-        cursor: pointer;
-    }
-    #micBtn.listening {
-        background: #ffdddd;
-    }
+  :root { --bg:#f4f7fb; --card:#fff; --accent:#276ef1; --muted:#666; }
+  body { margin:0; font-family:Inter,Arial,Helvetica,sans-serif; background:var(--bg); color:#111; }
+  header{padding:12px 18px; display:flex; justify-content:space-between; align-items:center; background:linear-gradient(90deg,#fff, #f0f5ff);}
+  h1{margin:0;font-size:18px}
+  main{display:grid; grid-template-columns:320px 1fr 360px; gap:16px; padding:18px;}
+  .card{background:var(--card); padding:12px; border-radius:10px; box-shadow:0 1px 6px rgba(20,30,50,0.06);}
+  label{font-size:13px; color:var(--muted)}
+  input,select,textarea,button{font-family:inherit}
+  input,select,textarea{width:100%; padding:8px; margin-top:6px; border-radius:8px; border:1px solid #e6eef8; box-sizing:border-box}
+  button{padding:9px 12px; border-radius:8px; border:0; background:var(--accent); color:white; cursor:pointer}
+  button.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+  #suspects .suspect{padding:8px; border-radius:8px; border:1px solid #eee; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; cursor:pointer}
+  #chatWindow{height:480px; overflow:auto; padding:10px; background:#fafcff; border-radius:8px; border:1px solid #eef4ff}
+  .msg{margin:8px 0; padding:8px; border-radius:8px; max-width:78%}
+  .msg.user{margin-left:auto; background:#dbeafe}
+  .msg.bot{background:#fff; border:1px solid #eee}
+  .meta{font-size:12px;color:var(--muted); margin-bottom:6px}
+  footer{display:flex; gap:8px; align-items:center; margin-top:10px}
+  #logs{font-family:monospace; font-size:12px; background:#0b1220; color:#dbeefb; padding:8px; border-radius:6px; max-height:180px; overflow:auto}
+  .small{font-size:13px; color:var(--muted)}
+  @media (max-width:1100px){ main{grid-template-columns:1fr; } #chatWindow{height:320px} }
 </style>
-
 </head>
 <body>
 
-<div id="chat"></div>
+<header>
+  <div><h1>Delitto in Villa — Engine</h1><div class="small">Interrogatorio AI locale (dev)</div></div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <div class="small">Modello:</div>
+    <select id="modelSelect">
+      <option value="llama-3.1-8b-instant">llama-3.1-8b-instant</option>
+      <option value="llama-3.1-70b-versatile">llama-3.1-70b-versatile</option>
+    </select>
+  </div>
+</header>
 
-<div id="inputArea">
-    <input id="userInput" type="text" placeholder="Scrivi o parla..." />
-    <button id="micBtn">🎤</button>
-    <button id="sendBtn">➡️</button>
+<main>
+  <!-- LEFT: builder e API key -->
+  <div class="card" id="left">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <strong>Impostazioni</strong>
+      <button class="ghost" onclick="openBuilder()">Builder</button>
+    </div>
+
+    <div style="margin-top:12px">
+      <label>API key (solo browser — salva in localStorage)</label>
+      <input id="apiKeyInput" type="password" placeholder="Inserisci qui la tua Groq API key (gsk_...)" />
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button onclick="saveKey()">Salva key</button>
+        <button class="ghost" onclick="clearKey()">Rimuovi key</button>
+      </div>
+      <div id="keyStatus" class="small" style="margin-top:8px">Key: <span id="keyState">nessuna</span></div>
+    </div>
+
+    <hr style="margin:12px 0">
+
+    <div id="suspects" style="margin-top:8px">
+      <strong>Sospettati</strong>
+      <div id="suspectsList" style="margin-top:8px"></div>
+      <div style="margin-top:8px; display:flex; gap:8px">
+        <input id="newSuspectId" placeholder="id semplice (es: alfredo)" />
+        <button class="ghost" onclick="addSuspect()">Aggiungi</button>
+      </div>
+    </div>
+
+    <hr style="margin:12px 0">
+    <div>
+      <strong>Log</strong>
+      <div id="logs"></div>
+    </div>
+  </div>
+
+  <!-- CENTER: chat -->
+  <div class="card" id="center">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <strong>Interrogatorio</strong>
+        <div class="small" id="activeSuspectLabel">Nessuno selezionato</div>
+      </div>
+      <div class="small">Memoria: <span id="memCount">0</span></div>
+    </div>
+
+    <div id="chatWindow" style="margin-top:12px"></div>
+
+    <footer>
+      <input id="inputField" placeholder="Scrivi la domanda oppure usa 🎤" />
+      <button id="micBtn" class="ghost">🎤</button>
+      <button onclick="triggerSend()">Invia</button>
+      <button onclick="toggleTTS()" class="ghost" id="ttsBtn">TTS</button>
+    </footer>
+
+    <div style="margin-top:10px" class="small">Nota: la API key deve essere salvata nella sezione impostazioni per chiamate verso Groq.</div>
+  </div>
+
+  <!-- RIGHT: profilazione e builder -->
+  <div class="card" id="right">
+    <strong>Profilo sospettato</strong>
+    <div id="suspectDetails" style="margin-top:8px" class="small">Seleziona un sospettato per modificare il profilo.</div>
+
+    <div style="margin-top:12px">
+      <button onclick="exportCase()" class="ghost">Esporta caso</button>
+      <button onclick="importCase()" class="ghost">Importa caso</button>
+      <button onclick="resetAll()" class="ghost">Reset locale</button>
+    </div>
+  </div>
+</main>
+
+<!-- Builder modal -->
+<div id="builderModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;padding:20px">
+  <div style="background:white;border-radius:10px;padding:14px;max-width:900px;width:100%;max-height:90vh;overflow:auto">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3>Editor caso & personaggi</h3>
+      <div>
+        <button class="ghost" onclick="closeBuilder()">Chiudi</button>
+        <button onclick="saveBuilder()" style="margin-left:8px">Salva</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+      <div>
+        <label>Informazioni caso (JSON)</label>
+        <textarea id="caseJson" rows="12" placeholder='{"title":"..."}'></textarea>
+      </div>
+      <div>
+        <label>Personaggi (JSON)</label>
+        <textarea id="charactersJson" rows="12" placeholder='{"alfredo": {"nome":"Alfredo", ...}}'></textarea>
+      </div>
+    </div>
+
+    <div style="margin-top:12px; display:flex; gap:8px">
+      <button onclick="loadExample()">Carica esempio</button>
+      <button class="ghost" onclick="clearBuilder()">Svuota</button>
+    </div>
+  </div>
 </div>
 
 <script>
-/* ---------------------------
-    SINTESI VOCALE
------------------------------*/
-function speak(text) {
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = "it-IT";
-    speechSynthesis.speak(u);
-}
+/* ===================================================
+   Config e stato
+   =================================================== */
+const STORAGE_KEY = "delitto_engine_v1";
+const KEY_NAME = "groq_api_key";
+const DEFAULT_MODEL = "llama-3.1-8b-instant";
 
-/* ---------------------------
-    CHAT LOGIC
------------------------------*/
-/*async function sendMessage(text) {
-    if (!text.trim()) return;
-
-    appendMessage("Tu", text);
-    userInput.value = "";
-
-    // --- chiamata a OpenAI API (sostituisci con la tua chiave) ---
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "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"
-        },
-        body: JSON.stringify({
-           //model: "gpt-4o-mini",
-             model: "llama-3.1-8b-instant",
-            messages: [{ role: "user", content: text }]
-        })
-    });
-
-    const data = await response.json();
-    const reply = data.choices[0].message.content;
-
-    appendMessage("Assistente", reply);
-    speak(reply);
-}
-
-function appendMessage(sender, text) {
-    const chat = document.getElementById("chat");
-    const div = document.createElement("div");
-    div.textContent = sender + ": " + text;
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
-} */
-async function sendMessage(text) {
-    if (!text.trim()) return;
-
-    appendMessage("Tu", text);
-    userInput.value = "";
-
-    try {
-        const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "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"
-            },
-            body: JSON.stringify({
-                model: "llama-3.1-8b-instant",
-                messages: [
-                    {
-                        role: "system",
-                        content: "Sei un sospettato in un'indagine. Rispondi in modo realistico, coerente, con esitazioni e possibili bugie."
-                    },
-                    {
-                        role: "user",
-                        content: text
-                    }
-                ]
-            })
-        });
-
-        const data = await response.json();
-        console.log("Risposta Groq:", data);
-
-        if (!data.choices) {
-            appendMessage("Sistema", "Errore API:\n" + JSON.stringify(data, null, 2));
-            return;
-        }
-
-        const reply = data.choices[0].message.content;
-        appendMessage("Assistente", reply);
-        speak(reply);
-
-    } catch (err) {
-        appendMessage("Errore", err.message);
-    }
-}
-
-
-    
-//--------------
-const userInput = document.getElementById("userInput");
-document.getElementById("sendBtn").onclick = () => sendMessage(userInput.value);
-
-/* ---------------------------
-    RICONOSCIMENTO VOCALE
------------------------------*/
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-let recognition;
-
-if (SpeechRecognition) {
-    recognition = new SpeechRecognition();
-    recognition.lang = "it-IT";
-    recognition.interimResults = false;   // restituisce solo il testo finale
-    recognition.continuous = false;       // si ferma da sola
-
-    recognition.onresult = (event) => {
-        const text = event.results[0][0].transcript;
-        sendMessage(text);
-        
-        micBtn.classList.remove("listening");
-        ask();
-    };
-
-    recognition.onend = () => {
-        micBtn.classList.remove("listening");
-    };
-}
-
-const micBtn = document.getElementById("micBtn");
-micBtn.onclick = () => {
-    if (!recognition) {
-        alert("Il riconoscimento vocale non è supportato su questo browser.");
-        return;
-    }
-    recognition.start();
-    micBtn.classList.add("listening");
+let state = {
+  caseData: null,
+  characters: {},
+  suspects: [],
+  memory: {},  // per sospettato: array di {role, content}
+  current: null,
+  tts: true,
+  recognition: null,
+  isListening: false
 };
 
+/* ===================================================
+   UTIL: logging e UI helpers
+   =================================================== */
+function log(...args){
+  const el = document.getElementById("logs");
+  el.innerText = (new Date()).toLocaleTimeString() + " | " + args.join(" ") + "\n" + el.innerText;
+}
+
+/* ===================================================
+   KEY management (stored in localStorage of browser)
+   =================================================== */
+function saveKey(){
+  const k = document.getElementById("apiKeyInput").value.trim();
+  if(!k){ alert("Inserisci una key valida (gsk_...)"); return; }
+  localStorage.setItem(KEY_NAME, k);
+  updateKeyUI();
+  log("API key salvata (localStorage).");
+}
+function loadKey(){
+  return localStorage.getItem(KEY_NAME) || "";
+}
+function clearKey(){
+  localStorage.removeItem(KEY_NAME);
+  updateKeyUI();
+  log("API key rimossa da localStorage.");
+}
+function updateKeyUI(){
+  const k = loadKey();
+  document.getElementById("keyState").innerText = k ? "presente" : "nessuna";
+  document.getElementById("apiKeyInput").value = k ? "••••••••" : "";
+}
+
+/* ===================================================
+   Builder: editor per caso e personaggi (JSON)
+   =================================================== */
+function openBuilder(){
+  document.getElementById("builderModal").style.display = "flex";
+  // popola i textarea con quello salvato
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  document.getElementById("caseJson").value = JSON.stringify(saved.case || {}, null, 2);
+  document.getElementById("charactersJson").value = JSON.stringify(saved.characters || {}, null, 2);
+}
+function closeBuilder(){ document.getElementById("builderModal").style.display = "none"; }
+function saveBuilder(){
+  try{
+    const caseObj = JSON.parse(document.getElementById("caseJson").value || "{}");
+    const chars = JSON.parse(document.getElementById("charactersJson").value || "{}");
+    const pkg = { case: caseObj, characters: chars };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(pkg));
+    loadCaseFromStorage();
+    closeBuilder();
+    log("Case salvato.");
+  }catch(e){
+    alert("JSON non valido: " + e.message);
+  }
+}
+function clearBuilder(){
+  document.getElementById("caseJson").value = "{}";
+  document.getElementById("charactersJson").value = "{}";
+}
+function loadExample(){
+  const example = {
+    case: { title:"Delitto in Villa - Demo", victim:"Lord X", time:"2025-11-30T22:15:00", location:"Studio" },
+    characters: {
+      maggiordomo:{ nome:"Ernesto", ruolo:"Maggiordomo", personalita:"controllato, servile", alibi:"In cucina 21:30-22:00", inventory:["guanti"], secrets:["sapeva del testamento"] },
+      madre:{ nome:"Clara", ruolo:"Parente", personalita:"drammatica", alibi:"In giardino", inventory:["collana"], secrets:["documenti tolti"] },
+      giardiniere:{ nome:"Luca", ruolo:"Giardiniere", personalita:"ruvido", alibi:"In serra", inventory:["torcia"], secrets:["incontri segreti"] }
+    }
+  };
+  document.getElementById("caseJson").value = JSON.stringify(example.case, null, 2);
+  document.getElementById("charactersJson").value = JSON.stringify(example.characters, null, 2);
+}
+
+/* ===================================================
+   Load case & render suspects
+   =================================================== */
+function loadCaseFromStorage(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(!raw){
+    state.caseData = null; state.characters = {}; state.suspects = []; state.memory = {}; renderSuspects(); return;
+  }
+  try{
+    const pkg = JSON.parse(raw);
+    state.caseData = pkg.case || {};
+    state.characters = pkg.characters || {};
+    state.suspects = Object.keys(state.characters);
+    // init memory for each
+    state.memory = {};
+    state.suspects.forEach(id => state.memory[id] = []);
+    renderSuspects();
+    log("Case caricato:", state.suspects.length, "sospettati");
+  }catch(e){ console.error(e); }
+}
+function renderSuspects(){
+  const list = document.getElementById("suspectsList"); list.innerHTML = "";
+  state.suspects.forEach(id=>{
+    const info = state.characters[id] || { nome:id };
+    const div = document.createElement("div");
+    div.className = "suspect";
+    div.innerHTML = `<div><strong>${info.nome||id}</strong><div class="small">${info.ruolo||""} • ${info.personalita||""}</div></div>
+      <div style="display:flex;gap:6px">
+        <button class="ghost" onclick="viewDetails('${id}', event)">Dettagli</button>
+        <button onclick="selectSuspect('${id}', event)">Interroga</button>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+function addSuspect(){
+  const id = document.getElementById("newSuspectId").value.trim();
+  if(!id) return alert("Inserisci un id semplice.");
+  if(state.suspects.includes(id)) return alert("Id già esistente.");
+  state.suspects.push(id);
+  state.characters[id] = { nome:id, ruolo:"", personalita:"" };
+  state.memory[id] = [];
+  // persist minimal case structure
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  saved.characters = saved.characters || {};
+  saved.characters[id] = state.characters[id];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+  document.getElementById("newSuspectId").value = "";
+  renderSuspects();
+  log("Aggiunto sospettato", id);
+}
+function viewDetails(id, ev){
+  if(ev) ev.stopPropagation();
+  const info = state.characters[id] || {};
+  document.getElementById("suspectDetails").innerHTML = `<div><strong>${info.nome||id}</strong></div>
+    <div class="small" style="margin-top:8px">Ruolo: ${info.ruolo||"-"}</div>
+    <div style="margin-top:8px"><strong>Personalità</strong><div class="small">${info.personalita||"-"}</div></div>
+    <div style="margin-top:8px"><strong>Alibi</strong><div class="small">${info.alibi||"-"}</div></div>
+    <div style="margin-top:8px"><button onclick="exportCharacter('${id}')">Esporta</button></div>`;
+}
+
+/* ===================================================
+   Selection & chat rendering
+   =================================================== */
+function selectSuspect(id, ev){
+  if(ev) ev.stopPropagation();
+  if(!state.suspects.includes(id)) { alert("Sospettato non trovato"); return; }
+  state.current = id;
+  document.getElementById("activeSuspectLabel").innerText = (state.characters[id]?.nome || id);
+  renderChatWindow();
+  document.getElementById("memCount").innerText = state.memory[id]?.length || 0;
+}
+function renderChatWindow(){
+  const win = document.getElementById("chatWindow"); win.innerHTML = "";
+  if(!state.current) { win.innerHTML = "<div class='small'>Seleziona un sospettato per cominciare.</div>"; return; }
+  const mem = state.memory[state.current] || [];
+  mem.forEach(m=>{
+    const d = document.createElement("div");
+    d.className = "msg " + (m.role==="user" ? "user" : "bot");
+    d.innerHTML = `<div class="meta">${m.role}</div><div>${escapeHtml(m.content)}</div>`;
+    win.appendChild(d);
+  });
+  win.scrollTop = win.scrollHeight;
+}
+function escapeHtml(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+/* ===================================================
+   PARSING risposta API - supporta vari formati
+   =================================================== */
+function parseApiResponse(data){
+  if(!data) return null;
+  if(data?.choices && data.choices[0]){
+    return data.choices[0].message?.content ?? data.choices[0].text ?? null;
+  }
+  if(data?.output && Array.isArray(data.output) && data.output.length){
+    const out = data.output[0];
+    if(typeof out === "string") return out;
+    if(out?.content && Array.isArray(out.content) && out.content[0]) return out.content[0].text || out.content[0].message || null;
+    if(out?.text) return out.text;
+  }
+  if(typeof data === "string") return data;
+  return null;
+}
+
+/* ===================================================
+   callGroq: effettua la fetch a Groq con headers corretti
+   =================================================== */
+async function callGroq(apiKey, messages, model, temperature=0.7){
+  const endpoint = "https://api.groq.com/openai/v1/chat/completions";
+
+  const resp = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type":"application/json",
+      "Authorization": "Bearer " + apiKey
+    },
+    body: JSON.stringify({
+      model: model,
+      messages: messages,
+      temperature: temperature
+    })
+  });
+
+  const text = await resp.text();
+  // log raw for debug
+  log("Raw response length:", text.length, "status:", resp.status);
+  // if non OK, return structured error inside string
+  if(!resp.ok){
+    return { errorRaw: text, status: resp.status };
+  }
+  try{
+    const data = JSON.parse(text);
+    return { data };
+  }catch(e){
+    return { errorRaw: text, status: resp.status };
+  }
+}
+
+/* ===================================================
+   Invia domanda (usata da bottone e da riconoscimento vocale)
+   =================================================== */
+async function triggerSend(){
+  const text = document.getElementById("inputField").value.trim();
+  if(!text) return;
+  await sendQuestion(text);
+}
+
+/* core function */
+async function sendQuestion(text){
+  if(!state.current){ alert("Seleziona prima un sospettato."); return; }
+  const apiKey = loadKey();
+  if(!apiKey){ alert("Inserisci e salva la API key nelle impostazioni"); return; }
+
+  // push user message locally
+  state.memory[state.current].push({ role: "user", content: text });
+  renderChatWindow();
+  document.getElementById("inputField").value = "";
+  document.getElementById("memCount").innerText = state.memory[state.current].length;
+
+  // build system prompt combining director rules + character profile + case facts
+  const director = `Sei un personaggio in un giallo sotto interrogatorio. Mantieni coerenza narrativa, personalità e regia. Non rivelare il colpevole subito. Rispondi in italiano corretto.`;
+  const c = state.characters[state.current] || {};
+  const characterBlock = `
+Personaggio: ${c.nome || state.current}
+Ruolo: ${c.ruolo || ""}
+Tratti: ${c.personalita || ""}
+Alibi: ${c.alibi || ""}
+Segreti: ${(c.secrets||[]).join(", ")}
+`;
+
+  const messages = [
+    { role: "system", content: director + "\n" + characterBlock },
+    ...state.memory[state.current],
+    { role: "user", content: text }
+  ];
+
+  // call Groq
+  const model = document.getElementById("modelSelect").value || DEFAULT_MODEL;
+  const res = await callGroq(apiKey, messages, model, parseFloat(document.getElementById("modelSelect").dataset.temp || 0.7));
+
+  if(res.errorRaw){
+    // show error nicely and save as assistant message
+    const errMsg = `Errore API (status ${res.status}): ${res.errorRaw}`;
+    state.memory[state.current].push({ role: "assistant", content: "(Errore API) " + res.errorRaw });
+    renderChatWindow();
+    log("API Error:", res.status);
+    alert("Errore API: vedi log (console e area log).");
+    return;
+  }
+
+  const data = res.data;
+  const answer = parseApiResponse(data);
+  if(!answer){
+    const raw = JSON.stringify(data,null,2);
+    state.memory[state.current].push({ role: "assistant", content: "(Risposta non riconosciuta) " + raw });
+    renderChatWindow();
+    log("Parsing failed. Raw:", raw);
+    return;
+  }
+
+  // push assistant response to memory and render
+  state.memory[state.current].push({ role: "assistant", content: answer });
+  renderChatWindow();
+  log("Risposta ricevuta per", state.current);
+
+  // optionally TTS
+  if(state.tts) speak(answer);
+}
+
+/* ===================================================
+   TTS
+   =================================================== */
+function toggleTTS(){ state.tts = !state.tts; document.getElementById("ttsBtn").innerText = state.tts ? "TTS ON" : "TTS"; }
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "it-IT";
+  // pick italian voice if available
+  const voices = speechSynthesis.getVoices();
+  if(voices && voices.length){
+    const v = voices.find(x => x.lang && x.lang.startsWith("it")) || voices[0];
+    if(v) u.voice = v;
+  }
+  u.rate = 1;
+  speechSynthesis.speak(u);
+}
+
+/* ===================================================
+   Speech recognition (minimal: start -> onresult -> auto send)
+   =================================================== */
+function initRecognition(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition){
+    log("SpeechRecognition non disponibile in questo browser.");
+    document.getElementById("micBtn").style.display = "none";
+    return;
+  }
+
+  const rec = new SpeechRecognition();
+  rec.lang = "it-IT";
+  rec.interimResults = false;
+  rec.continuous = false; // stop automatically when user pauses
+  rec.onstart = () => { state.isListening = true; document.getElementById("micBtn").classList.add("listening"); log("Listening..."); };
+  rec.onend = () => { state.isListening = false; document.getElementById("micBtn").classList.remove("listening"); log("Stopped listening"); };
+  rec.onresult = (ev) => {
+    const txt = ev.results[0][0].transcript;
+    document.getElementById("inputField").value = txt;
+    log("Trascrizione:", txt);
+    // automaticamente invia la domanda
+    sendQuestion(txt).catch(e=>log("sendQuestion error:", e.message));
+  };
+  rec.onerror = (ev) => { log("Rec error:", ev.error); alert("Errore riconoscimento: " + ev.error); };
+
+  state.recognition = rec;
+}
+
+function toggleRec(){
+  if(!state.recognition) return;
+  if(state.isListening){ state.recognition.stop(); } else { state.recognition.start(); }
+}
+
+/* ===================================================
+   import/export/reset utilities
+   =================================================== */
+function exportCase(){
+  const pkg = { case: state.caseData || {}, characters: state.characters || {} };
+  const blob = new Blob([JSON.stringify(pkg, null, 2)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "case.json"; a.click();
+}
+function importCase(){
+  const inp = document.createElement("input"); inp.type="file"; inp.accept="application/json";
+  inp.onchange = e => {
+    const f = e.target.files[0];
+    if(!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try{
+        localStorage.setItem(STORAGE_KEY, r.result);
+        loadCaseFromStorage();
+        alert("Case importato.");
+      }catch(err){ alert("Errore import: " + err.message); }
+    };
+    r.readAsText(f);
+  };
+  inp.click();
+}
+function exportCharacter(id){
+  const blob = new Blob([JSON.stringify(state.characters[id]||{},null,2)], {type:"application/json"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = id + ".json"; a.click();
+}
+function resetAll(){ if(confirm("Rimuovere dati locali (case, key)?")){ localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(KEY_NAME); location.reload(); } }
+
+/* ===================================================
+   helpers & init
+   =================================================== */
+function init(){
+  updateKeyUI();
+  loadCaseFromStorage();
+  initRecognition();
+  document.getElementById("modelSelect").value = DEFAULT_MODEL;
+  // attach mic button
+  document.getElementById("micBtn").onclick = toggleRec;
+  // attach enter to input
+  document.getElementById("inputField").addEventListener("keydown", (e)=>{
+    if(e.key === "Enter"){ e.preventDefault(); triggerSend(); }
+  });
+  log("Engine pronto.");
+}
+init();
 </script>
 
 </body>
