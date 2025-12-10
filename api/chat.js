@@ -1,51 +1,75 @@
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Not allowed" });
+  // --- CORS: permette al browser di parlare con questa API ---
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+
+  // Preflight (obbligatorio per browser)
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
   }
 
-  const { message, suspect, memory } = req.body;
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Solo POST consentito" });
+  }
 
-  const systemPrompt = `
-Sei un personaggio di un gioco investigativo "Delitto in Villa".
-Interpreti questo ruolo: ${suspect}.
-Hai informazioni rilevanti ma nascondi un segreto.
-Rispondi in modo coerente, plausibile, umano.
-Non confessare direttamente.
-Mantieni continuità narrativa.
-`;
+  // --- API KEY presa da Vercel ---
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ error: "GROQ_API_KEY mancante su Vercel" });
+  }
+
+  const { message } = req.body || {};
+  if (!message) {
+    return res.status(400).json({ error: "Messaggio mancante" });
+  }
 
   try {
-    const groqRes = await fetch(
+    const groqResponse = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.GROQ_API_KEY}`
+          "Authorization": `Bearer ${apiKey}`
         },
         body: JSON.stringify({
           model: "llama-3.1-8b-instant",
-          temperature: 0.7,
           messages: [
-            { role: "system", content: systemPrompt },
-            ...(memory || []),
-            { role: "user", content: message }
-          ]
+            {
+              role: "system",
+              content:
+                "Sei un personaggio coinvolto in un'indagine di omicidio. Rispondi in modo coerente, umano e narrativo."
+            },
+            {
+              role: "user",
+              content: message
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 500
         })
       }
     );
 
-    const data = await groqRes.json();
+    const text = await groqResponse.text();
 
-    if (!data.choices) {
-      return res.status(500).json({ error: data });
+    if (!groqResponse.ok) {
+      return res.status(500).json({
+        error: "Errore Groq",
+        details: text
+      });
     }
 
-    res.status(200).json({
-      reply: data.choices[0].message.content
-    });
+    const data = JSON.parse(text);
+    const reply = data.choices[0].message.content;
+
+    return res.status(200).json({ reply });
 
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({
+      error: "Errore server",
+      details: err.message
+    });
   }
 }
