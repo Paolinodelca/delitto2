@@ -380,8 +380,85 @@ async function triggerSend(){
   await sendQuestion(text);
 }
 
+  
+  async function sendMessage(text) {
+  if (!text || !text.trim()) return;
+
+  appendMessage("Tu", text);
+
+  const payload = {
+    message: text,
+    suspect: currentSuspect,
+    memory: conversationMemory
+  };
+/* PROVA DI TRAPIANTO      FINE TRAPIANTO */  
+ if(!state.current){ alert("Seleziona prima un sospettato."); return; }
+//  const apiKey = loadKey();
+//  if(!apiKey){ alert("Inserisci e salva la API key nelle impostazioni"); return; }
+
+  // push user message locally
+  state.memory[state.current].push({ role: "user", content: text });
+  renderChatWindow();
+  document.getElementById("inputField").value = "";
+  document.getElementById("memCount").innerText = state.memory[state.current].length;
+
+  // build system prompt combining director rules + character profile + case facts
+  const director = `Sei un personaggio in un giallo sotto interrogatorio. Mantieni coerenza narrativa, personalità e regia. Non rivelare il colpevole subito. Rispondi in italiano corretto.`;
+  const c = state.characters[state.current] || {};
+  const characterBlock = `
+Personaggio: ${c.nome || state.current}
+Ruolo: ${c.ruolo || ""}
+Tratti: ${c.personalita || ""}
+Alibi: ${c.alibi || ""}
+Segreti: ${(c.secrets||[]).join(", ")}
+`;
+
+  const messages = [
+    { role: "system", content: director + "\n" + characterBlock },
+    ...state.memory[state.current],
+    { role: "user", content: text }
+  ];
+
+
+// fine trapianto
+    
+  try {
+    const resp = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!resp.ok) {
+      const errText = await resp.text();
+      appendMessage("Sistema", "Errore backend: " + errText);
+      return;
+    }
+
+    const data = await resp.json();
+    const reply = data.reply;
+
+    appendMessage(currentSuspect, reply);
+
+    // aggiorna memoria
+    conversationMemory.push({ role: "user", content: text });
+    conversationMemory.push({ role: "assistant", content: reply });
+
+    speak(reply); // se hai la sintesi vocale
+
+  } catch (err) {
+    appendMessage("Sistema", "Errore JS: " + err.message);
+  }
+}
+
+
+  
 /* core function */
-async function sendQuestion(text){
+/*async function sendQuestion(text){
+
+  
   if(!state.current){ alert("Seleziona prima un sospettato."); return; }
   const apiKey = loadKey();
   if(!apiKey){ alert("Inserisci e salva la API key nelle impostazioni"); return; }
@@ -441,7 +518,12 @@ Segreti: ${(c.secrets||[]).join(", ")}
   // optionally TTS
   if(state.tts) speak(answer);
 }
+*/
 
+
+
+
+  
 /* ===================================================
    TTS
    =================================================== */
