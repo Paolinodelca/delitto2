@@ -1,4 +1,6 @@
-const API_URL = "/api/chat";
+//const API_URL = "/api/chat";
+const API_URL = "https://delitto2.vercel.app/api/chat";
+
 const output = document.getElementById("output");
 
 
