@@ -1,26 +1,21 @@
-// api/chat.js — versione stabile
-
 export default async function handler(req, res) {
-  // Permetti solo POST
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Solo POST consentito" });
   }
 
   try {
-    // Leggi API key da Vercel
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       return res.status(500).json({ error: "GROQ_API_KEY mancante su Vercel" });
     }
 
-    // Body della richiesta dal browser
-    const { message, suspect } = req.body;
+    const body = typeof req.body === "string" ? JSON.parse(req.body) : req.body;
+    const { message, suspect } = body;
 
     if (!message) {
       return res.status(400).json({ error: "Messaggio mancante" });
     }
 
-    // Chiama il modello Groq
     const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -52,7 +47,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const answer = data.choices[0].message.content;
+    const answer = data.choices?.[0]?.message?.content || "(nessuna risposta)";
 
     return res.status(200).json({ reply: answer });
 
