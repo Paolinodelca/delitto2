@@ -39,13 +39,22 @@ export default async function handler(req, res) {
     });
 
     const data = await groqResponse.json();
-
+/*
     if (!groqResponse.ok) {
       return res.status(500).json({
         error: "Errore Groq",
         details: JSON.stringify(data)
       });
     }
+*/
+    if (!groqResponse.ok) {
+  console.error("Groq ERROR:", data); // <-- lo vediamo nei log Vercel
+  return res.status(500).json({
+    error: "Errore Groq",
+    groqStatus: groqResponse.status,
+    details: data
+  });
+}
 
     const answer = data.choices?.[0]?.message?.content || "(nessuna risposta)";
 
