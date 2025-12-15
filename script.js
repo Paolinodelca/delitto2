@@ -36,7 +36,47 @@ conversationMemory = conversationMemory.slice(-MAX_MEMORY_MESSAGES);
 /************************************************************
 * INVIO MESSAGGIO — CUORE (GIÀ FUNZIONANTE)
 ************************************************************/
-async function sendMessage(text) {
+async function sendMessage() {
+  console.log("sendMessage chiamata");
+
+  const input = document.getElementById("userInput");
+  if (!input) {
+    console.log("ERRORE: input non trovato");
+    return;
+  }
+
+  const text = input.value;
+  console.log("Testo letto:", text);
+
+  if (!text || !text.trim()) {
+    console.log("Testo vuoto, esco");
+    return;
+  }
+
+  console.log("Invio al backend...");
+
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: text,
+        suspect: "maggiordomo"
+      })
+    });
+
+    console.log("Risposta fetch ricevuta, status:", res.status);
+
+    const data = await res.json();
+    console.log("Dati backend:", data);
+
+  } catch (err) {
+    console.error("Errore fetch:", err);
+  }
+}
+
+
+/*async function sendMessage(text) {
 const suspectSelect = document.getElementById("suspect");
 const suspectId = suspectSelect.value;
 const suspect = SUSPECTS[suspectId];
@@ -74,7 +114,7 @@ speak(data.reply);
 showReply("Errore di rete");
 }
 }
-
+*/
 
 /************************************************************
 * UI + SINTESI VOCALE (minimale, non toccata ora)
