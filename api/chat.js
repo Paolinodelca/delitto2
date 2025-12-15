@@ -1,5 +1,6 @@
 module.exports = async function handler(req, res) {
 //export default async function handler(req, res) {
+try {
 console.log("API CHAT AVVIATA");
 if (req.method !== "POST") {
     return res.status(405).json({ error: "Solo POST consentito" });
@@ -65,7 +66,7 @@ return res.status(500).json({ error: "Errore Groq", details: data });
 return res.status(200).json({ reply: data.choices[0].message.content });
 
 
-} catch (err) {
+catch (err) {
 return res.status(500).json({ error: "Errore server", details: err.toString() });
 }
 }
