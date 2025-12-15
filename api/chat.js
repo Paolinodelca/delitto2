@@ -1,6 +1,12 @@
 module.exports = async function handler(req, res) {
 //export default async function handler(req, res) {
 try {
+const apiKey = process.env.GROQ_API_KEY;
+
+if (!apiKey) {
+  throw new Error("GROQ_API_KEY mancante");
+}
+
 console.log("API CHAT AVVIATA");
 if (req.method !== "POST") {
     return res.status(405).json({ error: "Solo POST consentito" });
@@ -66,7 +72,7 @@ return res.status(500).json({ error: "Errore Groq", details: data });
 return res.status(200).json({ reply: data.choices[0].message.content });
 
 
-catch (err) {
+} catch (err) {
 return res.status(500).json({ error: "Errore server", details: err.toString() });
 }
 }
