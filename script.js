@@ -1,4 +1,4 @@
-console.log("SCRIPT JS CARICATO");
+geconsole.log("SCRIPT JS CARICATO");
 /************************************************************
 * CAST FISSO — PARAMETRICO
 ************************************************************/
@@ -39,7 +39,7 @@ conversationMemory = conversationMemory.slice(-MAX_MEMORY_MESSAGES);
 async function sendMessage() {
   console.log("sendMessage chiamata");
 
-  const input = document.getElementById("userInput");
+  const input = document.getElementById("message");
   if (!input) {
     console.log("ERRORE: input non trovato");
     return;
@@ -89,6 +89,7 @@ try {
 const res = await fetch("/api/chat", {
 method: "POST",
 headers: { "Content-Type": "application/json" },
+<script src="script.js"></script>
 body: JSON.stringify({
 message: text,
 suspect,
