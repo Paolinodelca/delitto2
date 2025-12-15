@@ -57,7 +57,17 @@ async function sendMessage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         message,
-        suspect: "Andrea"
+      //  suspect: "Andrea"
+      const suspect = SUSPECTS.mario; // o lucia, o selezione UI
+
+      body: JSON.stringify({
+       message,
+       suspect,
+      memory: conversationMemory
+      });
+
+
+        
       })
     });
 
@@ -79,6 +89,14 @@ async function sendMessage() {
   } catch (err) {
     console.error("Errore fetch:", err);
   }
+addToMemory("user", message);
+addToMemory("assistant", data.reply);
+
+showReply(data.reply);
+speak(data.reply);
+
+input.value = "";
+
 }
 
 
