@@ -39,7 +39,7 @@ conversationMemory = conversationMemory.slice(-MAX_MEMORY_MESSAGES);
 async function sendMessage() {
   console.log("sendMessage chiamata");
 
-  const input = document.getElementById("userInput");
+  const input = document.getElementById("message");
   if (!input) {
     console.error("ERRORE: input non trovato");
     return;
