@@ -1,4 +1,4 @@
-geconsole.log("SCRIPT JS CARICATO");
+getconsole.log("SCRIPT JS CARICATO");
 /************************************************************
 * CAST FISSO — PARAMETRICO
 ************************************************************/
@@ -67,7 +67,21 @@ async function sendMessage() {
 
     console.log("Risposta fetch ricevuta, status:", res.status);
 
-    const data = await res.json();
+   // const data = await res.json();
+const text = await response.text();
+console.log("Risposta raw dal server:", text);
+
+let data;
+try {
+  data = JSON.parse(text);
+} catch (e) {
+  console.error("Risposta NON JSON:", text);
+  return;
+}
+
+    
+
+    
     console.log("Dati backend:", data);
 
   } catch (err) {
