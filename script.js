@@ -1,4 +1,4 @@
-getconsole.log("SCRIPT JS CARICATO");
+console.log("SCRIPT JS CARICATO");
 /************************************************************
 * CAST FISSO — PARAMETRICO
 ************************************************************/
@@ -37,6 +37,54 @@ conversationMemory = conversationMemory.slice(-MAX_MEMORY_MESSAGES);
 * INVIO MESSAGGIO — CUORE (GIÀ FUNZIONANTE)
 ************************************************************/
 async function sendMessage() {
+  console.log("sendMessage chiamata");
+
+  const input = document.getElementById("userInput");
+  if (!input) {
+    console.error("ERRORE: input non trovato");
+    return;
+  }
+
+  const message = input.value.trim();
+  console.log("Testo letto:", message);
+  if (!message) return;
+
+  console.log("Invio al backend...");
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        suspect: "Andrea"
+      })
+    });
+
+    console.log("Risposta fetch ricevuta, status:", response.status);
+
+    const text = await response.text();
+    console.log("Risposta raw dal server:", text);
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      console.error("Risposta NON JSON:", text);
+      return;
+    }
+
+    console.log("Risposta JSON:", data);
+
+  } catch (err) {
+    console.error("Errore fetch:", err);
+  }
+}
+
+
+
+
+/*async function sendMessage() {
   console.log("sendMessage chiamata");
 
   const input = document.getElementById("message");
@@ -88,7 +136,7 @@ try {
     console.error("Errore fetch:", err);
   }
 }
-
+*/
 
 /*async function sendMessage(text) {
 const suspectSelect = document.getElementById("suspect");
