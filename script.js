@@ -36,7 +36,7 @@ conversationMemory = conversationMemory.slice(-MAX_MEMORY_MESSAGES);
 /************************************************************
 * INVIO MESSAGGIO — CUORE (GIÀ FUNZIONANTE)
 ************************************************************/
-async function sendQuestion(text) {
+async function sendMessage(text) {
 const suspectSelect = document.getElementById("suspect");
 const suspectId = suspectSelect.value;
 const suspect = SUSPECTS[suspectId];
