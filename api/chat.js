@@ -1,7 +1,11 @@
 module.exports = async function handler(req, res) {
 //export default async function handler(req, res) {
-}
+console.log("API CHAT AVVIATA");
+if (req.method !== "POST") {
+    return res.status(405).json({ error: "Solo POST consentito" });
 
+}
+console.log("BODY RICEVUTO:", req.body);
 
 const { message, suspect, memory } = req.body;
 if (!message || !suspect) {
