@@ -49,6 +49,57 @@ async function sendMessage() {
   console.log("Testo letto:", message);
   if (!message) return;
 
+  const suspect = SUSPECTS.mario; // 👈 scegli qui il personaggio
+
+  console.log("Invio al backend...");
+
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        suspect,
+        memory: conversationMemory
+      })
+    });
+
+    console.log("Risposta fetch ricevuta, status:", response.status);
+
+    const data = await response.json();
+    console.log("Risposta JSON:", data);
+
+    addToMemory("user", message);
+    addToMemory("assistant", data.reply);
+
+    showReply(data.reply);
+    speak(data.reply);
+
+    input.value = "";
+
+  } catch (err) {
+    console.error("Errore fetch:", err);
+  }
+}
+
+
+
+
+
+
+/*async function sendMessage() {
+  console.log("sendMessage chiamata");
+
+  const input = document.getElementById("message");
+  if (!input) {
+    console.error("ERRORE: input non trovato");
+    return;
+  }
+
+  const message = input.value.trim();
+  console.log("Testo letto:", message);
+  if (!message) return;
+
   console.log("Invio al backend...");
 
   try {
@@ -100,7 +151,7 @@ input.value = "";
 }
 
 
-
+*/
 
 /*async function sendMessage() {
   console.log("sendMessage chiamata");
