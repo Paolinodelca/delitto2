@@ -252,10 +252,22 @@ showReply("Errore di rete");
 * UI + SINTESI VOCALE (minimale, non toccata ora)
 ************************************************************/
 function showReply(text) {
+  const box = document.getElementById("reply");
+  if (!box) {
+    console.error("Elemento #reply non trovato nel DOM");
+    return;
+  }
+  box.textContent = text;
+}
+
+
+
+/*
+function showReply(text) {
 const box = document.getElementById("reply");
 box.textContent = text;
 }
-
+*/
 
 function speak(text) {
 const utter = new SpeechSynthesisUtterance(text);
