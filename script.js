@@ -92,7 +92,7 @@ async function sendMessage() {
     message,
     suspect,
     memory
-    }); //paura per il punto e virgola
+    }) //paura per il punto e virgola
  
     });
 
