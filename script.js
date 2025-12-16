@@ -78,8 +78,14 @@ async function sendMessage() {
 */
    showReply(data.reply);
 
-   const spokenText = cleanForSpeech(data.reply);
-   speak(spokenText);
+ //  const spokenText = cleanForSpeech(data.reply);
+ //  speak(spokenText);
+    
+  const spokenText = adaptToSpokenItalian(
+  cleanForSpeech(data.reply)
+  );
+
+  speak(spokenText);
 
     
     input.value = "";
@@ -110,6 +116,18 @@ function cleanForSpeech(text) {
     .replace(/\s+/g, " ")             // spazi doppi
     .trim();
 }
+function adaptToSpokenItalian(text) {
+  return text
+    // spezza frasi troppo lunghe
+    .replace(/,\s+(che|mentre|quando|perché|dove)/gi, ". ")
+    // riduce incisi
+    .replace(/;\s*/g, ". ")
+    // rende l'intonazione più naturale
+    .replace(/\s+e\s+/gi, ", e ")
+    .trim();
+}
+
+
 
 /*
 function speak(text) {
@@ -126,15 +144,25 @@ function speak(text) {
 
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = "it-IT";
-  utter.rate = 0.9;          // più lento = più credibile
-  utter.pitch = 0.95;        // leggermente più grave
+ // utter.rate = 0.9;          // più lento = più credibile
+ // utter.pitch = 0.95;        // leggermente più grave
+  utter.rate = 0.85;          // più lento = più credibile
+  utter.pitch = 0.9;        // leggermente più grave
   utter.volume = 1;
 
   // Pausa naturale su punti e frasi lunghe
+ /*
   utter.text = text
     .replace(/\.\s/g, ".  ")
     .replace(/\?\s/g, "?  ");
+*/
+  utter.text = text
+  .replace(/\.\s*/g, ".   ")
+  .replace(/\?\s*/g, "?   ")
+  .replace(/!\s*/g, "!   ");
 
+  utter.text = "… " + utter.text;
+  
   speechSynthesis.speak(utter);
 }
 
