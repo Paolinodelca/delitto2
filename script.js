@@ -21,16 +21,35 @@ profile: "affascinante, intelligente, tende a manipolare l'interlocutore"
 /************************************************************
 * MEMORIA DI SESSIONE — PARAMETRICA
 ************************************************************/
-let conversationMemory = [];
+//let conversationMemory = [];
+let conversationMemory = {};
+
 const MAX_MEMORY_MESSAGES = 12;
 
-
+/*
 function addToMemory(role, content) {
 conversationMemory.push({ role, content });
 if (conversationMemory.length > MAX_MEMORY_MESSAGES) {
 conversationMemory = conversationMemory.slice(-MAX_MEMORY_MESSAGES);
 }
 }
+*/
+function getMemoryFor(suspectId) {
+  if (!conversationMemory[suspectId]) {
+    conversationMemory[suspectId] = [];
+  }
+  return conversationMemory[suspectId];
+}
+
+function addToMemory(suspectId, role, content) {
+  const memory = getMemoryFor(suspectId);
+  memory.push({ role, content });
+
+  if (memory.length > MAX_MEMORY_MESSAGES) {
+    conversationMemory[suspectId] = memory.slice(-MAX_MEMORY_MESSAGES);
+  }
+}
+
 
 
 /************************************************************
@@ -49,7 +68,12 @@ async function sendMessage() {
   console.log("Testo letto:", message);
   if (!message) return;
 
-  const suspect = SUSPECTS.mario; // 👈 scegli qui il personaggio
+  //const suspect = SUSPECTS.mario; // 👈 scegli qui il personaggio
+  const suspectId = document.getElementById("suspectSelect").value;
+  const suspect = SUSPECTS[suspectId];
+  const memory = getMemoryFor(suspectId);
+
+  
 
   console.log("Invio al backend...");
 
@@ -57,21 +81,33 @@ async function sendMessage() {
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+     /* 
       body: JSON.stringify({
         message,
         suspect,
         memory: conversationMemory
       })
+*/
+    body: JSON.stringify({
+    message,
+    suspect,
+    memory
+    }); //paura per il punto e virgola
+ 
     });
 
     console.log("Risposta fetch ricevuta, status:", response.status);
 
     const data = await response.json();
     console.log("Risposta JSON:", data);
-
+    /*
     addToMemory("user", message);
     addToMemory("assistant", data.reply);
+    */
+    addToMemory(suspectId, "user", message);
+    addToMemory(suspectId, "assistant", data.reply);
 
+    
     /*
     showReply(data.reply);
     speak(data.reply);
