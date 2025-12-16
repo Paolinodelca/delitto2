@@ -72,9 +72,16 @@ async function sendMessage() {
     addToMemory("user", message);
     addToMemory("assistant", data.reply);
 
+    /*
     showReply(data.reply);
     speak(data.reply);
+*/
+   showReply(data.reply);
 
+   const spokenText = cleanForSpeech(data.reply);
+   speak(spokenText);
+
+    
     input.value = "";
 
   } catch (err) {
@@ -82,171 +89,6 @@ async function sendMessage() {
   }
 }
 
-
-
-
-
-
-/*async function sendMessage() {
-  console.log("sendMessage chiamata");
-
-  const input = document.getElementById("message");
-  if (!input) {
-    console.error("ERRORE: input non trovato");
-    return;
-  }
-
-  const message = input.value.trim();
-  console.log("Testo letto:", message);
-  if (!message) return;
-
-  console.log("Invio al backend...");
-
-  try {
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message,
-      //  suspect: "Andrea"
-      const suspect = SUSPECTS.mario; // o lucia, o selezione UI
-
-      body: JSON.stringify({
-       message,
-       suspect,
-      memory: conversationMemory
-      });
-
-
-        
-      })
-    });
-
-    console.log("Risposta fetch ricevuta, status:", response.status);
-
-    const text = await response.text();
-    console.log("Risposta raw dal server:", text);
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e) {
-      console.error("Risposta NON JSON:", text);
-      return;
-    }
-
-    console.log("Risposta JSON:", data);
-
-  } catch (err) {
-    console.error("Errore fetch:", err);
-  }
-addToMemory("user", message);
-addToMemory("assistant", data.reply);
-
-showReply(data.reply);
-speak(data.reply);
-
-input.value = "";
-
-}
-
-
-*/
-
-/*async function sendMessage() {
-  console.log("sendMessage chiamata");
-
-  const input = document.getElementById("message");
-  if (!input) {
-    console.log("ERRORE: input non trovato");
-    return;
-  }
-
-  const text = input.value;
-  console.log("Testo letto:", text);
-
-  if (!text || !text.trim()) {
-    console.log("Testo vuoto, esco");
-    return;
-  }
-
-  console.log("Invio al backend...");
-
-  try {
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: text,
-        suspect: "maggiordomo"
-      })
-    });
-
-    console.log("Risposta fetch ricevuta, status:", res.status);
-
-   // const data = await res.json();
-const text = await response.text();
-console.log("Risposta raw dal server:", text);
-
-let data;
-try {
-  data = JSON.parse(text);
-} catch (e) {
-  console.error("Risposta NON JSON:", text);
-  return;
-}
-
-    
-
-    
-    console.log("Dati backend:", data);
-
-  } catch (err) {
-    console.error("Errore fetch:", err);
-  }
-}
-*/
-
-/*async function sendMessage(text) {
-const suspectSelect = document.getElementById("suspect");
-const suspectId = suspectSelect.value;
-const suspect = SUSPECTS[suspectId];
-
-
-addToMemory("user", text);
-
-
-try {
-const res = await fetch("/api/chat", {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-<script src="script.js"></script>
-body: JSON.stringify({
-message: text,
-suspect,
-memory: conversationMemory
-})
-});
-
-
-if (!res.ok) throw new Error("Risposta non valida");
-
-
-const data = await res.json();
-
-
-addToMemory("assistant", data.reply);
-
-
-showReply(data.reply);
-speak(data.reply);
-
-
-} catch (err) {
-showReply("Errore di rete");
-}
-}
-*/
 
 /************************************************************
 * UI + SINTESI VOCALE (minimale, non toccata ora)
@@ -261,17 +103,38 @@ function showReply(text) {
 }
 
 
+function cleanForSpeech(text) {
+  return text
+    .replace(/\([^)]*\)/g, "")       // rimuove (pausa), (sospira), ecc.
+    .replace(/\[.*?\]/g, "")         // rimuove eventuali [note]
+    .replace(/\s+/g, " ")             // spazi doppi
+    .trim();
+}
 
 /*
-function showReply(text) {
-const box = document.getElementById("reply");
-box.textContent = text;
-}
-*/
-
 function speak(text) {
 const utter = new SpeechSynthesisUtterance(text);
 utter.lang = "it-IT";
 utter.rate = 0.95;
 speechSynthesis.speak(utter);
 }
+*/
+function speak(text) {
+  if (!text) return;
+
+  speechSynthesis.cancel(); // evita sovrapposizioni
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = "it-IT";
+  utter.rate = 0.9;          // più lento = più credibile
+  utter.pitch = 0.95;        // leggermente più grave
+  utter.volume = 1;
+
+  // Pausa naturale su punti e frasi lunghe
+  utter.text = text
+    .replace(/\.\s/g, ".  ")
+    .replace(/\?\s/g, "?  ");
+
+  speechSynthesis.speak(utter);
+}
+
