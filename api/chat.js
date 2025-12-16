@@ -37,6 +37,8 @@ Regole:
 - Non usare etichette tipo "Sospettato:" o "Risposta:"
 - Ricorda ciò che hai detto prima
 - Se menti, fallo in modo plausibile
+- Le indicazioni sceniche vanno solo tra parentesi tonde
+- Non scrivere mai parole come "pausa", "silenzio", "sospira" fuori dalle parentesi
 `;
 
 
