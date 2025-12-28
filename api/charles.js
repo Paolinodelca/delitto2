@@ -33,7 +33,8 @@ Rispondi in massimo 4–5 frasi.
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+      //  model: "gpt-4o-mini",
+        model: "llama-3.1-8b-instant",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: playerText }
