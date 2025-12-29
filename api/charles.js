@@ -1,4 +1,11 @@
 export default async function handler(req, res) {
+  return res.status(200).json({
+    reply: "Charles è operativo. Il problema non è l'endpoint."
+  });
+}
+
+
+/*export default async function handler(req, res) {
   console.log("CHARLES API CALLED");
   console.log("METHOD:", req.method);
   console.log("BODY:", req.body);
@@ -63,3 +70,4 @@ Rispondi in massimo 4–5 frasi.
     res.status(500).json({ error: "Errore nel motore investigativo" });
   }
 }
+*/
