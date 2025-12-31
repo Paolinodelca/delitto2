@@ -7,7 +7,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { playerText } = req.body;
+   // const { playerText } = req.body;
+    const { playerText, gameState } = req.body;
 
     // --- 1. Leggiamo i file esterni ---
     const basePath = process.cwd();
@@ -32,13 +33,37 @@ Sospettati: ${scenarioData.sospettati.join(", ")}
 Atmosfera: ${scenarioData.atmosfera}
 `;
 
+const systemPrompt = `
+${charlesPrompt}
+
+Contesto del caso:
+${scenarioPrompt}
+
+${statePrompt}
+
+Comportamento:
+Tieni conto dello stato dell'indagine.
+Non ripetere informazioni già note.
+Usa lo stato per suggerire nuove direzioni.
+`;
+
+    
+/*
     const systemPrompt = `
 ${charlesPrompt}
 
 Contesto del caso:
 ${scenarioPrompt}
 `;
+*/
+const statePrompt = `
+Stato dell'indagine finora:
+- Fatti scoperti: ${gameState?.discoveredFacts?.join(", ") || "Nessuno"}
+- Persone già interrogate: ${gameState?.interviewed?.join(", ") || "Nessuna"}
+- Azioni sbloccate: ${gameState?.unlockedActions?.join(", ") || "Nessuna"}
+`;
 
+    
     // --- 3. Chiamata al modello ---
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
