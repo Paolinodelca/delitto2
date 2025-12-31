@@ -1,4 +1,11 @@
 console.log("SCENA CARICATA");
+let gameState = {
+  discoveredFacts: [],
+  interviewed: [],
+  unlockedActions: [],
+  timePassed: 0
+};
+
 
 /* =========================
    STATO DEL SOSPETTATO
@@ -48,10 +55,19 @@ async function handlePlayerInput(text) {
   const response = await fetch("/api/charles", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+
     body: JSON.stringify({
+  playerText: text,
+  gameState: gameState
+})     
+
+     
+  /*   
+     body: JSON.stringify({
       playerText: text,
       gameState: {} // per ora vuoto, lo useremo dopo
     })
+   */  
   });
 
   const data = await response.json();
