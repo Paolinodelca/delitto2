@@ -70,9 +70,22 @@ async function handlePlayerInput(text) {
    */  
   });
 
+
+  
   const data = await response.json();
   speak(data.reply);
 }
+if (!gameState.interviewed.includes("Charles")) {
+  gameState.interviewed.push("Charles");
+}
+if (text.toLowerCase().includes("azienda")) {
+  if (!gameState.discoveredFacts.includes("Possibile crisi dell'azienda")) {
+    gameState.discoveredFacts.push("Possibile crisi dell'azienda");
+  }
+}
+
+
+
 
 /*
 function handlePlayerInput(text) {
