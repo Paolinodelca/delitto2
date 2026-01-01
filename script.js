@@ -49,7 +49,43 @@ function getIntent(text) {
 /* =========================
    LOGICA DELLA SCENA
 ========================= */
-async function handlePlayerInput(text) {
+async function handlePlayerInput() {
+  const input = document.getElementById("playerInput");
+  const text = input.value.trim();
+
+  if (!text) return;
+
+  speak("Un momento, prego.");
+  input.value = "";
+
+  try {
+    const response = await fetch("/api/charles", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        playerText: text,
+        gameState: gameState
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.reply) {
+      speak(data.reply);
+    } else {
+      speak("Temo che qualcosa non abbia funzionato correttamente.");
+    }
+
+  } catch (error) {
+    console.error("Errore client:", error);
+    speak("Mi scuso, ma si è verificato un problema tecnico.");
+  }
+}
+
+
+
+
+/*async function handlePlayerInput(text) {
   speak("Un momento, prego.");
 
   const response = await fetch("/api/charles", {
@@ -62,19 +98,17 @@ async function handlePlayerInput(text) {
 })     
 
      
-  /*   
-     body: JSON.stringify({
-      playerText: text,
-      gameState: {} // per ora vuoto, lo useremo dopo
-    })
-   */  
+
   });
 
 
-  
+
   const data = await response.json();
   speak(data.reply);
 }
+*/
+
+
 if (!gameState.interviewed.includes("Charles")) {
   gameState.interviewed.push("Charles");
 }
