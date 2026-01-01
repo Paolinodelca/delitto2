@@ -49,14 +49,10 @@ function getIntent(text) {
 /* =========================
    LOGICA DELLA SCENA
 ========================= */
-async function handlePlayerInput() {
-  const input = document.getElementById("playerInput");
-  const text = input.value.trim();
-
+async function handlePlayerInput(text) {
   if (!text) return;
 
   speak("Un momento, prego.");
-  input.value = "";
 
   try {
     const response = await fetch("/api/charles", {
@@ -72,13 +68,14 @@ async function handlePlayerInput() {
 
     if (data.reply) {
       speak(data.reply);
+      document.getElementById("charlesComment").innerText = data.reply;
     } else {
-      speak("Temo che qualcosa non abbia funzionato correttamente.");
+      speak("Temo che qualcosa non abbia funzionato.");
     }
 
   } catch (error) {
     console.error("Errore client:", error);
-    speak("Mi scuso, ma si è verificato un problema tecnico.");
+    speak("Si è verificato un problema tecnico.");
   }
 }
 
