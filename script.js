@@ -52,6 +52,17 @@ function getIntent(text) {
 async function handlePlayerInput(text) {
   if (!text) return;
 
+  // 🔎 aggiorniamo lo stato QUI (text esiste)
+  if (!gameState.interviewed.includes("Charles")) {
+    gameState.interviewed.push("Charles");
+  }
+
+  if (text.toLowerCase().includes("azienda")) {
+    if (!gameState.discoveredFacts.includes("Possibile crisi dell'azienda")) {
+      gameState.discoveredFacts.push("Possibile crisi dell'azienda");
+    }
+  }
+
   speak("Un momento, prego.");
 
   try {
@@ -80,8 +91,6 @@ async function handlePlayerInput(text) {
 }
 
 
-
-
 /*async function handlePlayerInput(text) {
   speak("Un momento, prego.");
 
@@ -104,16 +113,6 @@ async function handlePlayerInput(text) {
   speak(data.reply);
 }
 */
-
-
-if (!gameState.interviewed.includes("Charles")) {
-  gameState.interviewed.push("Charles");
-}
-if (text.toLowerCase().includes("azienda")) {
-  if (!gameState.discoveredFacts.includes("Possibile crisi dell'azienda")) {
-    gameState.discoveredFacts.push("Possibile crisi dell'azienda");
-  }
-}
 
 
 
