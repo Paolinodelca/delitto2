@@ -1,3 +1,5 @@
+console.log("SCRIPT VERSIONE 2026-01-01");
+
 console.log("SCENA CARICATA");
 let gameState = {
   discoveredFacts: [],
