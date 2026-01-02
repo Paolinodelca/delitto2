@@ -91,56 +91,6 @@ async function handlePlayerInput(text) {
 }
 
 
-/*async function handlePlayerInput(text) {
-  speak("Un momento, prego.");
-
-  const response = await fetch("/api/charles", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-
-    body: JSON.stringify({
-  playerText: text,
-  gameState: gameState
-})     
-
-     
-
-  });
-
-
-
-  const data = await response.json();
-  speak(data.reply);
-}
-*/
-
-
-
-
-/*
-function handlePlayerInput(text) {
-  const intent = getIntent(text);
-  let reply = "";
-  let comment = "";
-
-  if (intent === "ALIBI") {
-    reply = "Dopo cena sono salito in camera mia. Non mi sentivo bene.";
-    comment = "Risposta breve. Troppo controllata.";
-    suspect.pressure++;
-  } 
-  else if (intent === "MOTIVO") {
-    reply = "Mio padre ed io avevamo idee diverse. Succede in tutte le famiglie.";
-    comment = "Ha evitato accuratamente di parlare di denaro.";
-    suspect.pressure++;
-  } 
-  else {
-    reply = "Non capisco dove voglia arrivare.";
-    comment = "Sta guadagnando tempo.";
-  }
-
-  showAndSpeak(reply, comment);
-}
-*/
 /* =========================
    VOCE
 ========================= */
