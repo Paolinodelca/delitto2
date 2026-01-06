@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import fetch from "node-fetch";
 import {
   createInitialGameState,
   gameStateToPrompt
@@ -11,13 +12,19 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { playerText, gameState } = req.body;
+    const { playerText, gameState } = req.body || {};
 
-    // 🔐 Stato ufficiale del gioco
+    if (!playerText) {
+      return res.status(400).json({ error: "playerText mancante" });
+    }
+
+    if (!process.env.GROQ_API_KEY) {
+      throw new Error("GROQ_API_KEY non impostata");
+    }
+
     const state = gameState || createInitialGameState();
     const statePrompt = gameStateToPrompt(state);
 
-    // 📖 Prompt base di Charles
     const basePath = process.cwd();
     const charlesPrompt = fs.readFileSync(
       path.join(basePath, "prompts", "charles.txt"),
@@ -57,19 +64,17 @@ REGOLE:
 
     const data = await response.json();
 
-    if (!data.choices || !data.choices[0]) {
+    if (!data.choices?.[0]?.message?.content) {
       throw new Error("Risposta AI non valida");
     }
 
-    const reply = data.choices[0].message.content;
-
     res.status(200).json({
-      reply,
+      reply: data.choices[0].message.content,
       gameState: state
     });
 
   } catch (error) {
     console.error("CHARLES ERROR:", error);
-    res.status(500).json({ error: "Errore nel motore di Charles" });
+    res.status(500).json({ error: error.message });
   }
 }
