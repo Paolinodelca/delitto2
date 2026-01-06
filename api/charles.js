@@ -75,6 +75,13 @@ REGOLE:
 
   } catch (error) {
     console.error("CHARLES ERROR:", error);
-    res.status(500).json({ error: error.message });
+
+    res.status(500).json({
+  error: "Errore nel motore di Charles",
+  details: error.message,
+  stack: error.stack
+});
+
+   // res.status(500).json({ error: error.message });
   }
 }
