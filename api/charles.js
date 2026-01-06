@@ -1,46 +1,16 @@
-import fs from "fs";
-import path from "path";
-import fetch from "node-fetch";
-import {
-  createInitialGameState,
-  gameStateToPrompt
-} from "../game/gameState.js";
-
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Metodo non consentito" });
-  }
-
   try {
-    const { playerText, gameState } = req.body || {};
-
-    if (!playerText) {
-      return res.status(400).json({ error: "playerText mancante" });
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Metodo non consentito" });
     }
 
-    if (!process.env.GROQ_API_KEY) {
-      throw new Error("GROQ_API_KEY non impostata");
-    }
-
-    const state = gameState || createInitialGameState();
-    const statePrompt = gameStateToPrompt(state);
-
-    const basePath = process.cwd();
-    const charlesPrompt = fs.readFileSync(
-      path.join(basePath, "prompts", "charles.txt"),
-      "utf-8"
-    );
+    const { playerText, gameState } = req.body;
 
     const systemPrompt = `
-${charlesPrompt}
-
-${statePrompt}
-
-REGOLE:
-- Usa solo i fatti come verità.
-- Non inventare nuovi fatti.
-- Le ipotesi restano tali.
-- Non risolvere il caso.
+Sei Charles, un maggiordomo inglese negli anni '50.
+Tono: deferente, lucido, investigativo.
+Non inventare fatti.
+Non risolvere il caso.
 `;
 
     const response = await fetch(
@@ -64,24 +34,16 @@ REGOLE:
 
     const data = await response.json();
 
-    if (!data.choices?.[0]?.message?.content) {
-      throw new Error("Risposta AI non valida");
-    }
-
-    res.status(200).json({
+    return res.status(200).json({
       reply: data.choices[0].message.content,
-      gameState: state
+      gameState
     });
 
   } catch (error) {
     console.error("CHARLES ERROR:", error);
-
-    res.status(500).json({
-  error: "Errore nel motore di Charles",
-  details: error.message,
-  stack: error.stack
-});
-
-   // res.status(500).json({ error: error.message });
+    return res.status(500).json({
+      error: "Errore server",
+      details: error.message
+    });
   }
 }
