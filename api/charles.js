@@ -12,6 +12,9 @@ Tono: deferente, lucido, investigativo.
 Non inventare fatti.
 Non risolvere il caso.
 `;
+console.log("===== SYSTEM PROMPT =====");
+console.log(systemPrompt);
+console.log("=========================");
 
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
