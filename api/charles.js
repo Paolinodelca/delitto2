@@ -1,17 +1,20 @@
+import fs from "fs";
+   
+import path from "path";
+
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Metodo non consentito" });
     }
+   
 
     const { playerText, gameState } = req.body;
 
-    const systemPrompt = `
-Sei Charles, un maggiordomo inglese negli anni '50.
-Tono: deferente, lucido, investigativo.
-Non inventare fatti.
-Non risolvere il caso.
-`;
+const promptPath = path.join(process.cwd(), "prompts", "Charles.txt");
+const systemPrompt = fs.readFileSync(promptPath, "utf-8");
+
+
 console.log("===== SYSTEM PROMPT =====");
 console.log(systemPrompt);
 console.log("=========================");
