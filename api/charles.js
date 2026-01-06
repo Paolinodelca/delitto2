@@ -27,7 +27,7 @@ Non risolvere il caso.
             { role: "system", content: systemPrompt },
             { role: "user", content: playerText }
           ],
-          temperature: 0.8
+          temperature: 0.2
         })
       }
     );
