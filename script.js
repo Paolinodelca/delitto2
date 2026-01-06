@@ -76,7 +76,25 @@ async function handlePlayerInput(text) {
         gameState: gameState
       })
     });
+    if (!response.ok) {
+  const text = await response.text();
+  console.error("Risposta non JSON dal server:", text);
+  speak("Si è verificato un problema sul server.");
+  return;
+}
 
+const data = await response.json();
+
+if (data.reply) {
+  speak(data.reply);
+  document.getElementById("charlesComment").innerText = data.reply;
+} else {
+  speak("Temo che qualcosa non abbia funzionato.");
+}
+
+
+    
+/*
     const data = await response.json();
 
     if (data.reply) {
@@ -85,7 +103,7 @@ async function handlePlayerInput(text) {
     } else {
       speak("Temo che qualcosa non abbia funzionato.");
     }
-
+*/
   } catch (error) {
     console.error("Errore client:", error);
     speak("Si è verificato un problema tecnico.");
