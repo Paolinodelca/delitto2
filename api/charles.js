@@ -11,8 +11,21 @@ export default async function handler(req, res) {
 
     const { playerText, gameState } = req.body;
 
-const promptPath = path.join(process.cwd(), "prompts", "Charles.txt");
-const systemPrompt = fs.readFileSync(promptPath, "utf-8");
+const promptPath = path.join(process.cwd(), "prompts", "charles.txt");
+//const systemPrompt = fs.readFileSync(promptPath, "utf-8");
+let systemPrompt;
+try {
+  systemPrompt = fs.readFileSync(promptPath, "utf-8");
+} catch (err) {
+  console.error("PROMPT FILE NOT FOUND, using fallback");
+  systemPrompt = `
+Sei Charles, un maggiordomo inglese negli anni '50.
+Tono: deferente, lucido, investigativo.
+Rispondi in modo conciso.
+Non inventare fatti.
+Non risolvere il caso.
+`;
+}
 
 
 console.log("===== SYSTEM PROMPT =====");
