@@ -1,6 +1,17 @@
 import fs from "fs";
    
 import path from "path";
+const statePath = path.join(process.cwd(), "data", "game", "state.json");
+let gameStateData = {};
+
+try {
+  gameStateData = JSON.parse(fs.readFileSync(statePath, "utf-8"));
+} catch {
+  gameStateData = {};
+}
+
+
+
 
 export default async function handler(req, res) {
   try {
