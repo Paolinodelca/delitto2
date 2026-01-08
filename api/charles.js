@@ -1,46 +1,33 @@
 import fs from "fs";
 import path from "path";
 
-const statePath = path.join(process.cwd(), "data", "game", "state.json");
-
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Metodo non consentito" });
     }
 
-    const { playerText } = req.body;
+    const { playerText, gameState } = req.body;
 
-    // 1. carica stato
-    let gameStateData;
-    try {
-      gameStateData = JSON.parse(fs.readFileSync(statePath, "utf-8"));
-    } catch {
-      gameStateData = { scoperte: { personaggi: [] } };
-    }
+    // Stato di lavoro (solo in memoria)
+    const state = gameState || { scoperte: { personaggi: [] } };
 
-    // 2. estrai nomi dal testo
+    // Estrai nomi propri dal testo
     const playerMentions = playerText.match(/\b[A-Z][a-z]+\b/g) || [];
-    const knownPeople = gameStateData.scoperte.personaggi;
+    const knownPeople = state.scoperte.personaggi || [];
 
     const newPeople = playerMentions.filter(
       name => !knownPeople.includes(name)
     );
 
-    // 3. aggiorna stato se serve
     if (newPeople.length > 0) {
-      gameStateData.scoperte.personaggi.push(...newPeople);
-
-      fs.writeFileSync(
-        statePath,
-        JSON.stringify(gameStateData, null, 2),
-        "utf-8"
-      );
+      state.scoperte.personaggi.push(...newPeople);
     }
 
-    // 4. prompt
+    // Carica prompt di Charles
     const promptPath = path.join(process.cwd(), "prompts", "charles.txt");
     let systemPrompt;
+
     try {
       systemPrompt = fs.readFileSync(promptPath, "utf-8");
     } catch {
@@ -53,7 +40,18 @@ Non risolvere il caso.
 `;
     }
 
-    // 5. chiamata LLM
+    // Arricchisci il prompt con lo stato
+    systemPrompt += `
+
+STATO CONOSCIUTO:
+Personaggi noti: ${state.scoperte.personaggi.join(", ") || "nessuno"}
+
+Regole:
+- Se un personaggio non è nello stato, dichiara che non hai informazioni verificate.
+- Non introdurre nuovi nomi spontaneamente.
+`;
+
+    // Chiamata LLM
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
       {
@@ -77,7 +75,7 @@ Non risolvere il caso.
 
     return res.status(200).json({
       reply: data.choices[0].message.content,
-      gameState: gameStateData
+      gameState: state
     });
 
   } catch (error) {
