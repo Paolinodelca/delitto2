@@ -12,7 +12,9 @@ export default async function handler(req, res) {
     const { playerText, gameState } = req.body;
 
     // Stato di lavoro (solo in memoria)
-    const state = gameState || { scoperte: { personaggi: [] } };
+  //  const state = gameState || { scoperte: { personaggi: [] } };
+    const state = { scoperte: { personaggi: [] } };
+
 // 🔒 normalizzazione stato (fondamentale)
 if (!state.scoperte) {
   state.scoperte = {};
