@@ -51,6 +51,29 @@ Non risolvere il caso.
 `;
     }
 
+
+// Arricchisci il prompt con lo stato noto
+systemPrompt += `
+
+STATO CONOSCIUTO:
+Personaggi noti: ${state.scoperte.personaggi.join(", ") || "nessuno"}
+Fatti noti: ${
+  state.scoperte.fatti
+    ? state.scoperte.fatti.map(f => f.testo).join("; ")
+    : "nessuno"
+}
+
+Regole:
+- Se un personaggio è noto ma non ci sono fatti associati, dichiaralo esplicitamente.
+- Non dedurre ruoli, lavori o relazioni non presenti nei fatti.
+- Non introdurre nuovi nomi.
+- Non risolvere il caso.
+`;
+
+
+
+    
+ /*   
     // Arricchisci il prompt con lo stato
     systemPrompt += `
 
@@ -62,6 +85,8 @@ Regole:
 - Non introdurre nuovi nomi spontaneamente.
 `;
 
+
+    */
     // Chiamata LLM
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
