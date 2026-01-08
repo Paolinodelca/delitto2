@@ -2,6 +2,8 @@ import fs from "fs";
 import path from "path";
 
 export default async function handler(req, res) {
+  console.log("BODY RICEVUTO:", req.body);
+
   try {
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Metodo non consentito" });
