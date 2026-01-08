@@ -83,7 +83,16 @@ async function handlePlayerInput(text) {
   return;
 }
 
-const data = await response.json();
+//const data = await response.json();
+console.log("STATUS:", response.status);
+const text = await response.text();
+console.log("RAW RESPONSE:", text);
+const data = JSON.parse(text);
+
+
+
+
+    
 
 if (data.reply) {
   speak(data.reply);
