@@ -51,15 +51,15 @@ function getIntent(text) {
 /* =========================
    LOGICA DELLA SCENA
 ========================= */
-async function handlePlayerInput(text) {
-  if (!text) return;
+async function handlePlayerInput(playerText) {
+  if (!playerText) return;
 
-  // 🔎 aggiorniamo lo stato QUI (text esiste)
+  // 🔎 aggiorniamo lo stato
   if (!gameState.interviewed.includes("Charles")) {
     gameState.interviewed.push("Charles");
   }
 
-  if (text.toLowerCase().includes("azienda")) {
+  if (playerText.toLowerCase().includes("azienda")) {
     if (!gameState.discoveredFacts.includes("Possibile crisi dell'azienda")) {
       gameState.discoveredFacts.push("Possibile crisi dell'azienda");
     }
@@ -72,39 +72,29 @@ async function handlePlayerInput(text) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        playerText: text,
+        playerText: playerText,
         gameState: gameState
       })
     });
+
+    const rawResponse = await response.text();
+    console.log("STATUS:", response.status);
+    console.log("RAW RESPONSE:", rawResponse);
+
     if (!response.ok) {
-  const text = await response.text();
-  console.error("Risposta non JSON dal server:", text);
-  speak("Si è verificato un problema sul server.");
-  return;
-}
+      console.error("Risposta non valida dal server");
+      speak("Si è verificato un problema sul server.");
+      return;
+    }
 
-//const data = await response.json();
-console.log("STATUS:", response.status);
-const text = await response.text();
-console.log("RAW RESPONSE:", text);
-const data = JSON.parse(text);
-
-
-
-
-    
-
-if (data.reply) {
-  speak(data.reply);
-  document.getElementById("charlesComment").innerText = data.reply;
-} else {
-  speak("Temo che qualcosa non abbia funzionato.");
-}
-
-
-    
-/*
-    const data = await response.json();
+    let data;
+    try {
+      data = JSON.parse(rawResponse);
+    } catch (e) {
+      console.error("Errore parsing JSON:", e);
+      speak("Il server ha risposto in modo inatteso.");
+      return;
+    }
 
     if (data.reply) {
       speak(data.reply);
@@ -112,12 +102,19 @@ if (data.reply) {
     } else {
       speak("Temo che qualcosa non abbia funzionato.");
     }
-*/
+
   } catch (error) {
     console.error("Errore client:", error);
     speak("Si è verificato un problema tecnico.");
   }
 }
+
+////////////
+
+    
+/*
+    const data = await response.json();
+
 
 
 /* =========================
