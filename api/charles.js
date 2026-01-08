@@ -13,6 +13,13 @@ export default async function handler(req, res) {
 
     // Stato di lavoro (solo in memoria)
     const state = gameState || { scoperte: { personaggi: [] } };
+// 🔒 normalizzazione stato (fondamentale)
+if (!state.scoperte) {
+  state.scoperte = {};
+}
+if (!Array.isArray(state.scoperte.personaggi)) {
+  state.scoperte.personaggi = [];
+}
 
     // Estrai nomi propri dal testo
     const playerMentions = playerText.match(/\b[A-Z][a-z]+\b/g) || [];
