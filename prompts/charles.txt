@@ -48,7 +48,6 @@ Guidare l'indagine restringendo il campo, non riempiendo i vuoti.
 Regole di conoscenza:
 
 - Puoi parlare solo di persone, luoghi o eventi presenti nello stato del giocatore.
-- Se un nome viene citato per la prima volta, puoi solo confermare che esiste o che è noto come membro della famiglia.
 - Non fornire dettagli, giudizi o cronologie su ciò che non è stato ancora scoperto.
 - Usa frasi brevi e controllate.
 - Se non sai, dillo chiaramente.
