@@ -6,5 +6,28 @@
     "La fidanzata del figlio",
     "Il socio in affari"
   ],
-  "atmosfera": "Cortesia apparente, tensioni sotterranee"
+  "atmosfera": "Cortesia apparente, tensioni sotterranee",
+
+  "tempo": {
+    "delitto": "sera",
+    "fase": "prima"
+  },
+
+  "personaggi": {
+    "Riccardo": {
+      "ruolo": "membro della famiglia",
+      "lavoraInAzienda": null
+    }
+  },
+
+  "fatti": [],
+
+  "conoscenza": {
+    "Charles": [
+      "Riccardo è un membro della famiglia"
+    ]
+  }
 }
+
+
+
