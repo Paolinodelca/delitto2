@@ -13,7 +13,18 @@ export default async function handler(req, res) {
 
     // Stato di lavoro (solo in memoria)
   //  const state = gameState || { scoperte: { personaggi: [] } };
-    const state = { scoperte: { personaggi: [] } };
+  //  const state = { scoperte: { personaggi: [] } };
+const state = gameState || { scoperte: { personaggi: [], fatti: [], indizi: [] } };
+
+const WORLD_TRUTH = {
+  ambientazione: "Villa signorile sul Lago di Como, anni '50",
+  vittima: "Industriale facoltoso, proprietario della villa",
+  relazioni: {
+    Riccardo: "Figlio biologico della vittima"
+  }
+};
+
+    
 
 // 🔒 normalizzazione stato (fondamentale)
 if (!state.scoperte) {
@@ -43,27 +54,74 @@ try {
 } catch {
   scenarioText = "{}";
 }
-//fine inserimentto
+//fine inserimento
 
     
-    // Carica prompt di Charles
-    const promptPath = path.join(process.cwd(), "prompts", "charles.txt");
-    let systemPrompt;
-
-    try {
-      systemPrompt = fs.readFileSync(promptPath, "utf-8");
-    } catch {
-      systemPrompt = `
+const systemPrompt = `
+IDENTITÀ
 Sei Charles, un maggiordomo inglese negli anni '50.
 Tono: deferente, lucido, investigativo.
-Rispondi in modo conciso.
 Non inventare fatti.
 Non risolvere il caso.
-`;
-    }
-systemPrompt = `
-${systemPrompt}
 
+MONDO DI GIOCO (fatti oggettivi):
+${scenarioText}
+
+STATO CONOSCIUTO:
+Personaggi noti: ${state.scoperte.personaggi.join(", ") || "nessuno"}
+Fatti noti: ${
+  state.scoperte.fatti
+    ? state.scoperte.fatti.map(f => f.testo).join("; ")
+    : "nessuno"
+}
+
+REGOLE DI COERENZA:
+- Se un personaggio è noto ma non ci sono fatti associati, dichiaralo esplicitamente.
+- Non dedurre ruoli, lavori o relazioni non presenti nei fatti.
+- Non introdurre nuovi nomi.
+- Non risolvere il caso.
+`;
+
+    
+/*    
+let systemPrompt = `
+IDENTITÀ
+Sei Charles, maggiordomo inglese negli anni '50.
+Tono controllato, deferente, investigativo.
+Mai teatrale. Mai moderno.
+
+STRATO A — VERITÀ DEL MONDO (IMMUTABILI)
+Ambientazione: ${WORLD_TRUTH.ambientazione}
+Vittima: ${WORLD_TRUTH.vittima}
+Relazioni vere:
+${Object.entries(WORLD_TRUTH.relazioni)
+  .map(([k, v]) => `- ${k}: ${v}`)
+  .join("\n")}
+
+Queste informazioni sono SEMPRE vere.
+Non devono MAI essere negate o dichiarate "non accertate".
+
+STRATO B — STATO CONOSCIUTO DAL GIOCATORE
+Personaggi noti: ${state.scoperte.personaggi.length ? state.scoperte.personaggi.join(", ") : "nessuno"}
+Fatti noti: ${state.scoperte.fatti?.length ? state.scoperte.fatti.join(", ") : "nessuno"}
+Indizi raccolti: ${state.scoperte.indizi?.length ? state.scoperte.indizi.join(", ") : "nessuno"}
+
+STRATO C — REGOLE DI COMPORTAMENTO
+- Puoi conoscere tutte le verità del mondo
+- Puoi rivelare SOLO ciò che è nello stato noto
+- Se un fatto è vero ma non ancora noto:
+  - sii evasivo
+  - NON dire che è falso
+  - NON dire che non è accertato
+- Non introdurre nuovi nomi o relazioni
+- Se c'è conflitto: scegli l'ambiguità, mai la negazione
+
+STRATO D — INPUT
+Rispondi ora alla domanda del giocatore come Charles.
+`;
+
+    
+  
 MONDO DI GIOCO (fatti oggettivi):
 ${scenarioText}
 `;
@@ -87,23 +145,10 @@ Regole:
 - Non risolvere il caso.
 `;
 
-
+*/
 
     
- /*   
-    // Arricchisci il prompt con lo stato
-    systemPrompt += `
 
-STATO CONOSCIUTO:
-Personaggi noti: ${state.scoperte.personaggi.join(", ") || "nessuno"}
-
-Regole:
-- Se un personaggio non è nello stato, dichiara che non hai informazioni verificate.
-- Non introdurre nuovi nomi spontaneamente.
-`;
-
-
-    */
     // Chiamata LLM
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
