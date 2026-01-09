@@ -2,32 +2,26 @@
   "ambientazione": "Villa signorile sul Lago di Como, anni '50",
   "vittima": "Industriale facoltoso, proprietario della villa",
   "sospettati": [
-    "Il figlio",
-    "La fidanzata del figlio",
+    "Riccardo",
+    "La fidanzata di Riccardo",
     "Il socio in affari"
   ],
   "atmosfera": "Cortesia apparente, tensioni sotterranee",
 
-  "tempo": {
-    "delitto": "sera",
-    "fase": "prima"
-  },
-
-"personaggi": {
-  "Riccardo": {
-    "ruolo": "figlio della vittima",
-    "lavoraInAzienda": null
-  }
-},
-
-  "fatti": [],
-
-  "conoscenza": {
-    "Charles": [
-      "Riccardo è un membro della famiglia"
-    ]
-  }
+  "fatti": [
+    {
+      "id": "F1",
+      "soggetto": "Riccardo",
+      "testo": "Riccardo è il figlio della vittima."
+    },
+    {
+      "id": "F2",
+      "soggetto": "La fidanzata di Riccardo",
+      "testo": "La fidanzata di Riccardo era presente in villa il giorno del delitto."
+    }
+  ]
 }
+
 
 
 
