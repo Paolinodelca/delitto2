@@ -34,7 +34,18 @@ if (!Array.isArray(state.scoperte.personaggi)) {
     if (newPeople.length > 0) {
       state.scoperte.personaggi.push(...newPeople);
     }
+//inizio inserimento
+const scenarioPath = path.join(process.cwd(), "game", "scenario.json");
+let scenarioText = "";
 
+try {
+  scenarioText = fs.readFileSync(scenarioPath, "utf-8");
+} catch {
+  scenarioText = "{}";
+}
+//fine inserimentto
+
+    
     // Carica prompt di Charles
     const promptPath = path.join(process.cwd(), "prompts", "charles.txt");
     let systemPrompt;
@@ -50,6 +61,12 @@ Non inventare fatti.
 Non risolvere il caso.
 `;
     }
+systemPrompt = `
+${systemPrompt}
+
+MONDO DI GIOCO (fatti oggettivi):
+${scenarioText}
+`;
 
 
 // Arricchisci il prompt con lo stato noto
