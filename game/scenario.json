@@ -12,13 +12,13 @@
     "delitto": "sera",
     "fase": "prima"
   },
-
-  "personaggi": {
-    "Riccardo": {
-      "ruolo": "membro della famiglia",
-      "lavoraInAzienda": null
-    }
-  },
+///////
+"personaggi": {
+  "Riccardo": {
+    "ruolo": "figlio della vittima",
+    "lavoraInAzienda": null
+  }
+},
 
   "fatti": [],
 
