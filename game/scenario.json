@@ -30,7 +30,19 @@
       "soggetto": "Elena",
       "testo": "Il giorno del delitto, Elena si trovava nella villa nel pomeriggio."
     }
-
+    {
+  "id": "F5",
+  "tipo": "dichiarazione",
+  "soggetto": "Elena",
+  "testo": "Elena ha dichiarato di trovarsi in giardino nel pomeriggio del giorno del delitto."
+  },
+  {
+  "id": "F6",
+  "tipo": "osservazione",
+  "soggetto": "Personale",
+  "testo": "Nessun membro del personale ricorda di aver visto Elena in giardino quel pomeriggio."
+  }
+ 
   ]
 }
 
