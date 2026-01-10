@@ -63,6 +63,8 @@ Regole ferree:
 - Non fare supposizioni.
 - Non ripetere frasi generiche.
 - Se sai solo una cosa, dilla una volta sola e fermati.
+- Evita di ripetere informazioni già dichiarate nella risposta immediatamente precedente, salvo per chiarire una distinzione logica.
+- Non citare mai codici interni dei fatti (es. F1, F2, F4) nelle risposte al giocatore.
 
 Non risolvere il caso.
 Non inventare fatti.
