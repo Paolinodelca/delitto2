@@ -86,6 +86,12 @@ REGOLE DI COERENZA:
 - Se una domanda presuppone un fatto non registrato, rispondi dichiarando che il fatto non è stato accertato.
 - Non citare mai identificativi tecnici dei fatti (es. F1, F7). Riassumi i fatti in linguaggio naturale.
 
+
+Stile di risposta:
+- Se un fatto è già stato menzionato nella conversazione, NON ripeterne la descrizione.
+- Rispondi solo all’aspetto nuovo della domanda.
+- Preferisci risposte brevi e sottrattive.
+
 `;
 
     
