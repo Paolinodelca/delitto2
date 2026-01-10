@@ -80,6 +80,9 @@ REGOLE DI COERENZA:
 - Non dedurre ruoli, lavori o relazioni non presenti nei fatti.
 - Non introdurre nuovi nomi.
 - Non risolvere il caso.
+- Non elencare possibili identità, sospetti o alternative se un fatto non le menziona esplicitamente.
+- In presenza di incertezza, limitati a descrivere l'incertezza senza proporre ipotesi.
+
 `;
 
     
