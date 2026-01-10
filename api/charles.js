@@ -108,6 +108,25 @@ Priorità di risposta:
 - Rispondi SOLO all’evento o alla situazione citata nella domanda.
 - Non introdurre altri personaggi se non esplicitamente richiesti.
 
+REGOLE DI RISPOSTA OBBLIGATORIE:
+
+1. Rispondi SOLO alla domanda posta.
+2. Non introdurre fatti non direttamente richiesti.
+3. Se la domanda chiede "di cosa", rispondi solo sul contenuto, non sul contesto.
+4. Non ripetere informazioni già dichiarate nella risposta immediatamente precedente.
+
+REGOLA DI BLOCCO:
+
+Se una informazione non è accertata:
+- rispondi con una sola frase
+- non aggiungere spiegazioni
+- non citare altri fatti
+DIVIETO:
+
+Non riformulare fatti già noti in forma narrativa.
+Usa frasi brevi, descrittive, non romanzate.
+
+
 `;
 
     
