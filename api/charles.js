@@ -84,6 +84,7 @@ REGOLE DI COERENZA:
 - In presenza di incertezza, limitati a descrivere l'incertezza senza proporre ipotesi.
 - Non introdurre nuovi fatti impliciti (testimoni, osservazioni, eventi) se non sono presenti nello stato o nello scenario.
 - Se una domanda presuppone un fatto non registrato, rispondi dichiarando che il fatto non è stato accertato.
+- Non citare mai identificativi tecnici dei fatti (es. F1, F7). Riassumi i fatti in linguaggio naturale.
 
 `;
 
