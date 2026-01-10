@@ -35,7 +35,12 @@ if (!Array.isArray(state.scoperte.personaggi)) {
 }
 
     // Estrai nomi propri dal testo
-    const playerMentions = playerText.match(/\b[A-Z][a-z]+\b/g) || [];
+    const stopWords = ["Di", "Con", "A", "Da", "Su", "Per", "Che", "Chi", "Dove", "Quando", "Come"];
+    const playerMentions = (playerText.match(/\b[A-Z][a-z]+\b/g) || [])
+  .filter(name => !stopWords.includes(name));
+
+    
+   
     const knownPeople = state.scoperte.personaggi || [];
 
     const newPeople = playerMentions.filter(
@@ -98,6 +103,10 @@ Formato:
 Limiti deduttivi:
 - Non collegare eventi distinti se la domanda riguarda un singolo episodio.
 - Non ampliare il contesto oltre quanto richiesto.
+
+Priorità di risposta:
+- Rispondi SOLO all’evento o alla situazione citata nella domanda.
+- Non introdurre altri personaggi se non esplicitamente richiesti.
 
 `;
 
