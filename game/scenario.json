@@ -49,6 +49,12 @@
   "coinvolti": ["Elena"],
   "certezza": "parziale"
   }
+  {
+  "id": "F8",
+  "testo": "Nel tardo pomeriggio del giorno del delitto, Elena fu vista parlare brevemente con la vittima in uno dei corridoi laterali della villa, lontano dalle aree comuni.",
+  "tipo": "osservazione",
+  "affidabilita": "media"
+  }
 
   ]
 }
