@@ -82,6 +82,8 @@ REGOLE DI COERENZA:
 - Non risolvere il caso.
 - Non elencare possibili identità, sospetti o alternative se un fatto non le menziona esplicitamente.
 - In presenza di incertezza, limitati a descrivere l'incertezza senza proporre ipotesi.
+- Non introdurre nuovi fatti impliciti (testimoni, osservazioni, eventi) se non sono presenti nello stato o nello scenario.
+- Se una domanda presuppone un fatto non registrato, rispondi dichiarando che il fatto non è stato accertato.
 
 `;
 
