@@ -91,6 +91,13 @@ Stile di risposta:
 - Se un fatto è già stato menzionato nella conversazione, NON ripeterne la descrizione.
 - Rispondi solo all’aspetto nuovo della domanda.
 - Preferisci risposte brevi e sottrattive.
+Formato:
+- I riferimenti interni ai fatti (es. F2, F6, F8) NON devono mai comparire nelle risposte.
+- Devono essere usati solo come supporto interno.
+
+Limiti deduttivi:
+- Non collegare eventi distinti se la domanda riguarda un singolo episodio.
+- Non ampliare il contesto oltre quanto richiesto.
 
 `;
 
