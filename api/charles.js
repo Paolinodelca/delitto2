@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+const factsPath = path.join(process.cwd(), "data", "game", "facts.json");
 
 export default async function handler(req, res) {
   console.log("BODY RICEVUTO:", req.body);
@@ -60,6 +61,20 @@ try {
   scenarioText = "{}";
 }
 //fine inserimento
+/////
+let factsData = { fatti: [] };
+
+try {
+  factsData = JSON.parse(fs.readFileSync(factsPath, "utf-8"));
+} catch {
+  factsData = { fatti: [] };
+}
+/////
+const factsText =
+  factsData.fatti.length > 0
+    ? factsData.fatti.map(f => `- ${f.testo}`).join("\n")
+    : "Nessun fatto accertato.";
+ ////   
 
     
 const systemPrompt = `
@@ -79,7 +94,21 @@ Fatti noti: ${
     ? state.scoperte.fatti.map(f => f.testo).join("; ")
     : "nessuno"
 }
+/////
+systemPrompt += `
 
+FATTI ACCERTATI (verità oggettive):
+${factsText}
+
+Regole fondamentali:
+- Puoi affermare solo ciò che è esplicitamente contenuto nei fatti accertati.
+- Se una informazione non è presente, dichiara che non risulta accertata.
+- Non citare ID, numeri di fatto o fonti.
+- Non dedurre, non interpretare, non colmare i vuoti.
+`;
+
+
+/////
 REGOLE DI COERENZA:
 - Se un personaggio è noto ma non ci sono fatti associati, dichiaralo esplicitamente.
 - Non dedurre ruoli, lavori o relazioni non presenti nei fatti.
@@ -125,78 +154,13 @@ DIVIETO:
 
 Non riformulare fatti già noti in forma narrativa.
 Usa frasi brevi, descrittive, non romanzate.
-
-
 `;
 
-    
-/*    
-let systemPrompt = `
-IDENTITÀ
-Sei Charles, maggiordomo inglese negli anni '50.
-Tono controllato, deferente, investigativo.
-Mai teatrale. Mai moderno.
-
-STRATO A — VERITÀ DEL MONDO (IMMUTABILI)
-Ambientazione: ${WORLD_TRUTH.ambientazione}
-Vittima: ${WORLD_TRUTH.vittima}
-Relazioni vere:
-${Object.entries(WORLD_TRUTH.relazioni)
-  .map(([k, v]) => `- ${k}: ${v}`)
-  .join("\n")}
-
-Queste informazioni sono SEMPRE vere.
-Non devono MAI essere negate o dichiarate "non accertate".
-
-STRATO B — STATO CONOSCIUTO DAL GIOCATORE
-Personaggi noti: ${state.scoperte.personaggi.length ? state.scoperte.personaggi.join(", ") : "nessuno"}
-Fatti noti: ${state.scoperte.fatti?.length ? state.scoperte.fatti.join(", ") : "nessuno"}
-Indizi raccolti: ${state.scoperte.indizi?.length ? state.scoperte.indizi.join(", ") : "nessuno"}
-
-STRATO C — REGOLE DI COMPORTAMENTO
-- Puoi conoscere tutte le verità del mondo
-- Puoi rivelare SOLO ciò che è nello stato noto
-- Se un fatto è vero ma non ancora noto:
-  - sii evasivo
-  - NON dire che è falso
-  - NON dire che non è accertato
-- Non introdurre nuovi nomi o relazioni
-- Se c'è conflitto: scegli l'ambiguità, mai la negazione
-
-STRATO D — INPUT
-Rispondi ora alla domanda del giocatore come Charles.
-`;
-
-    
-  
-MONDO DI GIOCO (fatti oggettivi):
-${scenarioText}
-`;
-
-
-// Arricchisci il prompt con lo stato noto
-systemPrompt += `
-
-STATO CONOSCIUTO:
-Personaggi noti: ${state.scoperte.personaggi.join(", ") || "nessuno"}
-Fatti noti: ${
-  state.scoperte.fatti
-    ? state.scoperte.fatti.map(f => f.testo).join("; ")
-    : "nessuno"
-}
-
-Regole:
-- Se un personaggio è noto ma non ci sono fatti associati, dichiaralo esplicitamente.
-- Non dedurre ruoli, lavori o relazioni non presenti nei fatti.
-- Non introdurre nuovi nomi.
-- Non risolvere il caso.
-`;
-
-*/
 
     
 
     // Chiamata LLM
+   /*
     const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
       {
@@ -214,15 +178,30 @@ Regole:
           temperature: 0.2
         })
       }
-    );
+    ); */
 
+    /////
+   /*
     const data = await response.json();
 
     return res.status(200).json({
       reply: data.choices[0].message.content,
       gameState: state
-    });
+    });  */
+/////
+return res.status(200).json({
+  reply: `
+[TEST SENZA LLM]
 
+FATTI CARICATI:
+${factsText}
+`,
+  gameState: state
+});
+
+
+
+    ///////
   } catch (error) {
     console.error("CHARLES ERROR:", error);
     return res.status(500).json({
