@@ -1,0 +1,53 @@
+{
+  "facts": [
+    {
+      "id": "vittima_identita",
+      "subject": "Vittima",
+      "predicate": "identità",
+      "object": "Industriale facoltoso, proprietario della villa",
+      "state": "CERTO"
+    },
+    {
+      "id": "riccardo_parentela",
+      "subject": "Riccardo",
+      "predicate": "parentela",
+      "object": "Figlio della vittima",
+      "state": "CERTO"
+    },
+    {
+      "id": "elena_identita",
+      "subject": "Elena",
+      "predicate": "relazione",
+      "object": "Fidanzata di Riccardo",
+      "state": "CERTO"
+    },
+    {
+      "id": "elena_presenza_villa",
+      "subject": "Elena",
+      "predicate": "presenza",
+      "object": "Presente in villa il giorno del delitto",
+      "state": "CERTO"
+    },
+    {
+      "id": "elena_giardino_dichiarazione",
+      "subject": "Elena",
+      "predicate": "dichiarazione",
+      "object": "Dice di essersi trovata in giardino nel pomeriggio",
+      "state": "DICHIARATO"
+    },
+    {
+      "id": "elena_giardino_testimoni",
+      "subject": "Personale",
+      "predicate": "osservazione",
+      "object": "Nessun membro ricorda di aver visto Elena in giardino nel pomeriggio",
+      "state": "CERTO"
+    },
+    {
+      "id": "elena_vittima_corridoio",
+      "subject": "Elena",
+      "predicate": "interazione",
+      "object": "Ha parlato brevemente con la vittima in un corridoio laterale nel tardo pomeriggio",
+      "state": "OSSERVATO_INCERTO"
+    }
+  ]
+}
