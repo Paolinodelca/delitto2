@@ -1,0 +1,51 @@
+{
+  "fatti": [
+    {
+      "id": "F1",
+      "soggetto": "Riccardo",
+      "testo": "Riccardo è il figlio della vittima."
+    },
+    {
+      "id": "F2",
+      "soggetto": "La fidanzata di Riccardo",
+      "testo": "La fidanzata di Riccardo era presente in villa il giorno del delitto."
+    }
+    {
+      "id": "F3",
+      "soggetto": "La fidanzata di Riccardo",
+      "testo": "La fidanzata di Riccardo si chiama Elena."
+    }
+
+    {
+      "id": "F4",
+      "soggetto": "Elena",
+      "testo": "Il giorno del delitto, Elena si trovava nella villa nel pomeriggio."
+    }
+    {
+  "id": "F5",
+  "tipo": "dichiarazione",
+  "soggetto": "Elena",
+  "testo": "Elena ha dichiarato di trovarsi in giardino nel pomeriggio del giorno del delitto."
+  },
+  {
+  "id": "F6",
+  "tipo": "osservazione",
+  "soggetto": "Personale",
+  "testo": "Nessun membro del personale ricorda di aver visto Elena in giardino quel pomeriggio."
+  }
+  {
+  "id": "F7",
+  "testo": "Poco prima di uscire dalla villa, Elena è stata vista parlare brevemente con una persona, ma il testimone non è in grado di identificarla con certezza.",
+  "tipo": "osservazione",
+  "coinvolti": ["Elena"],
+  "certezza": "parziale"
+  }
+  {
+  "id": "F8",
+  "testo": "Nel tardo pomeriggio del giorno del delitto, Elena fu vista parlare brevemente con la vittima in uno dei corridoi laterali della villa, lontano dalle aree comuni.",
+  "tipo": "osservazione",
+  "affidabilita": "media"
+  }
+
+  ] 
+}
