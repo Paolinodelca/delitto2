@@ -1,6 +1,15 @@
 import fs from "fs";
 import path from "path";
-const factsPath = path.join(process.cwd(), "data", "game", "facts.json");
+
+// 📁 base dati di gioco
+const basePath = path.join(process.cwd(), "data", "game");
+
+const factsPath = path.join(basePath, "facts.json");
+const scenarioPath = path.join(basePath, "scenario.json");
+
+
+
+
 
 export default async function handler(req, res) {
   console.log("BODY RICEVUTO:", req.body);
@@ -53,7 +62,24 @@ if (!Array.isArray(state.scoperte.personaggi)) {
     }
 //inizio inserimento
 //const scenarioPath = path.join(process.cwd(), "game", "scenario.json");
-const scenarioPath = path.join(process.cwd(), "data", "game", "scenario.json");
+let factsData = { fatti: [] };
+try {
+  factsData = JSON.parse(fs.readFileSync(factsPath, "utf-8"));
+} catch {
+  factsData = { fatti: [] };
+}
+
+let scenarioText = "{}";
+try {
+  scenarioText = fs.readFileSync(scenarioPath, "utf-8");
+} catch {
+  scenarioText = "{}";
+}
+
+
+    
+/*    
+    const scenarioPath = path.join(process.cwd(), "data", "game", "scenario.json");
 
     
 let scenarioText = "";
@@ -63,6 +89,7 @@ try {
 } catch {
   scenarioText = "{}";
 }
+    */
 //fine inserimento
 /////
 let factsData = { fatti: [] };
