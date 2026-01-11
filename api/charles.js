@@ -18,6 +18,7 @@ export default async function handler(req, res) {
     const { playerText, gameState } = req.body;
 
     // Stato di gioco
+  /*
     const state = gameState || {
       scoperte: { personaggi: [], fatti: [], indizi: [] }
     };
@@ -25,6 +26,8 @@ export default async function handler(req, res) {
     if (!state.scoperte.personaggi) {
       state.scoperte.personaggi = [];
     }
+*/
+   const state = gameState || {};
 
     // 📖 carica scenario
     let scenarioText = "{}";
