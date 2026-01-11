@@ -52,7 +52,10 @@ if (!Array.isArray(state.scoperte.personaggi)) {
       state.scoperte.personaggi.push(...newPeople);
     }
 //inizio inserimento
-const scenarioPath = path.join(process.cwd(), "game", "scenario.json");
+//const scenarioPath = path.join(process.cwd(), "game", "scenario.json");
+const scenarioPath = path.join(process.cwd(), "data", "game", "scenario.json");
+
+    
 let scenarioText = "";
 
 try {
@@ -77,7 +80,7 @@ const factsText =
  ////   
 
     
-const systemPrompt = `
+let systemPrompt = `
 IDENTITÀ
 Sei Charles, un maggiordomo inglese negli anni '50.
 Tono: deferente, lucido, investigativo.
@@ -94,7 +97,7 @@ Fatti noti: ${
     ? state.scoperte.fatti.map(f => f.testo).join("; ")
     : "nessuno"
 }
-/////
+
 systemPrompt += `
 
 FATTI ACCERTATI (verità oggettive):
@@ -108,7 +111,7 @@ Regole fondamentali:
 `;
 
 
-/////
+
 REGOLE DI COERENZA:
 - Se un personaggio è noto ma non ci sono fatti associati, dichiaralo esplicitamente.
 - Non dedurre ruoli, lavori o relazioni non presenti nei fatti.
