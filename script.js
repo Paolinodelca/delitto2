@@ -2,11 +2,13 @@ console.log("SCRIPT VERSIONE 2026-01-01");
 
 console.log("SCENA CARICATA");
 let gameState = {
-  discoveredFacts: [],
-  interviewed: [],
-  unlockedActions: [],
-  timePassed: 0
+  scoperte: {
+    fatti: [],
+    personaggi: [],
+    indizi: []
+  }
 };
+
 
 
 /* =========================
@@ -58,13 +60,13 @@ async function handlePlayerInput(playerText) {
   if (!gameState.interviewed.includes("Charles")) {
     gameState.interviewed.push("Charles");
   }
-
+/*
   if (playerText.toLowerCase().includes("azienda")) {
     if (!gameState.discoveredFacts.includes("Possibile crisi dell'azienda")) {
       gameState.discoveredFacts.push("Possibile crisi dell'azienda");
     }
   }
-
+*/
   speak("Un momento, prego.");
 
   try {
@@ -77,6 +79,7 @@ async function handlePlayerInput(playerText) {
       })
     });
 
+    
     const rawResponse = await response.text();
     console.log("STATUS:", response.status);
     console.log("RAW RESPONSE:", rawResponse);
