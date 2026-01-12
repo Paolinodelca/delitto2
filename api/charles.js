@@ -9,6 +9,17 @@ const basePath = path.join(process.cwd(), "data", "game");
 const factsPath = path.join(basePath, "facts.json");
 const scenarioPath = path.join(basePath, "scenario.json");
 
+// 🔍 STEP 2 – funzione di analisi (non ancora attiva)
+function discoverFacts(playerText, factsData) {
+  const text = playerText.toLowerCase();
+
+  return factsData.fatti.filter(fatto =>
+    fatto.trigger?.some(trigger =>
+      text.includes(trigger.toLowerCase())
+    )
+  );
+}
+
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
