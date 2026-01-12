@@ -52,6 +52,15 @@ export default async function handler(req, res) {
     let factsData = { fatti: [] };
     try {
       factsData = JSON.parse(fs.readFileSync(factsPath, "utf-8"));
+    // 🔎 seleziona i fatti rilevanti in base ai trigger
+    const question = (playerText || "").toLowerCase();
+
+    const matchingFacts = factsData.fatti.filter(f =>
+    Array.isArray(f.trigger) &&
+    f.trigger.some(t => question.includes(t.toLowerCase()))
+    );
+  
+      
     } catch {
       factsData = { fatti: [] };
     }
@@ -79,8 +88,7 @@ if (matchingFacts.length > 0) {
 } else {
   reply = "Mi dispiace, ma su questo non dispongo di fatti accertati.";
 }
-
-    
+  
     // 🧠 system prompt (chiuso correttamente)
     const systemPrompt = `
 IDENTITÀ
@@ -102,13 +110,15 @@ REGOLE:
 - Risposte brevi, non narrative.
 `;
     
+const replyText =
+  matchingFacts.length > 0
+    ? matchingFacts.map(f => `- ${f.testo}`).join("\n")
+    : "Mi dispiace, ma su questo non dispongo di fatti accertati.";
+
 return res.status(200).json({
-  reply,
+  reply: replyText,
   gameState: state
 });
-
-
-
     
   } catch (error) {
     console.error("CHARLES ERROR:", error);
