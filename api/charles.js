@@ -26,10 +26,18 @@ export default async function handler(req, res) {
       return res.status(405).json({ error: "Metodo non consentito" });
     }
 
-    const { playerText, gameState } = req.body;
+  const gameState = req.body.gameState || {};
+  const playerText =
+  req.body.playerText ||
+  req.body.message ||
+  req.body.text ||
+  "";
+
+    
+    //const { playerText, gameState } = req.body;
     //temporaneo
-  console.log("PLAYER TEXT:", playerText);
-  console.log("BODY:", req.body);
+ // console.log("PLAYER TEXT:", playerText);
+ // console.log("BODY:", req.body);
 //fine temporaneo
     // Stato di gioco
   /*
