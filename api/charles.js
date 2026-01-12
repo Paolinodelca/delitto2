@@ -27,7 +27,10 @@ export default async function handler(req, res) {
     }
 
     const { playerText, gameState } = req.body;
-
+    //temporaneo
+  console.log("PLAYER TEXT:", playerText);
+  console.log("BODY:", req.body);
+//fine temporaneo
     // Stato di gioco
   /*
     const state = gameState || {
