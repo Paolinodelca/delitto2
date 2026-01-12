@@ -80,7 +80,9 @@ export default async function handler(req, res) {
       factsData.fatti.length > 0
         ? factsData.fatti.map(f => `- ${f.testo}`).join("\n")
         : "Nessun fatto accertato.";
-
+//test
+    console.log("FACTS DATA:", factsData);
+//fine test
 // 🔍 analisi semplice della domanda
 const question = (playerText || "").toLowerCase();
 
@@ -133,6 +135,8 @@ return res.status(200).json({
     
   } catch (error) {
     console.error("CHARLES ERROR:", error);
+    console.log("PLAYER TEXT NORMALIZZATO:", playerText);
+
     return res.status(500).json({
       error: "Errore server",
       details: error.message
