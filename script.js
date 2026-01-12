@@ -55,11 +55,12 @@ function getIntent(text) {
 ========================= */
 async function handlePlayerInput(playerText) {
   if (!playerText) return;
-
+/*
   // 🔎 aggiorniamo lo stato
   if (!gameState.interviewed.includes("Charles")) {
     gameState.interviewed.push("Charles");
   }
+  */
 /*
   if (playerText.toLowerCase().includes("azienda")) {
     if (!gameState.discoveredFacts.includes("Possibile crisi dell'azienda")) {
