@@ -59,48 +59,32 @@ export default async function handler(req, res) {
       scenarioText = "{}";
     }
 
-    // 📚 carica fatti (UNA SOLA VOLTA)
-    let factsData = { fatti: [] };
-    try {
-      factsData = JSON.parse(fs.readFileSync(factsPath, "utf-8"));
-    // 🔎 seleziona i fatti rilevanti in base ai trigger
-    const question = (playerText || "").toLowerCase();
+    // 📚 carica fatti
+let factsData = { fatti: [] };
+try {
+  factsData = JSON.parse(fs.readFileSync(factsPath, "utf-8"));
+} catch {
+  factsData = { fatti: [] };
+}
 
-    const matchingFacts = factsData.fatti.filter(f =>
-    Array.isArray(f.trigger) &&
-    f.trigger.some(t => question.includes(t.toLowerCase()))
-    );
-  
-      
-    } catch {
-      factsData = { fatti: [] };
-    }
-
-    const factsText =
-      factsData.fatti.length > 0
-        ? factsData.fatti.map(f => `- ${f.testo}`).join("\n")
-        : "Nessun fatto accertato.";
-//test
-    console.log("FACTS DATA:", factsData);
-//fine test
-// 🔍 analisi semplice della domanda
+// 🔎 normalizza la domanda del giocatore
 const question = (playerText || "").toLowerCase();
 
-// cerchiamo fatti rilevanti
-const matchingFacts = factsData.fatti.filter(f =>
-  question.includes(f.soggetto?.toLowerCase())
+// 🎯 seleziona i fatti rilevanti tramite trigger
+const matchingFacts = factsData.fatti.filter(fatto =>
+  Array.isArray(fatto.trigger) &&
+  fatto.trigger.some(trigger =>
+    question.includes(trigger.toLowerCase())
+  )
 );
 
-// costruiamo la risposta di Charles
-let reply;
+// 🗣️ costruzione risposta di Charles
+const replyText =
+  matchingFacts.length > 0
+    ? matchingFacts.map(f => `- ${f.testo}`).join("\n")
+    : "Mi dispiace, ma su questo non dispongo di fatti accertati.";
 
-if (matchingFacts.length > 0) {
-  reply = matchingFacts
-    .map(f => `- ${f.testo}`)
-    .join("\n");
-} else {
-  reply = "Mi dispiace, ma su questo non dispongo di fatti accertati.";
-}
+   
   
     // 🧠 system prompt (chiuso correttamente)
     const systemPrompt = `
