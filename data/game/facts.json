@@ -3,7 +3,7 @@
     {
       "id": "F1",
       "testo": "Riccardo è il figlio della vittima.",
-      "trigger": ["Riccardo", "figlio", "relazione"]
+      "trigger": ["Riccardo"]
     },
     {
       "id": "F2",
