@@ -16,7 +16,7 @@ function discoverFacts(playerText, factsData) {
   return factsData.fatti.filter(fatto =>
     fatto.trigger?.some(trigger =>
       text.includes(trigger.toLowerCase())
-    )
+    ).length >= 2
   );
 }
 
