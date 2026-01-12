@@ -34,21 +34,7 @@ export default async function handler(req, res) {
   "";
 
     
-    //const { playerText, gameState } = req.body;
-    //temporaneo
- // console.log("PLAYER TEXT:", playerText);
- // console.log("BODY:", req.body);
-//fine temporaneo
-    // Stato di gioco
-  /*
-    const state = gameState || {
-      scoperte: { personaggi: [], fatti: [], indizi: [] }
-    };
-
-    if (!state.scoperte.personaggi) {
-      state.scoperte.personaggi = [];
-    }
-*/
+   
    const state = gameState || {};
 
     // 📖 carica scenario
@@ -106,12 +92,12 @@ REGOLE:
 - Non citare ID o riferimenti tecnici.
 - Risposte brevi, non narrative.
 `;
-    
+/*    
 const replyText =
   matchingFacts.length > 0
     ? matchingFacts.map(f => `- ${f.testo}`).join("\n")
     : "Mi dispiace, ma su questo non dispongo di fatti accertati.";
-
+*/
 return res.status(200).json({
   reply: replyText,
   gameState: state
