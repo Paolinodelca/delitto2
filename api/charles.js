@@ -70,9 +70,13 @@ const replyText =
     ? matchingFacts.map(f => `- ${f.testo}`).join("\n")
     : "Mi dispiace, ma su questo non dispongo di fatti accertati.";
 
-   
+  const factsText =
+  factsData.fatti.map(f => `- ${f.testo}`).join("\n");
+ 
   
     // 🧠 system prompt (chiuso correttamente)
+
+ /*   
     const systemPrompt = `
 IDENTITÀ
 Sei Charles, un maggiordomo inglese negli anni '50.
@@ -92,11 +96,6 @@ REGOLE:
 - Non citare ID o riferimenti tecnici.
 - Risposte brevi, non narrative.
 `;
-/*    
-const replyText =
-  matchingFacts.length > 0
-    ? matchingFacts.map(f => `- ${f.testo}`).join("\n")
-    : "Mi dispiace, ma su questo non dispongo di fatti accertati.";
 */
 return res.status(200).json({
   reply: replyText,
