@@ -28,7 +28,16 @@ export default async function handler(req, res) {
       req.body.text ||
       "";
 
+   // const state = req.body.gameState || {};
     const state = req.body.gameState || {};
+
+  if (!state.scoperte) {
+  state.scoperte = { fatti: [] };
+  }
+  if (!Array.isArray(state.scoperte.fatti)) {
+  state.scoperte.fatti = [];
+  }
+
 
     // 📖 scenario (qui non lo usiamo ancora, ma lo teniamo)
     let scenarioText = "{}";
@@ -46,13 +55,14 @@ export default async function handler(req, res) {
     const questionType = detectQuestionType(question);
 
     // 🎯 FILTRO CORRETTO (QUESTO È IL matchingFacts “giusto”)
-    const matchingFacts = factsData.fatti.filter(fatto =>
-      fatto.tipo === questionType &&
-      Array.isArray(fatto.trigger) &&
-      fatto.trigger.some(trigger =>
-        question.includes(trigger.toLowerCase())
-      )
-    );
+   const matchingFacts = factsData.fatti.filter(fatto =>
+  state.scoperte.fatti.includes(fatto.id) &&
+  fatto.tipo === questionType &&
+  Array.isArray(fatto.trigger) &&
+  fatto.trigger.some(trigger =>
+    question.includes(trigger.toLowerCase()))
+  );
+
 
     // 🗣️ risposta di Charles
     const replyText =
