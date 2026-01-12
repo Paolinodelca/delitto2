@@ -61,6 +61,26 @@ export default async function handler(req, res) {
         ? factsData.fatti.map(f => `- ${f.testo}`).join("\n")
         : "Nessun fatto accertato.";
 
+// 🔍 analisi semplice della domanda
+const question = (playerText || "").toLowerCase();
+
+// cerchiamo fatti rilevanti
+const matchingFacts = factsData.fatti.filter(f =>
+  question.includes(f.soggetto?.toLowerCase())
+);
+
+// costruiamo la risposta di Charles
+let reply;
+
+if (matchingFacts.length > 0) {
+  reply = matchingFacts
+    .map(f => `- ${f.testo}`)
+    .join("\n");
+} else {
+  reply = "Mi dispiace, ma su questo non dispongo di fatti accertati.";
+}
+
+    
     // 🧠 system prompt (chiuso correttamente)
     const systemPrompt = `
 IDENTITÀ
@@ -81,13 +101,15 @@ REGOLE:
 - Non citare ID o riferimenti tecnici.
 - Risposte brevi, non narrative.
 `;
+    
+return res.status(200).json({
+  reply,
+  gameState: state
+});
 
-    // ✅ test senza LLM
-    return res.status(200).json({
-      reply: `[TEST OK]\n\n${factsText}`,
-      gameState: state
-    });
 
+
+    
   } catch (error) {
     console.error("CHARLES ERROR:", error);
     return res.status(500).json({
