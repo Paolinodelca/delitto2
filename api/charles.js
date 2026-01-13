@@ -15,6 +15,11 @@ function detectQuestionType(text) {
   return "generica";
 }
 
+const facts = [
+  { subject: "riccardo", predicate: "identità", value: "figlio della vittima" }
+];
+
+
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
