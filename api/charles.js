@@ -71,9 +71,11 @@ const matchingFacts = factsData.fatti.filter(fatto =>
         : "Mi dispiace, ma su questo non dispongo di fatti accertati.";
 
     return res.status(200).json({
-      reply,
-      gameState: req.body.gameState || {}
-    });
+  reply,
+  usedFacts: matchingFacts.map(f => f.id),
+  gameState: state
+});
+
 
   } catch (error) {
     console.error("CHARLES ERROR:", error);
