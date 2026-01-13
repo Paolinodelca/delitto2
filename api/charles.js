@@ -60,15 +60,14 @@ export default async function handler(req, res) {
     const questionType = detectQuestionType(question);
 
     // 🎯 FILTRO CORRETTO (QUESTO È IL matchingFacts “giusto”)
-   const matchingFacts = factsData.fatti.filter(fatto =>
-  state.scoperte.fatti.includes(fatto.id) &&
-  fatto.tipo === questionType &&
+  const matchingFacts = factsData.fatti.filter(fatto =>
   Array.isArray(fatto.trigger) &&
   fatto.trigger.some(trigger =>
-    question.includes(trigger.toLowerCase()))
-  );
+    question.includes(trigger.toLowerCase())
+  )
+);
 
-    
+   
     // 🧠 fallback intelligente: soggetto sì, tipo no
 if (matchingFacts.length === 0) {
   const possibleNames = ["riccardo", "elena"];
