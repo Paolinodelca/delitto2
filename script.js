@@ -104,6 +104,16 @@ async function handlePlayerInput(playerText) {
     }
 
     if (data.reply) {
+    if (Array.isArray(data.usedFacts)) {
+    data.usedFacts.forEach(id => {
+    if (!gameState.scoperte.fatti.includes(id)) {
+      gameState.scoperte.fatti.push(id);
+      console.log("📌 Fatto scoperto:", id);
+    }
+  });
+}
+
+      
       speak(data.reply);
       document.getElementById("charlesComment").innerText = data.reply;
     } else {
