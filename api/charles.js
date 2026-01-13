@@ -49,7 +49,7 @@ export default async function handler(req, res) {
 
     const question = playerText.toLowerCase();
     const questionAmbito = detectQuestionAmbito(question);
-
+/*
     // 🎯 filtro corretto: trigger + ambito
     const matchingFacts = factsData.fatti.filter(fatto =>
       fatto.ambito === questionAmbito &&
@@ -58,7 +58,19 @@ export default async function handler(req, res) {
         question.includes(trigger.toLowerCase())
       )
     );
+*/
+  const discoveredFacts = state.scoperte?.fatti || [];
 
+  const matchingFacts = factsData.fatti.filter(fatto =>
+  discoveredFacts.includes(fatto.id) &&   // solo fatti già scoperti
+  Array.isArray(fatto.trigger) &&
+  fatto.trigger.some(trigger =>
+    question.includes(trigger.toLowerCase())
+  )
+);
+
+
+    
     // 🗣️ risposta di Charles
     const reply =
       matchingFacts.length > 0
