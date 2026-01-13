@@ -39,6 +39,8 @@ export default async function handler(req, res) {
       req.body.text ||
       "";
 
+    const state = req.body.gameState || {};
+
     // 📚 carica fatti
     let factsData = { fatti: [] };
     try {
