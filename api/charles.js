@@ -7,12 +7,24 @@ const factsPath = path.join(basePath, "facts.json");
 
 // 🧠 riconoscimento semplice del tipo di domanda
 function detectQuestionAmbito(text) {
-  if (text.includes("chi è") || text.includes("di chi")) return "identità";
-  if (text.includes("lavoro") || text.includes("fa")) return "lavoro";
-  if (text.includes("con chi") || text.includes("parlato")) return "relazione";
-  if (text.includes("dove") || text.includes("quando") || text.includes("visto")) return "contesto";
+  // normalizzazione minima
+  const t = text
+    .toLowerCase()
+    .replace(/’/g, "'");
+
+  if (t.includes("chi è") || t.includes("di chi")) return "identità";
+  if (t.includes("lavoro") || t.includes("fa")) return "lavoro";
+  if (t.includes("con chi") || t.includes("parlato")) return "relazione";
+  if (
+    t.includes("dove") ||
+    t.includes("dov'") ||
+    t.includes("quando") ||
+    t.includes("visto")
+  ) return "contesto";
+
   return "generica";
 }
+
 
 export default async function handler(req, res) {
   try {
