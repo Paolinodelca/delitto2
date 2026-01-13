@@ -15,10 +15,6 @@ function detectQuestionType(text) {
   return "generica";
 }
 
-const facts = [
-  { subject: "riccardo", predicate: "identità", value: "figlio della vittima" }
-];
-
 
 export default async function handler(req, res) {
   try {
@@ -56,6 +52,10 @@ export default async function handler(req, res) {
       factsData = JSON.parse(fs.readFileSync(factsPath, "utf-8"));
     } catch {}
 
+    // 🔒 NORMALIZZAZIONE (QUESTA MANCAVA)
+  if (!Array.isArray(factsData.fatti)) {
+  factsData.fatti = [];
+  }
     const question = playerText.toLowerCase();
     const questionType = detectQuestionType(question);
 
