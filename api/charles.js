@@ -59,11 +59,13 @@ export default async function handler(req, res) {
 
 const matchingFacts = factsData.fatti.filter(fatto =>
   discoveredFacts.includes(fatto.id) &&
+  fatto.ambito === questionAmbito &&
   Array.isArray(fatto.trigger) &&
   fatto.trigger.some(trigger =>
     question.includes(trigger.toLowerCase())
   )
 );
+
 
 
     
