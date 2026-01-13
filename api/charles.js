@@ -16,11 +16,13 @@ function detectQuestionAmbito(text) {
   if (t.includes("lavoro") || t.includes("fa")) return "lavoro";
   if (t.includes("con chi") || t.includes("parlato")) return "relazione";
   if (
-    t.includes("dove") ||
-    t.includes("dov'") ||
-    t.includes("quando") ||
-    t.includes("visto")
-  ) return "contesto";
+  t.includes("dove") ||
+  t.includes("dov") ||      // copre dov', dove, doveera
+  t.includes("quando") ||
+  t.includes("era") ||      // fondamentale per “dove era”
+  t.includes("visto")
+) return "contesto";
+
 
   return "generica";
 }
