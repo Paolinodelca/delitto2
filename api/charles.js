@@ -68,7 +68,8 @@ export default async function handler(req, res) {
     question.includes(trigger.toLowerCase()))
   );
 
-    // Fallback: match per nome se non ci sono trigger espliciti
+    
+    // 🧠 fallback intelligente: soggetto sì, tipo no
 if (matchingFacts.length === 0) {
   const possibleNames = ["riccardo", "elena"];
 
@@ -77,22 +78,22 @@ if (matchingFacts.length === 0) {
   );
 
   if (mentionedName) {
+    // esistono fatti su questo soggetto?
+    const factsAboutSubject = factsData.fatti.filter(f =>
+      f.soggetto === mentionedName
+    );
 
-   const nameFacts = factsData.fatti.filter(f =>
-  f.testo &&
-  f.testo.toLowerCase().includes(mentionedName)
-);
-
-if (nameFacts.length > 0) {
-  matchingFacts.push(...nameFacts);
-}
- 
-   
-
-    
+    if (factsAboutSubject.length > 0) {
+      // Charles SA chi è, ma NON sa questo aspetto
+      return res.status(200).json({
+        reply: "Mi dispiace, ma su questo aspetto non dispongo di fatti accertati.",
+        gameState: state
+      });
+    }
   }
 }
 
+    
 
     // 🗣️ risposta di Charles
     const replyText =
