@@ -28,8 +28,11 @@ const suspect = {
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = "it-IT";
 recognition.interimResults = false;
-
 function startListening() {
+  if (recognition.state === "listening") {
+    console.log("🎙️ Riconoscimento già attivo");
+    return;
+  }
   recognition.start();
 }
 
