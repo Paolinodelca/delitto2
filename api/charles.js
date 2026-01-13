@@ -8,6 +8,7 @@ const factsPath = path.join(basePath, "facts.json");
 // 🧠 riconoscimento semplice del tipo di domanda
 function detectQuestionAmbito(text) {
   // normalizzazione minima
+  
   const t = text
     .toLowerCase()
     .replace(/’/g, "'");
@@ -67,15 +68,36 @@ const matchingFacts = factsData.fatti.filter(fatto =>
     question.includes(trigger.toLowerCase())
   )
 );
+// 🧠 fatti noti sul soggetto, ma non pertinenti alla domanda
+const mentionedNames = ["riccardo", "elena"];
+
+const mentionedName = mentionedNames.find(name =>
+  question.includes(name)
+);
+
+const knownFactsOnSubject = mentionedName
+  ? factsData.fatti.filter(f =>
+      discoveredFacts.includes(f.id) &&
+      f.testo.toLowerCase().includes(mentionedName)
+    )
+  : [];
 
 
 
     
     // 🗣️ risposta di Charles
-    const reply =
-      matchingFacts.length > 0
-        ? matchingFacts.map(f => `- ${f.testo}`).join("\n")
-        : "Mi dispiace, ma su questo non dispongo di fatti accertati.";
+  let reply;
+
+if (matchingFacts.length > 0) {
+  reply = matchingFacts.map(f => `- ${f.testo}`).join("\n");
+} else if (knownFactsOnSubject.length > 0) {
+  reply =
+    "Su questo punto non dispongo di informazioni, " +
+    "ma so che:\n" +
+    knownFactsOnSubject.map(f => `- ${f.testo}`).join("\n");
+} else {
+  reply = "Mi dispiace, ma su questo non dispongo di fatti accertati.";
+}
 
     return res.status(200).json({
   reply,
