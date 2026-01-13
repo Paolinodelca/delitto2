@@ -9,6 +9,7 @@ let gameState = {
   }
 };
 
+gameState.scoperte.fatti.push("F1");
 
 
 /* =========================
