@@ -77,13 +77,19 @@ if (matchingFacts.length === 0) {
   );
 
   if (mentionedName) {
-    const nameFacts = facts.fatti.filter(f =>
-      f.testo.toLowerCase().includes(mentionedName)
-    );
 
-    if (nameFacts.length > 0) {
-      matchingFacts.push(...nameFacts);
-    }
+   const nameFacts = factsData.fatti.filter(f =>
+  f.testo &&
+  f.testo.toLowerCase().includes(mentionedName)
+);
+
+if (nameFacts.length > 0) {
+  matchingFacts.push(...nameFacts);
+}
+ 
+   
+
+    
   }
 }
 
