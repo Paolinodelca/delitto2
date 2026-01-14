@@ -28,6 +28,21 @@ function detectQuestionAmbito(text) {
   return "generica";
 }
 
+function invertRelationFact(fatto, targetName) {
+  const r = fatto.relazione;
+  if (!r || !r.bidirezionale) return null;
+
+  if (r.oggetto === targetName) {
+    return {
+      id: fatto.id + "_inv",
+      testo: `${r.oggetto[0].toUpperCase() + r.oggetto.slice(1)} ha parlato con ${r.soggetto}.`,
+      ambito: fatto.ambito
+    };
+  }
+
+  return null;
+}
+
 
 export default async function handler(req, res) {
   try {
@@ -46,21 +61,7 @@ export default async function handler(req, res) {
 
     // 📚 carica fatti
     let factsData = { fatti: [] };
-    function invertRelationFact(fatto, targetName) {
-  const r = fatto.relazione;
-  if (!r || !r.bidirezionale) return null;
-
-  if (r.oggetto === targetName) {
-    return {
-      id: fatto.id + "_inv",
-      testo: `${r.oggetto[0].toUpperCase() + r.oggetto.slice(1)} ha parlato con ${r.soggetto}.`,
-      ambito: fatto.ambito
-    };
-  }
-
-  return null;
-}
-
+   
     
     try {
       factsData = JSON.parse(fs.readFileSync(factsPath, "utf-8"));
@@ -97,12 +98,18 @@ const mentionedName = mentionedNames.find(name =>
   question.includes(name)
 );
 
+    
 const knownFactsOnSubject = mentionedName
   ? factsData.fatti.filter(f =>
       discoveredFacts.includes(f.id) &&
       f.testo.toLowerCase().includes(mentionedName)
     )
+  : [];
+
 const inferredFacts = [];
+
+
+    
 
 if (mentionedName) {
   factsData.fatti.forEach(f => {
