@@ -1,48 +1,59 @@
-import fs from "fs";
-import path from "path";
+// charles.js
 
-const basePath = path.join(process.cwd(), "data", "game");
-const factsPath = path.join(basePath, "facts.json");
+import { elenaFacts } from "./knowledge/elena.js";
+import { riccardoFacts } from "./knowledge/riccardo.js";
 
-export default async function handler(req, res) {
-  try {
-    if (req.method !== "POST") {
-      return res.status(405).json({ error: "Metodo non consentito" });
-    }
+/**
+ * Funzione principale chiamata dal backend
+ */
+export function charlesReply(userText) {
+  const text = userText.toLowerCase();
 
-    const playerText =
-      req.body.playerText ||
-      req.body.message ||
-      req.body.text ||
-      "";
+  // 1. Rilevamento personaggio
+  const character = detectCharacter(text);
 
-    let factsData = { fatti: [] };
-    try {
-      factsData = JSON.parse(fs.readFileSync(factsPath, "utf-8"));
-    } catch {}
+  console.log("CHARLES | personaggio rilevato:", character);
 
-    const question = playerText.toLowerCase();
-
-    const matchingFacts = factsData.fatti.filter(f =>
-      Array.isArray(f.trigger) &&
-     // f.trigger.some(t => question.includes(t))
-
-      f.trigger.some(t => question.includes(t.toLowerCase()))
-
-    );
-
-    const reply =
-      matchingFacts.length > 0
-        ? matchingFacts.map(f => `- ${f.testo}`).join("\n")
-        : "Mi dispiace, ma su questo non dispongo di fatti accertati.";
-
-    return res.status(200).json({ reply });
-
-  } catch (error) {
-    console.error("CHARLES ERROR:", error);
-    return res.status(500).json({
-      error: "Errore server",
-      details: error.message
-    });
+  // 2. Routing verso la knowledge base corretta
+  if (character === "elena") {
+    return answerFromFacts("Elena", elenaFacts, text);
   }
+
+  if (character === "riccardo") {
+    return answerFromFacts("Riccardo", riccardoFacts, text);
+  }
+
+  // 3. Fallback narrativo
+  return fallback();
+}
+
+/**
+ * Riconosce se nella domanda è citato un personaggio
+ */
+function detectCharacter(text) {
+  if (text.includes("elena")) return "elena";
+  if (text.includes("riccardo")) return "riccardo";
+  return null;
+}
+
+/**
+ * Cerca una risposta nella knowledge base del personaggio
+ */
+function answerFromFacts(name, facts, text) {
+  for (const fact of facts) {
+    if (text.includes(fact.trigger)) {
+      console.log(`CHARLES | fatto trovato per ${name}:`, fact.trigger);
+      return `${name}: ${fact.answer}`;
+    }
+  }
+
+  // se il personaggio è noto ma la domanda no
+  return `${name}: Su questo non risultano fatti accertati.`;
+}
+
+/**
+ * Risposta di Charles quando non sa nemmeno di chi si parla
+ */
+function fallback() {
+  return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
 }
