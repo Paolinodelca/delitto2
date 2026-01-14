@@ -25,7 +25,10 @@ export default async function handler(req, res) {
 
     const matchingFacts = factsData.fatti.filter(f =>
       Array.isArray(f.trigger) &&
-      f.trigger.some(t => question.includes(t))
+     // f.trigger.some(t => question.includes(t))
+
+      f.trigger.some(t => question.includes(t.toLowerCase()))
+
     );
 
     const reply =
