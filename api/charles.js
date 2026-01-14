@@ -46,6 +46,22 @@ export default async function handler(req, res) {
 
     // 📚 carica fatti
     let factsData = { fatti: [] };
+    function invertRelationFact(fatto, targetName) {
+  const r = fatto.relazione;
+  if (!r || !r.bidirezionale) return null;
+
+  if (r.oggetto === targetName) {
+    return {
+      id: fatto.id + "_inv",
+      testo: `${r.oggetto[0].toUpperCase() + r.oggetto.slice(1)} ha parlato con ${r.soggetto}.`,
+      ambito: fatto.ambito
+    };
+  }
+
+  return null;
+}
+
+    
     try {
       factsData = JSON.parse(fs.readFileSync(factsPath, "utf-8"));
     } catch {
@@ -86,6 +102,22 @@ const knownFactsOnSubject = mentionedName
       discoveredFacts.includes(f.id) &&
       f.testo.toLowerCase().includes(mentionedName)
     )
+const inferredFacts = [];
+
+if (mentionedName) {
+  factsData.fatti.forEach(f => {
+    if (
+      discoveredFacts.includes(f.id) &&
+      f.relazione &&
+      f.relazione.bidirezionale
+    ) {
+      const inv = invertRelationFact(f, mentionedName);
+      if (inv) inferredFacts.push(inv);
+    }
+  });
+}
+
+  
   : [];
 
 
@@ -100,14 +132,16 @@ if (ambitoCompatibleFacts.length > 0) {
   reply =
     "Non ho informazioni precise su questo aspetto, ma so che:\n" +
     matchingFacts.map(f => `- ${f.testo}`).join("\n");
-}
- 
-else if (knownFactsOnSubject.length > 0) {
+} else if (knownFactsOnSubject.length > 0 || inferredFacts.length > 0) {
   reply =
-    "Su questo punto non dispongo di informazioni, " +
-    "ma so che:\n" +
-    knownFactsOnSubject.map(f => `- ${f.testo}`).join("\n");
-} else {
+    "Su questo punto non dispongo di informazioni precise, ma so che:\n" +
+    [...knownFactsOnSubject, ...inferredFacts]
+      .map(f => `- ${f.testo}`)
+      .join("\n");
+}
+/*
+   */
+  else {
   reply = "Mi dispiace, ma su questo non dispongo di fatti accertati.";
 }
 
