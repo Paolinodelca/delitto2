@@ -62,12 +62,18 @@ export default async function handler(req, res) {
 
 const matchingFacts = factsData.fatti.filter(fatto =>
   discoveredFacts.includes(fatto.id) &&
-  fatto.ambito === questionAmbito &&
   Array.isArray(fatto.trigger) &&
   fatto.trigger.some(trigger =>
     question.includes(trigger.toLowerCase())
   )
 );
+
+    const ambitoCompatibleFacts = matchingFacts.filter(
+  f => f.ambito === questionAmbito
+);
+
+
+    
 // 🧠 fatti noti sul soggetto, ma non pertinenti alla domanda
 const mentionedNames = ["riccardo", "elena"];
 
@@ -88,9 +94,15 @@ const knownFactsOnSubject = mentionedName
     // 🗣️ risposta di Charles
   let reply;
 
-if (matchingFacts.length > 0) {
-  reply = matchingFacts.map(f => `- ${f.testo}`).join("\n");
-} else if (knownFactsOnSubject.length > 0) {
+if (ambitoCompatibleFacts.length > 0) {
+  reply = ambitoCompatibleFacts.map(f => `- ${f.testo}`).join("\n");
+} else if (matchingFacts.length > 0) {
+  reply =
+    "Non ho informazioni precise su questo aspetto, ma so che:\n" +
+    matchingFacts.map(f => `- ${f.testo}`).join("\n");
+}
+ 
+else if (knownFactsOnSubject.length > 0) {
   reply =
     "Su questo punto non dispongo di informazioni, " +
     "ma so che:\n" +
