@@ -12,6 +12,20 @@
       "ambito": "contesto",
       "trigger": ["elena", "presente", "villa"]
     }
+      {
+      "id": "F3",
+      "testo": "Elena ha parlato con Riccardo.",
+      "ambito": "relazione",
+      "trigger": ["elena", "parlato"],
+      "relazione": {
+      "tipo": "dialogo",
+      "soggetto": "elena",
+      "oggetto": "riccardo",
+      "bidirezionale": true
+      }
+    }
+
+    
   ]
 }
 
