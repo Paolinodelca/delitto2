@@ -98,7 +98,7 @@ const mentionedName = mentionedNames.find(name =>
   question.includes(name)
 );
 
-    
+/////    
 const knownFactsOnSubject = mentionedName
   ? factsData.fatti.filter(f =>
       discoveredFacts.includes(f.id) &&
@@ -107,9 +107,6 @@ const knownFactsOnSubject = mentionedName
   : [];
 
 const inferredFacts = [];
-
-
-    
 
 if (mentionedName) {
   factsData.fatti.forEach(f => {
@@ -124,6 +121,7 @@ if (mentionedName) {
   });
 }
 
+//////
   
   : [];
 
