@@ -3,6 +3,25 @@
 import fs from "fs";
 import path from "path";
 
+import { elenaFacts } from "./knowledge/elena.js";
+import { riccardoFacts } from "./knowledge/riccardo.js";
+
+/**
+ * Normalizza il testo dell'utente
+ * (accenti, apostrofi, maiuscole)
+ */
+function normalize(text) {
+  return text
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/[èéê]/g, "e")
+    .replace(/[à]/g, "a")
+    .replace(/[ì]/g, "i")
+    .replace(/[ò]/g, "o")
+    .replace(/[ù]/g, "u");
+}
+
+
 // percorsi knowledge
 const basePath = path.join(process.cwd(), "knowledge");
 const elenaPath = path.join(basePath, "elena.json");
@@ -61,7 +80,9 @@ export default async function handler(req, res) {
       req.body.message ||
       "";
 
-    const text = userText.toLowerCase();
+    export function charlesReply(userText) {
+    const text = normalize(userText);
+
 
     const who = detectCharacter(text);
 
