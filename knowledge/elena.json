@@ -1,4 +1,5 @@
-{
+
+/*{
   "nome": "Elena",
   "ruolo": "personaggio",
   "descrizione": "Elena è una figura presente in villa il giorno del delitto.",
@@ -11,4 +12,11 @@
   ]
  "contesto": "Elena era presente in villa il giorno del delitto."
  
+} */
+{
+  "nome": "Elena",
+  "descrizione": "Elena è una figura presente in villa il giorno del delitto.",
+  "contesto": "Elena era presente in villa il giorno del delitto."
 }
+
+
