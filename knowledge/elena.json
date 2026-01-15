@@ -1,0 +1,12 @@
+{
+  "nome": "Elena",
+  "ruolo": "personaggio",
+  "descrizione": "Elena è una figura presente in villa il giorno del delitto.",
+  "relazioni": [
+    {
+      "tipo": "ha parlato con",
+      "persona": "Riccardo",
+      "bidirezionale": true
+    }
+  ]
+}
