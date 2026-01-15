@@ -1,76 +1,36 @@
-// api/charles.js
+// /api/charles.js
 
 import fs from "fs";
 import path from "path";
 
-const knowledgePath = path.join(process.cwd(), "knowledge");
+// percorsi knowledge
+const basePath = path.join(process.cwd(), "knowledge");
+const elenaPath = path.join(basePath, "elena.json");
+const riccardoPath = path.join(basePath, "riccardo.json");
 
-/* =========================
-   API HANDLER (Vercel)
-========================= */
-export default function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Metodo non consentito" });
-  }
-
-  const userText =
-    req.body.playerText ||
-    req.body.text ||
-    req.body.message ||
-    "";
-
-  const reply = charlesReply(userText);
-
-  return res.status(200).json({ reply });
-}
-
-/* =========================
-   LOGICA DI CHARLES
-========================= */
-
-function charlesReply(userText) {
-  const text = userText.toLowerCase();
-
-  const character = detectCharacter(text);
-
-  console.log("CHARLES | personaggio rilevato:", character);
-
-  if (!character) {
-    return fallback();
-  }
-
-  const characterData = loadCharacter(character);
-
-  if (!characterData) {
-    return fallback();
-  }
-
-  return answerFromCharacter(characterData, text);
-}
-
-/* =========================
-   UTILITÀ
-========================= */
-
-function detectCharacter(text) {
-  if (text.includes("riccardo")) return "riccardo";
-  if (text.includes("elena")) return "elena";
-  return null;
-}
-
-function loadCharacter(name) {
+// helper: carica JSON
+function loadJSON(filePath) {
   try {
-    const filePath = path.join(knowledgePath, `${name}.json`);
-    const raw = fs.readFileSync(filePath, "utf-8");
-    return JSON.parse(raw);
-  } catch (err) {
-    console.error("CHARLES | errore caricamento JSON:", err);
+    return JSON.parse(fs.readFileSync(filePath, "utf-8"));
+  } catch {
     return null;
   }
 }
-/////
+
+// riconoscimento personaggio
+function detectCharacter(text) {
+  if (text.includes("elena")) return "elena";
+  if (text.includes("riccardo")) return "riccardo";
+  return null;
+}
+
+// risposta per personaggio
 function answerFromCharacter(character, text) {
-  if (text.includes("chi è") || text.includes("chi era")) {
+  if (!character) {
+    return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
+  }
+
+  if (text.includes("chi è") || text.includes("chi era") || text.includes("dimmi")) {
     return `${character.nome}: ${character.descrizione}`;
   }
 
@@ -85,20 +45,39 @@ function answerFromCharacter(character, text) {
     return `${character.nome}: Su questo non risultano informazioni accertate.`;
   }
 
-  if (
-    text.includes("dimmi") ||
-    text.includes("parlami") ||
-    text.includes("raccontami")
-  ) {
-    return `${character.nome}: ${character.descrizione}`;
-  }
-
   return `${character.nome}: Su questo non dispongo di fatti accertati.`;
 }
 
+// 🔴 ENTRY POINT OBBLIGATORIO PER VERCEL
+export default async function handler(req, res) {
+  try {
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Metodo non consentito" });
+    }
 
+    const userText =
+      req.body.playerText ||
+      req.body.text ||
+      req.body.message ||
+      "";
 
-///////
-function fallback() {
-  return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
+    const text = userText.toLowerCase();
+
+    const who = detectCharacter(text);
+
+    let character = null;
+    if (who === "elena") character = loadJSON(elenaPath);
+    if (who === "riccardo") character = loadJSON(riccardoPath);
+
+    const reply = answerFromCharacter(character, text);
+
+    return res.status(200).json({ reply });
+
+  } catch (err) {
+    console.error("CHARLES ERROR:", err);
+    return res.status(500).json({
+      error: "Errore server",
+      details: err.message
+    });
+  }
 }
