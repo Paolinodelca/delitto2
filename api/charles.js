@@ -1,14 +1,34 @@
-// charles.js
+// api/charles.js
 
 import fs from "fs";
 import path from "path";
 
 const knowledgePath = path.join(process.cwd(), "knowledge");
 
-/**
- * Funzione principale
- */
-export function charlesReply(userText) {
+/* =========================
+   API HANDLER (Vercel)
+========================= */
+export default function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Metodo non consentito" });
+  }
+
+  const userText =
+    req.body.playerText ||
+    req.body.text ||
+    req.body.message ||
+    "";
+
+  const reply = charlesReply(userText);
+
+  return res.status(200).json({ reply });
+}
+
+/* =========================
+   LOGICA DI CHARLES
+========================= */
+
+function charlesReply(userText) {
   const text = userText.toLowerCase();
 
   const character = detectCharacter(text);
@@ -28,18 +48,16 @@ export function charlesReply(userText) {
   return answerFromCharacter(characterData, text);
 }
 
-/**
- * Rileva il personaggio citato
- */
+/* =========================
+   UTILITÀ
+========================= */
+
 function detectCharacter(text) {
   if (text.includes("riccardo")) return "riccardo";
   if (text.includes("elena")) return "elena";
   return null;
 }
 
-/**
- * Carica il JSON del personaggio
- */
 function loadCharacter(name) {
   try {
     const filePath = path.join(knowledgePath, `${name}.json`);
@@ -51,16 +69,11 @@ function loadCharacter(name) {
   }
 }
 
-/**
- * Genera la risposta a partire dal personaggio
- */
 function answerFromCharacter(character, text) {
-  // domande di identità
   if (text.includes("chi è") || text.includes("chi era")) {
     return `${character.nome}: ${character.descrizione}`;
   }
 
-  // domande generiche sul personaggio
   if (
     text.includes("dimmi") ||
     text.includes("parlami") ||
@@ -72,9 +85,6 @@ function answerFromCharacter(character, text) {
   return `${character.nome}: Su questo non dispongo di fatti accertati.`;
 }
 
-/**
- * Fallback totale
- */
 function fallback() {
   return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
 }
