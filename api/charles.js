@@ -9,26 +9,24 @@ import { riccardoFacts } from "./knowledge/riccardo.js";
 export function charlesReply(userText) {
   const text = userText.toLowerCase();
 
-  // 1. Rilevamento personaggio
   const character = detectCharacter(text);
+  const ambito = detectAmbito(text);
 
-  console.log("CHARLES | personaggio rilevato:", character);
+  console.log("CHARLES | personaggio:", character, "| ambito:", ambito);
 
-  // 2. Routing verso la knowledge base corretta
   if (character === "elena") {
-    return answerFromFacts("Elena", elenaFacts, text);
+    return answerFromFacts("Elena", elenaFacts, text, ambito);
   }
 
   if (character === "riccardo") {
-    return answerFromFacts("Riccardo", riccardoFacts, text);
+    return answerFromFacts("Riccardo", riccardoFacts, text, ambito);
   }
 
-  // 3. Fallback narrativo
   return fallback();
 }
 
 /**
- * Riconosce se nella domanda è citato un personaggio
+ * Riconosce il personaggio citato
  */
 function detectCharacter(text) {
   if (text.includes("elena")) return "elena";
@@ -37,22 +35,37 @@ function detectCharacter(text) {
 }
 
 /**
- * Cerca una risposta nella knowledge base del personaggio
+ * Riconosce il tipo di domanda
  */
-function answerFromFacts(name, facts, text) {
+function detectAmbito(text) {
+  if (text.includes("chi è") || text.includes("chi era")) return "identità";
+  if (text.includes("dove") || text.includes("era")) return "contesto";
+  if (text.includes("con chi") || text.includes("parlato")) return "relazioni";
+  if (text.includes("lavoro") || text.includes("fa")) return "lavoro";
+  return "generico";
+}
+
+/**
+ * Cerca una risposta coerente nella knowledge base
+ */
+function answerFromFacts(name, facts, text, ambito) {
+  // 1. match diretto per trigger + ambito
   for (const fact of facts) {
-    if (text.includes(fact.trigger)) {
+    if (
+      text.includes(fact.trigger) &&
+      (!fact.ambito || fact.ambito === ambito)
+    ) {
       console.log(`CHARLES | fatto trovato per ${name}:`, fact.trigger);
       return `${name}: ${fact.answer}`;
     }
   }
 
-  // se il personaggio è noto ma la domanda no
-  return `${name}: Su questo non risultano fatti accertati.`;
+  // 2. fallback sul personaggio (ma coerente)
+  return `${name}: Su questo punto non risultano fatti accertati.`;
 }
 
 /**
- * Risposta di Charles quando non sa nemmeno di chi si parla
+ * Fallback totale
  */
 function fallback() {
   return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
