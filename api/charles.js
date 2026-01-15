@@ -1,67 +1,75 @@
 // charles.js
 
-import { elenaFacts } from "./knowledge/elena.js";
-import { riccardoFacts } from "./knowledge/riccardo.js";
+import fs from "fs";
+import path from "path";
+
+const knowledgePath = path.join(process.cwd(), "knowledge");
 
 /**
- * Funzione principale chiamata dal backend
+ * Funzione principale
  */
 export function charlesReply(userText) {
   const text = userText.toLowerCase();
 
   const character = detectCharacter(text);
-  const ambito = detectAmbito(text);
 
-  console.log("CHARLES | personaggio:", character, "| ambito:", ambito);
+  console.log("CHARLES | personaggio rilevato:", character);
 
-  if (character === "elena") {
-    return answerFromFacts("Elena", elenaFacts, text, ambito);
+  if (!character) {
+    return fallback();
   }
 
-  if (character === "riccardo") {
-    return answerFromFacts("Riccardo", riccardoFacts, text, ambito);
+  const characterData = loadCharacter(character);
+
+  if (!characterData) {
+    return fallback();
   }
 
-  return fallback();
+  return answerFromCharacter(characterData, text);
 }
 
 /**
- * Riconosce il personaggio citato
+ * Rileva il personaggio citato
  */
 function detectCharacter(text) {
-  if (text.includes("elena")) return "elena";
   if (text.includes("riccardo")) return "riccardo";
+  if (text.includes("elena")) return "elena";
   return null;
 }
 
 /**
- * Riconosce il tipo di domanda
+ * Carica il JSON del personaggio
  */
-function detectAmbito(text) {
-  if (text.includes("chi è") || text.includes("chi era")) return "identità";
-  if (text.includes("dove") || text.includes("era")) return "contesto";
-  if (text.includes("con chi") || text.includes("parlato")) return "relazioni";
-  if (text.includes("lavoro") || text.includes("fa")) return "lavoro";
-  return "generico";
+function loadCharacter(name) {
+  try {
+    const filePath = path.join(knowledgePath, `${name}.json`);
+    const raw = fs.readFileSync(filePath, "utf-8");
+    return JSON.parse(raw);
+  } catch (err) {
+    console.error("CHARLES | errore caricamento JSON:", err);
+    return null;
+  }
 }
 
 /**
- * Cerca una risposta coerente nella knowledge base
+ * Genera la risposta a partire dal personaggio
  */
-function answerFromFacts(name, facts, text, ambito) {
-  // 1. match diretto per trigger + ambito
-  for (const fact of facts) {
-    if (
-      text.includes(fact.trigger) &&
-      (!fact.ambito || fact.ambito === ambito)
-    ) {
-      console.log(`CHARLES | fatto trovato per ${name}:`, fact.trigger);
-      return `${name}: ${fact.answer}`;
-    }
+function answerFromCharacter(character, text) {
+  // domande di identità
+  if (text.includes("chi è") || text.includes("chi era")) {
+    return `${character.nome}: ${character.descrizione}`;
   }
 
-  // 2. fallback sul personaggio (ma coerente)
-  return `${name}: Su questo punto non risultano fatti accertati.`;
+  // domande generiche sul personaggio
+  if (
+    text.includes("dimmi") ||
+    text.includes("parlami") ||
+    text.includes("raccontami")
+  ) {
+    return `${character.nome}: ${character.descrizione}`;
+  }
+
+  return `${character.nome}: Su questo non dispongo di fatti accertati.`;
 }
 
 /**
