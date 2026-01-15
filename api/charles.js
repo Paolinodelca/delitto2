@@ -3,8 +3,9 @@
 import fs from "fs";
 import path from "path";
 
-import { elenaFacts } from "./knowledge/elena.js";
-import { riccardoFacts } from "./knowledge/riccardo.js";
+const { elenaFacts } = require("./knowledge/elena.js");
+const { riccardoFacts } = require("./knowledge/riccardo.js");
+
 
 /**
  * Normalizza il testo dell'utente
@@ -80,8 +81,10 @@ export default async function handler(req, res) {
       req.body.message ||
       "";
 
-    export function charlesReply(userText) {
-    const text = normalize(userText);
+      function charlesReply(userText) {
+
+    
+      const text = normalize(userText);
 
 
     const who = detectCharacter(text);
@@ -102,3 +105,5 @@ export default async function handler(req, res) {
     });
   }
 }
+module.exports = { charlesReply };
+
