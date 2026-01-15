@@ -1,14 +1,6 @@
+
 {
   "nome": "Riccardo",
-  "ruolo": "personaggio",
   "descrizione": "Riccardo è il figlio della vittima.",
-  "relazioni": [
-    {
-      "tipo": "figlio di",
-      "persona": "La vittima",
-      "bidirezionale": false
-    }
-  ]
   "contesto": "Riccardo era presente in villa nei giorni precedenti al delitto."
-
 }
