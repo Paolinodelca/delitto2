@@ -68,10 +68,21 @@ function loadCharacter(name) {
     return null;
   }
 }
-
+/////
 function answerFromCharacter(character, text) {
   if (text.includes("chi è") || text.includes("chi era")) {
     return `${character.nome}: ${character.descrizione}`;
+  }
+
+  if (
+    text.includes("dove") ||
+    text.includes("quando") ||
+    text.includes("era")
+  ) {
+    if (character.contesto) {
+      return `${character.nome}: ${character.contesto}`;
+    }
+    return `${character.nome}: Su questo non risultano informazioni accertate.`;
   }
 
   if (
@@ -85,6 +96,9 @@ function answerFromCharacter(character, text) {
   return `${character.nome}: Su questo non dispongo di fatti accertati.`;
 }
 
+
+
+///////
 function fallback() {
   return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
 }
