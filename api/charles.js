@@ -17,6 +17,34 @@ function normalize(text) {
     .replace(/[ù]/g, "u");
 }
 
+// mappa degli intenti della domanda
+const intentMap = {
+  identita: [
+    "chi e",
+    "chi era",
+    "dimmi",
+    "dimmi di"
+  ],
+  contesto: [
+    "dove",
+    "quando",
+    "era",
+    "si trovava",
+    "presente"
+  ]
+};
+
+// rileva l'intento della domanda
+function detectIntent(text) {
+  for (const [intent, keywords] of Object.entries(intentMap)) {
+    if (keywords.some(k => text.includes(k))) {
+      return intent;
+    }
+  }
+  return "generica";
+}
+
+
 // percorsi knowledge
 const basePath = path.join(process.cwd(), "knowledge");
 const elenaPath = path.join(basePath, "elena.json");
@@ -38,29 +66,34 @@ function detectCharacter(text) {
   return null;
 }
 
+
 // risposta logica
 function answerFromCharacter(character, text) {
   if (!character) {
     return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
   }
 
-  if (
-    text.includes("chi e") ||
-    text.includes("chi era") ||
-    text.includes("dimmi")
-  ) {
-    return `${character.nome}: ${character.descrizione}`;
+  const intent = detectIntent(text);
+
+  // IDENTITÀ
+  if (intent === "identita") {
+    if (character.descrizione) {
+      return `${character.nome}: ${character.descrizione}`;
+    }
   }
 
-  if (text.includes("dove") || text.includes("quando") || text.includes("era")) {
+  // CONTESTO (dove / quando / era)
+  if (intent === "contesto") {
     if (character.contesto) {
       return `${character.nome}: ${character.contesto}`;
     }
     return `${character.nome}: Su questo non risultano informazioni accertate.`;
   }
 
+  // fallback per domande generiche
   return `${character.nome}: Su questo non dispongo di fatti accertati.`;
 }
+
 
 // ✅ ENTRY POINT VERCEL (UNO SOLO)
 export default async function handler(req, res) {
