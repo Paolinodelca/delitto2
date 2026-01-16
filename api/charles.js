@@ -76,13 +76,25 @@ function answerFromCharacter(character, text) {
   }
 
   // 🔴 PRIORITÀ ASSOLUTA: relazioni familiari
+  // 🔴 PRIORITÀ: relazioni familiari
+if (
+  text.includes("padre") ||
+  text.includes("figlio") ||
+  text.includes("figlia")
+) {
+  // caso: domanda incompleta ("figlio di", "padre di")
   if (
-    text.includes("padre") ||
-    text.includes("figlio") ||
-    text.includes("figlia")
+    text.endsWith("figlio di") ||
+    text.endsWith("figlia di") ||
+    text.endsWith("padre di")
   ) {
-    return `${character.nome}: Non risultano informazioni accertate su relazioni familiari.`;
+    return `${character.nome}: La domanda non specifica di chi.`;
   }
+
+  // caso: domanda completa ma relazione non presente nella knowledge
+  return `${character.nome}: Non risultano informazioni accertate su relazioni familiari.`;
+}
+
 
   const intent = detectIntent(text);
 
