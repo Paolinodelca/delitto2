@@ -133,24 +133,40 @@ let newState = req.body.gameState || {};
 // se c’è un’ambiguità in sospeso
 if (newState.pendingAmbiguity) {
   const chosen = detectCharacter(text);
+/////
+if (chosen) {
+  const originalText = newState.pendingAmbiguity.originalText;
+  const mergedText = originalText + " " + chosen;
 
-  if (chosen) {
-    const originalText = newState.pendingAmbiguity.originalText;
-    const mergedText = originalText + " " + chosen;
+  const finalText = normalize(mergedText);
+  const whoFinal = detectCharacter(finalText);
 
-    const finalText = normalize(mergedText);
-    const whoFinal = detectCharacter(finalText);
+  let finalCharacter = null;
+  if (whoFinal === "elena") finalCharacter = loadJSON(elenaPath);
+  if (whoFinal === "riccardo") finalCharacter = loadJSON(riccardoPath);
 
-    let finalCharacter = null;
-    if (whoFinal === "elena") finalCharacter = loadJSON(elenaPath);
-    if (whoFinal === "riccardo") finalCharacter = loadJSON(riccardoPath);
+  reply = answerFromCharacter(finalCharacter, finalText);
 
-    reply = answerFromCharacter(finalCharacter, finalText);
-
+  delete newState.pendingAmbiguity;
+} else {
+  // risposta evasiva o indecisa → chiudiamo l’ambiguità
+  if (
+    text.includes("boh") ||
+    text.includes("non so") ||
+    text.includes("non ricordo") ||
+    text.includes("nessuno")
+  ) {
+    reply =
+      "Charles: Va bene. Quando vuoi chiarire a chi ti riferisci, chiedimelo pure.";
     delete newState.pendingAmbiguity;
   } else {
-    reply = "Charles: Non ho capito a chi ti riferisci.";
+    reply =
+      "Charles: Non ho capito a chi ti riferisci. Puoi dirmi il nome?";
   }
+}
+
+
+  
 } else {
   reply = answerFromCharacter(character, text);
 
