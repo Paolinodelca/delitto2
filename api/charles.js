@@ -68,9 +68,20 @@ function detectCharacter(text) {
 
 
 // risposta logica
+
+
 function answerFromCharacter(character, text) {
   if (!character) {
     return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
+  }
+
+  // 🔴 PRIORITÀ ASSOLUTA: relazioni familiari
+  if (
+    text.includes("padre") ||
+    text.includes("figlio") ||
+    text.includes("figlia")
+  ) {
+    return `${character.nome}: Non risultano informazioni accertate su relazioni familiari.`;
   }
 
   const intent = detectIntent(text);
@@ -87,24 +98,17 @@ function answerFromCharacter(character, text) {
     if (character.contesto) {
       return `${character.nome}: ${character.contesto}`;
     }
-    
+
     return `${character.nome}: Su questo non risultano informazioni accertate.`;
   }
 
-  // fallback per domande generiche
-  // caso: domanda su relazioni familiari non note
-if (
-  text.includes("padre") ||
-  text.includes("figlio") ||
-  text.includes("figlia")
-) {
-  return `${character.nome}: Non risultano informazioni su figli o paternità.`;
-}
-
+  // fallback finale
   return `${character.nome}: Su questo non dispongo di fatti accertati.`;
 }
 
 
+
+////
 // ✅ ENTRY POINT VERCEL (UNO SOLO)
 export default async function handler(req, res) {
   try {
