@@ -3,12 +3,15 @@
 import fs from "fs";
 import path from "path";
 
-/**
- * Normalizza il testo dell'utente
- */
+/* =========================
+   UTILITÀ BASE
+========================= */
+
+// Normalizza il testo dell'utente
 function normalize(text) {
   return text
     .toLowerCase()
+    .trim()
     .replace(/['’]/g, "")
     .replace(/[èéê]/g, "e")
     .replace(/[à]/g, "a")
@@ -17,13 +20,13 @@ function normalize(text) {
     .replace(/[ù]/g, "u");
 }
 
-// mappa degli intenti della domanda
+// Mappa degli intenti
 const intentMap = {
-  identita: ["chi e", "chi era", "dimmi", "dimmi di"],
+  identita: ["chi e", "chi era", "chi sono", "dimmi", "dimmi di"],
   contesto: ["dove", "quando", "era", "si trovava", "presente"]
 };
 
-// rileva l'intento
+// Rileva intento
 function detectIntent(text) {
   for (const [intent, keywords] of Object.entries(intentMap)) {
     if (keywords.some(k => text.includes(k))) {
@@ -33,12 +36,14 @@ function detectIntent(text) {
   return "generica";
 }
 
-// percorsi knowledge
+/* =========================
+   KNOWLEDGE BASE
+========================= */
+
 const basePath = path.join(process.cwd(), "knowledge");
 const elenaPath = path.join(basePath, "elena.json");
 const riccardoPath = path.join(basePath, "riccardo.json");
 
-// carica JSON
 function loadJSON(filePath) {
   try {
     return JSON.parse(fs.readFileSync(filePath, "utf-8"));
@@ -47,42 +52,44 @@ function loadJSON(filePath) {
   }
 }
 
-// riconoscimento personaggio singolo
-function detectCharacter(text) {
-  if (text.includes("elena")) return "elena";
-  if (text.includes("riccardo")) return "riccardo";
-  return null;
-}
+/* =========================
+   PERSONAGGI
+========================= */
 
-// 🔹 FASE 5: rileva TUTTI i personaggi menzionati
+// Tutti i personaggi menzionati
 function detectCharacters(text) {
   const found = [];
-  if (text.includes("elena")) found.push("Elena");
-  if (text.includes("riccardo")) found.push("Riccardo");
+  if (text.includes("elena")) found.push("elena");
+  if (text.includes("riccardo")) found.push("riccardo");
   return found;
 }
 
-// risposta logica centrale
-function answerFromCharacter(character, text) {
+// Carica il personaggio richiesto
+function loadCharacter(name) {
+  if (name === "elena") return loadJSON(elenaPath);
+  if (name === "riccardo") return loadJSON(riccardoPath);
+  return null;
+}
+
+/* =========================
+   RISPOSTE LOGICHE
+========================= */
+
+function answerSingleCharacter(character, text) {
   if (!character) {
     return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
   }
 
-
- 
-
-  
   const intent = detectIntent(text);
 
   // IDENTITÀ
- if (intent === "identita") {
-  if (character.descrizione) {
-    return `${character.nome}: ${character.descrizione}`;
+  if (intent === "identita") {
+    if (character.descrizione) {
+      return `${character.nome}: ${character.descrizione}`;
+    }
+    return `${character.nome}: Non risultano informazioni biografiche accertate.`;
   }
-  return `${character.nome}: Non risultano informazioni biografiche accertate.`;
-}
 
-  
   // CONTESTO
   if (intent === "contesto") {
     if (character.contesto) {
@@ -91,7 +98,7 @@ function answerFromCharacter(character, text) {
     return `${character.nome}: Su questo non risultano informazioni accertate.`;
   }
 
-  // RELAZIONI NON NOTE
+  // RELAZIONI
   if (
     text.includes("padre") ||
     text.includes("figlio") ||
@@ -103,98 +110,86 @@ function answerFromCharacter(character, text) {
   return `${character.nome}: Su questo non dispongo di fatti accertati.`;
 }
 
-// ✅ ENTRY POINT VERCEL
+/* =========================
+   ENTRY POINT VERCEL
+========================= */
+
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Metodo non consentito" });
     }
 
-    const userText =
-      req.body.playerText ||
-      req.body.text ||
-      req.body.message ||
+    // 🔹 Recupero testo (robusto)
+    const rawText =
+      req.body?.playerText ??
+      req.body?.text ??
+      req.body?.message ??
       "";
 
-    const text = normalize(userText);
+    const text = normalize(String(rawText));
+
+    // 🔹 Risposte evasive / neutre
     if (
-  text === "boh" ||
-  text === "non so" ||
-  text === "non lo so" ||
-  text === "non ricordo"
-) {
-  return res.status(200).json({
-    reply: "Charles: Va bene. Quando vuoi chiarire, sono qui."
-  });
-}
+      text === "" ||
+      text === "boh" ||
+      text === "non so" ||
+      text === "non lo so" ||
+      text === "non ricordo"
+    ) {
+      return res.status(200).json({
+        reply: "Charles: Va bene. Quando vuoi chiarire, sono qui."
+      });
+    }
 
-    
-    const who = detectCharacter(text);
+    const characters = detectCharacters(text);
 
-    let character = null;
-    if (who === "elena") character = loadJSON(elenaPath);
-    if (who === "riccardo") character = loadJSON(riccardoPath);
+    // 🔹 CASO 1: NESSUN PERSONAGGIO
+    if (characters.length === 0) {
+      return res.status(200).json({
+        reply: "Charles: Non riesco a capire a chi ti riferisci."
+      });
+    }
 
+    // 🔹 CASO 2: PIÙ PERSONAGGI → gestione esplicita
+    if (characters.length > 1) {
+      // relazione familiare
+      if (text.includes("figlio") || text.includes("padre")) {
+        return res.status(200).json({
+          reply:
+            "Charles: Non risultano informazioni accertate su relazioni familiari tra queste persone."
+        });
+      }
 
-    
-let reply;
-let newState = req.body.gameState || {};
+      // identità multipla
+      if (detectIntent(text) === "identita") {
+        return res.status(200).json({
+          reply:
+            "Charles: Sono persone coinvolte negli eventi della villa."
+        });
+      }
 
-// se c’è un’ambiguità in sospeso
-if (newState.pendingAmbiguity) {
-  const chosen = detectCharacter(text);
-/////
-if (chosen) {
-  const originalText = newState.pendingAmbiguity.originalText;
-  const mergedText = originalText + " " + chosen;
+      // contesto multiplo
+      if (detectIntent(text) === "contesto") {
+        return res.status(200).json({
+          reply:
+            "Charles: Erano presenti in momenti diversi secondo le testimonianze."
+        });
+      }
 
-  const finalText = normalize(mergedText);
-  const whoFinal = detectCharacter(finalText);
+      return res.status(200).json({
+        reply:
+          "Charles: La domanda coinvolge più persone. Puoi specificarne una?"
+      });
+    }
 
-  let finalCharacter = null;
-  if (whoFinal === "elena") finalCharacter = loadJSON(elenaPath);
-  if (whoFinal === "riccardo") finalCharacter = loadJSON(riccardoPath);
+    // 🔹 CASO 3: UN SOLO PERSONAGGIO
+    const characterName = characters[0];
+    const character = loadCharacter(characterName);
 
-  reply = answerFromCharacter(finalCharacter, finalText);
+    const reply = answerSingleCharacter(character, text);
 
-  delete newState.pendingAmbiguity;
-} else {
-  // risposta evasiva o indecisa → chiudiamo l’ambiguità
-  if (
-    text.includes("boh") ||
-    text.includes("non so") ||
-    text.includes("non ricordo") ||
-    text.includes("nessuno")
-  ) {
-    reply =
-      "Charles: Va bene. Quando vuoi chiarire a chi ti riferisci, chiedimelo pure.";
-    delete newState.pendingAmbiguity;
-  } else {
-    reply =
-      "Charles: Non ho capito a chi ti riferisci. Puoi dirmi il nome?";
-  }
-}
-
-
-  
-} else {
-  reply = answerFromCharacter(character, text);
-
-  // se la risposta segnala ambiguità, la memorizziamo
-  if (reply.startsWith("Charles: La domanda coinvolge più persone")) {
-    newState.pendingAmbiguity = {
-      originalText: text
-    };
-  }
-}
-
-return res.status(200).json({
-  reply,
-  gameState: newState
-});
-
-
-    
+    return res.status(200).json({ reply });
   } catch (err) {
     console.error("CHARLES ERROR:", err);
     return res.status(500).json({
