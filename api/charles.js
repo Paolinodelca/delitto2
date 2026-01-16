@@ -79,40 +79,20 @@ function detectCharacter(text) {
 // risposta logica
 
 
+
+
 function answerFromCharacter(character, text) {
   if (!character) {
     return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
   }
 
-  // 🔴 PRIORITÀ ASSOLUTA: relazioni familiari
- 
-// 🔴 RELAZIONI FAMILIARI (esplicite + dedotte)
-if (
-  text.includes("padre") ||
-  text.includes("figlio") ||
-  text.includes("figlia")
-) {
-  const rel = character.relazioni || {};
-
-  // domanda incompleta
-  if (
-    text.endsWith("figlio di") ||
-    text.endsWith("figlia di") ||
-    text.endsWith("padre di")
-  ) {
-    return `${character.nome}: La domanda non specifica di chi.`;
+  // 🔹 FASE 5: ambiguità esplicita (QUI è legale il return)
+  const mentioned = detectCharacters(text);
+  if (mentioned.length > 1) {
+    return `Charles: La domanda coinvolge più persone (${mentioned.join(
+      ", "
+    )}). A chi ti riferisci esattamente?`;
   }
-
-  // relazione esplicita
-  if (rel.figlio_di) {
-    return `${character.nome}: Dai fatti noti risulta essere figlio della ${rel.figlio_di}.`;
-  }
-
-  // nessuna informazione disponibile
-  return `${character.nome}: Non risultano informazioni accertate su relazioni familiari.`;
-}
-
-
 
   const intent = detectIntent(text);
 
@@ -123,18 +103,27 @@ if (
     }
   }
 
-  // CONTESTO (dove / quando / era)
+  // CONTESTO
   if (intent === "contesto") {
     if (character.contesto) {
       return `${character.nome}: ${character.contesto}`;
     }
-
     return `${character.nome}: Su questo non risultano informazioni accertate.`;
   }
 
-  // fallback finale
+  // RELAZIONI NON NOTE
+  if (
+    text.includes("padre") ||
+    text.includes("figlio") ||
+    text.includes("figlia")
+  ) {
+    return `${character.nome}: Non risultano informazioni accertate su relazioni familiari.`;
+  }
+
   return `${character.nome}: Su questo non dispongo di fatti accertati.`;
 }
+
+
 
 
 
