@@ -76,13 +76,16 @@ function answerFromCharacter(character, text) {
   }
 
   // 🔴 PRIORITÀ ASSOLUTA: relazioni familiari
-  // 🔴 PRIORITÀ: relazioni familiari
+ 
+// 🔴 RELAZIONI FAMILIARI (esplicite + dedotte)
 if (
   text.includes("padre") ||
   text.includes("figlio") ||
   text.includes("figlia")
 ) {
-  // caso: domanda incompleta ("figlio di", "padre di")
+  const rel = character.relazioni || {};
+
+  // domanda incompleta
   if (
     text.endsWith("figlio di") ||
     text.endsWith("figlia di") ||
@@ -91,9 +94,15 @@ if (
     return `${character.nome}: La domanda non specifica di chi.`;
   }
 
-  // caso: domanda completa ma relazione non presente nella knowledge
+  // relazione esplicita
+  if (rel.figlio_di) {
+    return `${character.nome}: Dai fatti noti risulta essere figlio della ${rel.figlio_di}.`;
+  }
+
+  // nessuna informazione disponibile
   return `${character.nome}: Non risultano informazioni accertate su relazioni familiari.`;
 }
+
 
 
   const intent = detectIntent(text);
