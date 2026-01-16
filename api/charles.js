@@ -3,13 +3,8 @@
 import fs from "fs";
 import path from "path";
 
-const { elenaFacts } = require("./knowledge/elena.js");
-const { riccardoFacts } = require("./knowledge/riccardo.js");
-
-
 /**
  * Normalizza il testo dell'utente
- * (accenti, apostrofi, maiuscole)
  */
 function normalize(text) {
   return text
@@ -22,13 +17,12 @@ function normalize(text) {
     .replace(/[ù]/g, "u");
 }
 
-
 // percorsi knowledge
 const basePath = path.join(process.cwd(), "knowledge");
 const elenaPath = path.join(basePath, "elena.json");
 const riccardoPath = path.join(basePath, "riccardo.json");
 
-// helper: carica JSON
+// carica JSON
 function loadJSON(filePath) {
   try {
     return JSON.parse(fs.readFileSync(filePath, "utf-8"));
@@ -44,21 +38,21 @@ function detectCharacter(text) {
   return null;
 }
 
-// risposta per personaggio
+// risposta logica
 function answerFromCharacter(character, text) {
   if (!character) {
     return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
   }
 
-  if (text.includes("chi è") || text.includes("chi era") || text.includes("dimmi")) {
+  if (
+    text.includes("chi e") ||
+    text.includes("chi era") ||
+    text.includes("dimmi")
+  ) {
     return `${character.nome}: ${character.descrizione}`;
   }
 
-  if (
-    text.includes("dove") ||
-    text.includes("quando") ||
-    text.includes("era")
-  ) {
+  if (text.includes("dove") || text.includes("quando") || text.includes("era")) {
     if (character.contesto) {
       return `${character.nome}: ${character.contesto}`;
     }
@@ -68,7 +62,7 @@ function answerFromCharacter(character, text) {
   return `${character.nome}: Su questo non dispongo di fatti accertati.`;
 }
 
-// 🔴 ENTRY POINT OBBLIGATORIO PER VERCEL
+// ✅ ENTRY POINT VERCEL (UNO SOLO)
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
@@ -81,12 +75,7 @@ export default async function handler(req, res) {
       req.body.message ||
       "";
 
-      function charlesReply(userText) {
-
-    
-      const text = normalize(userText);
-
-
+    const text = normalize(userText);
     const who = detectCharacter(text);
 
     let character = null;
@@ -96,7 +85,6 @@ export default async function handler(req, res) {
     const reply = answerFromCharacter(character, text);
 
     return res.status(200).json({ reply });
-
   } catch (err) {
     console.error("CHARLES ERROR:", err);
     return res.status(500).json({
@@ -105,5 +93,3 @@ export default async function handler(req, res) {
     });
   }
 }
-module.exports = { charlesReply };
-
