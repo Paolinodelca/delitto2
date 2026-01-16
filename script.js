@@ -58,7 +58,7 @@ function getIntent(text) {
 /* =========================
    LOGICA DELLA SCENA
 ========================= */
-function handlePlayerInput(playerText) {
+async function handlePlayerInput(playerText) {
   if (playerText === null || playerText === undefined) return;
 
 /*
