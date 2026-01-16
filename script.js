@@ -58,8 +58,9 @@ function getIntent(text) {
 /* =========================
    LOGICA DELLA SCENA
 ========================= */
-async function handlePlayerInput(playerText) {
-  if (!playerText) return;
+function handlePlayerInput(playerText) {
+  if (playerText === null || playerText === undefined) return;
+
 /*
   // 🔎 aggiorniamo lo stato
   if (!gameState.interviewed.includes("Charles")) {
