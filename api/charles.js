@@ -19,22 +19,11 @@ function normalize(text) {
 
 // mappa degli intenti della domanda
 const intentMap = {
-  identita: [
-    "chi e",
-    "chi era",
-    "dimmi",
-    "dimmi di"
-  ],
-  contesto: [
-    "dove",
-    "quando",
-    "era",
-    "si trovava",
-    "presente"
-  ]
+  identita: ["chi e", "chi era", "dimmi", "dimmi di"],
+  contesto: ["dove", "quando", "era", "si trovava", "presente"]
 };
 
-// rileva l'intento della domanda
+// rileva l'intento
 function detectIntent(text) {
   for (const [intent, keywords] of Object.entries(intentMap)) {
     if (keywords.some(k => text.includes(k))) {
@@ -43,7 +32,6 @@ function detectIntent(text) {
   }
   return "generica";
 }
-
 
 // percorsi knowledge
 const basePath = path.join(process.cwd(), "knowledge");
@@ -59,34 +47,28 @@ function loadJSON(filePath) {
   }
 }
 
-// riconoscimento personaggio
+// riconoscimento personaggio singolo
 function detectCharacter(text) {
   if (text.includes("elena")) return "elena";
   if (text.includes("riccardo")) return "riccardo";
   return null;
 }
 
-  // 🔹 FASE 5: ambiguità esplicita
-  const mentioned = detectCharacters(text);
+// 🔹 FASE 5: rileva TUTTI i personaggi menzionati
+function detectCharacters(text) {
+  const found = [];
+  if (text.includes("elena")) found.push("Elena");
+  if (text.includes("riccardo")) found.push("Riccardo");
+  return found;
+}
 
-  if (mentioned.length > 1) {
-    return `Charles: La domanda coinvolge più persone (${mentioned.join(
-      ", "
-    )}). A chi ti riferisci esattamente?`;
-  }
-
-
-// risposta logica
-
-
-
-
+// risposta logica centrale
 function answerFromCharacter(character, text) {
   if (!character) {
     return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
   }
 
-  // 🔹 FASE 5: ambiguità esplicita (QUI è legale il return)
+  // ambiguità: più personaggi nella stessa domanda
   const mentioned = detectCharacters(text);
   if (mentioned.length > 1) {
     return `Charles: La domanda coinvolge più persone (${mentioned.join(
@@ -123,12 +105,7 @@ function answerFromCharacter(character, text) {
   return `${character.nome}: Su questo non dispongo di fatti accertati.`;
 }
 
-
-
-
-
-////
-// ✅ ENTRY POINT VERCEL (UNO SOLO)
+// ✅ ENTRY POINT VERCEL
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
