@@ -1,6 +1,9 @@
-
 {
   "nome": "Riccardo",
-  "descrizione": "Riccardo è il figlio della vittima.",
-  "contesto": "Riccardo era presente in villa nei giorni precedenti al delitto."
+  "descrizione": "Riccardo è un giovane uomo coinvolto negli eventi della villa.",
+  "contesto": "Riccardo era presente in villa nei giorni precedenti al delitto.",
+  "relazioni": {
+    "figlio_di": "vittima"
+  }
 }
+
