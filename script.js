@@ -129,12 +129,7 @@ function handlePlayerInput(playerText) {
   }
 }
 
-////////////
-
-    
-/*
-    const data = await response.json();
-
+// (codice rimosso – parsing JSON già gestito sopra)
 
 
 /* =========================
