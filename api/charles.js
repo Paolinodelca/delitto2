@@ -66,6 +66,15 @@ function detectCharacter(text) {
   return null;
 }
 
+  // 🔹 FASE 5: ambiguità esplicita
+  const mentioned = detectCharacters(text);
+
+  if (mentioned.length > 1) {
+    return `Charles: La domanda coinvolge più persone (${mentioned.join(
+      ", "
+    )}). A chi ti riferisci esattamente?`;
+  }
+
 
 // risposta logica
 
