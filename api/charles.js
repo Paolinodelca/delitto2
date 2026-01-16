@@ -125,9 +125,50 @@ export default async function handler(req, res) {
     if (who === "elena") character = loadJSON(elenaPath);
     if (who === "riccardo") character = loadJSON(riccardoPath);
 
-    const reply = answerFromCharacter(character, text);
 
-    return res.status(200).json({ reply });
+    
+let reply;
+let newState = req.body.gameState || {};
+
+// se c’è un’ambiguità in sospeso
+if (newState.pendingAmbiguity) {
+  const chosen = detectCharacter(text);
+
+  if (chosen) {
+    const originalText = newState.pendingAmbiguity.originalText;
+    const mergedText = originalText + " " + chosen;
+
+    const finalText = normalize(mergedText);
+    const whoFinal = detectCharacter(finalText);
+
+    let finalCharacter = null;
+    if (whoFinal === "elena") finalCharacter = loadJSON(elenaPath);
+    if (whoFinal === "riccardo") finalCharacter = loadJSON(riccardoPath);
+
+    reply = answerFromCharacter(finalCharacter, finalText);
+
+    delete newState.pendingAmbiguity;
+  } else {
+    reply = "Charles: Non ho capito a chi ti riferisci.";
+  }
+} else {
+  reply = answerFromCharacter(character, text);
+
+  // se la risposta segnala ambiguità, la memorizziamo
+  if (reply.startsWith("Charles: La domanda coinvolge più persone")) {
+    newState.pendingAmbiguity = {
+      originalText: text
+    };
+  }
+}
+
+return res.status(200).json({
+  reply,
+  gameState: newState
+});
+
+
+    
   } catch (err) {
     console.error("CHARLES ERROR:", err);
     return res.status(500).json({
