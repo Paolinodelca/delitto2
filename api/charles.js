@@ -68,23 +68,21 @@ function answerFromCharacter(character, text) {
     return "Charles: Mi dispiace, ma su questo non dispongo di fatti accertati.";
   }
 
-  // ambiguità: più personaggi nella stessa domanda
-  const mentioned = detectCharacters(text);
-  if (mentioned.length > 1) {
-    return `Charles: La domanda coinvolge più persone (${mentioned.join(
-      ", "
-    )}). A chi ti riferisci esattamente?`;
-  }
 
+ 
+
+  
   const intent = detectIntent(text);
 
   // IDENTITÀ
-  if (intent === "identita") {
-    if (character.descrizione) {
-      return `${character.nome}: ${character.descrizione}`;
-    }
+ if (intent === "identita") {
+  if (character.descrizione) {
+    return `${character.nome}: ${character.descrizione}`;
   }
+  return `${character.nome}: Non risultano informazioni biografiche accertate.`;
+}
 
+  
   // CONTESTO
   if (intent === "contesto") {
     if (character.contesto) {
@@ -119,6 +117,18 @@ export default async function handler(req, res) {
       "";
 
     const text = normalize(userText);
+    if (
+  text === "boh" ||
+  text === "non so" ||
+  text === "non lo so" ||
+  text === "non ricordo"
+) {
+  return res.status(200).json({
+    reply: "Charles: Va bene. Quando vuoi chiarire, sono qui."
+  });
+}
+
+    
     const who = detectCharacter(text);
 
     let character = null;
