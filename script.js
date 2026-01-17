@@ -32,7 +32,7 @@ let isListening = false;
 let turnTimer = null;
 let turnClosed = false;
 
-/**
+/*
  * Inizializza SpeechRecognition
  * VA CHIAMATA UNA SOLA VOLTA
  */
@@ -84,7 +84,7 @@ recognition.onerror = (event) => {
   };
 }
 
-/**
+/*
  * Avvia ascolto vocale
  */
 function startListening() {
@@ -111,7 +111,7 @@ function startListening() {
   }, 2500);
 }
 
-/**
+/*
  * Chiude il turno corrente
  */
 function closeTurn() {
