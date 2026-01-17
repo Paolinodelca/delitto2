@@ -27,59 +27,70 @@ const suspect = {
    RICONOSCIMENTO VOCALE
 ========================= */
 
-const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-recognition.lang = "it-IT";
-recognition.interimResults = false;
+let recognition;
+let turnTimer = null;
+let turnClosed = false;
 
-////
+function initRecognition() {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
 
-let silenceTimer = null;
-let hasSpoken = false;
+  recognition = new SpeechRecognition();
+  recognition.lang = "it-IT";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.onresult = (event) => {
+    if (turnClosed) return;
+    closeTurn();
+
+    const text = event.results[0][0].transcript;
+    document.getElementById("playerText").textContent = text;
+    handlePlayerInput(text);
+  };
+
+  recognition.onerror = () => {
+    if (turnClosed) return;
+    closeTurn();
+    handlePlayerInput("<<silenzio>>");
+  };
+
+  recognition.onend = () => {
+    // se finisce senza risultato, aspettiamo il timer
+  };
+}
 
 function startListening() {
+  // 🔁 reset turno
+  closeTurn();
+  turnClosed = false;
+
   try {
     recognition.abort();
   } catch (e) {}
 
-  hasSpoken = false;
   recognition.start();
 
-  // ⏱️ il silenzio parte SEMPRE
-  silenceTimer = setTimeout(() => {
-    if (!hasSpoken) {
-      console.log("⏱️ Silenzio / vocalizzo non riconosciuto");
-      handlePlayerInput("<<silenzio>>");
-    }
+  // ⏱️ TIMER ASSOLUTO (indipendente dalla voce)
+  turnTimer = setTimeout(() => {
+    if (turnClosed) return;
+    closeTurn();
+    handlePlayerInput("<<silenzio>>");
   }, 2500);
 }
 
-// 🎙️ voce reale rilevata
-recognition.onspeechstart = () => {
-  hasSpoken = true;
+function closeTurn() {
+  turnClosed = true;
 
-  if (silenceTimer) {
-    clearTimeout(silenceTimer);
-    silenceTimer = null;
+  if (turnTimer) {
+    clearTimeout(turnTimer);
+    turnTimer = null;
   }
 
-  console.log("🎙️ Voce rilevata");
-};
-
-// 📝 trascrizione riuscita
-recognition.onresult = (event) => {
-  hasSpoken = true;
-
-  if (silenceTimer) {
-    clearTimeout(silenceTimer);
-    silenceTimer = null;
-  }
-
-  const text = event.results[0][0].transcript;
-  document.getElementById("playerText").textContent = text;
-  handlePlayerInput(text);
-};
-
-
+  try {
+    recognition.abort();
+  } catch (e) {}
+}
 
 //////
 /* =========================
