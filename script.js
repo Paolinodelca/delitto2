@@ -30,13 +30,15 @@ const suspect = {
 const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
 recognition.lang = "it-IT";
 recognition.interimResults = false;
+
 function startListening() {
-  if (recognition.state === "listening") {
-    console.log("🎙️ Riconoscimento già attivo");
-    return;
-  }
+  try {
+    recognition.abort(); // chiude eventuali sessioni pendenti
+  } catch (e) {}
+
   recognition.start();
 }
+
 
 recognition.onresult = (event) => {
   const text = event.results[0][0].transcript;
@@ -59,22 +61,26 @@ function getIntent(text) {
    LOGICA DELLA SCENA
 ========================= */
 async function handlePlayerInput(playerText) {
-  // ❗ NON blocchiamo stringhe vuote o incerte
   if (playerText === null || playerText === undefined) return;
 
-  const normalizedText = playerText.toLowerCase().trim();
+  const text = playerText.toLowerCase().trim();
 
-  // 🧠 PRE-FILTRO CONVERSAZIONALE (boh, mah, silenzio, ecc.)
-  // Questo intercetta SEMPRE l’input, anche se il server non risponde
-  if (window.ConversationCore) {
-    const localReply = ConversationCore.preProcess(normalizedText);
+  // 🧠 GESTIONE LOCALE INCERTEZZA (boh, mah, silenzio)
+  const uncertaintyWords = [
+    "boh",
+    "mah",
+    "non so",
+    "non lo so",
+    "non ricordo",
+    "non saprei",
+    "non ne ho idea"
+  ];
 
-    if (localReply) {
-      console.log("🧠 Risposta locale ConversationCore:", localReply);
-      speak(localReply);
-      document.getElementById("charlesComment").innerText = localReply;
-      return; // ⛔ non andiamo al server
-    }
+  if (text === "" || uncertaintyWords.includes(text)) {
+    const reply = "Charles: Va bene. Prenditi pure un momento. Io sono qui.";
+    speak(reply);
+    document.getElementById("charlesComment").innerText = reply;
+    return; // ⛔ stop totale, niente server
   }
 
   speak("Un momento, prego.");
@@ -94,35 +100,23 @@ async function handlePlayerInput(playerText) {
     console.log("RAW RESPONSE:", rawResponse);
 
     if (!response.ok) {
-      console.error("Risposta non valida dal server");
-      speak("Si è verificato un problema sul server.");
+      speak("C'è stato un problema nel sistema.");
       return;
     }
 
     let data;
     try {
       data = JSON.parse(rawResponse);
-    } catch (e) {
-      console.error("Errore parsing JSON:", e);
+    } catch {
       speak("Il server ha risposto in modo inatteso.");
       return;
     }
 
     if (data.reply) {
-      // 📌 gestione fatti scoperti (se presenti)
-      if (Array.isArray(data.usedFacts)) {
-        data.usedFacts.forEach(id => {
-          if (!gameState.scoperte.fatti.includes(id)) {
-            gameState.scoperte.fatti.push(id);
-            console.log("📌 Fatto scoperto:", id);
-          }
-        });
-      }
-
       speak(data.reply);
       document.getElementById("charlesComment").innerText = data.reply;
     } else {
-      speak("Temo che qualcosa non abbia funzionato.");
+      speak("Non ho una risposta chiara al momento.");
     }
 
   } catch (error) {
@@ -130,6 +124,7 @@ async function handlePlayerInput(playerText) {
     speak("Si è verificato un problema tecnico.");
   }
 }
+
 
 
 
