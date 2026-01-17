@@ -122,7 +122,7 @@ function closeTurn() {
     turnTimer = null;
   }
 ///
-   /+
+   /*
   if (recognition && isListening) {
     try {
       recognition.abort();
