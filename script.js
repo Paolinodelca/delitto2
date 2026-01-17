@@ -108,7 +108,7 @@ function startListening() {
     if (turnClosed) return;
     closeTurn();
     handlePlayerInput("<<silenzio>>");
-  }, 2500);
+  }, 4000);
 }
 
 /*
@@ -145,13 +145,16 @@ async function handlePlayerInput(playerText) {
   const cleaned = playerText.toLowerCase().trim();
 
   /* ---- SILENZIO ---- */
-  if (playerText === "<<silenzio>>") {
-    const reply = "Charles: Capisco. A volte il silenzio dice già molto.";
-    speak(reply);
-    document.getElementById("charlesComment").innerText = reply;
-    return;
-  }
+ 
+   
+if (playerText === "<<silenzio>>") {
+  console.log("⏸️ Silenzio rilevato – nessuna risposta");
+  return;
+}
 
+
+
+   
   /* ---- INCERTEZZA (boh, mah, ecc.) ---- */
   const uncertaintyWords = [
     "boh",
