@@ -77,11 +77,25 @@ recognition.onerror = (event) => {
 
 
 
-   
+/*   
   recognition.onend = () => {
     isListening = false;
     console.log("🎤 Recognition terminata");
   };
+*/
+
+recognition.onend = () => {
+  if (turnClosed) return;
+
+  turnTimer = setTimeout(() => {
+    if (turnClosed) return;
+    closeTurn();
+    handlePlayerInput("<<silenzio>>");
+  }, 3000);
+};
+
+
+   
 }
 
 /*
@@ -101,14 +115,21 @@ function startListening() {
   turnClosed = false;
   isListening = true;
 
+   
   recognition.start();
 
+//////
+
+   
   // ⏱️ Timeout assoluto del turno
+   /*
   turnTimer = setTimeout(() => {
     if (turnClosed) return;
     closeTurn();
     handlePlayerInput("<<silenzio>>");
   }, 4000);
+   */
+   /////
 }
 
 /*
@@ -121,15 +142,7 @@ function closeTurn() {
     clearTimeout(turnTimer);
     turnTimer = null;
   }
-///
-   /*
-  if (recognition && isListening) {
-    try {
-      recognition.abort();
-    } catch (e) {}
-  }
-   */
-////
+
   isListening = false;
 }
 
@@ -138,24 +151,28 @@ function closeTurn() {
 ========================= */
 
 async function handlePlayerInput(playerText) {
-   
   if (playerText == null) return;
+
+  /* =========================
+     TRASCRIZIONE A SCHERMO
+  ========================= */
   document.getElementById("playerText").textContent = playerText;
 
   const cleaned = playerText.toLowerCase().trim();
 
-  /* ---- SILENZIO ---- */
- 
-   
-if (playerText === "<<silenzio>>") {
-  console.log("⏸️ Silenzio rilevato – nessuna risposta");
-  return;
-}
+  /* =========================
+     SILENZIO (fine turno senza parlato)
+  ========================= */
+  if (playerText === "<<silenzio>>") {
+    console.log("⏸️ Silenzio rilevato – nessuna risposta");
+    document.getElementById("playerText").textContent = "…";
+    return;
+  }
 
-
-
-   
-  /* ---- INCERTEZZA (boh, mah, ecc.) ---- */
+  /* =========================
+     INCERTEZZA / ESITAZIONE
+     (boh, mah, frasi con non so, ecc.)
+  ========================= */
   const uncertaintyWords = [
     "boh",
     "mah",
@@ -166,14 +183,18 @@ if (playerText === "<<silenzio>>") {
     "non ne ho idea"
   ];
 
-  if (cleaned === "" || uncertaintyWords.includes(cleaned)) {
+  const isUncertain = uncertaintyWords.some(w => cleaned.includes(w));
+
+  if (cleaned === "" || isUncertain) {
     const reply = "Charles: Va bene. Prenditi pure un momento. Io sono qui.";
     speak(reply);
     document.getElementById("charlesComment").innerText = reply;
-    return;
+    return; // ⛔ stop totale: niente server
   }
 
-  /* ---- CHIAMATA AL SERVER ---- */
+  /* =========================
+     CHIAMATA AL SERVER
+  ========================= */
   try {
     const response = await fetch("/api/charles", {
       method: "POST",
@@ -207,6 +228,7 @@ if (playerText === "<<silenzio>>") {
     speak("Si è verificato un problema tecnico.");
   }
 }
+
 
 /* =========================
    SINTESI VOCALE
