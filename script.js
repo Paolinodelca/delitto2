@@ -59,21 +59,24 @@ function getIntent(text) {
    LOGICA DELLA SCENA
 ========================= */
 async function handlePlayerInput(playerText) {
+  // ❗ NON blocchiamo stringhe vuote o incerte
   if (playerText === null || playerText === undefined) return;
 
-/*
-  // 🔎 aggiorniamo lo stato
-  if (!gameState.interviewed.includes("Charles")) {
-    gameState.interviewed.push("Charles");
-  }
-  */
-/*
-  if (playerText.toLowerCase().includes("azienda")) {
-    if (!gameState.discoveredFacts.includes("Possibile crisi dell'azienda")) {
-      gameState.discoveredFacts.push("Possibile crisi dell'azienda");
+  const normalizedText = playerText.toLowerCase().trim();
+
+  // 🧠 PRE-FILTRO CONVERSAZIONALE (boh, mah, silenzio, ecc.)
+  // Questo intercetta SEMPRE l’input, anche se il server non risponde
+  if (window.ConversationCore) {
+    const localReply = ConversationCore.preProcess(normalizedText);
+
+    if (localReply) {
+      console.log("🧠 Risposta locale ConversationCore:", localReply);
+      speak(localReply);
+      document.getElementById("charlesComment").innerText = localReply;
+      return; // ⛔ non andiamo al server
     }
   }
-*/
+
   speak("Un momento, prego.");
 
   try {
@@ -86,7 +89,6 @@ async function handlePlayerInput(playerText) {
       })
     });
 
-    
     const rawResponse = await response.text();
     console.log("STATUS:", response.status);
     console.log("RAW RESPONSE:", rawResponse);
@@ -107,16 +109,16 @@ async function handlePlayerInput(playerText) {
     }
 
     if (data.reply) {
-    if (Array.isArray(data.usedFacts)) {
-    data.usedFacts.forEach(id => {
-    if (!gameState.scoperte.fatti.includes(id)) {
-      gameState.scoperte.fatti.push(id);
-      console.log("📌 Fatto scoperto:", id);
-    }
-  });
-}
+      // 📌 gestione fatti scoperti (se presenti)
+      if (Array.isArray(data.usedFacts)) {
+        data.usedFacts.forEach(id => {
+          if (!gameState.scoperte.fatti.includes(id)) {
+            gameState.scoperte.fatti.push(id);
+            console.log("📌 Fatto scoperto:", id);
+          }
+        });
+      }
 
-      
       speak(data.reply);
       document.getElementById("charlesComment").innerText = data.reply;
     } else {
@@ -129,6 +131,10 @@ async function handlePlayerInput(playerText) {
   }
 }
 
+
+
+
+////////
 // (codice rimosso – parsing JSON già gestito sopra)
 
 
