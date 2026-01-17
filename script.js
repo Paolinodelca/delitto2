@@ -31,6 +31,8 @@ const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognit
 recognition.lang = "it-IT";
 recognition.interimResults = false;
 
+////
+
 let silenceTimer = null;
 
 function startListening() {
@@ -40,16 +42,28 @@ function startListening() {
 
   recognition.start();
 
-  // ⏳ se nessun risultato arriva → incertezza
+  // timer di silenzio (parte solo se NON si sente nulla)
   silenceTimer = setTimeout(() => {
-    console.log("⏱️ Silenzio rilevato → incertezza");
+    console.log("⏱️ Silenzio reale rilevato");
     handlePlayerInput("<<silenzio>>");
-  }, 2500); // 2,5 secondi: naturale
+  }, 2500);
 }
 
+// 🟢 appena l’utente EMETTE un suono → stop silenzio
+recognition.onspeechstart = () => {
+  if (silenceTimer) {
+    clearTimeout(silenceTimer);
+    silenceTimer = null;
+    console.log("🎙️ Voce rilevata, silenzio annullato");
+  }
+};
 
+// 🟢 quando arriva la trascrizione → sicurezza extra
 recognition.onresult = (event) => {
-  clearTimeout(silenceTimer);
+  if (silenceTimer) {
+    clearTimeout(silenceTimer);
+    silenceTimer = null;
+  }
 
   const text = event.results[0][0].transcript;
   document.getElementById("playerText").textContent = text;
@@ -57,6 +71,7 @@ recognition.onresult = (event) => {
 };
 
 
+//////
 /* =========================
    INTERPRETAZIONE SEMPLICE
 ========================= */
