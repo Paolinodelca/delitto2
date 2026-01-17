@@ -34,32 +34,41 @@ recognition.interimResults = false;
 ////
 
 let silenceTimer = null;
+let hasSpoken = false;
 
 function startListening() {
   try {
     recognition.abort();
   } catch (e) {}
 
+  hasSpoken = false;
   recognition.start();
 
-  // timer di silenzio (parte solo se NON si sente nulla)
+  // ⏱️ il silenzio parte SEMPRE
   silenceTimer = setTimeout(() => {
-    console.log("⏱️ Silenzio reale rilevato");
-    handlePlayerInput("<<silenzio>>");
+    if (!hasSpoken) {
+      console.log("⏱️ Silenzio / vocalizzo non riconosciuto");
+      handlePlayerInput("<<silenzio>>");
+    }
   }, 2500);
 }
 
-// 🟢 appena l’utente EMETTE un suono → stop silenzio
+// 🎙️ voce reale rilevata
 recognition.onspeechstart = () => {
+  hasSpoken = true;
+
   if (silenceTimer) {
     clearTimeout(silenceTimer);
     silenceTimer = null;
-    console.log("🎙️ Voce rilevata, silenzio annullato");
   }
+
+  console.log("🎙️ Voce rilevata");
 };
 
-// 🟢 quando arriva la trascrizione → sicurezza extra
+// 📝 trascrizione riuscita
 recognition.onresult = (event) => {
+  hasSpoken = true;
+
   if (silenceTimer) {
     clearTimeout(silenceTimer);
     silenceTimer = null;
@@ -69,6 +78,7 @@ recognition.onresult = (event) => {
   document.getElementById("playerText").textContent = text;
   handlePlayerInput(text);
 };
+
 
 
 //////
