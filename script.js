@@ -62,14 +62,22 @@ function initRecognition() {
     handlePlayerInput(text);
   };
 
-  recognition.onerror = (event) => {
-    console.warn("🎤 Errore recognition:", event.error);
-    if (turnClosed) return;
+   
+recognition.onerror = (event) => {
+  console.warn("🎤 Errore recognition:", event.error);
 
-    closeTurn();
-    handlePlayerInput("<<silenzio>>");
-  };
+  // abort = interruzione tecnica, NON silenzio dell'utente
+  if (event.error === "aborted") return;
 
+  if (turnClosed) return;
+
+  closeTurn();
+  handlePlayerInput("<<silenzio>>");
+};
+
+
+
+   
   recognition.onend = () => {
     isListening = false;
     console.log("🎤 Recognition terminata");
@@ -113,13 +121,15 @@ function closeTurn() {
     clearTimeout(turnTimer);
     turnTimer = null;
   }
-
+///
+   /+
   if (recognition && isListening) {
     try {
       recognition.abort();
     } catch (e) {}
   }
-
+   */
+////
   isListening = false;
 }
 
@@ -128,7 +138,9 @@ function closeTurn() {
 ========================= */
 
 async function handlePlayerInput(playerText) {
+   
   if (playerText == null) return;
+  document.getElementById("playerText").textContent = playerText;
 
   const cleaned = playerText.toLowerCase().trim();
 
