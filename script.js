@@ -31,20 +31,31 @@ const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognit
 recognition.lang = "it-IT";
 recognition.interimResults = false;
 
+let silenceTimer = null;
+
 function startListening() {
   try {
-    recognition.abort(); // chiude eventuali sessioni pendenti
+    recognition.abort();
   } catch (e) {}
 
   recognition.start();
+
+  // ⏳ se nessun risultato arriva → incertezza
+  silenceTimer = setTimeout(() => {
+    console.log("⏱️ Silenzio rilevato → incertezza");
+    handlePlayerInput("<<silenzio>>");
+  }, 2500); // 2,5 secondi: naturale
 }
 
 
 recognition.onresult = (event) => {
+  clearTimeout(silenceTimer);
+
   const text = event.results[0][0].transcript;
   document.getElementById("playerText").textContent = text;
   handlePlayerInput(text);
 };
+
 
 /* =========================
    INTERPRETAZIONE SEMPLICE
@@ -62,7 +73,14 @@ function getIntent(text) {
 ========================= */
 async function handlePlayerInput(playerText) {
   if (playerText === null || playerText === undefined) return;
+  if (playerText === "<<silenzio>>") {
+  const reply = "Charles: Capisco. A volte il silenzio dice già molto.";
+  speak(reply);
+  document.getElementById("charlesComment").innerText = reply;
+  return;
+}
 
+  
   const text = playerText.toLowerCase().trim();
 
   // 🧠 GESTIONE LOCALE INCERTEZZA (boh, mah, silenzio)
