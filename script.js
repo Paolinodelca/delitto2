@@ -151,29 +151,28 @@ function closeTurn() {
 ========================= */
 
 async function handlePlayerInput(playerText) {
+
+  /* ---- NULL / UNDEFINED ---- */
   if (playerText == null) return;
 
-  /* =========================
-     TRASCRIZIONE A SCHERMO
-  ========================= */
-  document.getElementById("playerText").textContent = playerText;
+  const playerTextEl = document.getElementById("playerText");
+  const charlesEl = document.getElementById("charlesComment");
 
   const cleaned = playerText.toLowerCase().trim();
 
-  /* =========================
-     SILENZIO (fine turno senza parlato)
-  ========================= */
-  if (playerText === "<<silenzio>>") {
-    console.log("⏸️ Silenzio rilevato – nessuna risposta");
-    document.getElementById("playerText").textContent = "…";
+  // aggiorna subito il testo del giocatore
+  playerTextEl.textContent = cleaned === "" ? "…" : playerText;
+
+  /* ---- SILENZIO RICONOSCIUTO ---- */
+  if (playerText === "<<silenzio>>" || cleaned === "") {
+    console.log("⏸️ Silenzio rilevato");
+    playerTextEl.textContent = "…";
+    charlesEl.textContent = "";
     return;
   }
 
-  /* =========================
-     INCERTEZZA / ESITAZIONE
-     (boh, mah, frasi con non so, ecc.)
-  ========================= */
-  const uncertaintyWords = [
+  /* ---- INCERTEZZA (anche combinata) ---- */
+  const uncertaintyPatterns = [
     "boh",
     "mah",
     "non so",
@@ -183,18 +182,18 @@ async function handlePlayerInput(playerText) {
     "non ne ho idea"
   ];
 
-  const isUncertain = uncertaintyWords.some(w => cleaned.includes(w));
+  const isUncertain = uncertaintyPatterns.some(word =>
+    cleaned.includes(word)
+  );
 
-  if (cleaned === "" || isUncertain) {
+  if (isUncertain) {
     const reply = "Charles: Va bene. Prenditi pure un momento. Io sono qui.";
     speak(reply);
-    document.getElementById("charlesComment").innerText = reply;
-    return; // ⛔ stop totale: niente server
+    charlesEl.innerText = reply;
+    return;
   }
 
-  /* =========================
-     CHIAMATA AL SERVER
-  ========================= */
+  /* ---- CHIAMATA AL SERVER ---- */
   try {
     const response = await fetch("/api/charles", {
       method: "POST",
@@ -211,23 +210,27 @@ async function handlePlayerInput(playerText) {
 
     if (!response.ok) {
       speak("C'è stato un problema nel sistema.");
+      charlesEl.innerText = "Charles: …";
       return;
     }
 
     const data = JSON.parse(rawResponse);
 
-    if (data.reply) {
+    if (data.reply && data.reply.trim() !== "") {
       speak(data.reply);
-      document.getElementById("charlesComment").innerText = data.reply;
+      charlesEl.innerText = data.reply;
     } else {
       speak("Non ho una risposta chiara al momento.");
+      charlesEl.innerText = "Charles: …";
     }
 
   } catch (error) {
     console.error("Errore client:", error);
     speak("Si è verificato un problema tecnico.");
+    charlesEl.innerText = "Charles: …";
   }
 }
+
 
 
 /* =========================
