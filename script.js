@@ -1,17 +1,17 @@
 console.log("SCRIPT VERSIONE 2026-01-01");
-
 console.log("SCENA CARICATA");
+
+/* =========================
+   STATO DEL GIOCO
+========================= */
+
 let gameState = {
   scoperte: {
-    fatti: ["F1", "F2"], // Riccardo + Elena noti all’inizio
+    fatti: ["F1", "F2"],
     personaggi: [],
     indizi: []
   }
 };
-
-
-gameState.scoperte.fatti.push("F1");
-
 
 /* =========================
    STATO DEL SOSPETTATO
@@ -27,13 +27,23 @@ const suspect = {
    RICONOSCIMENTO VOCALE
 ========================= */
 
-let recognition;
+let recognition = null;
+let isListening = false;
 let turnTimer = null;
 let turnClosed = false;
 
+/**
+ * Inizializza SpeechRecognition
+ * VA CHIAMATA UNA SOLA VOLTA
+ */
 function initRecognition() {
   const SpeechRecognition =
     window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    console.error("SpeechRecognition non supportato");
+    return;
+  }
 
   recognition = new SpeechRecognition();
   recognition.lang = "it-IT";
@@ -42,36 +52,50 @@ function initRecognition() {
 
   recognition.onresult = (event) => {
     if (turnClosed) return;
+
     closeTurn();
 
     const text = event.results[0][0].transcript;
+    console.log("🎤 TRASCRITTO:", text);
+
     document.getElementById("playerText").textContent = text;
     handlePlayerInput(text);
   };
 
-  recognition.onerror = () => {
+  recognition.onerror = (event) => {
+    console.warn("🎤 Errore recognition:", event.error);
     if (turnClosed) return;
+
     closeTurn();
     handlePlayerInput("<<silenzio>>");
   };
 
   recognition.onend = () => {
-    // se finisce senza risultato, aspettiamo il timer
+    isListening = false;
+    console.log("🎤 Recognition terminata");
   };
 }
 
+/**
+ * Avvia ascolto vocale
+ */
 function startListening() {
-  // 🔁 reset turno
-  closeTurn();
-  turnClosed = false;
+  if (!recognition) {
+    console.error("Recognition non inizializzato");
+    return;
+  }
 
-  try {
-    recognition.abort();
-  } catch (e) {}
+  if (isListening) {
+    console.warn("🎤 Già in ascolto");
+    return;
+  }
+
+  turnClosed = false;
+  isListening = true;
 
   recognition.start();
 
-  // ⏱️ TIMER ASSOLUTO (indipendente dalla voce)
+  // ⏱️ Timeout assoluto del turno
   turnTimer = setTimeout(() => {
     if (turnClosed) return;
     closeTurn();
@@ -79,6 +103,9 @@ function startListening() {
   }, 2500);
 }
 
+/**
+ * Chiude il turno corrente
+ */
 function closeTurn() {
   turnClosed = true;
 
@@ -87,39 +114,33 @@ function closeTurn() {
     turnTimer = null;
   }
 
-  try {
-    recognition.abort();
-  } catch (e) {}
-}
+  if (recognition && isListening) {
+    try {
+      recognition.abort();
+    } catch (e) {}
+  }
 
-//////
-/* =========================
-   INTERPRETAZIONE SEMPLICE
-========================= */
-
-function getIntent(text) {
-  text = text.toLowerCase();
-  if (text.includes("ieri") || text.includes("sera")) return "ALIBI";
-  if (text.includes("soldi") || text.includes("azienda")) return "MOTIVO";
-  return "GENERICA";
+  isListening = false;
 }
 
 /* =========================
    LOGICA DELLA SCENA
 ========================= */
+
 async function handlePlayerInput(playerText) {
-  if (playerText === null || playerText === undefined) return;
+  if (playerText == null) return;
+
+  const cleaned = playerText.toLowerCase().trim();
+
+  /* ---- SILENZIO ---- */
   if (playerText === "<<silenzio>>") {
-  const reply = "Charles: Capisco. A volte il silenzio dice già molto.";
-  speak(reply);
-  document.getElementById("charlesComment").innerText = reply;
-  return;
-}
+    const reply = "Charles: Capisco. A volte il silenzio dice già molto.";
+    speak(reply);
+    document.getElementById("charlesComment").innerText = reply;
+    return;
+  }
 
-  
-  const text = playerText.toLowerCase().trim();
-
-  // 🧠 GESTIONE LOCALE INCERTEZZA (boh, mah, silenzio)
+  /* ---- INCERTEZZA (boh, mah, ecc.) ---- */
   const uncertaintyWords = [
     "boh",
     "mah",
@@ -130,22 +151,21 @@ async function handlePlayerInput(playerText) {
     "non ne ho idea"
   ];
 
-  if (text === "" || uncertaintyWords.includes(text)) {
+  if (cleaned === "" || uncertaintyWords.includes(cleaned)) {
     const reply = "Charles: Va bene. Prenditi pure un momento. Io sono qui.";
     speak(reply);
     document.getElementById("charlesComment").innerText = reply;
-    return; // ⛔ stop totale, niente server
+    return;
   }
 
-  speak("Un momento, prego.");
-
+  /* ---- CHIAMATA AL SERVER ---- */
   try {
     const response = await fetch("/api/charles", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        playerText: playerText,
-        gameState: gameState
+        playerText,
+        gameState
       })
     });
 
@@ -158,13 +178,7 @@ async function handlePlayerInput(playerText) {
       return;
     }
 
-    let data;
-    try {
-      data = JSON.parse(rawResponse);
-    } catch {
-      speak("Il server ha risposto in modo inatteso.");
-      return;
-    }
+    const data = JSON.parse(rawResponse);
 
     if (data.reply) {
       speak(data.reply);
@@ -179,19 +193,12 @@ async function handlePlayerInput(playerText) {
   }
 }
 
-
-
-
-
-////////
-// (codice rimosso – parsing JSON già gestito sopra)
-
-
 /* =========================
-   VOCE
+   SINTESI VOCALE
 ========================= */
 
 function speak(text) {
+  speechSynthesis.cancel(); // evita sovrapposizioni
   const utter = new SpeechSynthesisUtterance(text);
   utter.lang = "it-IT";
   utter.rate = 0.9;
@@ -200,13 +207,8 @@ function speak(text) {
 }
 
 /* =========================
-   OUTPUT
+   AVVIO
 ========================= */
 
-function showAndSpeak(reply, comment) {
-  document.getElementById("suspectReply").textContent = reply;
-  document.getElementById("charlesComment").textContent = comment;
-
-  speak(reply);
-  setTimeout(() => speak(comment), 1200);
-}
+// inizializzazione UNA VOLTA SOLA
+initRecognition();
