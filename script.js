@@ -32,6 +32,16 @@ let isListening = false;
 let turnTimer = null;
 let turnClosed = false;
 
+//rifinimento tempi risposte
+
+let pendingPlayerText = null;
+let responseTimer = null;
+
+const RESPONSE_DELAY_MS = 800; // puoi portarlo a 1000 se vuoi più calma
+
+//
+
+
 /*
  * Inizializza SpeechRecognition
  * VA CHIAMATA UNA SOLA VOLTA
@@ -152,84 +162,86 @@ function closeTurn() {
 
 async function handlePlayerInput(playerText) {
 
-  /* ---- NULL / UNDEFINED ---- */
   if (playerText == null) return;
 
-  const playerTextEl = document.getElementById("playerText");
-  const charlesEl = document.getElementById("charlesComment");
+  // aggiorna sempre il testo visibile
+  document.getElementById("playerText").textContent = playerText;
+
+  // ---- SILENZIO ESPLICITO ----
+  if (playerText === "<<silenzio>>") {
+    console.log("⏸️ Silenzio rilevato – nessuna risposta");
+    document.getElementById("playerText").textContent = "…";
+    return;
+  }
 
   const cleaned = playerText.toLowerCase().trim();
 
-  // aggiorna subito il testo del giocatore
-  playerTextEl.textContent = cleaned === "" ? "…" : playerText;
+  // ---- ACCUMULO + DEBOUNCE ----
+  pendingPlayerText = cleaned;
 
-  /* ---- SILENZIO RICONOSCIUTO ---- */
-  if (playerText === "<<silenzio>>" || cleaned === "") {
-    console.log("⏸️ Silenzio rilevato");
-    playerTextEl.textContent = "…";
-    charlesEl.textContent = "";
-    return;
+  if (responseTimer) {
+    clearTimeout(responseTimer);
   }
 
-  /* ---- INCERTEZZA (anche combinata) ---- */
-  const uncertaintyPatterns = [
-    "boh",
-    "mah",
-    "non so",
-    "non lo so",
-    "non ricordo",
-    "non saprei",
-    "non ne ho idea"
-  ];
+  responseTimer = setTimeout(async () => {
 
-  const isUncertain = uncertaintyPatterns.some(word =>
-    cleaned.includes(word)
-  );
+    responseTimer = null;
 
-  if (isUncertain) {
-    const reply = "Charles: Va bene. Prenditi pure un momento. Io sono qui.";
-    speak(reply);
-    charlesEl.innerText = reply;
-    return;
-  }
+    // ---- INCERTEZZA ----
+    const uncertaintyWords = [
+      "boh",
+      "mah",
+      "non so",
+      "non lo so",
+      "non ricordo",
+      "non saprei",
+      "non ne ho idea"
+    ];
 
-  /* ---- CHIAMATA AL SERVER ---- */
-  try {
-    const response = await fetch("/api/charles", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        playerText,
-        gameState
-      })
-    });
-
-    const rawResponse = await response.text();
-    console.log("STATUS:", response.status);
-    console.log("RAW RESPONSE:", rawResponse);
-
-    if (!response.ok) {
-      speak("C'è stato un problema nel sistema.");
-      charlesEl.innerText = "Charles: …";
+    if (pendingPlayerText === "" || uncertaintyWords.includes(pendingPlayerText)) {
+      const reply = "Charles: Va bene. Prenditi pure un momento. Io sono qui.";
+      speak(reply);
+      document.getElementById("charlesComment").innerText = reply;
       return;
     }
 
-    const data = JSON.parse(rawResponse);
+    // ---- CHIAMATA AL SERVER ----
+    try {
+      const response = await fetch("/api/charles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          playerText: pendingPlayerText,
+          gameState
+        })
+      });
 
-    if (data.reply && data.reply.trim() !== "") {
-      speak(data.reply);
-      charlesEl.innerText = data.reply;
-    } else {
-      speak("Non ho una risposta chiara al momento.");
-      charlesEl.innerText = "Charles: …";
+      const rawResponse = await response.text();
+      console.log("STATUS:", response.status);
+      console.log("RAW RESPONSE:", rawResponse);
+
+      if (!response.ok) {
+        speak("C'è stato un problema nel sistema.");
+        return;
+      }
+
+      const data = JSON.parse(rawResponse);
+
+      if (data.reply) {
+        speak(data.reply);
+        document.getElementById("charlesComment").innerText = data.reply;
+      } else {
+        speak("Non ho una risposta chiara al momento.");
+      }
+
+    } catch (error) {
+      console.error("Errore client:", error);
+      speak("Si è verificato un problema tecnico.");
     }
 
-  } catch (error) {
-    console.error("Errore client:", error);
-    speak("Si è verificato un problema tecnico.");
-    charlesEl.innerText = "Charles: …";
-  }
+  }, RESPONSE_DELAY_MS);
 }
+
 
 
 
