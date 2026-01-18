@@ -37,7 +37,7 @@ let turnClosed = false;
 let pendingPlayerText = null;
 let responseTimer = null;
 
-const RESPONSE_DELAY_MS = 800; // puoi portarlo a 1000 se vuoi più calma
+const RESPONSE_DELAY_MS = 1200; // puoi portarlo a 1200 se vuoi più calma
 
 //
 
@@ -111,6 +111,7 @@ recognition.onend = () => {
 /*
  * Avvia ascolto vocale
  */
+
 function startListening() {
   if (!recognition) {
     console.error("Recognition non inizializzato");
@@ -122,39 +123,50 @@ function startListening() {
     return;
   }
 
+  // 🔁 reset stato turno
   turnClosed = false;
   isListening = true;
 
-   
-  recognition.start();
+  try {
+    recognition.start();
+  } catch (e) {
+    console.warn("Errore start recognition:", e);
+    isListening = false;
+    return;
+  }
 
-//////
-
-   
-  // ⏱️ Timeout assoluto del turno
-   /*
+  // ⏱️ Timeout assoluto del turno (tollerante alle pause)
   turnTimer = setTimeout(() => {
     if (turnClosed) return;
+
+    console.log("⏱️ Timeout turno – considerato silenzio");
     closeTurn();
     handlePlayerInput("<<silenzio>>");
   }, 4000);
-   */
-   /////
 }
+
 
 /*
  * Chiude il turno corrente
  */
 function closeTurn() {
+  if (turnClosed) return;
+
   turnClosed = true;
+  isListening = false;
 
   if (turnTimer) {
     clearTimeout(turnTimer);
     turnTimer = null;
   }
 
-  isListening = false;
+  try {
+    recognition.abort(); // 🔴 chiude davvero il recognition
+  } catch (e) {
+    console.warn("Abort recognition fallito:", e);
+  }
 }
+
 
 /* =========================
    LOGICA DELLA SCENA
