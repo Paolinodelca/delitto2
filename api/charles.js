@@ -49,15 +49,12 @@ function detectCharacter(text) {
 ========================= */
 
 function answerWithFacts(character, text) {
-  if (!character) {
+
+ if (!character) {
     return "Charles: Non riesco a capire a chi ti riferisci.";
   }
-
-  if (text.includes("chi e") || text.includes("chi era")) {
-    return `${character.nome}: ${character.descrizione}`;
-  }
-
-  if (
+  
+    if (
     text.includes("figlio") ||
     text.includes("padre") ||
     text.includes("madre")
@@ -67,6 +64,11 @@ function answerWithFacts(character, text) {
     if (isFactDiscovered("F_PARENTELA_RICCARDO_ELENA")) {
       return "Charles: Risulta che Riccardo sia figlio di Elena.";
     }
+  }
+  
+
+  if (text.includes("chi e") || text.includes("chi era")) {
+    return `${character.nome}: ${character.descrizione}`;
   }
 
   if (text.includes("dove") || text.includes("era")) {
