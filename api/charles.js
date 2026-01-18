@@ -1,19 +1,15 @@
-/* =====================================================
-   CHARLES API — FACT-DRIVEN
-   ===================================================== */
-
 import fs from "fs";
 import path from "path";
 
-// 🧠 FACT ENGINE
 import {
   FACTS,
+  discoverFact,
   isFactDiscovered,
   getKnownFacts
 } from "../data/game/facts.js";
 
 /* =========================
-   UTIL
+   Utility
 ========================= */
 
 function normalize(text) {
@@ -28,7 +24,7 @@ function normalize(text) {
 }
 
 /* =========================
-   PERSONAGGI (STATICI)
+   Personaggi statici
 ========================= */
 
 const basePath = path.join(process.cwd(), "knowledge");
@@ -49,44 +45,29 @@ function detectCharacter(text) {
 }
 
 /* =========================
-   LOGICA DI RISPOSTA
+   Logica di risposta
 ========================= */
-
-import { discoverFact, isFactDiscovered } from "../data/game/facts.js";
 
 function answerWithFacts(character, text) {
   if (!character) {
     return "Charles: Non riesco a capire a chi ti riferisci.";
   }
 
-  /* =========================
-     IDENTITÀ
-  ========================= */
-
   if (text.includes("chi e") || text.includes("chi era")) {
     return `${character.nome}: ${character.descrizione}`;
   }
-
-  /* =========================
-     PARENTELA (SBLOCCA FATTO)
-  ========================= */
 
   if (
     text.includes("figlio") ||
     text.includes("padre") ||
     text.includes("madre")
   ) {
-    // 🔓 SCOPERTA DEL FATTO
     discoverFact("F_PARENTELA_RICCARDO_ELENA");
 
     if (isFactDiscovered("F_PARENTELA_RICCARDO_ELENA")) {
       return "Charles: Risulta che Riccardo sia figlio di Elena.";
     }
   }
-
-  /* =========================
-     PRESENZA IN VILLA
-  ========================= */
 
   if (text.includes("dove") || text.includes("era")) {
     if (character.nome === "Elena") {
@@ -103,44 +84,34 @@ function answerWithFacts(character, text) {
   return "Charles: Non dispongo di informazioni accertate su questo.";
 }
 
-
-
-
-
 /* =========================
-   API HANDLER
+   API handler (attivo)
 ========================= */
-export default function handler(req, res) {
-  return res.status(200).json({
-    reply: "Backend vivo e risponde."
-  });
-}
 
-/*
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Metodo non consentito" });
+  try {
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Metodo non consentito" });
+    }
+
+    const rawText = req.body.playerText || req.body.text || "";
+    const text = normalize(rawText);
+
+    const knownFacts = getKnownFacts();
+    console.log("📚 FATTI NOTI:", knownFacts);
+
+    const who = detectCharacter(text);
+    const character = who ? loadCharacter(who) : null;
+
+    const reply = answerWithFacts(character, text);
+
+    return res.status(200).json({
+      reply,
+      knownFacts,
+    });
+  } catch (err) {
+    console.error("Errore handler API:", err);
+    return res.status(500).json({ error: "Errore interno al server" });
   }
-
-  const rawText =
-    req.body.playerText ||
-    req.body.text ||
-    "";
-
-  const text = normalize(rawText);
-
-  // 🧠 fatti noti (per debug o future AI)
-  const knownFacts = getKnownFacts();
-  console.log("📚 FATTI NOTI:", knownFacts);
-
-  const who = detectCharacter(text);
-  const character = who ? loadCharacter(who) : null;
-
-  const reply = answerWithFacts(character, text);
-
-  return res.status(200).json({
-    reply,
-    knownFacts
-  });
 }
-*/
+
