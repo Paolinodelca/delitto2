@@ -72,18 +72,6 @@ function answerWithFacts(character, text) {
     return `${character.nome}: ${character.descrizione}`;
   }
 
-  if (text.includes("dove") || text.includes("era")) {
-    if (character.nome === "Elena") {
-      discoverFact("F_PRESENZA_VILLA_ELENA");
-      return "Elena: Ero presente in villa il giorno del delitto.";
-    }
-
-    if (character.nome === "Riccardo") {
-      discoverFact("F_PRESENZA_VILLA_RICCARDO");
-      return "Riccardo: Ero in villa nei giorni precedenti al delitto.";
-    }
-  }
-
 
 /* =========================
    MOTIVO / PERCHÉ
@@ -102,8 +90,25 @@ if (text.includes("perche") || text.includes("motivo")) {
 
 
   
+  if (text.includes("dove") || text.includes("era")) {
+    if (character.nome === "Elena") {
+      discoverFact("F_PRESENZA_VILLA_ELENA");
+      return "Elena: Ero presente in villa il giorno del delitto.";
+    }
+
+    if (character.nome === "Riccardo") {
+      discoverFact("F_PRESENZA_VILLA_RICCARDO");
+      return "Riccardo: Ero in villa nei giorni precedenti al delitto.";
+    }
+  }
+
+  
+
+  
   return "Charles: Non dispongo di informazioni accertate su questo.";
 }
+
+
 
 /* =========================
    API handler (attivo)
