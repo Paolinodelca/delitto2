@@ -45,4 +45,7 @@ export function getKnownFacts() {
     .filter(f => f.discovered)
     .map(f => f.id);
 }
+export function areFactsDiscovered(ids = []) {
+  return ids.every(id => FACTS[id]?.discovered === true);
+}
 
