@@ -28,13 +28,19 @@ export const FACTS = {
 ========================= */
 
 export function discoverFact(id) {
-  if (FACTS[id] && !FACTS[id].discovered) {
+  if (!FACTS[id]) return false;
+
+  if (!FACTS[id].discovered) {
     FACTS[id].discovered = true;
+    FACTS[id].timesMentioned = 1;
     console.log("🧠 FATTO SCOPERTO:", id);
-    return true;
+    return "first";
   }
-  return false;
+
+  FACTS[id].timesMentioned++;
+  return "repeat";
 }
+
 
 export function isFactDiscovered(id) {
   return FACTS[id]?.discovered === true;
