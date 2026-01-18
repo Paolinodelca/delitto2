@@ -110,7 +110,13 @@ function answerWithFacts(character, text) {
 /* =========================
    API HANDLER
 ========================= */
+export default function handler(req, res) {
+  return res.status(200).json({
+    reply: "Backend vivo e risponde."
+  });
+}
 
+/*
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Metodo non consentito" });
@@ -137,3 +143,4 @@ export default async function handler(req, res) {
     knownFacts
   });
 }
+*/
