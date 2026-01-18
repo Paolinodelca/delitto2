@@ -52,33 +52,60 @@ function detectCharacter(text) {
    LOGICA DI RISPOSTA
 ========================= */
 
+import { discoverFact, isFactDiscovered } from "../data/game/facts.js";
+
 function answerWithFacts(character, text) {
   if (!character) {
     return "Charles: Non riesco a capire a chi ti riferisci.";
   }
 
-  // 🔍 DOMANDE DI IDENTITÀ
+  /* =========================
+     IDENTITÀ
+  ========================= */
+
   if (text.includes("chi e") || text.includes("chi era")) {
     return `${character.nome}: ${character.descrizione}`;
   }
 
-  // 🔍 DOMANDE DI PARENTELA
-  if (text.includes("padre") || text.includes("figlio")) {
+  /* =========================
+     PARENTELA (SBLOCCA FATTO)
+  ========================= */
+
+  if (
+    text.includes("figlio") ||
+    text.includes("padre") ||
+    text.includes("madre")
+  ) {
+    // 🔓 SCOPERTA DEL FATTO
+    discoverFact("F_PARENTELA_RICCARDO_ELENA");
+
     if (isFactDiscovered("F_PARENTELA_RICCARDO_ELENA")) {
       return "Charles: Risulta che Riccardo sia figlio di Elena.";
     }
-    return "Charles: Non risultano informazioni accertate su relazioni familiari.";
   }
 
-  // 🔍 DOMANDE DI CONTESTO
+  /* =========================
+     PRESENZA IN VILLA
+  ========================= */
+
   if (text.includes("dove") || text.includes("era")) {
-    if (character.contesto) {
-      return `${character.nome}: ${character.contesto}`;
+    if (character.nome === "Elena") {
+      discoverFact("F_PRESENZA_VILLA_ELENA");
+      return "Elena: Ero presente in villa il giorno del delitto.";
+    }
+
+    if (character.nome === "Riccardo") {
+      discoverFact("F_PRESENZA_VILLA_RICCARDO");
+      return "Riccardo: Ero in villa nei giorni precedenti al delitto.";
     }
   }
 
   return "Charles: Non dispongo di informazioni accertate su questo.";
 }
+
+
+
+
 
 /* =========================
    API HANDLER
