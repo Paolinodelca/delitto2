@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { areFactsDiscovered } from "../data/game/facts.js";
 
 import {
   FACTS,
@@ -83,6 +84,24 @@ function answerWithFacts(character, text) {
     }
   }
 
+
+/* =========================
+   MOTIVO / PERCHÉ
+========================= */
+
+if (text.includes("perche") || text.includes("motivo")) {
+  // questa risposta richiede fatti
+  const requiredFacts = ["F_PRESENZA_VILLA_RICCARDO"];
+
+  if (!areFactsDiscovered(requiredFacts)) {
+    return "Charles: Non ho ancora elementi sufficienti per rispondere con certezza.";
+  }
+
+  return "Charles: Le ragioni della presenza di Riccardo in villa non sono ancora del tutto chiare.";
+}
+
+
+  
   return "Charles: Non dispongo di informazioni accertate su questo.";
 }
 
