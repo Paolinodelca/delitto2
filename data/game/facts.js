@@ -13,13 +13,15 @@ export const FACTS = {
   F_PRESENZA_VILLA_ELENA: {
     id: "F_PRESENZA_VILLA_ELENA",
     description: "Elena era presente in villa il giorno del delitto",
-    discovered: false
+    discovered: false,
+  timesMentioned: 0
   },
 
   F_PRESENZA_VILLA_RICCARDO: {
     id: "F_PRESENZA_VILLA_RICCARDO",
     description: "Riccardo era presente in villa il giorno del delitto",
-    discovered: false
+    discovered: false,
+  timesMentioned: 0
   }
 };
 
