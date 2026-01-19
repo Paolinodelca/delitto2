@@ -9,6 +9,17 @@ import {
   getKnownFacts
 } from "../data/game/facts.js";
 
+
+/* =========================
+   Stato conversazionale
+========================= */
+
+const conversationState = {
+  activeCharacter: null
+};
+
+
+
 /* =========================
    Utility
 ========================= */
@@ -44,6 +55,18 @@ function detectCharacter(text) {
   if (text.includes("elena")) return "elena";
   return null;
 }
+
+function resolveActiveCharacter(text) {
+  const detected = detectCharacter(text);
+
+  if (detected) {
+    conversationState.activeCharacter = detected;
+    return detected;
+  }
+
+  return conversationState.activeCharacter;
+}
+
 
 /* =========================
    Logica di risposta
@@ -136,7 +159,7 @@ export default async function handler(req, res) {
     const knownFacts = getKnownFacts();
     console.log("📚 FATTI NOTI:", knownFacts);
 
-    const who = detectCharacter(text);
+    const who = resolveActiveCharacter(text);
     const character = who ? loadCharacter(who) : null;
 
     const reply = answerWithFacts(character, text);
