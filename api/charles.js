@@ -56,6 +56,16 @@ function detectCharacter(text) {
   return null;
 }
 
+function detectCharacters(text) {
+  const characters = [];
+
+  if (text.includes("riccardo")) characters.push("riccardo");
+  if (text.includes("elena")) characters.push("elena");
+
+  return characters;
+}
+
+
 function resolveActiveCharacter(text) {
   const detected = detectCharacter(text);
 
@@ -159,11 +169,28 @@ export default async function handler(req, res) {
     const knownFacts = getKnownFacts();
     console.log("📚 FATTI NOTI:", knownFacts);
 
-    const who = resolveActiveCharacter(text);
-    const character = who ? loadCharacter(who) : null;
+    const detectedCharacters = detectCharacters(text);
 
-    const reply = answerWithFacts(character, text);
+if (detectedCharacters.length > 1) {
+  return res.status(200).json({
+    reply:
+      "Charles: Stai parlando di più persone. Preferisco affrontare una persona alla volta. Di chi vuoi parlare?",
+    knownFacts,
+  });
+}
 
+  const who = detectedCharacters[0] || null;
+  const character = who ? loadCharacter(who) : null;
+
+  const reply = answerWithFacts(character, text);
+
+  return res.status(200).json({
+  reply,
+  knownFacts,
+});
+
+
+    
     return res.status(200).json({
       reply,
       knownFacts,
