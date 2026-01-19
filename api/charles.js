@@ -18,6 +18,9 @@ const conversationState = {
   activeCharacter: null
 };
 
+const state = {
+  activeCharacter: null
+};
 
 
 /* =========================
@@ -66,16 +69,30 @@ function detectCharacters(text) {
 }
 
 
-function resolveActiveCharacter(text) {
-  const detected = detectCharacter(text);
 
-  if (detected) {
-    conversationState.activeCharacter = detected;
-    return detected;
+function resolveActiveCharacter(text) {
+  const detected = detectCharacters(text);
+
+  // Caso ambiguo → reset
+  if (detected.length > 1) {
+    state.activeCharacter = null;
+    return null;
   }
 
-  return conversationState.activeCharacter;
+  // Se viene nominato esplicitamente
+  if (detected.length === 1) {
+    state.activeCharacter = detected[0];
+    return detected[0];
+  }
+
+  // Nessun nome → usa il focus se esiste
+  if (state.activeCharacter) {
+    return state.activeCharacter;
+  }
+
+  return null;
 }
+
 
 
 /* =========================
@@ -169,9 +186,13 @@ export default async function handler(req, res) {
     const knownFacts = getKnownFacts();
     console.log("📚 FATTI NOTI:", knownFacts);
 
-    const detectedCharacters = detectCharacters(text);
+
+    
+   const detectedCharacters = detectCharacters(text);
 
 if (detectedCharacters.length > 1) {
+  state.activeCharacter = null;
+
   return res.status(200).json({
     reply:
       "Charles: Stai parlando di più persone. Preferisco affrontare una persona alla volta. Di chi vuoi parlare?",
@@ -179,9 +200,10 @@ if (detectedCharacters.length > 1) {
   });
 }
 
-  const who = detectedCharacters[0] || null;
-  const character = who ? loadCharacter(who) : null;
+const who = resolveActiveCharacter(text);
+const character = who ? loadCharacter(who) : null;
 
+    
   const reply = answerWithFacts(character, text);
 
   return res.status(200).json({
