@@ -13,5 +13,26 @@
     "tags": ["arma"],
     "revealed_by": ["ispezione_studio"],
     "depends_on": ["corpo_trovato"]
+  },
+  
+    "alibi_riccardo_falso": {
+    "truth": true,
+    "type": "relazione",
+    "tags": ["alibi"]
+  },
+
+  "porta_chiusa_a_chiave": {
+    "truth": false,
+    "type": "stato",
+    "tags": ["villa"]
+  },
+
+  "complice_presente": {
+    "truth": null,
+    "type": "persona",
+    "tags": ["mistero"]
   }
 }
+ 
+  
+
