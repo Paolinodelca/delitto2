@@ -1,0 +1,17 @@
+{
+  "corpo_trovato": {
+    "truth": true,
+    "type": "evento",
+    "tags": ["morte", "iniziale"],
+    "revealed_by": [],
+    "depends_on": []
+  },
+
+  "arma_coltello": {
+    "truth": true,
+    "type": "oggetto",
+    "tags": ["arma"],
+    "revealed_by": ["ispezione_studio"],
+    "depends_on": ["corpo_trovato"]
+  }
+}
