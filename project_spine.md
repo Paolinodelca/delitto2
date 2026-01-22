@@ -76,12 +76,30 @@ actions.js
 
 ---
 
-## 6. Prossimo passo pianificato
+di seguito gli aggiornamenti:
+### CHECKPOINT – Modellazione Delitto Villa Lago di Como
 
-Definizione strutturata dei **FACTS**:
-- forma
-- lifecycle
-- rivelabilità
-- relazione con azioni e stato
+FASE:
+Prima istanziazione concreta World / Knowledge.
 
-I facts saranno la prima vera entità narrativa verificabile.
+WORLD:
+- Creato primo set di facts atomici oggettivi
+- Nessuna informazione interpretativa o psicologica
+- Eventi separati da cause e motivazioni
+- Oggetti e stati osservabili modellati esplicitamente
+
+KNOWLEDGE:
+- Introdotta distinzione verità soggettiva / oggettiva
+- Bugie e segreti modellati come knowledge false
+- Responsabilità dell’omicidio NON presente nel World
+- Knowledge non produce deduzioni automatiche
+
+ARCHITETTURA:
+- Separazione World / Knowledge rispettata
+- Nessuna logica investigativa nel core
+- Engine resta cieco, applica solo trasformazioni
+
+REGOLA ATTIVA:
+Ogni nuovo scenario narrativo viene prima distrutto in facts,
+poi ricostruito come conoscenza distribuita.
+
