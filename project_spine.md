@@ -103,3 +103,52 @@ REGOLA ATTIVA:
 Ogni nuovo scenario narrativo viene prima distrutto in facts,
 poi ricostruito come conoscenza distribuita.
 
+CHECKPOINT – Gestione Facts, IA e Progresso
+
+FACTS:
+
+I facts sono la fonte primaria di verità strutturale
+
+Distinzione netta tra:
+
+facts di world (oggettivi, rari)
+
+facts di knowledge (soggettivi, volatili)
+
+facts di state (progresso e possibilità)
+
+Nessun fact contiene interpretazioni o deduzioni
+
+IA:
+
+L’IA NON ha accesso diretto al World completo
+
+Riceve solo viste filtrate e contestualizzate
+
+L’engine seleziona i facts rilevanti per:
+
+personaggio
+
+fase
+
+obiettivo
+
+L’IA interpreta, non decide cosa è vero
+
+PROGRESSIONE:
+
+Il gioco avanza tramite trasformazioni di:
+
+knowledge (scoperte, bugie, omissioni)
+
+state (sblocco, vincoli, fasi)
+
+eventi (azioni nel mondo)
+
+La storia emerge dalla combinazione dei facts,
+non da una sequenza narrativa scritta
+
+PRINCIPIO ATTIVO:
+
+Il motore non “racconta una storia”.
+Mantiene un mondo coerente mentre altri cercano di capirlo.
