@@ -152,3 +152,21 @@ PRINCIPIO ATTIVO:
 
 Il motore non “racconta una storia”.
 Mantiene un mondo coerente mentre altri cercano di capirlo.
+
+CHECKPOINT – Modellazione Azioni
+
+AZIONI:
+
+Le azioni sono trasformazioni pure di world / knowledge / state
+
+Nessuna azione produce testo o interpretazione
+
+Le bugie vivono nella knowledge, non nelle azioni
+
+L’interrogatorio produce testimonianze, non verità
+
+PRINCIPIO OPERATIVO:
+
+L’engine applica regole.
+I personaggi mentono.
+Il giocatore deduce.
