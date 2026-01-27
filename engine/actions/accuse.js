@@ -19,6 +19,18 @@ export function accuse({ world, hypotheses, state }, payload) {
   state.gameOver = true;
   state.phase = "chiusura";
 
+
+  // ===== TEST MANUALE =====
+const testAccusation = {
+  accused: "dario_rossi",
+  motive: "gelosia",
+  method: "avvelenamento",
+  time: "21_00"
+};
+
+// Simulazione chiamata
+// accuse({ state, world }, testAccusation);
+
   return { state };
 }
 
