@@ -142,6 +142,32 @@ export const worldFacts = [
     object: "statuette",
     quantity_after: 1,
     note: "frammenti_presenti_sotto_armadio"
-  }
+  },
+  // ─────────────────────────
+// VERITÀ OGGETTIVE (NON OSSERVABILI)
+// ─────────────────────────
+{
+  type: "truth",
+  id: "murderer",
+  value: "riccardo_brambilla"
+},
+{
+  type: "truth",
+  id: "motive",
+  value: "appropriazione_fondi"
+},
+{
+  type: "truth",
+  id: "method",
+  value: "colpo_con_statuetta"
+},
+{
+  type: "truth",
+  id: "time",
+  value: "22_30"
+}
+
+
+
 
 ];

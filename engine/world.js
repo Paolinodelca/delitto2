@@ -4,10 +4,12 @@ import path from "path";
 export class World {
   constructor(basePath) {
     this.basePath = basePath;
-    this.world = this.loadJSON("data/world/world.json");
-    this.timeline = this.loadJSON("data/world/timeline.json");
+
+    // carica i facts come MAPPA (oggetto)
     this.facts = this.loadJSON("data/game/facts.json");
-    this.state = this.loadJSON("data/game/state.json");
+
+    // carica eventuali verità oggettive (murderer, motive, ecc.)
+    this.truths = this.loadJSON("data/world/truth.json");
   }
 
   loadJSON(relPath) {
@@ -15,20 +17,18 @@ export class World {
     return JSON.parse(fs.readFileSync(fullPath, "utf-8"));
   }
 
-  saveState() {
-    const fullPath = path.join(this.basePath, "data/game/state.json");
-    fs.writeFileSync(fullPath, JSON.stringify(this.state, null, 2));
-  }
+  /**
+   * Restituisce un fact (da facts o truths) dato un id
+   */
+  getFactById(id) {
+    if (this.truths && this.truths[id]) {
+      return this.truths[id];
+    }
 
-  getFact(id) {
-    return this.facts[id];
-  }
+    if (this.facts && this.facts[id]) {
+      return this.facts[id];
+    }
 
-  setFact(id, value) {
-    this.facts[id] = value;
-  }
-
-  advanceTime(marker) {
-    this.state.time = marker;
+    return null;
   }
 }

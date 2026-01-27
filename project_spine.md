@@ -170,3 +170,352 @@ PRINCIPIO OPERATIVO:
 L’engine applica regole.
 I personaggi mentono.
 Il giocatore deduce.
+
+CHECKPOINT – Azione di Perquisizione
+
+AZIONE:
+
+Introdotta perquisizione come azione pura
+
+La perquisizione rende osservabili facts già presenti nel World
+
+Nessuna creazione di nuovi eventi
+
+Knowledge aggiornata tramite osservazione diretta
+
+State registra le stanze già esplorate
+
+PRINCIPIO:
+
+Nulla appare dal nulla.
+Le azioni rivelano, non inventano.
+
+CHECKPOINT – Modellazione Deduzione del Giocatore
+
+NUOVO CONCETTO INTRODOTTO:
+
+Hypotheses (o Player Reasoning Layer)
+
+Le deduzioni NON sono facts
+
+Le deduzioni NON modificano il World
+
+Le deduzioni NON sono verità
+
+Una deduzione è:
+
+un collegamento tra facts noti
+
+espresso da un attore (di solito il giocatore)
+
+potenzialmente errato o incompleto
+
+ARCHITETTURA:
+
+World resta fonte unica di verità oggettiva
+
+Knowledge resta soggettiva e fallibile
+
+State abilita o blocca azioni
+
+Hypotheses registrano il ragionamento
+
+REGOLA ATTIVA:
+
+Il motore non deduce mai.
+Registra solo ciò che qualcuno pensa.
+
+IMPLICAZIONI DI DESIGN:
+
+Accuse sbagliate sono possibili
+
+Il giocatore può auto-ingannarsi
+
+Il gioco premia il ragionamento, non la “risposta giusta”
+
+PROSSIMO PASSO TECNICO:
+
+Introdurre azione connectFacts
+
+Creare struttura hypotheses.js
+
+Usare le ipotesi per:
+
+sbloccare interrogatori avanzati
+
+generare reazioni emotive degli agenti
+
+permettere finali multipli
+
+CHECKPOINT – Introduzione Hypotheses come Strato Cognitivo
+
+NUOVO STRATO:
+
+Hypotheses = modello del ragionamento del giocatore
+
+Non rappresentano verità
+
+Non modificano il World
+
+Non producono eventi
+
+Possono essere errate o contraddittorie
+
+FUNZIONE:
+
+Registrare connessioni tra facts noti
+
+Consentire accuse, errori, bluff
+
+Influenzare reazioni e possibilità di gioco
+
+ARCHITETTURA:
+
+Hypotheses vivono fuori da World / Knowledge / State
+
+Sono create solo tramite azione connectFacts
+
+L’engine non le interpreta né le verifica
+
+USO OPERATIVO:
+
+Sblocco di azioni (accuse, confronti)
+
+Modifica del comportamento degli agenti
+
+Condizioni di vittoria / fallimento
+
+REGOLA ATTIVA:
+
+Il motore protegge la verità.
+Il giocatore costruisce significati.
+Il gioco nasce dal loro attrito.
+
+CHECKPOINT – Reazioni degli Agenti alle Hypotheses
+
+NUOVO CONCETTO:
+
+AgentDisposition (nello State)
+
+Rappresenta atteggiamento e tensione degli agenti
+
+NON è psicologia profonda
+
+È un segnale operativo per il comportamento
+
+STRUTTURA:
+
+attitude: categoria discreta (collaborativo, difensivo, ostile)
+
+suspicionLevel: intensità continua
+
+ARCHITETTURA:
+
+Le reazioni NON sono automatiche
+
+Vengono applicate tramite azione esplicita
+
+Il motore non interpreta emozioni
+
+AZIONE INTRODOTTA:
+
+applyHypothesisEffects
+
+Trasforma ipotesi del giocatore in conseguenze sociali
+
+Non modifica World né Knowledge
+
+REGOLA ATTIVA:
+
+Il giocatore pensa.
+Gli agenti reagiscono.
+La verità resta immobile.
+CHECKPOINT – Accusa Formale e Chiusura del Gioco
+
+AZIONE INTRODOTTA:
+
+accuse
+
+Atto irreversibile del giocatore
+
+Non produce verità
+
+Non modifica il World
+
+Termina il gioco
+
+ARCHITETTURA:
+
+L’accusa viene registrata nello State
+
+La valutazione avviene fuori dal motore
+
+Il motore resta cieco e coerente
+
+STRUTTURA:
+
+state.accusation
+
+state.gameOver = true
+
+REGOLA ATTIVA:
+
+Il mondo non reagisce alle accuse.
+Le accuse reagiscono al mondo.
+
+Judge = modulo esterno che valuta lo stato finale
+Non modifica il mondo
+Non produce narrazione
+Fornisce esiti verificabili
+
+È un contratto, non un personaggio.
+Il Judge produce valutazioni strutturate, non narrative
+Lo scoring è un confronto esplicito tra stato finale e verità del mondo
+Ogni interpretazione è demandata a strati successivi
+CHECKPOINT – Narratore come Strato di Traduzione
+
+Il narratore è esterno al motore
+
+Riceve solo verdetti strutturati
+
+Non accede a World / Knowledge / State
+
+Traduce risultati in:
+
+esperienza narrativa
+
+feedback formativo
+
+output strutturato
+
+Regola attiva:
+
+Il motore decide.
+Il giudice confronta.
+Il narratore dà senso.
+
+Aggiungiamo un asse temporale esplicito:
+
+World        → verità fissa
+Knowledge    → info parziali / bugie
+Hypotheses   → costruzioni del giocatore
+State        → progresso + fase narrativa
+Actions      → trasformazioni controllate
+Judge        → valutazione finale
+Narrator     → restituzione narrativa
+
+
+Dentro State entra ufficialmente:
+
+phase = "inizio" | "indagine" | "confronto" | "accusa" | "chiusura"
+
+
+Checkpoint spine:
+✅ Flusso del delitto governato da fasi discrete
+CHECKPOINT – Gestione delle Fasi di Gioco
+
+Introdotto state.phase come macchina a stati esplicita
+
+Le transizioni sono controllate da azione dedicata (advancePhase)
+
+Le azioni sensibili verificano autonomamente la fase
+
+Nessuna logica narrativa associata alle fasi
+
+Le fasi regolano possibilità, non significato
+
+Regola attiva:
+
+Il tempo della storia è uno stato, non un racconto.
+CHECKPOINT – Judge come Valutatore Esterno
+
+Introdotto Judge deterministico
+
+Il Judge non modifica lo stato
+
+Il Judge legge solo World + Accusa
+
+La valutazione è strutturata, non narrativa
+
+Supporta errori, parzialità e scoring
+
+Regola attiva:
+
+La verità non premia.
+Premia il metodo con cui ci si avvicina.
+Regola d’oro (da incidere nella Spine)
+
+Il Judge non deduce.
+Se una verità deve essere giudicata, deve esistere come fact atomico.
+CHECKPOINT – Judge Deterministico e Verità Esplicite
+
+JUDGE:
+
+Implementato Judge esterno all’engine
+
+Il Judge legge solo World + Accusa
+
+Non deduce, non interpreta
+
+Produce verdetto, punteggio e breakdown
+
+WORLD:
+
+Introdotti facts di verità oggettiva non osservabile
+
+Le verità necessarie al giudizio sono sempre esplicite
+
+Nessuna deduzione automatica è ammessa
+
+REGOLA ATTIVA:
+
+Ciò che può essere giudicato deve esistere.
+Ciò che non esiste non può essere valutato.
+CHECKPOINT – Narratore Reattivo al Verdetto
+
+NARRATORE:
+
+Strato esterno all’engine
+
+Produce solo testo
+
+Non accede al World
+
+Reagisce esclusivamente all’output del Judge
+
+ARCHITETTURA:
+
+Judge → Narratore (one-way)
+
+Nessun feedback verso il motore
+
+Nessuna correzione della verità
+
+PRINCIPIO ATTIVO:
+
+Il motore protegge la realtà.
+Il giudice la valuta.
+Il narratore la interpreta.
+
+CHECKPOINT – Contratto Narratore
+
+NARRATORE:
+
+Riceve solo output strutturato del Judge
+
+Non calcola punteggi
+
+Non interpreta i facts
+
+Non accede al World
+
+CONTRATTO:
+
+Input: { verdict, score, breakdown, accused }
+
+Output: testo o struttura (a seconda del ruolo)
+
+REGOLA ATTIVA:
+
+Ogni strato risponde solo a ciò che riceve,
+mai a ciò che potrebbe dedurre.

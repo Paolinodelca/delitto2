@@ -2,6 +2,7 @@
 
 export function createInitialGameState() {
   return {
+    phase: "inizio",
     facts: [
       {
         id: "death_time_estimated",
@@ -21,8 +22,15 @@ export function createInitialGameState() {
     ],
 
     interviewed: [],
-    unlockedActions: []
+    unlockedActions: [],
+    accusation: null,
+    gameOver: false,
+    verdict: null
+
   };
+
+ 
+
 }
 /*export function gameStateToPrompt(state) {
   const factsText =
@@ -50,12 +58,19 @@ export function gameStateToPrompt(state) {
   let prompt = "STATO ATTUALE DEL CASO\n\n";
 
   prompt += "FATTI ACCERTATI:\n";
-  if (!state.discoveredFacts || state.discoveredFacts.length === 0) {
+
+ if (!state.facts || state.facts.length === 0) {
+
+
+
     prompt += "- Non sono stati accertati fatti rilevanti.\n";
   } else {
-    state.discoveredFacts.forEach(f => {
-      prompt += `- ${f}\n`;
-    });
+   
+   state.facts.forEach(f => {
+  prompt += `- ${f.text}\n`;
+  });
+
+
   }
 
   return prompt;
