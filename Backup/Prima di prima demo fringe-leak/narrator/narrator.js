@@ -68,25 +68,14 @@ function judgeNarration(verdict) {
     dettagli: breakdown
   };
 }
-
-function tutorNarration({ verdict, outcome }) {
-  const { severity, wrong } = outcome;
-
-  let feedback;
-
-  if (severity === "lieve") {
-    feedback = "Il ragionamento è coerente, ma manca una verifica decisiva.";
-  } else if (severity === "media") {
-    feedback = "La costruzione è parziale: alcuni collegamenti non sono supportati.";
-  } else {
-    feedback = "L’accusa sembra costruita senza una base osservativa solida.";
-  }
+function tutorNarration(verdict) {
+  const { score, breakdown } = verdict;
 
   return {
-    feedback,
-    livelloErrore: severity,
-    elementiCritici: wrong.length,
-    punteggio: verdict.score
+    feedback: "Analisi completata",
+    puntiForti: Object.keys(breakdown).filter(k => breakdown[k] === true),
+    puntiDeboli: Object.keys(breakdown).filter(k => breakdown[k] === false),
+    punteggio: score
   };
 }
 

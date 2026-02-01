@@ -1,0 +1,29 @@
+{
+  "id": "riccardo",
+  "nome": "Riccardo Lombardi",
+  "ruolo": "Figlio della vittima",
+  "profilo_pubblico": {
+    "descrizione": "Uomo educato, controllato, apparentemente leale verso la famiglia",
+    "rapporto_con_vittima": "Conflittuale ma rispettoso in pubblico"
+  },
+  "stato_reale": {
+    "motivazioni": [
+      "Timore di perdere il controllo dell'azienda",
+      "Risentimento per essere stato escluso da decisioni importanti"
+    ],
+    "segreti": [
+      "Conosce la reale situazione finanziaria dell'azienda",
+      "Ha avuto un violento scontro con la vittima"
+    ]
+  },
+  "conoscenza_eventi": {
+    "t_minus_3": "presente",
+    "t_minus_1": "ignora",
+    "t_0": "assente"
+  },
+  "atteggiamento": {
+    "cooperazione": "media",
+    "nervosismo": "alto",
+    "tendenza_alla_menzogna": "difensiva"
+  }
+}

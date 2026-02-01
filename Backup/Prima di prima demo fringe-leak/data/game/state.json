@@ -1,0 +1,22 @@
+{
+  "phase": "inizio",
+  "facts": [
+    {
+      "id": "death_time_estimated",
+      "text": "La vittima è morta tra le 21:30 e le 22:30.",
+      "confirmed": true
+    }
+  ],
+  "hypotheses": [],
+  "timeline": [
+    {
+      "time": "21:30–22:30",
+      "event": "Finestra temporale stimata della morte",
+      "source": "medico legale"
+    }
+  ],
+  "interviewed": [],
+  "unlockedActions": [],
+  "gameOver": false
+}
+

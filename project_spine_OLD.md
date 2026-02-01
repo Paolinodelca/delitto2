@@ -18,6 +18,41 @@ un esoscheletro che definisce:
 - conoscenze
 - stati
 
+Visione e obiettivi del progetto
+
+L’obiettivo primario del progetto è la realizzazione di un motore narrativo interattivo, capace di gestire stati, conoscenze, ipotesi e conseguenze in modo coerente e dinamico.
+
+Motore narrativo istruibile per giochi deduttivi, simulazioni formative e interazioni a personaggi reattivi, con valutazione esplicita del ragionamento del giocatore.
+
+Come primo risultato concreto e presentabile, il progetto mira a completare un gioco narrativo dimostrativo (durata breve, esperienza guidata), con le seguenti caratteristiche:
+
+interazione conversazionale con il sistema
+
+gestione esplicita delle ipotesi del giocatore
+
+evoluzione dello stato narrativo in base alle azioni e alle deduzioni
+
+narrazione reattiva e coerente
+
+possibilità di integrazione futura con input/output vocali
+
+Il gioco dimostrativo ha una duplice funzione:
+
+essere un’esperienza autonoma, sorprendente e giocabile
+
+fungere da dimostrazione delle capacità del motore, in vista di utilizzi futuri quali:
+
+giochi personalizzati
+
+simulatori narrativi e formativi
+
+interfacce conversazionali istruite
+
+esperienze educative o immersive
+
+Lo sviluppo tecnico viene quindi guidato non dalla complessità astratta del sistema, ma dalla necessità di arrivare rapidamente a un prodotto funzionante, mostrabile e ripetibile.
+
+
 Separazione netta tra:
 - **regole (struttura)**
 - **copione (contenuto)**
@@ -471,6 +506,39 @@ REGOLA ATTIVA:
 
 Ciò che può essere giudicato deve esistere.
 Ciò che non esiste non può essere valutato.
+
+CHECKPOINT – Outcome Profile (Lettura dell’Errore)
+
+NUOVO STRATO:
+
+Outcome Profile = classificazione dell’esito dell’accusa
+
+Non modifica World
+Non modifica State
+Non deduce nuove verità
+
+FUNZIONE:
+
+Tradurre il breakdown del Judge in categorie di errore o successo
+
+ARCHITETTURA:
+
+Judge → OutcomeProfiler → Narratore / Tutor
+
+Il profiler:
+
+legge solo dati strutturati
+
+non accede al World
+
+non produce narrazione
+
+REGOLA ATTIVA:
+
+Il Judge confronta.
+Il Profiler comprende l’errore.
+Il Narratore lo racconta.
+
 CHECKPOINT – Narratore Reattivo al Verdetto
 
 NARRATORE:
@@ -496,6 +564,9 @@ PRINCIPIO ATTIVO:
 Il motore protegge la realtà.
 Il giudice la valuta.
 Il narratore la interpreta.
+Il narratore può reagire anche all’Outcome Profile,
+ma solo in termini di distanza dalla verità,
+mai di contenuto della verità.
 
 CHECKPOINT – Contratto Narratore
 
@@ -519,3 +590,183 @@ REGOLA ATTIVA:
 
 Ogni strato risponde solo a ciò che riceve,
 mai a ciò che potrebbe dedurre.
+
+CHECKPOINT – Outcome Profiler
+
+OutcomeProfiler è uno strato di lettura dell’esito
+
+Non accede al World
+Non modifica State
+Non deduce verità
+
+Legge il breakdown del Judge
+Classifica il tipo di errore o successo
+
+Architettura:
+
+Judge → OutcomeProfiler → Narratore / Tutor
+
+Regola attiva:
+
+Il giudice misura.
+Il profiler capisce l’errore.
+Il narratore lo trasforma in esperienza.
+CHECKPOINT – Hypotheses come Parte dello State
+
+Le Hypotheses:
+
+vivono in state.hypotheses
+
+NON modificano World
+
+NON modificano Knowledge
+
+NON vengono lette dal Judge
+
+Le azioni cognitive del giocatore:
+
+sono trasformazioni dello State
+
+registrano pensiero, non verità
+
+connectFacts:
+
+è un’azione pura
+
+valida solo conoscenze disponibili
+
+aggiorna esclusivamente lo State
+
+Regola attiva:
+
+Il mondo resta immobile.
+La conoscenza è fallibile.
+Il pensiero del giocatore lascia tracce.
+
+CHECKPOINT – AgentDisposition come Memoria Sociale
+
+AgentDisposition vive nello State
+
+Rappresenta l’atteggiamento operativo degli agenti verso il giocatore
+
+NON riflette la verità
+NON è dedotta automaticamente
+NON influenza il Judge
+
+Viene modificata solo da azioni esplicite
+
+applyHypothesisEffects:
+- legge hypotheses
+- aggiorna tensione e atteggiamento
+- non accede al World
+
+Regola attiva:
+Il giocatore ragiona.
+Il mondo sociale reagisce.
+La verità non si difende.
+
+CHECKPOINT – AgentDisposition e Conseguenze Sociali delle Hypotheses
+STATO RAGGIUNTO ✅
+
+È stato introdotto e verificato AgentDisposition come strato operativo nello State.
+
+STRUTTURA
+
+Dentro state è ora ufficialmente presente:
+
+state.agentDisposition = {
+  [agentId]: {
+    attitude: "neutro" | "difensivo" | "ostile",
+    suspicionLevel: number // 0..1
+  }
+}
+
+
+attitude è una categoria discreta
+
+suspicionLevel è una grandezza continua
+
+nessuna psicologia profonda
+
+nessuna deduzione automatica
+
+AZIONE: applyHypothesisEffects
+
+È stata introdotta l’azione pura:
+
+applyHypothesisEffects({ state }, payload?)
+
+
+Caratteristiche:
+
+legge solo state.hypotheses
+
+modifica solo state.agentDisposition
+
+non accede al World
+
+non accede alla Knowledge
+
+non produce testo
+
+non giudica la verità delle ipotesi
+
+Effetto operativo:
+
+le ipotesi del giocatore hanno conseguenze sociali
+
+anche ipotesi errate producono reazioni
+
+il mondo resta immobile, le persone reagiscono
+
+VERIFICA FUNZIONALE (ESEGUITA)
+
+Output dimostrato:
+
+Hypothesis creata via connectFacts
+
+applyHypothesisEffects applicata correttamente
+
+incremento di suspicionLevel
+
+cambio di attitude al superamento delle soglie
+
+stato coerente, persistente, osservabile
+
+Esempio verificato:
+
+riccardo_brambilla: {
+  "attitude": "difensivo",
+  "suspicionLevel": 0.5
+}
+
+ARCHITETTURA CONFERMATA
+Strato	                Ruolo
+World	                  verità oggettiva, immutabile
+Knowledge	              informazioni soggettive
+Hypotheses	            ragionamento del giocatore
+State	                  progresso + fasi + reazioni
+Actions	                trasformazioni pure
+Judge	                  valutazione esterna
+OutcomeProfiler	        classificazione errore
+Narrator	              restituzione narrativa
+
+Nessuna violazione delle regole sacre.
+
+PRINCIPIO ATTIVO (AGGIUNTO ALLA SPINE)
+
+Il giocatore può sbagliare.
+Gli agenti reagiscono comunque.
+La verità non si muove.
+
+Interrogation Layer
+Modulo che simula la reazione comportamentale degli agenti a input narrativi (domande, accuse, informazioni).
+Non modifica lo stato globale; restituisce effetti suggeriti su disposition e hypotheses.
+Narrator
+  ↓
+interrogateAgent
+  ↓
+{ reply, effects }
+  ↓
+State / Hypotheses / Judge
+

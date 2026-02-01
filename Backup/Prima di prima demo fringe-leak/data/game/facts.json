@@ -1,0 +1,93 @@
+{
+  "corpo_trovato": {
+    "truth": true,
+    "type": "evento",
+    "tags": ["morte", "iniziale"],
+    "revealed_by": [],
+    "depends_on": []
+  },
+
+  "arma_coltello": {
+    "truth": true,
+    "type": "oggetto",
+    "tags": ["arma"],
+    "revealed_by": ["ispezione_studio"],
+    "depends_on": ["corpo_trovato"]
+  },
+  
+    "alibi_riccardo_falso": {
+    "truth": true,
+    "type": "relazione",
+    "tags": ["alibi"]
+  },
+
+  "porta_chiusa_a_chiave": {
+    "truth": false,
+    "type": "stato",
+    "tags": ["villa"]
+  },
+
+  "complice_presente": {
+    "truth": null,
+    "type": "persona",
+    "tags": ["mistero"]
+  
+  },
+
+   "ora_delitto": {
+    "truth": true,
+    "type": "evento",
+    "tags": ["morte","ora"]
+  } ,
+  "sospettato1_presente": {
+    "truth": true,
+    "type": "persona",
+    "tags": ["Amalia"]
+  },
+  "sospettato2_presente": {
+    "truth": true,
+    "type": "persona",
+    "tags": ["Riccardo"]
+  },
+  "sospettato3_presente": {
+    "truth": true,
+    "type": "persona",
+    "tags": ["Alfonso"]
+  },
+  
+  "relazione1_sospettato1": {
+    "truth": true,
+    "type": "relazione",
+    "tags": ["fidanzata Riccardo"]
+  },
+   "relazione2_sospettato1": {
+    "truth": true,
+    "type": "relazione",
+    "tags": ["ricattava vittima","segreto"]
+  },
+     "relazione1_sospettato2": {
+    "truth": true,
+    "type": "relazione",
+    "tags": ["figlio vittima","non lavora in azienda padre"]
+  },
+    "relazione1_sospettato3": {
+    "truth": true,
+    "type": "relazione",
+    "tags": ["socio vittima"]
+  },
+     "relazione2_sospettato3": {
+    "truth": true,
+    "type": "evento",
+    "tags": ["discussione con vittima"]
+  },
+    "relazione3_sospettato3": {
+    "truth": true,
+    "type": "evento",
+    "tags": ["ruba all'azienda della vittima"]
+  }
+  
+  
+}
+ 
+  
+
