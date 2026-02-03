@@ -1,5 +1,8 @@
 const app = document.getElementById("app");
 
+let pressureLevel = 0;
+const MAX_PRESSURE = 100;
+
 let step = 0;
 const answers = [];
 
@@ -76,9 +79,40 @@ function next() {
 }
 
 function answer(n) {
-  const value = document.getElementById(`a${n}`).value;
+  const input = document.getElementById(`a${n}`);
+  const value = input ? input.value.trim() : "";
   answers.push(value);
+
+  // 🔥 AUMENTO PRESSIONE: il punto giusto
+  if (n === 1) {
+    increasePressure(
+      30,
+      "La tua risposta riduce l’ambiguità. Aumenta la responsabilità."
+    );
+  }
+
+  if (n === 2) {
+    increasePressure(
+      40,
+      "Ora il sistema osserva la coerenza interna del tuo ragionamento."
+    );
+  }
+
   next();
+}
+
+function increasePressure(amount, reason = "") {
+  pressureLevel = Math.min(MAX_PRESSURE, pressureLevel + amount);
+
+  const bar = document.getElementById("pressure-bar");
+  if (bar) {
+    bar.style.width = pressureLevel + "%";
+  }
+
+  const label = document.getElementById("pressure-label");
+  if (label && reason) {
+    label.textContent = reason;
+  }
 }
 
 render();
