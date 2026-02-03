@@ -43,34 +43,92 @@ function render() {
     `;
   }
 
+
   if (step === 3) {
-    app.innerHTML = `
-      <div class="output">
-        <h3>NARRATORE</h3>
-        <p>
-          La tua posizione regge sotto osservazione.<br>
-          Non hai dimostrato di avere ragione,<br>
-          ma non sei crollato quando ti è stato chiesto di spiegarti.
-        </p>
+  let narratorText = "";
+  let tutorText = "";
+  let judge = {};
 
-        <h3>TUTOR</h3>
-        <p>
-          In FRINGE non conta ciò che pensi.<br>
-          Conta come reagisci quando il tuo pensiero viene messo sotto pressione.
-        </p>
-
-        <h3>GIUDICE</h3>
-        <pre>{
-  "esito": "indeterminato",
-  "coerenza": "accettabile",
-  "note": [
-    "Nessuna accusa formale",
-    "Nessuna violazione dei fatti noti"
-  ]
-}</pre>
-      </div>
+  if (pressureLevel < 40) {
+    narratorText = `
+      La tua posizione regge senza incrinarsi.<br>
+      Le risposte sono caute, forse difensive,<br>
+      ma non mostrano cedimenti evidenti.
     `;
+
+    tutorText = `
+      Hai mantenuto il controllo.<br>
+      In FRINGE, la stabilità è una forma di competenza.
+    `;
+
+    judge = {
+      esito: "indeterminato",
+      coerenza: "solida",
+      note: [
+        "Bassa esposizione sotto pressione",
+        "Nessuna contraddizione rilevante"
+      ]
+    };
+  } 
+  else if (pressureLevel < 70) {
+    narratorText = `
+      La tua posizione regge, ma sotto sforzo.<br>
+      Alcune risposte lasciano spazio all’interpretazione.<br>
+      L’ambiguità aumenta.
+    `;
+
+    tutorText = `
+      La pressione non ti ha spezzato,<br>
+      ma ha iniziato a modellare il tuo ragionamento.
+    `;
+
+    judge = {
+      esito: "indeterminato",
+      coerenza: "accettabile",
+      note: [
+        "Risposte parzialmente esposte",
+        "La posizione resta plausibile ma fragile"
+      ]
+    };
+  } 
+  else {
+    narratorText = `
+      La tua posizione mostra segni di stress.<br>
+      Le risposte accelerano, si comprimono,<br>
+      e iniziano a perdere precisione.
+    `;
+
+    tutorText = `
+      In FRINGE la pressione non è un errore.<br>
+      È una lente che rivela i limiti.
+    `;
+
+    judge = {
+      esito: "critico",
+      coerenza: "instabile",
+      note: [
+        "Alta esposizione sotto pressione",
+        "Il ragionamento mostra cedimenti"
+      ]
+    };
   }
+
+  app.innerHTML = `
+    <div class="output">
+      <h3>NARRATORE</h3>
+      <p>${narratorText}</p>
+
+      <h3>TUTOR</h3>
+      <p>${tutorText}</p>
+
+      <h3>GIUDICE</h3>
+      <pre>${JSON.stringify(judge, null, 2)}</pre>
+    </div>
+  `;
+}
+
+
+
 }
 
 function next() {
