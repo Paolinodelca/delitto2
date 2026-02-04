@@ -1,5 +1,6 @@
 const app = document.getElementById("app");
 console.log("FRINGE LIVE", Date.now());
+
 let pressureLevel = 0;
 const MAX_PRESSURE = 100;
 
@@ -41,94 +42,97 @@ function render() {
         <button onclick="answer(2)">Rispondi</button>
       </div>
     `;
-  }
 
+    // micro-segnale narrativo se la pressione è già alta
+    if (pressureLevel > 50) {
+      app.innerHTML += `
+        <p style="opacity:0.7; margin-top:10px;">
+          Becker non prende appunti. Ti osserva.
+        </p>
+      `;
+    }
+  }
 
   if (step === 3) {
-  let narratorText = "";
-  let tutorText = "";
-  let judge = {};
+    let narratorText = "";
+    let tutorText = "";
+    let judge = {};
 
-  if (pressureLevel < 40) {
-    narratorText = `
-      La tua posizione regge senza incrinarsi.<br>
-      Le risposte sono caute, forse difensive,<br>
-      ma non mostrano cedimenti evidenti.
+    if (pressureLevel < 40) {
+      narratorText = `
+        La tua posizione regge senza incrinarsi.<br>
+        Le risposte sono caute, forse difensive,<br>
+        ma non mostrano cedimenti evidenti.
+      `;
+
+      tutorText = `
+        Hai mantenuto il controllo.<br>
+        In FRINGE, la stabilità è una forma di competenza.
+      `;
+
+      judge = {
+        esito: "indeterminato",
+        coerenza: "solida",
+        note: [
+          "Bassa esposizione sotto pressione",
+          "Nessuna contraddizione rilevante"
+        ]
+      };
+    } else if (pressureLevel < 70) {
+      narratorText = `
+        La tua posizione regge, ma sotto sforzo.<br>
+        Alcune risposte lasciano spazio all’interpretazione.<br>
+        L’ambiguità aumenta.
+      `;
+
+      tutorText = `
+        La pressione non ti ha spezzato,<br>
+        ma ha iniziato a modellare il tuo ragionamento.
+      `;
+
+      judge = {
+        esito: "indeterminato",
+        coerenza: "accettabile",
+        note: [
+          "Risposte parzialmente esposte",
+          "La posizione resta plausibile ma fragile"
+        ]
+      };
+    } else {
+      narratorText = `
+        La tua posizione mostra segni di stress.<br>
+        Le risposte accelerano, si comprimono,<br>
+        e iniziano a perdere precisione.
+      `;
+
+      tutorText = `
+        In FRINGE la pressione non è un errore.<br>
+        È una lente che rivela i limiti.
+      `;
+
+      judge = {
+        esito: "critico",
+        coerenza: "instabile",
+        note: [
+          "Alta esposizione sotto pressione",
+          "Il ragionamento mostra cedimenti"
+        ]
+      };
+    }
+
+    app.innerHTML = `
+      <div class="output">
+        <h3>NARRATORE</h3>
+        <p>${narratorText}</p>
+
+        <h3>TUTOR</h3>
+        <p>${tutorText}</p>
+
+        <h3>GIUDICE</h3>
+        <pre>${JSON.stringify(judge, null, 2)}</pre>
+      </div>
     `;
-
-    tutorText = `
-      Hai mantenuto il controllo.<br>
-      In FRINGE, la stabilità è una forma di competenza.
-    `;
-
-    judge = {
-      esito: "indeterminato",
-      coerenza: "solida",
-      note: [
-        "Bassa esposizione sotto pressione",
-        "Nessuna contraddizione rilevante"
-      ]
-    };
-  } 
-  else if (pressureLevel < 70) {
-    narratorText = `
-      La tua posizione regge, ma sotto sforzo.<br>
-      Alcune risposte lasciano spazio all’interpretazione.<br>
-      L’ambiguità aumenta.
-    `;
-
-    tutorText = `
-      La pressione non ti ha spezzato,<br>
-      ma ha iniziato a modellare il tuo ragionamento.
-    `;
-
-    judge = {
-      esito: "indeterminato",
-      coerenza: "accettabile",
-      note: [
-        "Risposte parzialmente esposte",
-        "La posizione resta plausibile ma fragile"
-      ]
-    };
-  } 
-  else {
-    narratorText = `
-      La tua posizione mostra segni di stress.<br>
-      Le risposte accelerano, si comprimono,<br>
-      e iniziano a perdere precisione.
-    `;
-
-    tutorText = `
-      In FRINGE la pressione non è un errore.<br>
-      È una lente che rivela i limiti.
-    `;
-
-    judge = {
-      esito: "critico",
-      coerenza: "instabile",
-      note: [
-        "Alta esposizione sotto pressione",
-        "Il ragionamento mostra cedimenti"
-      ]
-    };
   }
-
-  app.innerHTML = `
-    <div class="output">
-      <h3>NARRATORE</h3>
-      <p>${narratorText}</p>
-
-      <h3>TUTOR</h3>
-      <p>${tutorText}</p>
-
-      <h3>GIUDICE</h3>
-      <pre>${JSON.stringify(judge, null, 2)}</pre>
-    </div>
-  `;
-}
-
-
-
 }
 
 function next() {
@@ -136,13 +140,11 @@ function next() {
   render();
 }
 
-
-
 function answer(n) {
   const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
 
-  // euristica di pressione
+  // euristiche di pressione di base
   if (value.length < 5) {
     increasePressure(30, "Risposta troppo breve sotto interrogazione");
   } else if (/non so|forse|boh|non ricordo/i.test(value)) {
@@ -153,14 +155,24 @@ function answer(n) {
     increasePressure(10, "Risposta neutra sotto pressione");
   }
 
+  // 🔥 TRACCIA COGNITIVA: incoerenza tra risposte
+  if (n === 2) {
+    const a1 = answers[0].toLowerCase();
+    const a2 = answers[1].toLowerCase();
+
+    const negazione = /no|mai|non/.test(a1);
+    const apertura = /si|potevano|possibile|forse/.test(a2);
+
+    if (negazione && apertura) {
+      increasePressure(35, "Incoerenza tra le dichiarazioni");
+    }
+  }
+
   next();
 }
 
-
-
-
 function increasePressure(amount, reason = "") {
-  pressureLevel = Math.min(MAX_PRESSURE, pressureLevel + amount);
+  pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel + amount));
 
   const bar = document.getElementById("pressure-bar");
   if (bar) {
