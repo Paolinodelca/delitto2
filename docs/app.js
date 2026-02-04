@@ -138,6 +138,7 @@ function next() {
 
 
 
+
 function answer(n) {
   const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
