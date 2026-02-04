@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <title>FRINGE / LEAK</title>
+<div id="pressure-container">
+  <div id="pressure-bar"></div>
+  <div id="pressure-label">Livello di esposizione</div>
+</div>
+
+
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+  
+
     body {
       font-family: system-ui, sans-serif;
       background: #111;
@@ -33,6 +41,25 @@
       border-top: 1px solid #444;
       padding-top: 1rem;
     }
+    <style>
+#pressure-container {
+  margin: 20px 0;
+}
+
+#pressure-bar {
+  height: 8px;
+  width: 0%;
+  background: linear-gradient(90deg, #6b7280, #111827);
+  transition: width 0.6s ease;
+}
+
+#pressure-label {
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: 4px;
+}
+</style>
+
   </style>
 </head>
 <body>

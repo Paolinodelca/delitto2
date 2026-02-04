@@ -1,4 +1,8 @@
 const app = document.getElementById("app");
+console.log("FRINGE LIVE", Date.now());
+
+let pressureLevel = 0;
+const MAX_PRESSURE = 100;
 
 let step = 0;
 const answers = [];
@@ -38,33 +42,94 @@ function render() {
         <button onclick="answer(2)">Rispondi</button>
       </div>
     `;
+
+    // micro-segnale narrativo se la pressione è già alta
+    if (pressureLevel > 50) {
+      app.innerHTML += `
+        <p style="opacity:0.7; margin-top:10px;">
+          Becker non prende appunti. Ti osserva.
+        </p>
+      `;
+    }
   }
 
   if (step === 3) {
+    let narratorText = "";
+    let tutorText = "";
+    let judge = {};
+
+    if (pressureLevel < 40) {
+      narratorText = `
+        La tua posizione regge senza incrinarsi.<br>
+        Le risposte sono caute, forse difensive,<br>
+        ma non mostrano cedimenti evidenti.
+      `;
+
+      tutorText = `
+        Hai mantenuto il controllo.<br>
+        In FRINGE, la stabilità è una forma di competenza.
+      `;
+
+      judge = {
+        esito: "indeterminato",
+        coerenza: "solida",
+        note: [
+          "Bassa esposizione sotto pressione",
+          "Nessuna contraddizione rilevante"
+        ]
+      };
+    } else if (pressureLevel < 70) {
+      narratorText = `
+        La tua posizione regge, ma sotto sforzo.<br>
+        Alcune risposte lasciano spazio all’interpretazione.<br>
+        L’ambiguità aumenta.
+      `;
+
+      tutorText = `
+        La pressione non ti ha spezzato,<br>
+        ma ha iniziato a modellare il tuo ragionamento.
+      `;
+
+      judge = {
+        esito: "indeterminato",
+        coerenza: "accettabile",
+        note: [
+          "Risposte parzialmente esposte",
+          "La posizione resta plausibile ma fragile"
+        ]
+      };
+    } else {
+      narratorText = `
+        La tua posizione mostra segni di stress.<br>
+        Le risposte accelerano, si comprimono,<br>
+        e iniziano a perdere precisione.
+      `;
+
+      tutorText = `
+        In FRINGE la pressione non è un errore.<br>
+        È una lente che rivela i limiti.
+      `;
+
+      judge = {
+        esito: "critico",
+        coerenza: "instabile",
+        note: [
+          "Alta esposizione sotto pressione",
+          "Il ragionamento mostra cedimenti"
+        ]
+      };
+    }
+
     app.innerHTML = `
       <div class="output">
         <h3>NARRATORE</h3>
-        <p>
-          La tua posizione regge sotto osservazione.<br>
-          Non hai dimostrato di avere ragione,<br>
-          ma non sei crollato quando ti è stato chiesto di spiegarti.
-        </p>
+        <p>${narratorText}</p>
 
         <h3>TUTOR</h3>
-        <p>
-          In FRINGE non conta ciò che pensi.<br>
-          Conta come reagisci quando il tuo pensiero viene messo sotto pressione.
-        </p>
+        <p>${tutorText}</p>
 
         <h3>GIUDICE</h3>
-        <pre>{
-  "esito": "indeterminato",
-  "coerenza": "accettabile",
-  "note": [
-    "Nessuna accusa formale",
-    "Nessuna violazione dei fatti noti"
-  ]
-}</pre>
+        <pre>${JSON.stringify(judge, null, 2)}</pre>
       </div>
     `;
   }
@@ -76,9 +141,60 @@ function next() {
 }
 
 function answer(n) {
-  const value = document.getElementById(`a${n}`).value;
+  const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
+
+  // euristiche di pressione di base
+  if (value.length < 5) {
+    increasePressure(30, "Risposta troppo breve sotto interrogazione");
+  } else if (/non so|forse|boh|non ricordo/i.test(value)) {
+    increasePressure(25, "Risposta evasiva rilevata");
+  } else if (value.length > 60) {
+    increasePressure(-10, "Risposta articolata, pressione contenuta");
+  } else {
+    increasePressure(10, "Risposta neutra sotto pressione");
+  }
+
+  // 🔥 TRACCIA COGNITIVA: incoerenza tra risposte
+  if (n === 2) {
+    const a1 = answers[0].toLowerCase();
+    const a2 = answers[1].toLowerCase();
+
+    const negazione = /no|mai|non/.test(a1);
+    const apertura = /si|potevano|possibile|forse/.test(a2);
+
+    if (negazione && apertura) {
+      increasePressure(35, "Incoerenza tra le dichiarazioni");
+    }
+  }
+
   next();
 }
 
+function increasePressure(amount, reason = "") {
+  pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel + amount));
+
+  const bar = document.getElementById("pressure-bar");
+  if (bar) {
+    bar.style.width = pressureLevel + "%";
+  }
+
+  const label = document.getElementById("pressure-label");
+  if (label && reason) {
+    label.textContent = reason;
+  }
+}
+
 render();
+async function observeWithLLM(answers) {
+  const response = await fetch("/api/observe", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      answers
+    })
+  });
+
+  if (!response.ok) return null;
+  return await response.json();
+}

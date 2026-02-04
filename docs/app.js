@@ -155,18 +155,22 @@ function answer(n) {
     increasePressure(10, "Risposta neutra sotto pressione");
   }
 
-  // 🔥 TRACCIA COGNITIVA: incoerenza tra risposte
-  if (n === 2) {
-    const a1 = answers[0].toLowerCase();
-    const a2 = answers[1].toLowerCase();
+// 🔍 OSSERVAZIONE LLM ALLA FINE
+if (n === 2) {
+  observeWithLLM(answers).then(obs => {
+    if (!obs) return;
 
-    const negazione = /no|mai|non/.test(a1);
-    const apertura = /si|potevano|possibile|forse/.test(a2);
-
-    if (negazione && apertura) {
-      increasePressure(35, "Incoerenza tra le dichiarazioni");
+    if (obs.coerenza === "bassa") increasePressure(30);
+    if (obs.postura === "evasiva") increasePressure(20);
+    if (obs.segnali_stress?.includes("contraddizione")) {
+      increasePressure(35);
     }
-  }
+
+    render(); // aggiorna il finale con nuova pressione
+  });
+}
+
+
 
   next();
 }
@@ -186,3 +190,15 @@ function increasePressure(amount, reason = "") {
 }
 
 render();
+async function observeWithLLM(answers) {
+  const response = await fetch("/api/observe", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      answers
+    })
+  });
+
+  if (!response.ok) return null;
+  return await response.json();
+}
