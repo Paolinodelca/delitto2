@@ -138,43 +138,23 @@ function next() {
 
 
 
-
 function answer(n) {
   const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
 
-  // euristiche semplici (per ora)
-  const length = value.length;
-  const lower = value.toLowerCase();
-
-  let pressureAdd = 0;
-  let reason = "";
-
-  if (length === 0) {
-    pressureAdd = 20;
-    reason = "Evasione rilevata";
-  } else if (length < 10) {
-    pressureAdd = 15;
-    reason = "Risposta estremamente breve";
-  } else if (
-    lower.includes("non so") ||
-    lower.includes("forse") ||
-    lower.includes("non ricordo")
-  ) {
-    pressureAdd = 18;
-    reason = "Incertezza esplicita";
-  } else if (length > 120) {
-    pressureAdd = 25;
-    reason = "Risposta prolissa sotto pressione";
+  // euristica di pressione
+  if (value.length < 5) {
+    increasePressure(30, "Risposta troppo breve sotto interrogazione");
+  } else if (/non so|forse|boh|non ricordo/i.test(value)) {
+    increasePressure(25, "Risposta evasiva rilevata");
+  } else if (value.length > 60) {
+    increasePressure(-10, "Risposta articolata, pressione contenuta");
   } else {
-    pressureAdd = 8;
-    reason = "Risposta controllata";
+    increasePressure(10, "Risposta neutra sotto pressione");
   }
 
-  increasePressure(pressureAdd, reason);
   next();
 }
-
 
 
 
