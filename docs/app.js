@@ -1,5 +1,5 @@
 const app = document.getElementById("app");
-
+console.log("FRINGE LIVE", Date.now());
 let pressureLevel = 0;
 const MAX_PRESSURE = 100;
 
