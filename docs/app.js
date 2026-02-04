@@ -136,28 +136,47 @@ function next() {
   render();
 }
 
+
+
 function answer(n) {
-  const input = document.getElementById(`a${n}`);
-  const value = input ? input.value.trim() : "";
+  const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
 
-  // 🔥 AUMENTO PRESSIONE: il punto giusto
-  if (n === 1) {
-    increasePressure(
-      30,
-      "La tua risposta riduce l’ambiguità. Aumenta la responsabilità."
-    );
+  // euristiche semplici (per ora)
+  const length = value.length;
+  const lower = value.toLowerCase();
+
+  let pressureAdd = 0;
+  let reason = "";
+
+  if (length === 0) {
+    pressureAdd = 20;
+    reason = "Evasione rilevata";
+  } else if (length < 10) {
+    pressureAdd = 15;
+    reason = "Risposta estremamente breve";
+  } else if (
+    lower.includes("non so") ||
+    lower.includes("forse") ||
+    lower.includes("non ricordo")
+  ) {
+    pressureAdd = 18;
+    reason = "Incertezza esplicita";
+  } else if (length > 120) {
+    pressureAdd = 25;
+    reason = "Risposta prolissa sotto pressione";
+  } else {
+    pressureAdd = 8;
+    reason = "Risposta controllata";
   }
 
-  if (n === 2) {
-    increasePressure(
-      40,
-      "Ora il sistema osserva la coerenza interna del tuo ragionamento."
-    );
-  }
-
+  increasePressure(pressureAdd, reason);
   next();
 }
+
+
+
+
 
 function increasePressure(amount, reason = "") {
   pressureLevel = Math.min(MAX_PRESSURE, pressureLevel + amount);
