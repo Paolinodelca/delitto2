@@ -9,17 +9,14 @@ const answers = [];
 
 /**
  * MODELLO DEL GIOCATORE
- * Ipotesi operative, NON verità
+ * Ipotesi operative, non verità
  */
 const playerModel = {
   stile: "indeterminato",
   strategia: "indeterminata",
   fragilita: 0,
-
-  // nuovi fattori latenti
-  controllo: 50,   // 0–100
-  rischio: 0,      // 0–100
-  ambiguita: 0     // 0–100
+  rischioNarrativo: 0,     // nuovo
+  esposizione: 0          // nuovo
 };
 
 function render() {
@@ -92,51 +89,43 @@ function answer(n) {
   const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
 
-  observeLocally(value);
-
-  next();
-}
-
-/**
- * OSSERVATORE NON DETERMINISTICO (mock LLM)
- */
-function observeLocally(text) {
-  const len = text.length;
-
-  if (len < 8) {
-    increasePressure(25);
+  // Analisi linguistica semplice ma efficace
+  if (value.length < 5) {
+    increasePressure(30);
     playerModel.fragilita += 20;
-    playerModel.controllo -= 10;
-  }
-
-  if (/forse|dipende|non saprei/i.test(text)) {
-    playerModel.ambiguita += 30;
-    playerModel.strategia = "ambiguità";
-    increasePressure(20);
-  }
-
-  if (/assolutamente|mai|in nessun caso/i.test(text)) {
-    playerModel.rischio += 25;
+    playerModel.esposizione += 15;
+  } else if (/non so|forse|boh|non ricordo/i.test(value)) {
+    increasePressure(25);
+    playerModel.stile = "evasivo";
+    playerModel.rischioNarrativo += 10;
+  } else if (value.length > 70) {
+    increasePressure(-10);
     playerModel.stile = "assertivo";
+    playerModel.esposizione += 20;
+  } else {
     increasePressure(10);
+    playerModel.stile = "prudente";
   }
 
-  if (len > 70) {
-    playerModel.controllo += 10;
-    increasePressure(-5);
-  }
+  // Coerenza tra risposte
+  if (n === 2) {
+    const a1 = answers[0].toLowerCase();
+    const a2 = answers[1].toLowerCase();
 
-  // coerenza tra risposte
-  if (answers.length === 2) {
-    const [a1, a2] = answers.map(a => a.toLowerCase());
-    if (/mai|no/.test(a1) && /forse|possibile/.test(a2)) {
-      playerModel.ambiguita += 40;
-      playerModel.fragilita += 25;
-      increasePressure(30);
+    const negazione = /no|mai|non/.test(a1);
+    const apertura = /si|forse|possibile|potevano/.test(a2);
+
+    if (negazione && apertura) {
+      increasePressure(35);
+      playerModel.strategia = "ambiguità";
+      playerModel.fragilita += 30;
+      playerModel.rischioNarrativo += 25;
     } else {
       playerModel.strategia = "coerenza";
     }
   }
+
+  next();
 }
 
 function increasePressure(amount) {
@@ -144,65 +133,74 @@ function increasePressure(amount) {
 }
 
 function narratorOutput() {
-  if (playerModel.ambiguita > 60) {
+  if (playerModel.rischioNarrativo > 40) {
     return `
-      Le tue parole non mentono, ma non si lasciano afferrare.<br>
-      Becker annota meno. Ascolta di più.<br>
-      L’ambiguità è diventata una presenza.
+      Le tue parole hanno creato un precedente.<br>
+      Non è ancora una colpa,<br>
+      ma qualcuno potrebbe ricordarle.
     `;
   }
 
-  if (pressureLevel > 70) {
+  if (playerModel.strategia === "ambiguità") {
     return `
-      La pressione non rompe, ma deforma.<br>
-      Chi osserva ora sa dove premere.<br>
-      E lo farà.
+      La tua posizione non crolla, ma si piega.<br>
+      Le pieghe sono zone fertili.<br>
+      Anche per il sospetto.
     `;
   }
 
   return `
     La tua posizione resta in piedi.<br>
     Non perché sia inattaccabile,<br>
-    ma perché hai scelto cosa mostrare.
+    ma perché sai dove non spingere.
   `;
 }
 
 function tutorOutput() {
-  if (playerModel.controllo < 40) {
+  if (playerModel.esposizione > 30) {
     return `
-      Stai cedendo spazio narrativo.<br>
-      Non è un errore.<br>
-      Ma va fatto con consapevolezza.
+      Hai lasciato tracce.<br>
+      Non tutte sono errori.<br>
+      Ma tutte raccontano qualcosa.
     `;
   }
 
-  if (playerModel.rischio > 50) {
+  if (playerModel.stile === "evasivo") {
     return `
-      Hai preso una linea netta.<br>
-      In FRINGE, le linee attirano conseguenze.
+      Evitare è una tecnica.<br>
+      Funziona una volta.<br>
+      Raramente due.
+    `;
+  }
+
+  if (playerModel.stile === "assertivo") {
+    return `
+      Ti sei esposto con sicurezza.<br>
+      In FRINGE, questo ha sempre un prezzo.
     `;
   }
 
   return `
-    Hai gestito la tensione senza irrigidirti.<br>
-    Questa è una competenza, non una difesa.
+    Prudenza attiva.<br>
+    Non è silenzio.<br>
+    È controllo.
   `;
 }
 
 function judgeOutput() {
   return {
-    esito: pressureLevel > 70 ? "critico" : "instabile",
-    coerenza: playerModel.strategia,
+    esito: pressureLevel > 70 ? "critico" : "indeterminato",
+    coerenza: playerModel.strategia === "coerenza" ? "alta" : "media",
     modello_giocatore: {
       stile: playerModel.stile,
+      strategia: playerModel.strategia,
       fragilita_stimata: playerModel.fragilita,
-      controllo: playerModel.controllo,
-      rischio: playerModel.rischio,
-      ambiguita: playerModel.ambiguita
+      rischio_narrativo: playerModel.rischioNarrativo,
+      esposizione: playerModel.esposizione
     },
     note: [
-      "Valutazione emergente",
-      "Modello non deterministico",
+      "Valutazione comportamentale multilivello",
+      "Osservazione simulata di tipo cognitivo",
       "Nessuna verifica di verità fattuale"
     ]
   };
