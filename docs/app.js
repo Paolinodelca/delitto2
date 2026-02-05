@@ -9,37 +9,18 @@ const answers = [];
 
 /**
  * MODELLO DEL GIOCATORE
- * Non è una verità, sono ipotesi operative
+ * Ipotesi operative, NON verità
  */
 const playerModel = {
-  stile: "indeterminato",      // prudente | assertivo | evasivo
-  strategia: "indeterminata",  // coerenza | ambiguità | minimizzazione
-  fragilita: 0                // 0–100
+  stile: "indeterminato",
+  strategia: "indeterminata",
+  fragilita: 0,
+
+  // nuovi fattori latenti
+  controllo: 50,   // 0–100
+  rischio: 0,      // 0–100
+  ambiguita: 0     // 0–100
 };
-
-/**
- * OSSERVATORE LLM
- * Non giudica, osserva pattern cognitivi
- */
-async function observeWithLLM(answers) {
-  try {
-    const res = await fetch("/api/observe", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ answers })
-    });
-
-    if (!res.ok) {
-      console.warn("Osservazione LLM fallita");
-      return null;
-    }
-
-    return await res.json();
-  } catch (e) {
-    console.warn("Errore osservatore:", e);
-    return null;
-  }
-}
 
 function render() {
   app.innerHTML = "";
@@ -87,20 +68,16 @@ function render() {
   }
 
   if (step === 3) {
-    const narratorText = narratorOutput();
-    const tutorText = tutorOutput();
-    const judge = judgeOutput();
-
     app.innerHTML = `
       <div class="output">
         <h3>NARRATORE</h3>
-        <p>${narratorText}</p>
+        <p>${narratorOutput()}</p>
 
         <h3>TUTOR</h3>
-        <p>${tutorText}</p>
+        <p>${tutorOutput()}</p>
 
         <h3>GIUDICE</h3>
-        <pre>${JSON.stringify(judge, null, 2)}</pre>
+        <pre>${JSON.stringify(judgeOutput(), null, 2)}</pre>
       </div>
     `;
   }
@@ -111,56 +88,55 @@ function next() {
   render();
 }
 
-async function answer(n) {
+function answer(n) {
   const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
 
-  // Pressione base
-  if (value.length < 5) {
-    increasePressure(30);
-    playerModel.fragilita += 20;
-  } else if (/non so|forse|boh|non ricordo/i.test(value)) {
+  observeLocally(value);
+
+  next();
+}
+
+/**
+ * OSSERVATORE NON DETERMINISTICO (mock LLM)
+ */
+function observeLocally(text) {
+  const len = text.length;
+
+  if (len < 8) {
     increasePressure(25);
-    playerModel.stile = "evasivo";
-  } else if (value.length > 60) {
-    increasePressure(-10);
-    playerModel.stile = "assertivo";
-  } else {
-    increasePressure(10);
-    playerModel.stile = "prudente";
+    playerModel.fragilita += 20;
+    playerModel.controllo -= 10;
   }
 
-  // Coerenza locale
-  if (n === 2) {
-    const a1 = answers[0].toLowerCase();
-    const a2 = answers[1].toLowerCase();
+  if (/forse|dipende|non saprei/i.test(text)) {
+    playerModel.ambiguita += 30;
+    playerModel.strategia = "ambiguità";
+    increasePressure(20);
+  }
 
-    const negazione = /no|mai|non/.test(a1);
-    const apertura = /si|potevano|forse|possibile/.test(a2);
+  if (/assolutamente|mai|in nessun caso/i.test(text)) {
+    playerModel.rischio += 25;
+    playerModel.stile = "assertivo";
+    increasePressure(10);
+  }
 
-    if (negazione && apertura) {
-      increasePressure(35);
-      playerModel.strategia = "ambiguità";
-      playerModel.fragilita += 30;
+  if (len > 70) {
+    playerModel.controllo += 10;
+    increasePressure(-5);
+  }
+
+  // coerenza tra risposte
+  if (answers.length === 2) {
+    const [a1, a2] = answers.map(a => a.toLowerCase());
+    if (/mai|no/.test(a1) && /forse|possibile/.test(a2)) {
+      playerModel.ambiguita += 40;
+      playerModel.fragilita += 25;
+      increasePressure(30);
     } else {
       playerModel.strategia = "coerenza";
     }
-
-    // 👁 OSSERVAZIONE LLM (NUOVA)
-    const obs = await observeWithLLM(answers);
-    if (obs) {
-      if (obs.coerenza === "bassa") increasePressure(25);
-      if (obs.postura === "evasiva") increasePressure(15);
-
-      if (obs.segnali_stress?.includes("contraddizione")) {
-        increasePressure(30);
-      }
-
-      playerModel.stile = obs.postura || playerModel.stile;
-    }
   }
-
-  next();
 }
 
 function increasePressure(amount) {
@@ -168,64 +144,65 @@ function increasePressure(amount) {
 }
 
 function narratorOutput() {
-  if (playerModel.strategia === "ambiguità") {
+  if (playerModel.ambiguita > 60) {
     return `
-      La tua posizione non crolla, ma cambia forma.<br>
-      Dove prima c’era una linea, ora c’è una curva.<br>
-      Qualcuno potrebbe seguirla. Qualcun altro perdersi.
+      Le tue parole non mentono, ma non si lasciano afferrare.<br>
+      Becker annota meno. Ascolta di più.<br>
+      L’ambiguità è diventata una presenza.
     `;
   }
 
   if (pressureLevel > 70) {
     return `
-      La pressione ha lasciato un segno.<br>
-      Non è una colpa, ma è visibile.<br>
-      E ciò che è visibile diventa discutibile.
+      La pressione non rompe, ma deforma.<br>
+      Chi osserva ora sa dove premere.<br>
+      E lo farà.
     `;
   }
 
   return `
     La tua posizione resta in piedi.<br>
     Non perché sia inattaccabile,<br>
-    ma perché sai dove non spingere.
+    ma perché hai scelto cosa mostrare.
   `;
 }
 
 function tutorOutput() {
-  if (playerModel.stile === "evasivo") {
+  if (playerModel.controllo < 40) {
     return `
-      Evitare non è sempre fuggire.<br>
-      A volte è guadagnare tempo.<br>
-      Ma il tempo ha un costo.
+      Stai cedendo spazio narrativo.<br>
+      Non è un errore.<br>
+      Ma va fatto con consapevolezza.
     `;
   }
 
-  if (playerModel.stile === "assertivo") {
+  if (playerModel.rischio > 50) {
     return `
-      Hai parlato come chi accetta il rischio.<br>
-      In FRINGE, questo viene sempre notato.
+      Hai preso una linea netta.<br>
+      In FRINGE, le linee attirano conseguenze.
     `;
   }
 
   return `
-    Hai mantenuto una postura prudente.<br>
-    Non è neutralità.<br>
-    È una scelta.
+    Hai gestito la tensione senza irrigidirti.<br>
+    Questa è una competenza, non una difesa.
   `;
 }
 
 function judgeOutput() {
   return {
-    esito: pressureLevel > 70 ? "critico" : "indeterminato",
-    coerenza: playerModel.strategia === "coerenza" ? "alta" : "media",
+    esito: pressureLevel > 70 ? "critico" : "instabile",
+    coerenza: playerModel.strategia,
     modello_giocatore: {
       stile: playerModel.stile,
-      strategia: playerModel.strategia,
-      fragilita_stimata: playerModel.fragilita
+      fragilita_stimata: playerModel.fragilita,
+      controllo: playerModel.controllo,
+      rischio: playerModel.rischio,
+      ambiguita: playerModel.ambiguita
     },
     note: [
-      "Valutazione basata su osservazione comportamentale",
-      "Inclusa osservazione esterna non deterministica",
+      "Valutazione emergente",
+      "Modello non deterministico",
       "Nessuna verifica di verità fattuale"
     ]
   };
