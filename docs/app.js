@@ -7,10 +7,15 @@ const MAX_PRESSURE = 100;
 let step = 0;
 const answers = [];
 
-let observerTrace = null;
-let expectationLine = null;
-let frictionLine = null;
-let alteredQuestion = null;
+/**
+ * MODELLO DEL GIOCATORE
+ * Non è una verità, sono ipotesi operative
+ */
+const playerModel = {
+  stile: "indeterminato",      // prudente | assertivo | evasivo
+  strategia: "indeterminata",  // coerenza | ambiguità | minimizzazione
+  fragilita: 0                // 0–100
+};
 
 function render() {
   app.innerHTML = "";
@@ -39,60 +44,28 @@ function render() {
   }
 
   if (step === 2) {
-    const questionText = alteredQuestion ||
-      `«Quindi stai dicendo che <em>non potevano</em> sapere davvero?»`;
-
     app.innerHTML = `
       <div class="question">
         <p><strong>Jonas Becker</strong></p>
-        <p>${questionText}</p>
+        <p>«Quindi stai dicendo che <em>non potevano</em> sapere davvero?»</p>
         <input id="a2" style="width:100%" />
         <button onclick="answer(2)">Rispondi</button>
       </div>
     `;
 
-    if (expectationLine) {
+    if (pressureLevel > 50) {
       app.innerHTML += `
-        <p style="opacity:0.6; margin-top:10px; font-style:italic;">
-          ${expectationLine}
-        </p>
-      `;
-    }
-
-    if (frictionLine) {
-      app.innerHTML += `
-        <p style="opacity:0.75; margin-top:6px; font-style:italic;">
-          ${frictionLine}
+        <p style="opacity:0.7; margin-top:10px;">
+          Becker non prende appunti. Ti osserva.
         </p>
       `;
     }
   }
 
   if (step === 3) {
-    let narratorText = "";
-    let tutorText = "";
-    let judge = { note: [] };
-
-    if (pressureLevel < 40) {
-      narratorText = `La tua posizione resta stabile.`;
-      tutorText = `La pressione non ha alterato la forma del pensiero.`;
-      judge.coerenza = "solida";
-    } else if (pressureLevel < 70) {
-      narratorText = `La posizione regge, ma si adatta.`;
-      tutorText = `Il pensiero ha cambiato configurazione.`;
-      judge.coerenza = "accettabile";
-    } else {
-      narratorText = `La posizione mostra segni di cedimento.`;
-      tutorText = `La pressione ha reso visibili i limiti.`;
-      judge.coerenza = "instabile";
-    }
-
-    if (observerTrace) {
-      judge.note.push(`Postura osservata: ${observerTrace.postura}`);
-      observerTrace.segnali_stress?.forEach(s =>
-        judge.note.push(`Segnale: ${s}`)
-      );
-    }
+    const narratorText = narratorOutput();
+    const tutorText = tutorOutput();
+    const judge = judgeOutput();
 
     app.innerHTML = `
       <div class="output">
@@ -101,13 +74,6 @@ function render() {
 
         <h3>TUTOR</h3>
         <p>${tutorText}</p>
-
-        <h3>OSSERVAZIONE</h3>
-        <p style="opacity:0.8;">
-          ${observerTrace
-            ? "Il sistema ha osservato una traiettoria del ragionamento."
-            : "Nessuna traiettoria significativa rilevata."}
-        </p>
 
         <h3>GIUDICE</h3>
         <pre>${JSON.stringify(judge, null, 2)}</pre>
@@ -125,54 +91,106 @@ function answer(n) {
   const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
 
-  if (value.length < 5) pressureLevel += 30;
-  else if (/non so|forse|boh|non ricordo/i.test(value)) pressureLevel += 25;
-  else if (value.length > 60) pressureLevel -= 10;
-  else pressureLevel += 10;
-
-  pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel));
-
-  if (n === 1) {
-    observeWithLLM([answers[0], ""]).then(trace => {
-      observerTrace = trace;
-
-      if (trace?.postura === "difensiva") {
-        expectationLine = "Il sistema rileva una chiusura preventiva del campo.";
-      }
-      if (trace?.postura === "evasiva") {
-        expectationLine = "Il sistema rileva una strategia di diluizione.";
-      }
-      if (trace?.postura === "assertiva") {
-        expectationLine = "Il sistema rileva una posizione già consolidata.";
-      }
-
-      next();
-    }).catch(() => next());
-    return;
+  // Pressione base
+  if (value.length < 5) {
+    increasePressure(30);
+    playerModel.fragilita += 20;
+  } else if (/non so|forse|boh|non ricordo/i.test(value)) {
+    increasePressure(25);
+    playerModel.stile = "evasivo";
+  } else if (value.length > 60) {
+    increasePressure(-10);
+    playerModel.stile = "assertivo";
+  } else {
+    increasePressure(10);
+    playerModel.stile = "prudente";
   }
 
+  // Osservazione di coerenza tra risposte
   if (n === 2) {
-    if (observerTrace?.segnali_stress?.includes("contraddizione")) {
-      frictionLine = "La seconda risposta non segue la traiettoria prevista.";
-      alteredQuestion =
-        "«Questa risposta modifica la posizione che stavi costruendo?»";
+    const a1 = answers[0].toLowerCase();
+    const a2 = answers[1].toLowerCase();
+
+    const negazione = /no|mai|non/.test(a1);
+    const apertura = /si|potevano|forse|possibile/.test(a2);
+
+    if (negazione && apertura) {
+      increasePressure(35);
+      playerModel.strategia = "ambiguità";
+      playerModel.fragilita += 30;
+    } else {
+      playerModel.strategia = "coerenza";
     }
-    next();
   }
+
+  next();
 }
 
-async function observeWithLLM(answers) {
-  const response = await fetch("/api/observe", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      answer1: answers[0],
-      answer2: answers[1]
-    })
-  });
+function increasePressure(amount) {
+  pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel + amount));
+}
 
-  if (!response.ok) return null;
-  return await response.json();
+function narratorOutput() {
+  if (playerModel.strategia === "ambiguità") {
+    return `
+      La tua posizione non crolla, ma cambia forma.<br>
+      Dove prima c’era una linea, ora c’è una curva.<br>
+      Qualcuno potrebbe seguirla. Qualcun altro perdersi.
+    `;
+  }
+
+  if (pressureLevel > 70) {
+    return `
+      La pressione ha lasciato un segno.<br>
+      Non è una colpa, ma è visibile.<br>
+      E ciò che è visibile diventa discutibile.
+    `;
+  }
+
+  return `
+    La tua posizione resta in piedi.<br>
+    Non perché sia inattaccabile,<br>
+    ma perché sai dove non spingere.
+  `;
+}
+
+function tutorOutput() {
+  if (playerModel.stile === "evasivo") {
+    return `
+      Evitare non è sempre fuggire.<br>
+      A volte è guadagnare tempo.<br>
+      Ma il tempo ha un costo.
+    `;
+  }
+
+  if (playerModel.stile === "assertivo") {
+    return `
+      Hai parlato come chi accetta il rischio.<br>
+      In FRINGE, questo viene sempre notato.
+    `;
+  }
+
+  return `
+    Hai mantenuto una postura prudente.<br>
+    Non è neutralità.<br>
+    È una scelta.
+  `;
+}
+
+function judgeOutput() {
+  return {
+    esito: pressureLevel > 70 ? "critico" : "indeterminato",
+    coerenza: playerModel.strategia === "coerenza" ? "alta" : "media",
+    modello_giocatore: {
+      stile: playerModel.stile,
+      strategia: playerModel.strategia,
+      fragilita_stimata: playerModel.fragilita
+    },
+    note: [
+      "Valutazione basata su osservazione comportamentale",
+      "Nessuna verifica di verità fattuale"
+    ]
+  };
 }
 
 render();
