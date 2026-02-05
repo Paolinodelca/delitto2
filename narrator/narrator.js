@@ -1,93 +1,61 @@
-export function narrateVerdict({ result, outcome, role = "narratore", tone = "neutro" }) {
+function narrate({ state, world }) {
+  const lines = [];
 
+  const climate = world.socialClimate || {};
+  const tension = climate.tension || 0;
+  const trust = climate.trust ?? 1;
 
-  if (!result) {
-    throw new Error("Risultato del giudizio mancante");
-  }
+  // livello base
+  lines.push("L’osservazione prosegue.");
 
-  const verdict = deriveVerdict(result);
-
-  const enrichedResult = {
-    ...result,
-    verdict,
-    accused: result.accusation?.accused
-  };
-
-  switch (role) {
-    case "giudice":
-      return judgeNarration(enrichedResult);
-
-    case "tutor":
-      return tutorNarration(enrichedResult);
-
-    case "narratore":
-    default:
-      return storyNarration(enrichedResult, tone);
-  }
-}
-
-function deriveVerdict(result) {
-  if (result.success === true) return "corretta";
-  if (result.score > 0) return "parziale";
-  return "errata";
-}
-
-
-
-
-
-function storyNarration(result, outcome) {
-  const { success } = result;
-
-  if (success) {
-    return "La ricostruzione trova un equilibrio. I fatti si allineano.";
-  }
-
-  switch (outcome.severity) {
-    case "lieve":
-      return "L’accusa sfiora la verità, ma inciampa su dettagli decisivi.";
-
-    case "media":
-      return "La ricostruzione appare fragile. I collegamenti non reggono.";
-
-    case "grave":
-    default:
-      return "L’accusa non trova appigli solidi. La verità resta distante.";
-  }
-}
-
-
-
-
-function judgeNarration(verdict) {
-  const { success, score, breakdown } = verdict;
-
-  return {
-    esito: success ? "CORRETTO" : "ERRATO",
-    punteggio: score,
-    dettagli: breakdown
-  };
-}
-
-function tutorNarration({ verdict, outcome }) {
-  const { severity, wrong } = outcome;
-
-  let feedback;
-
-  if (severity === "lieve") {
-    feedback = "Il ragionamento è coerente, ma manca una verifica decisiva.";
-  } else if (severity === "media") {
-    feedback = "La costruzione è parziale: alcuni collegamenti non sono supportati.";
+  // TENSIONE
+  if (tension > 0.7) {
+    lines.push(
+      "L’ambiente si irrigidisce.",
+      "Le parole vengono trattenute più del necessario."
+    );
+  } else if (tension > 0.4) {
+    lines.push(
+      "L’attenzione aumenta.",
+      "Ogni risposta sembra avere un peso inaspettato."
+    );
   } else {
-    feedback = "L’accusa sembra costruita senza una base osservativa solida.";
+    lines.push(
+      "Il contesto rimane composto.",
+      "Le interazioni scorrono senza attrito evidente."
+    );
   }
 
-  return {
-    feedback,
-    livelloErrore: severity,
-    elementiCritici: wrong.length,
-    punteggio: verdict.score
-  };
+  // FIDUCIA
+  if (trust < 0.3) {
+    lines.push(
+      "La fiducia si è assottigliata.",
+      "Le informazioni circolano con cautela, se circolano."
+    );
+  } else if (trust < 0.6) {
+    lines.push(
+      "La fiducia non è data per scontata.",
+      "Ogni affermazione viene mentalmente verificata."
+    );
+  }
+
+  // FLAGS EMERGENTI
+  if (world.flags?.informationalFriction) {
+    lines.push(
+      "Le domande non cercano chiarimenti.",
+      "Cercano conferme."
+    );
+  }
+
+  if (world.flags?.atmosphere === "tesa") {
+    lines.push(
+      "Il silenzio tra una risposta e l’altra si allunga."
+    );
+  }
+
+  return lines.join(" ");
 }
 
-
+module.exports = {
+  narrate
+};
