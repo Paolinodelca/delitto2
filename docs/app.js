@@ -11,13 +11,64 @@ const answers = [];
  * MODELLO DEL GIOCATORE
  * Ipotesi operative, non verità
  */
-const playerModel = {
+let playerModel = {
   stile: "indeterminato",
   strategia: "indeterminata",
   fragilita: 0,
-  rischioNarrativo: 0,     // nuovo
-  esposizione: 0          // nuovo
+  rischioNarrativo: 0,
+  esposizione: 0
 };
+
+/* ===========================
+   MEMORIA LOCALE (PERSISTENZA)
+   =========================== */
+
+function loadPlayerModel() {
+  const saved = localStorage.getItem("FRINGE_PLAYER_MODEL");
+  if (saved) {
+    try {
+      playerModel = JSON.parse(saved);
+      console.log("Profilo giocatore ricaricato", playerModel);
+    } catch {
+      console.warn("Profilo corrotto, ripristino default");
+    }
+  }
+}
+
+function savePlayerModel() {
+  localStorage.setItem(
+    "FRINGE_PLAYER_MODEL",
+    JSON.stringify(playerModel)
+  );
+}
+
+/* ===========================
+   PRE-OSSERVAZIONE PREDITTIVA
+   =========================== */
+
+function predictiveCue() {
+  if (pressureLevel > 70 && playerModel.fragilita > 40) {
+    return "Qualunque esitazione ora verrà notata.";
+  }
+
+  if (playerModel.stile === "assertivo" && playerModel.esposizione > 30) {
+    return "Una risposta troppo sicura potrebbe sembrare costruita.";
+  }
+
+  if (playerModel.strategia === "ambiguità") {
+    return "La prossima risposta rischia di essere letta come una conferma.";
+  }
+
+  if (playerModel.rischioNarrativo > 40) {
+    return "Stai creando un precedente. Non passerà inosservato.";
+  }
+
+  return null;
+}
+
+/* ===========================
+   RENDER
+   =========================== */
 
 function render() {
   app.innerHTML = "";
@@ -55,6 +106,15 @@ function render() {
       </div>
     `;
 
+    const cue = predictiveCue();
+    if (cue) {
+      app.innerHTML += `
+        <p style="font-style:italic; opacity:0.6; margin-top:10px;">
+          ${cue}
+        </p>
+      `;
+    }
+
     if (pressureLevel > 50) {
       app.innerHTML += `
         <p style="opacity:0.7; margin-top:10px;">
@@ -65,6 +125,8 @@ function render() {
   }
 
   if (step === 3) {
+    savePlayerModel();
+
     app.innerHTML = `
       <div class="output">
         <h3>NARRATORE</h3>
@@ -80,6 +142,10 @@ function render() {
   }
 }
 
+/* ===========================
+   LOGICA
+   =========================== */
+
 function next() {
   step++;
   render();
@@ -89,7 +155,6 @@ function answer(n) {
   const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
 
-  // Analisi linguistica semplice ma efficace
   if (value.length < 5) {
     increasePressure(30);
     playerModel.fragilita += 20;
@@ -107,7 +172,6 @@ function answer(n) {
     playerModel.stile = "prudente";
   }
 
-  // Coerenza tra risposte
   if (n === 2) {
     const a1 = answers[0].toLowerCase();
     const a2 = answers[1].toLowerCase();
@@ -131,6 +195,10 @@ function answer(n) {
 function increasePressure(amount) {
   pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel + amount));
 }
+
+/* ===========================
+   OUTPUT NARRATIVI
+   =========================== */
 
 function narratorOutput() {
   if (playerModel.rischioNarrativo > 40) {
@@ -200,10 +268,15 @@ function judgeOutput() {
     },
     note: [
       "Valutazione comportamentale multilivello",
-      "Osservazione simulata di tipo cognitivo",
+      "Pre-osservazione predittiva attiva",
       "Nessuna verifica di verità fattuale"
     ]
   };
 }
 
+/* ===========================
+   AVVIO
+   =========================== */
+
+loadPlayerModel();
 render();
