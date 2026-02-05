@@ -17,6 +17,30 @@ const playerModel = {
   fragilita: 0                // 0–100
 };
 
+/**
+ * OSSERVATORE LLM
+ * Non giudica, osserva pattern cognitivi
+ */
+async function observeWithLLM(answers) {
+  try {
+    const res = await fetch("/api/observe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answers })
+    });
+
+    if (!res.ok) {
+      console.warn("Osservazione LLM fallita");
+      return null;
+    }
+
+    return await res.json();
+  } catch (e) {
+    console.warn("Errore osservatore:", e);
+    return null;
+  }
+}
+
 function render() {
   app.innerHTML = "";
 
@@ -87,7 +111,7 @@ function next() {
   render();
 }
 
-function answer(n) {
+async function answer(n) {
   const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
 
@@ -106,7 +130,7 @@ function answer(n) {
     playerModel.stile = "prudente";
   }
 
-  // Osservazione di coerenza tra risposte
+  // Coerenza locale
   if (n === 2) {
     const a1 = answers[0].toLowerCase();
     const a2 = answers[1].toLowerCase();
@@ -120,6 +144,19 @@ function answer(n) {
       playerModel.fragilita += 30;
     } else {
       playerModel.strategia = "coerenza";
+    }
+
+    // 👁 OSSERVAZIONE LLM (NUOVA)
+    const obs = await observeWithLLM(answers);
+    if (obs) {
+      if (obs.coerenza === "bassa") increasePressure(25);
+      if (obs.postura === "evasiva") increasePressure(15);
+
+      if (obs.segnali_stress?.includes("contraddizione")) {
+        increasePressure(30);
+      }
+
+      playerModel.stile = obs.postura || playerModel.stile;
     }
   }
 
@@ -188,6 +225,7 @@ function judgeOutput() {
     },
     note: [
       "Valutazione basata su osservazione comportamentale",
+      "Inclusa osservazione esterna non deterministica",
       "Nessuna verifica di verità fattuale"
     ]
   };

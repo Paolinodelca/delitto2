@@ -1,30 +1,20 @@
 module.exports = async function handler(req, res) {
-//export default async function handler(req, res) {
-try {
-const apiKey = process.env.GROQ_API_KEY;
+  try {
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      return res.status(500).json({ error: "GROQ_API_KEY mancante" });
+    }
 
-if (!apiKey) {
-  throw new Error("GROQ_API_KEY mancante");
-}
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Solo POST consentito" });
+    }
 
-console.log("API CHAT AVVIATA");
-if (req.method !== "POST") {
-    return res.status(405).json({ error: "Solo POST consentito" });
+    const { answers } = req.body;
+    if (!Array.isArray(answers) || answers.length < 2) {
+      return res.status(400).json({ error: "Risposte insufficienti" });
+    }
 
-}
-console.log("BODY RICEVUTO:", req.body);
-
-const { message, suspect, memory } = req.body;
-if (!message || !suspect) {
-return res.status(400).json({ error: "Dati mancanti" });
-}
-
-
-/************************************************************
-* PROMPT NARRATIVO — PARAMETRICO
-************************************************************/
-
-const systemPrompt = `
+    const systemPrompt = `
 Sei un osservatore cognitivo.
 
 Non giudichi la verità.
@@ -41,48 +31,39 @@ Dato questo scambio di risposte, restituisci SOLO un JSON valido con:
   contraddizione, esitazione, sovragiustificazione, evitamento
 
 Risposte:
-1) {{answer1}}
-2) {{answer2}}
+1) ${answers[0]}
+2) ${answers[1]}
 
 Restituisci SOLO il JSON.
-
 `;
 
+    const groqResponse = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + apiKey
+        },
+        body: JSON.stringify({
+          model: "llama-3.1-8b-instant",
+          messages: [{ role: "system", content: systemPrompt }],
+          temperature: 0.2
+        })
+      }
+    );
 
+    const data = await groqResponse.json();
+    if (!groqResponse.ok) {
+      return res.status(500).json({ error: "Errore Groq", details: data });
+    }
 
-const messages = [
-{ role: "system", content: systemPrompt },
-...(memory || []),
-{ role: "user", content: message }
-];
+    const raw = data.choices[0].message.content;
+    const parsed = JSON.parse(raw);
 
+    return res.status(200).json(parsed);
 
-const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-method: "POST",
-headers: {
-"Content-Type": "application/json",
-"Authorization": "Bearer " + apiKey
-},
-body: JSON.stringify({
-model: "llama-3.1-8b-instant",
-messages,
-temperature: 0.2
-})
-});
-
-
-const data = await groqResponse.json();
-
-
-if (!groqResponse.ok) {
-return res.status(500).json({ error: "Errore Groq", details: data });
-}
-
-
-return res.status(200).json({ reply: data.choices[0].message.content });
-
-
-} catch (err) {
-return res.status(500).json({ error: "Errore server", details: err.toString() });
-}
-}
+  } catch (err) {
+    return res.status(500).json({ error: err.toString() });
+  }
+};
