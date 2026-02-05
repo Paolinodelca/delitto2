@@ -6,6 +6,7 @@ const MAX_PRESSURE = 100;
 
 let step = 0;
 const answers = [];
+let observerTrace = null; // ← traccia dell’osservatore LLM
 
 function render() {
   app.innerHTML = "";
@@ -43,7 +44,6 @@ function render() {
       </div>
     `;
 
-    // micro-segnale narrativo se la pressione è già alta
     if (pressureLevel > 50) {
       app.innerHTML += `
         <p style="opacity:0.7; margin-top:10px;">
@@ -58,6 +58,7 @@ function render() {
     let tutorText = "";
     let judge = {};
 
+    // asse 1: pressione percepita
     if (pressureLevel < 40) {
       narratorText = `
         La tua posizione regge senza incrinarsi.<br>
@@ -73,10 +74,7 @@ function render() {
       judge = {
         esito: "indeterminato",
         coerenza: "solida",
-        note: [
-          "Bassa esposizione sotto pressione",
-          "Nessuna contraddizione rilevante"
-        ]
+        note: []
       };
     } else if (pressureLevel < 70) {
       narratorText = `
@@ -93,10 +91,7 @@ function render() {
       judge = {
         esito: "indeterminato",
         coerenza: "accettabile",
-        note: [
-          "Risposte parzialmente esposte",
-          "La posizione resta plausibile ma fragile"
-        ]
+        note: []
       };
     } else {
       narratorText = `
@@ -113,11 +108,27 @@ function render() {
       judge = {
         esito: "critico",
         coerenza: "instabile",
-        note: [
-          "Alta esposizione sotto pressione",
-          "Il ragionamento mostra cedimenti"
-        ]
+        note: []
       };
+    }
+
+    // asse 2: osservazione LLM (se presente)
+    if (observerTrace) {
+      judge.coerenza = observerTrace.coerenza || judge.coerenza;
+
+      if (observerTrace.postura) {
+        judge.note.push(`Postura rilevata: ${observerTrace.postura}`);
+      }
+
+      if (observerTrace.segnali_stress?.length) {
+        observerTrace.segnali_stress.forEach(s =>
+          judge.note.push(`Segnale osservato: ${s}`)
+        );
+      }
+    }
+
+    if (judge.note.length === 0) {
+      judge.note.push("Nessuna anomalia cognitiva rilevata");
     }
 
     app.innerHTML = `
@@ -144,59 +155,55 @@ function answer(n) {
   const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
 
-  // euristiche di pressione di base
+  // euristiche locali (pressione percepita)
   if (value.length < 5) {
-    increasePressure(30, "Risposta troppo breve sotto interrogazione");
+    increasePressure(30);
   } else if (/non so|forse|boh|non ricordo/i.test(value)) {
-    increasePressure(25, "Risposta evasiva rilevata");
+    increasePressure(25);
   } else if (value.length > 60) {
-    increasePressure(-10, "Risposta articolata, pressione contenuta");
+    increasePressure(-10);
   } else {
-    increasePressure(10, "Risposta neutra sotto pressione");
+    increasePressure(10);
   }
 
-  // 🔥 TRACCIA COGNITIVA: incoerenza tra risposte
+  // osservatore LLM SOLO alla fine
   if (n === 2) {
-    const a1 = answers[0].toLowerCase();
-    const a2 = answers[1].toLowerCase();
+    observeWithLLM(answers).then(trace => {
+      observerTrace = trace;
 
-    const negazione = /no|mai|non/.test(a1);
-    const apertura = /si|potevano|possibile|forse/.test(a2);
+      // micro-influenza dell’osservatore (non dominante)
+      if (trace?.coerenza === "bassa") increasePressure(15);
+      if (trace?.postura === "evasiva") increasePressure(10);
 
-    if (negazione && apertura) {
-      increasePressure(35, "Incoerenza tra le dichiarazioni");
-    }
+      next();
+    }).catch(() => {
+      // fallback: il sistema continua comunque
+      next();
+    });
+  } else {
+    next();
   }
-
-
-///
-  next();
 }
 
-function increasePressure(amount, reason = "") {
+function increasePressure(amount) {
   pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel + amount));
 
   const bar = document.getElementById("pressure-bar");
-  if (bar) {
-    bar.style.width = pressureLevel + "%";
-  }
-
-  const label = document.getElementById("pressure-label");
-  if (label && reason) {
-    label.textContent = reason;
-  }
+  if (bar) bar.style.width = pressureLevel + "%";
 }
 
-render();
 async function observeWithLLM(answers) {
   const response = await fetch("/api/observe", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      answers
+      answer1: answers[0],
+      answer2: answers[1]
     })
   });
 
   if (!response.ok) return null;
   return await response.json();
 }
+
+render();
