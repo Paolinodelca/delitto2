@@ -8,6 +8,7 @@ let step = 0;
 const answers = [];
 
 let observerTrace = null;
+let expectationLine = null;
 let frictionLine = null;
 let alteredQuestion = null;
 
@@ -50,9 +51,17 @@ function render() {
       </div>
     `;
 
+    if (expectationLine) {
+      app.innerHTML += `
+        <p style="opacity:0.6; margin-top:10px; font-style:italic;">
+          ${expectationLine}
+        </p>
+      `;
+    }
+
     if (frictionLine) {
       app.innerHTML += `
-        <p style="opacity:0.75; margin-top:10px; font-style:italic;">
+        <p style="opacity:0.75; margin-top:6px; font-style:italic;">
           ${frictionLine}
         </p>
       `;
@@ -62,47 +71,20 @@ function render() {
   if (step === 3) {
     let narratorText = "";
     let tutorText = "";
-    let judge = {};
+    let judge = { note: [] };
 
     if (pressureLevel < 40) {
-      narratorText = `
-        La tua posizione regge senza incrinarsi.<br>
-        Le risposte sono controllate.<br>
-        Nessuna frattura evidente.
-      `;
-
-      tutorText = `
-        Hai mantenuto una postura stabile.<br>
-        La pressione non ha trovato appigli.
-      `;
-
-      judge = { esito: "indeterminato", coerenza: "solida", note: [] };
+      narratorText = `La tua posizione resta stabile.`;
+      tutorText = `La pressione non ha alterato la forma del pensiero.`;
+      judge.coerenza = "solida";
     } else if (pressureLevel < 70) {
-      narratorText = `
-        La tua posizione regge, ma sotto carico.<br>
-        Il pensiero si adatta.<br>
-        L’ambiguità resta aperta.
-      `;
-
-      tutorText = `
-        Non hai ceduto,<br>
-        ma il ragionamento ha cambiato forma.
-      `;
-
-      judge = { esito: "indeterminato", coerenza: "accettabile", note: [] };
+      narratorText = `La posizione regge, ma si adatta.`;
+      tutorText = `Il pensiero ha cambiato configurazione.`;
+      judge.coerenza = "accettabile";
     } else {
-      narratorText = `
-        La posizione mostra segni di stress.<br>
-        Il controllo diminuisce.<br>
-        La precisione si assottiglia.
-      `;
-
-      tutorText = `
-        In FRINGE la pressione non punisce.<br>
-        Espone.
-      `;
-
-      judge = { esito: "critico", coerenza: "instabile", note: [] };
+      narratorText = `La posizione mostra segni di cedimento.`;
+      tutorText = `La pressione ha reso visibili i limiti.`;
+      judge.coerenza = "instabile";
     }
 
     if (observerTrace) {
@@ -123,8 +105,8 @@ function render() {
         <h3>OSSERVAZIONE</h3>
         <p style="opacity:0.8;">
           ${observerTrace
-            ? "Il sistema ha rilevato una variazione nella forma del ragionamento."
-            : "Nessuna variazione significativa rilevata."}
+            ? "Il sistema ha osservato una traiettoria del ragionamento."
+            : "Nessuna traiettoria significativa rilevata."}
         </p>
 
         <h3>GIUDICE</h3>
@@ -151,25 +133,31 @@ function answer(n) {
   pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel));
 
   if (n === 1) {
-    next();
-    return;
-  }
-
-  if (n === 2) {
-    observeWithLLM(answers).then(trace => {
+    observeWithLLM([answers[0], ""]).then(trace => {
       observerTrace = trace;
 
-      if (trace?.postura === "evasiva") {
-        frictionLine = "Becker inclina leggermente la testa. Non replica subito.";
+      if (trace?.postura === "difensiva") {
+        expectationLine = "Il sistema rileva una chiusura preventiva del campo.";
       }
-
-      if (trace?.segnali_stress?.includes("contraddizione")) {
-        alteredQuestion =
-          "«Quello che dici ora è compatibile con quanto hai appena affermato?»";
+      if (trace?.postura === "evasiva") {
+        expectationLine = "Il sistema rileva una strategia di diluizione.";
+      }
+      if (trace?.postura === "assertiva") {
+        expectationLine = "Il sistema rileva una posizione già consolidata.";
       }
 
       next();
     }).catch(() => next());
+    return;
+  }
+
+  if (n === 2) {
+    if (observerTrace?.segnali_stress?.includes("contraddizione")) {
+      frictionLine = "La seconda risposta non segue la traiettoria prevista.";
+      alteredQuestion =
+        "«Questa risposta modifica la posizione che stavi costruendo?»";
+    }
+    next();
   }
 }
 
