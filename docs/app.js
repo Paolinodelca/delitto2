@@ -1,3 +1,6 @@
+import { observeWithLLM } from "./observerLLM.js";
+let externalObservation = null;
+
 const app = document.getElementById("app");
 console.log("FRINGE LIVE", Date.now());
 
@@ -124,22 +127,56 @@ function render() {
     }
   }
 
-  if (step === 3) {
-    savePlayerModel();
 
-    app.innerHTML = `
-      <div class="output">
-        <h3>NARRATORE</h3>
-        <p>${narratorOutput()}</p>
+if (step === 3) {
+  savePlayerModel();
 
-        <h3>TUTOR</h3>
-        <p>${tutorOutput()}</p>
+  // se l'osservazione non è ancora arrivata, la richiediamo
+  if (!externalObservation) {
+    observeWithLLM({
+      playerModel,
+      pressureLevel,
+      step,
+      scenario: "FRINGE / LEAK"
+    }).then(result => {
+      externalObservation = result;
+      render();
+    });
 
-        <h3>GIUDICE</h3>
-        <pre>${JSON.stringify(judgeOutput(), null, 2)}</pre>
-      </div>
-    `;
+    app.innerHTML = `<p>Analisi in corso...</p>`;
+    return;
   }
+
+  // quando l'osservazione è disponibile, render finale completo
+  app.innerHTML = `
+    <div class="output">
+      <h3>NARRATORE</h3>
+      <p>${narratorOutput()}</p>
+
+      <h3>TUTOR</h3>
+      <p>${tutorOutput()}</p>
+
+      <h3>GIUDICE</h3>
+      <pre>${JSON.stringify(judgeOutput(), null, 2)}</pre>
+
+      ${
+        externalObservation?.osservazione
+          ? `
+        <h3>OSSERVATORE ESTERNO</h3>
+        <p style="opacity:0.8; font-style:italic;">
+          ${externalObservation.osservazione}
+        </p>
+        `
+          : ""
+      }
+    </div>
+  `;
+}
+
+
+
+
+
 }
 
 /* ===========================

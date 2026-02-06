@@ -1,40 +1,44 @@
 module.exports = async function handler(req, res) {
   try {
-    const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) {
-      return res.status(500).json({ error: "GROQ_API_KEY mancante" });
-    }
-
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Solo POST consentito" });
     }
 
-    const { answers } = req.body;
-    if (!Array.isArray(answers) || answers.length < 2) {
-      return res.status(400).json({ error: "Risposte insufficienti" });
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) throw new Error("GROQ_API_KEY mancante");
+
+    const { playerModel, pressureLevel, step, scenario } = req.body;
+
+    if (!playerModel) {
+      return res.status(400).json({ error: "playerModel mancante" });
     }
 
     const systemPrompt = `
-Sei un osservatore cognitivo.
+Sei un OSSERVATORE ESTERNO in un sistema narrativo sperimentale chiamato ${scenario}.
 
-Non giudichi la verità.
-Non dai consigli.
-Non interpreti intenzioni morali.
+Non parli mai al giocatore.
+Non dai giudizi morali.
+Non verifichi fatti.
 
-Osservi solo come una persona ragiona sotto pressione.
+Analizzi SOLO il comportamento osservato.
 
-Dato questo scambio di risposte, restituisci SOLO un JSON valido con:
+Produci:
+- una LETTURA sintetica (1–2 frasi)
+- 2–3 IPOTESI POSSIBILI (non certezze)
+- un livello di AFFIDABILITÀ (0–1)
 
-- coerenza: alta | media | bassa
-- postura: difensiva | assertiva | evasiva | esplorativa
-- segnali_stress: elenco tra
-  contraddizione, esitazione, sovragiustificazione, evitamento
+Scrivi in italiano sobrio.
+Non usare enfasi.
+Non spiegare il tuo metodo.
+`;
 
-Risposte:
-1) ${answers[0]}
-2) ${answers[1]}
+    const userPrompt = `
+STATO OSSERVATO:
+pressione=${pressureLevel}
+step=${step}
 
-Restituisci SOLO il JSON.
+MODELLO DEL GIOCATORE:
+${JSON.stringify(playerModel, null, 2)}
 `;
 
     const groqResponse = await fetch(
@@ -43,27 +47,29 @@ Restituisci SOLO il JSON.
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer " + apiKey
+          Authorization: "Bearer " + apiKey
         },
         body: JSON.stringify({
           model: "llama-3.1-8b-instant",
-          messages: [{ role: "system", content: systemPrompt }],
-          temperature: 0.2
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: userPrompt }
+          ],
+          temperature: 0.4
         })
       }
     );
 
     const data = await groqResponse.json();
     if (!groqResponse.ok) {
-      return res.status(500).json({ error: "Errore Groq", details: data });
+      return res.status(500).json(data);
     }
 
-    const raw = data.choices[0].message.content;
-    const parsed = JSON.parse(raw);
-
-    return res.status(200).json(parsed);
+    res.status(200).json({
+      osservazione: data.choices[0].message.content
+    });
 
   } catch (err) {
-    return res.status(500).json({ error: err.toString() });
+    res.status(500).json({ error: err.toString() });
   }
 };
