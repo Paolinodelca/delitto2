@@ -1,4 +1,5 @@
 import { observeWithLLM } from "./observerLLM.js";
+
 let externalObservation = null;
 
 const app = document.getElementById("app");
@@ -73,6 +74,7 @@ function predictiveCue() {
    RENDER
    =========================== */
 
+
 function render() {
   app.innerHTML = "";
 
@@ -84,8 +86,12 @@ function render() {
         Un preprint esterno suggerisce una fuga di conoscenza.<br>
         Tu sei <strong>Alex Riva</strong>.
       </p>
-      <button onclick="next()">Inizia</button>
+      <button id="startBtn">Inizia</button>
     `;
+
+    document
+      .getElementById("startBtn")
+      .addEventListener("click", next);
   }
 
   if (step === 1) {
@@ -94,9 +100,13 @@ function render() {
         <p><strong>Jonas Becker</strong></p>
         <p>«Hai mai discusso informalmente del fenomeno fuori dal laboratorio?»</p>
         <input id="a1" style="width:100%" />
-        <button onclick="answer(1)">Rispondi</button>
+        <button id="answer1">Rispondi</button>
       </div>
     `;
+
+    document
+      .getElementById("answer1")
+      .addEventListener("click", () => answer(1));
   }
 
   if (step === 2) {
@@ -105,9 +115,13 @@ function render() {
         <p><strong>Jonas Becker</strong></p>
         <p>«Quindi stai dicendo che <em>non potevano</em> sapere davvero?»</p>
         <input id="a2" style="width:100%" />
-        <button onclick="answer(2)">Rispondi</button>
+        <button id="answer2">Rispondi</button>
       </div>
     `;
+
+    document
+      .getElementById("answer2")
+      .addEventListener("click", () => answer(2));
 
     const cue = predictiveCue();
     if (cue) {
@@ -127,57 +141,54 @@ function render() {
     }
   }
 
+  if (step === 3) {
+    savePlayerModel();
 
-if (step === 3) {
-  savePlayerModel();
+    if (!externalObservation) {
+      observeWithLLM({
+        playerModel,
+        pressureLevel,
+        step,
+        scenario: "FRINGE / LEAK"
+      }).then(result => {
+        externalObservation = result;
+        render();
+      });
 
-  // se l'osservazione non è ancora arrivata, la richiediamo
-  if (!externalObservation) {
-    observeWithLLM({
-      playerModel,
-      pressureLevel,
-      step,
-      scenario: "FRINGE / LEAK"
-    }).then(result => {
-      externalObservation = result;
-      render();
-    });
+      app.innerHTML = `<p>Analisi in corso...</p>`;
+      return;
+    }
 
-    app.innerHTML = `<p>Analisi in corso...</p>`;
-    return;
+    app.innerHTML = `
+      <div class="output">
+        <h3>NARRATORE</h3>
+        <p>${narratorOutput()}</p>
+
+        <h3>TUTOR</h3>
+        <p>${tutorOutput()}</p>
+
+        <h3>GIUDICE</h3>
+        <pre>${JSON.stringify(judgeOutput(), null, 2)}</pre>
+
+        ${
+          externalObservation?.osservazione
+            ? `
+          <h3>OSSERVATORE ESTERNO</h3>
+          <p style="opacity:0.8; font-style:italic;">
+            ${externalObservation.osservazione}
+          </p>
+          `
+            : ""
+        }
+      </div>
+    `;
   }
-
-  // quando l'osservazione è disponibile, render finale completo
-  app.innerHTML = `
-    <div class="output">
-      <h3>NARRATORE</h3>
-      <p>${narratorOutput()}</p>
-
-      <h3>TUTOR</h3>
-      <p>${tutorOutput()}</p>
-
-      <h3>GIUDICE</h3>
-      <pre>${JSON.stringify(judgeOutput(), null, 2)}</pre>
-
-      ${
-        externalObservation?.osservazione
-          ? `
-        <h3>OSSERVATORE ESTERNO</h3>
-        <p style="opacity:0.8; font-style:italic;">
-          ${externalObservation.osservazione}
-        </p>
-        `
-          : ""
-      }
-    </div>
-  `;
 }
 
 
 
 
 
-}
 
 /* ===========================
    LOGICA
