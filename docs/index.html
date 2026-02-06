@@ -16,10 +16,6 @@
       margin: auto;
     }
 
-    .question {
-      margin-top: 2rem;
-    }
-
     button {
       margin-top: 1rem;
       padding: 0.5rem 1rem;
@@ -31,13 +27,6 @@
 
     button:hover {
       background: #555;
-    }
-
-    .output {
-      margin-top: 2rem;
-      white-space: pre-wrap;
-      border-top: 1px solid #444;
-      padding-top: 1rem;
     }
 
     #pressure-container {
@@ -70,8 +59,11 @@
 
   <div id="app"></div>
 
-  <!-- QUESTA È LA RIGA CRITICA -->
-  <script type="module" src="./app.js"></script>
+  <!-- BOTTONE SENZA onclick -->
+  <button id="startBtn">Inizia</button>
+
+  <!-- IMPORT COME MODULE -->
+  <script type="module" src="app.js"></script>
 
 </body>
 </html>
