@@ -1,60 +1,28 @@
-// /outcomes/outcomeProfiler.js
-
-export function profileOutcome({ success, score, breakdown }) {
-  if (!breakdown || typeof breakdown !== "object") {
-    throw new Error("Breakdown mancante o invalido");
+export function profileOutcome(verdict) {
+  if (!verdict || !verdict.mode) {
+    throw new Error("Verdetto mancante o non riconosciuto");
   }
 
-  const entries = Object.entries(breakdown);
-  const correct = entries.filter(([, v]) => v === true).map(([k]) => k);
-  const wrong = entries.filter(([, v]) => v === false).map(([k]) => k);
-
-  // Caso perfetto
-  if (success === true) {
+  // === MODALITÀ FRINGE ===
+  if (verdict.mode === "fringe") {
     return {
-      profile: "perfect_solution",
-      severity: "none",
-      correct,
-      wrong,
+      category: "cognitive_assessment",
+      outcome: verdict.assessment,
+      coherence: verdict.coherence,
+      notes: verdict.notes || [],
+      success: verdict.coherence === "acceptable"
     };
   }
 
-  // Nessun elemento corretto
-  if (correct.length === 0) {
+  // === MODALITÀ CLASSICA (delitto) ===
+  if (verdict.mode === "classic") {
     return {
-      profile: "arbitrary_accusation",
-      severity: "grave",
-      correct,
-      wrong,
+      category: "judicial_assessment",
+      score: verdict.score,
+      verdict: verdict.verdict,
+      success: verdict.score >= 70
     };
   }
 
-  // Un solo elemento corretto
-  if (correct.length === 1) {
-    return {
-      profile: `single_correct_element`,
-      severity: "media",
-      focus: correct[0],
-      correct,
-      wrong,
-    };
-  }
-
-  // Più elementi corretti ma accusa errata
-  if (correct.length >= 2) {
-    return {
-      profile: "partial_reconstruction",
-      severity: "lieve",
-      correct,
-      wrong,
-    };
-  }
-
-  // Fallback (non dovrebbe accadere)
-  return {
-    profile: "unknown_outcome",
-    severity: "indefinita",
-    correct,
-    wrong,
-  };
+  throw new Error("Modalità di verdetto non supportata");
 }

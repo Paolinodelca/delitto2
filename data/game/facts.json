@@ -1,93 +1,123 @@
-{
-  "corpo_trovato": {
+[
+  {
     "truth": true,
     "type": "evento",
-    "tags": ["morte", "iniziale"],
+    "tags": [
+      "morte",
+      "iniziale"
+    ],
     "revealed_by": [],
     "depends_on": []
   },
-
-  "arma_coltello": {
+  {
     "truth": true,
     "type": "oggetto",
-    "tags": ["arma"],
-    "revealed_by": ["ispezione_studio"],
-    "depends_on": ["corpo_trovato"]
+    "tags": [
+      "arma"
+    ],
+    "revealed_by": [
+      "ispezione_studio"
+    ],
+    "depends_on": [
+      "corpo_trovato"
+    ]
   },
-  
-    "alibi_riccardo_falso": {
+  {
     "truth": true,
     "type": "relazione",
-    "tags": ["alibi"]
+    "tags": [
+      "alibi"
+    ]
   },
-
-  "porta_chiusa_a_chiave": {
+  {
     "truth": false,
     "type": "stato",
-    "tags": ["villa"]
+    "tags": [
+      "villa"
+    ]
   },
-
-  "complice_presente": {
+  {
     "truth": null,
     "type": "persona",
-    "tags": ["mistero"]
-  
+    "tags": [
+      "mistero"
+    ]
   },
-
-   "ora_delitto": {
+  {
     "truth": true,
     "type": "evento",
-    "tags": ["morte","ora"]
-  } ,
-  "sospettato1_presente": {
+    "tags": [
+      "morte",
+      "ora"
+    ]
+  },
+  {
     "truth": true,
     "type": "persona",
-    "tags": ["Amalia"]
+    "tags": [
+      "Amalia"
+    ]
   },
-  "sospettato2_presente": {
+  {
     "truth": true,
     "type": "persona",
-    "tags": ["Riccardo"]
+    "tags": [
+      "Riccardo"
+    ]
   },
-  "sospettato3_presente": {
+  {
     "truth": true,
     "type": "persona",
-    "tags": ["Alfonso"]
+    "tags": [
+      "Alfonso"
+    ]
   },
-  
-  "relazione1_sospettato1": {
+  {
     "truth": true,
     "type": "relazione",
-    "tags": ["fidanzata Riccardo"]
+    "tags": [
+      "fidanzata Riccardo"
+    ]
   },
-   "relazione2_sospettato1": {
+  {
     "truth": true,
     "type": "relazione",
-    "tags": ["ricattava vittima","segreto"]
+    "tags": [
+      "ricattava vittima",
+      "segreto"
+    ]
   },
-     "relazione1_sospettato2": {
+  {
     "truth": true,
     "type": "relazione",
-    "tags": ["figlio vittima","non lavora in azienda padre"]
+    "tags": [
+      "figlio vittima",
+      "non lavora in azienda padre"
+    ]
   },
-    "relazione1_sospettato3": {
+  {
     "truth": true,
     "type": "relazione",
-    "tags": ["socio vittima"]
+    "tags": [
+      "socio vittima"
+    ]
   },
-     "relazione2_sospettato3": {
+  {
     "truth": true,
     "type": "evento",
-    "tags": ["discussione con vittima"]
+    "tags": [
+      "discussione con vittima"
+    ]
   },
-    "relazione3_sospettato3": {
+  {
     "truth": true,
     "type": "evento",
-    "tags": ["ruba all'azienda della vittima"]
+    "tags": [
+      "ruba all'azienda della vittima"
+    ]
+  },
+  {
+    "id": "hyp_player_independent_convergence",
+    "confidence": 1
   }
-  
-  
-}
- 
-  
-
+]

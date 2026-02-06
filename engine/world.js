@@ -5,30 +5,47 @@ export class World {
   constructor(basePath) {
     this.basePath = basePath;
 
-    // carica i facts come MAPPA (oggetto)
-    this.facts = this.loadJSON("data/game/facts.json");
+    const loaded = this.loadJSON("game/facts.json");
 
-    // carica eventuali verità oggettive (murderer, motive, ecc.)
-    this.truths = this.loadJSON("data/world/truth.json");
+    // 🔧 NORMALIZZAZIONE
+    if (Array.isArray(loaded)) {
+      this.facts = loaded;
+    } else if (loaded && typeof loaded === "object") {
+      this.facts = Object.values(loaded);
+    } else {
+      this.facts = [];
+    }
   }
 
-  loadJSON(relPath) {
-    const fullPath = path.join(this.basePath, relPath);
+  loadJSON(relativePath) {
+    const fullPath = path.join(this.basePath, "data", relativePath);
+    if (!fs.existsSync(fullPath)) return null;
     return JSON.parse(fs.readFileSync(fullPath, "utf-8"));
   }
 
-  /**
-   * Restituisce un fact (da facts o truths) dato un id
-   */
+  saveJSON(relativePath, data) {
+    const fullPath = path.join(this.basePath, "data", relativePath);
+    fs.writeFileSync(fullPath, JSON.stringify(data, null, 2));
+  }
+
+  saveState() {
+    this.saveJSON("game/facts.json", this.facts);
+  }
+
   getFactById(id) {
-    if (this.truths && this.truths[id]) {
-      return this.truths[id];
-    }
+    return this.facts.find(f => f.id === id);
+  }
 
-    if (this.facts && this.facts[id]) {
-      return this.facts[id];
-    }
+  // 🔧 ADATTATORE FRINGE
+  registerFact(fact) {
+    const { id, value, confidence = 1 } = fact;
 
-    return null;
+    const existing = this.getFactById(id);
+    if (existing) {
+      existing.value = value;
+      existing.confidence = confidence;
+    } else {
+      this.facts.push({ id, value, confidence });
+    }
   }
 }

@@ -1,8 +1,19 @@
-export function judgeGame({ world, state }) {
-  if (!state.accusation) {
-    throw new Error("Nessuna accusa da giudicare");
+export function judgeGame({ world, state = null, position = null }) {
+  // === MODALITÀ FRINGE (no accusa formale) ===
+  if (!state || !state.accusation) {
+    return {
+      mode: "fringe",
+      assessment: "underdetermined",
+      coherence: "acceptable",
+      notes: [
+        "Nessuna accusa formale presentata",
+        "Il ragionamento non viola i fatti noti",
+        "La posizione resta difensiva ma plausibile"
+      ]
+    };
   }
 
+  // === MODALITÀ CLASSICA (delitto) ===
   const accusation = state.accusation;
 
   const truth = {
@@ -12,29 +23,17 @@ export function judgeGame({ world, state }) {
     time: world.getFactById("time")?.value
   };
 
-  const weights = {
-    accused: 50,
-    motive: 20,
-    method: 20,
-    time: 10
-  };
-
   let score = 0;
-  const breakdown = {};
 
-  Object.keys(weights).forEach(key => {
-    const correct = accusation[key] === truth[key];
-    breakdown[key] = correct;
-    if (correct) score += weights[key];
-  });
+  if (accusation.accused === truth.accused) score += 50;
+  if (accusation.motive === truth.motive) score += 20;
+  if (accusation.method === truth.method) score += 20;
+  if (accusation.time === truth.time) score += 10;
 
   return {
-    status: "completed",
-    success: breakdown.accused === true,
+    mode: "classic",
     score,
-    breakdown,
-    accusation,
-    truth
+    verdict: score >= 70 ? "fondata" : "infondata"
   };
 }
 
