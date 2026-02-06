@@ -3,16 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <title>FRINGE / LEAK</title>
-<div id="pressure-container">
-  <div id="pressure-bar"></div>
-  <div id="pressure-label">Livello di esposizione</div>
-</div>
-
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-  
 
+  <style>
     body {
       font-family: system-ui, sans-serif;
       background: #111;
@@ -21,9 +15,11 @@
       max-width: 700px;
       margin: auto;
     }
+
     .question {
       margin-top: 2rem;
     }
+
     button {
       margin-top: 1rem;
       padding: 0.5rem 1rem;
@@ -32,42 +28,50 @@
       border: 1px solid #555;
       cursor: pointer;
     }
+
     button:hover {
       background: #555;
     }
+
     .output {
       margin-top: 2rem;
       white-space: pre-wrap;
       border-top: 1px solid #444;
       padding-top: 1rem;
     }
-    <style>
-#pressure-container {
-  margin: 20px 0;
-}
 
-#pressure-bar {
-  height: 8px;
-  width: 0%;
-  background: linear-gradient(90deg, #6b7280, #111827);
-  transition: width 0.6s ease;
-}
+    #pressure-container {
+      margin: 20px 0;
+    }
 
-#pressure-label {
-  font-size: 0.8rem;
-  color: #555;
-  margin-top: 4px;
-}
-</style>
+    #pressure-bar {
+      height: 8px;
+      width: 0%;
+      background: linear-gradient(90deg, #6b7280, #111827);
+      transition: width 0.6s ease;
+    }
 
+    #pressure-label {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 4px;
+    }
   </style>
 </head>
+
 <body>
 
-<h1>FRINGE / LEAK</h1>
+  <h1>FRINGE / LEAK</h1>
 
-<div id="app"></div>
+  <div id="pressure-container">
+    <div id="pressure-bar"></div>
+    <div id="pressure-label">Livello di esposizione</div>
+  </div>
 
-<script src="app.js"></script>
+  <div id="app"></div>
+
+  <!-- QUESTA È LA RIGA CRITICA -->
+  <script type="module" src="./app.js"></script>
+
 </body>
 </html>
