@@ -1,5 +1,3 @@
-import fetch from "node-fetch";
-
 export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
@@ -45,7 +43,7 @@ MODELLO DEL GIOCATORE:
 ${JSON.stringify(playerModel, null, 2)}
 `;
 
-    const groqResponse = await fetch(
+    const response = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
       {
         method: "POST",
@@ -64,11 +62,11 @@ ${JSON.stringify(playerModel, null, 2)}
       }
     );
 
-    const data = await groqResponse.json();
+    const data = await response.json();
 
-    if (!groqResponse.ok) {
+    if (!response.ok) {
       console.error("Errore Groq:", data);
-      return res.status(500).json({ error: "Errore da Groq", detail: data });
+      return res.status(500).json(data);
     }
 
     return res.status(200).json({
