@@ -1,6 +1,6 @@
 export async function observeWithLLM(payload) {
   try {
-    const res = await fetch("/observe", {
+    const res = await fetch("/api/observe", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
