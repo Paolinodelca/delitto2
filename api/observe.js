@@ -1,11 +1,15 @@
-module.exports = async function handler(req, res) {
+import fetch from "node-fetch";
+
+export default async function handler(req, res) {
   try {
     if (req.method !== "POST") {
       return res.status(405).json({ error: "Solo POST consentito" });
     }
 
     const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) throw new Error("GROQ_API_KEY mancante");
+    if (!apiKey) {
+      return res.status(500).json({ error: "GROQ_API_KEY mancante" });
+    }
 
     const { playerModel, pressureLevel, step, scenario } = req.body;
 
@@ -47,7 +51,7 @@ ${JSON.stringify(playerModel, null, 2)}
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer " + apiKey
+          Authorization: `Bearer ${apiKey}`
         },
         body: JSON.stringify({
           model: "llama-3.1-8b-instant",
@@ -61,15 +65,18 @@ ${JSON.stringify(playerModel, null, 2)}
     );
 
     const data = await groqResponse.json();
+
     if (!groqResponse.ok) {
-      return res.status(500).json(data);
+      console.error("Errore Groq:", data);
+      return res.status(500).json({ error: "Errore da Groq", detail: data });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       osservazione: data.choices[0].message.content
     });
 
   } catch (err) {
-    res.status(500).json({ error: err.toString() });
+    console.error("Errore observe:", err);
+    return res.status(500).json({ error: err.message });
   }
-};
+}
