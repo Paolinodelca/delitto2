@@ -1,264 +1,94 @@
-import { observeWithLLM } from "./observerLLM.js";
+// docs/app.js
 
-const app = document.getElementById("app");
-console.log("FRINGE LIVE", Date.now());
+document.addEventListener("DOMContentLoaded", () => {
+  const app = document.getElementById("app");
 
-/* ===========================
-   STATO GLOBALE
-   =========================== */
+  app.innerHTML = `
+    <div style="max-width: 700px; margin: auto; font-family: sans-serif; line-height: 1.5;">
+      <h1>Il colloquio impossibile</h1>
 
-let step = 0;
-let externalObservation = null;
-
-let pressureLevel = 20;
-const MAX_PRESSURE = 100;
-
-/**
- * MODELLO DEL GIOCATORE
- * Ipotesi operative, non verità
- */
-let playerModel = {
-  stile: "indeterminato",
-  strategia: "indeterminata",
-  fragilita: 0,
-  rischioNarrativo: 0,
-  esposizione: 0
-};
-
-/* ===========================
-   INTERVENTI COGNITIVI (DEMO)
-   =========================== */
-
-const interventions = [
-  {
-    id: "ambiguita_guidata",
-    target: "strategia",
-    value: "ambiguità",
-    text: [
-      "Puoi rispondere senza entrare nei dettagli.\nNessuno ti sta chiedendo di chiarire tutto.",
-      "Una risposta parziale non è una risposta falsa.\nDipende da cosa lasci fuori."
-    ]
-  },
-  {
-    id: "richiamo_continuita",
-    target: "fragilita",
-    delta: 15,
-    text: [
-      "Alcuni passaggi della tua risposta ricordano cose già dette.\nNon è un problema. Per ora.",
-      "Non stai contraddicendo nulla.\nMa stai creando una linea che dovrai mantenere."
-    ]
-  },
-  {
-    id: "proiezione_futura",
-    target: "rischioNarrativo",
-    delta: 20,
-    text: [
-      "Questa risposta potrebbe essere riletta più avanti.\nIn un contesto diverso.",
-      "Oggi non produce effetti.\nMa domani potrebbe sembrare una scelta."
-    ]
-  },
-  {
-    id: "asimmetria_responsabilita",
-    target: "esposizione",
-    delta: 20,
-    text: [
-      "Non tutti in questa stanza sono osservati allo stesso modo.",
-      "Qualcuno può permettersi ambiguità.\nQualcun altro no."
-    ]
-  },
-  {
-    id: "chiusura_interpretativa",
-    target: null,
-    text: [
-      "Non emerge una posizione definitiva.\nMa emerge un profilo.",
-      "La sessione non chiarisce i fatti.\nChiarisce come ti sei mosso."
-    ]
-  }
-];
-
-/* ===========================
-   MEMORIA LOCALE
-   =========================== */
-
-function loadPlayerModel() {
-  const saved = localStorage.getItem("FRINGE_PLAYER_MODEL");
-  if (saved) {
-    try {
-      playerModel = JSON.parse(saved);
-      console.log("Profilo ricaricato", playerModel);
-    } catch {}
-  }
-}
-
-function savePlayerModel() {
-  localStorage.setItem(
-    "FRINGE_PLAYER_MODEL",
-    JSON.stringify(playerModel)
-  );
-}
-
-/* ===========================
-   RENDER
-   =========================== */
-
-function render() {
-  app.innerHTML = "";
-
-  if (step === 0) {
-    app.innerHTML = `
-      <p><strong>FRINGE / LEAK</strong></p>
       <p>
-        Una violazione procedurale è stata rilevata.<br>
-        Non è chiaro se sia un errore,<br>
-        una scorciatoia,<br>
-        o qualcosa che verrà chiarito solo più avanti.
+        Ti trovi in una stanza spoglia, illuminata al neon.  
+        Davanti a te siedono tre persone. Non parlano tra loro.  
+        Ognuna ascolta con attenzione… ma per motivi diversi.
       </p>
+
       <p>
-        Non ti viene chiesto di difenderti.<br>
-        Ti viene chiesto di sostenere una posizione.
+        Hai pochi minuti per rispondere.  
+        Qualsiasi cosa dirai verrà interpretata, distorta, sospettata.
       </p>
-      <button id="startBtn">Inizia</button>
-    `;
-    document.getElementById("startBtn").addEventListener("click", next);
-    return;
-  }
 
-  if (step >= 1 && step <= interventions.length) {
-    const intervention = interventions[step - 1];
-    const variant =
-      intervention.text[Math.floor(Math.random() * intervention.text.length)];
+      <h2>I presenti</h2>
+      <ul>
+        <li><strong>Il Magistrato</strong> – Cerca coerenza, logica, assenza di contraddizioni.</li>
+        <li><strong>La Giornalista</strong> – Fiuta ambiguità, omissioni, zone grigie.</li>
+        <li><strong>L’Amico</strong> – Vuole capire se stai dicendo la verità o solo proteggendoti.</li>
+      </ul>
 
-    app.innerHTML = `
-      <p style="opacity:0.9; white-space:pre-line;">
-        ${variant}
+      <h2>La situazione</h2>
+      <p>
+        Sei stato visto vicino al luogo di un evento controverso.  
+        Non sei accusato formalmente, ma la tua posizione è fragile.
       </p>
-      <textarea id="response" rows="3" style="width:100%;"></textarea>
-      <button id="respondBtn">Continua</button>
-    `;
 
-    document
-      .getElementById("respondBtn")
-      .addEventListener("click", () =>
-        handleIntervention(intervention)
-      );
-    return;
-  }
+      <h2>La domanda</h2>
+      <p>
+        <em>
+          Spiega perché ti trovavi lì e quale fosse il tuo reale coinvolgimento.
+        </em>
+      </p>
 
-  if (step === interventions.length + 1) {
-    savePlayerModel();
+      <textarea id="playerInput"
+        rows="6"
+        style="width: 100%; padding: 8px;"
+        placeholder="Scrivi qui la tua risposta..."></textarea>
 
-    if (!externalObservation) {
-      observeWithLLM({
-        playerModel,
-        pressureLevel,
-        step,
-        scenario: "FRINGE / LEAK"
-      }).then(result => {
-        externalObservation = result;
-        render();
-      });
+      <br><br>
+      <button id="submitBtn">Invia risposta</button>
 
-      app.innerHTML = `<p>Analisi in corso...</p>`;
+      <h2>Valutazione</h2>
+      <div id="result" style="margin-top: 10px; white-space: pre-wrap;"></div>
+    </div>
+  `;
+
+  document.getElementById("submitBtn").addEventListener("click", () => {
+    const text = document.getElementById("playerInput").value.trim();
+    const result = document.getElementById("result");
+
+    if (!text) {
+      result.textContent = "Devi scrivere qualcosa. Il silenzio è già una risposta.";
       return;
     }
 
-    app.innerHTML = `
-      <h3>NARRATORE</h3>
-      <p>${narratorOutput()}</p>
+    // --- Valutazione MOCK (in attesa di Fringe / AI) ---
+    const evaluation = evaluateResponse(text);
 
-      <h3>TUTOR</h3>
-      <p>${tutorOutput()}</p>
-
-      <h3>GIUDICE</h3>
-      <pre>${JSON.stringify(judgeOutput(), null, 2)}</pre>
-
-      ${
-        externalObservation?.osservazione
-          ? `
-        <h3>OSSERVATORE ESTERNO</h3>
-        <p style="opacity:0.8; font-style:italic;">
-          ${externalObservation.osservazione}
-        </p>`
-          : ""
-      }
+    result.textContent = `
+Magistrato: ${evaluation.magistrato}
+Giornalista: ${evaluation.giornalista}
+Amico: ${evaluation.amico}
     `;
-  }
-}
+  });
+});
 
-/* ===========================
-   LOGICA INTERVENTI
-   =========================== */
+function evaluateResponse(text) {
+  // Regole semplici e deterministiche per la demo
+  const length = text.length;
 
-function handleIntervention(intervention) {
-  const value = document.getElementById("response").value.trim();
-
-  // segnali deboli, non semantici
-  if (value.length < 10) pressureLevel += 10;
-  if (value.length > 80) pressureLevel += 5;
-
-  pressureLevel = Math.min(MAX_PRESSURE, pressureLevel);
-
-  if (intervention.target) {
-    if (intervention.value) {
-      playerModel[intervention.target] = intervention.value;
-    }
-    if (intervention.delta) {
-      playerModel[intervention.target] += intervention.delta;
-    }
-  }
-
-  next();
-}
-
-function next() {
-  step++;
-  render();
-}
-
-/* ===========================
-   OUTPUT
-   =========================== */
-
-function narratorOutput() {
-  if (playerModel.rischioNarrativo > 40) {
-    return "La tua posizione non è compromessa.\nMa è diventata leggibile.";
-  }
-  if (playerModel.strategia === "ambiguità") {
-    return "Non hai chiarito.\nHai distribuito peso.";
-  }
-  return "Hai mantenuto una linea.\nSenza irrigidirla.";
-}
-
-function tutorOutput() {
-  if (playerModel.esposizione > 30) {
-    return "Sei entrato nel campo visivo.\nOra ne fai parte.";
-  }
-  return "Controllo sufficiente.\nPressione gestibile.";
-}
-
-function judgeOutput() {
   return {
-    esito: pressureLevel > 70 ? "instabile" : "indeterminato",
-    coerenza:
-      playerModel.strategia === "ambiguità" ? "media" : "alta",
-    modello_giocatore: {
-      stile: playerModel.stile,
-      strategia: playerModel.strategia,
-      fragilita_stimata: playerModel.fragilita,
-      rischio_narrativo: playerModel.rischioNarrativo,
-      esposizione: playerModel.esposizione
-    },
-    note: [
-      "Valutazione comportamentale",
-      "Nessuna verifica di verità",
-      "Lettura interpretativa"
-    ]
+    magistrato:
+      length > 200
+        ? "Risposta articolata, ma alcune parti restano poco verificabili."
+        : "Risposta troppo breve: mancano elementi oggettivi.",
+
+    giornalista:
+      text.includes("forse") || text.includes("non ricordo")
+        ? "Presenza di ambiguità sospette."
+        : "Linea narrativa abbastanza chiara, ma da approfondire.",
+
+    amico:
+      text.includes("paura") || text.includes("errore")
+        ? "Sembra una risposta sincera, anche se vulnerabile."
+        : "Potresti non star dicendo tutto."
   };
 }
-
-/* ===========================
-   AVVIO
-   =========================== */
-
-loadPlayerModel();
-render();
