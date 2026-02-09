@@ -1,94 +1,142 @@
-// docs/app.js
+import React, { useState } from "react";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const app = document.getElementById("app");
-
-  app.innerHTML = `
-    <div style="max-width: 700px; margin: auto; font-family: sans-serif; line-height: 1.5;">
-      <h1>Il colloquio impossibile</h1>
-
-      <p>
-        Ti trovi in una stanza spoglia, illuminata al neon.  
-        Davanti a te siedono tre persone. Non parlano tra loro.  
-        Ognuna ascolta con attenzione… ma per motivi diversi.
-      </p>
-
-      <p>
-        Hai pochi minuti per rispondere.  
-        Qualsiasi cosa dirai verrà interpretata, distorta, sospettata.
-      </p>
-
-      <h2>I presenti</h2>
-      <ul>
-        <li><strong>Il Magistrato</strong> – Cerca coerenza, logica, assenza di contraddizioni.</li>
-        <li><strong>La Giornalista</strong> – Fiuta ambiguità, omissioni, zone grigie.</li>
-        <li><strong>L’Amico</strong> – Vuole capire se stai dicendo la verità o solo proteggendoti.</li>
-      </ul>
-
-      <h2>La situazione</h2>
-      <p>
-        Sei stato visto vicino al luogo di un evento controverso.  
-        Non sei accusato formalmente, ma la tua posizione è fragile.
-      </p>
-
-      <h2>La domanda</h2>
-      <p>
-        <em>
-          Spiega perché ti trovavi lì e quale fosse il tuo reale coinvolgimento.
-        </em>
-      </p>
-
-      <textarea id="playerInput"
-        rows="6"
-        style="width: 100%; padding: 8px;"
-        placeholder="Scrivi qui la tua risposta..."></textarea>
-
-      <br><br>
-      <button id="submitBtn">Invia risposta</button>
-
-      <h2>Valutazione</h2>
-      <div id="result" style="margin-top: 10px; white-space: pre-wrap;"></div>
-    </div>
-  `;
-
-  document.getElementById("submitBtn").addEventListener("click", () => {
-    const text = document.getElementById("playerInput").value.trim();
-    const result = document.getElementById("result");
-
-    if (!text) {
-      result.textContent = "Devi scrivere qualcosa. Il silenzio è già una risposta.";
-      return;
-    }
-
-    // --- Valutazione MOCK (in attesa di Fringe / AI) ---
-    const evaluation = evaluateResponse(text);
-
-    result.textContent = `
-Magistrato: ${evaluation.magistrato}
-Giornalista: ${evaluation.giornalista}
-Amico: ${evaluation.amico}
-    `;
-  });
-});
+const QUESTIONS = [
+  {
+    scenario:
+      "La stanza è silenziosa. Il neon vibra appena. Sai che ogni parola verrà sezionata.",
+    question:
+      "Perché ti trovavi in quella zona e cosa stavi facendo esattamente?",
+  },
+  {
+    scenario:
+      "Il Magistrato prende appunti. La Giornalista inclina la testa, come se aspettasse una crepa.",
+    question:
+      "Quando hai capito che la situazione poteva essere problematica?",
+  },
+  {
+    scenario:
+      "Ti rendi conto che stai iniziando a difenderti più di quanto vorresti.",
+    question:
+      "C’è qualcosa che hai omesso finora? Spiega perché.",
+  },
+  {
+    scenario:
+      "Il tempo stringe. Ogni risposta restringe le possibilità.",
+    question:
+      "Chi potrebbe confermare la tua versione dei fatti?",
+  },
+  {
+    scenario:
+      "Ora sai che non si tratta più solo di chiarire i fatti.",
+    question:
+      "Se questa storia uscisse domani, cosa pensi che la gente capirebbe di te?",
+  },
+];
 
 function evaluateResponse(text) {
-  // Regole semplici e deterministiche per la demo
-  const length = text.length;
+  const length = text.trim().length;
 
-  return {
-    magistrato:
-      length > 200
-        ? "Risposta articolata, ma alcune parti restano poco verificabili."
-        : "Risposta troppo breve: mancano elementi oggettivi.",
+  let magistrate;
+  let journalist;
 
-    giornalista:
-      text.includes("forse") || text.includes("non ricordo")
-        ? "Presenza di ambiguità sospette."
-        : "Linea narrativa abbastanza chiara, ma da approfondire.",
+  if (length < 40) {
+    magistrate = "Risposta insufficiente: mancano dettagli verificabili.";
+    journalist = "Molte zone d’ombra. Possibile omissione intenzionale.";
+  } else if (length < 120) {
+    magistrate = "Struttura coerente ma parziale.";
+    journalist = "Linea narrativa presente, ma fragile.";
+  } else {
+    magistrate = "Risposta articolata e logicamente consistente.";
+    journalist = "Materiale interessante. Alcuni punti meritano approfondimento.";
+  }
 
-    amico:
-      text.includes("paura") || text.includes("errore")
-        ? "Sembra una risposta sincera, anche se vulnerabile."
-        : "Potresti non star dicendo tutto."
-  };
+  return { magistrate, journalist };
+}
+
+export default function App() {
+  const [step, setStep] = useState(0);
+  const [answer, setAnswer] = useState("");
+  const [history, setHistory] = useState([]);
+  const [evaluation, setEvaluation] = useState(null);
+
+  const current = QUESTIONS[step];
+
+  function submitAnswer() {
+    if (!answer.trim()) return;
+
+    const evalResult = evaluateResponse(answer);
+
+    setHistory([
+      ...history,
+      {
+        question: current.question,
+        answer,
+        evaluation: evalResult,
+      },
+    ]);
+
+    setEvaluation(evalResult);
+  }
+
+  function nextQuestion() {
+    setAnswer("");
+    setEvaluation(null);
+    setStep(step + 1);
+  }
+
+  if (step >= QUESTIONS.length) {
+    return (
+      <div style={{ padding: 20 }}>
+        <h2>Esito provvisorio</h2>
+        <p>
+          Nessuna risposta è stata una confessione. Nessuna è stata innocente.
+        </p>
+        <p>
+          Qualcosa, però, si è incrinato. E non era nella stanza.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: 20, maxWidth: 700 }}>
+      <h1>FRINGE / LEAK</h1>
+      <h3>Il colloquio impossibile</h3>
+
+      <p><em>{current.scenario}</em></p>
+
+      <strong>{current.question}</strong>
+
+      <textarea
+        rows={5}
+        style={{ width: "100%", marginTop: 10 }}
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+        disabled={!!evaluation}
+      />
+
+      {!evaluation && (
+        <button onClick={submitAnswer} style={{ marginTop: 10 }}>
+          Invia risposta
+        </button>
+      )}
+
+      {evaluation && (
+        <div style={{ marginTop: 20 }}>
+          <h4>Valutazione</h4>
+          <p><strong>Magistrato:</strong> {evaluation.magistrate}</p>
+          <p><strong>Giornalista:</strong> {evaluation.journalist}</p>
+
+          <p style={{ fontStyle: "italic", marginTop: 10 }}>
+            Da qualche parte, qualcuno che ti conosce bene inizia a chiedersi
+            se stai ancora dicendo la verità.
+          </p>
+
+          <button onClick={nextQuestion} style={{ marginTop: 10 }}>
+            Continua
+          </button>
+        </div>
+      )}
+    </div>
+  );
 }
