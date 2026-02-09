@@ -1,5 +1,5 @@
 import { judgeGame } from "./judge/judge.js";
-import { narrateVerdict } from "./narrator/narrator.js";
+import { narrateVerdict } from "./narrator/narrator_OLD.js";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";

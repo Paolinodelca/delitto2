@@ -1,3 +1,7 @@
+import { observeWithLLM } from "./observerLLM.js";
+
+let externalObservation = null;
+
 const app = document.getElementById("app");
 console.log("FRINGE LIVE", Date.now());
 
@@ -9,13 +13,67 @@ const answers = [];
 
 /**
  * MODELLO DEL GIOCATORE
- * Non è una verità, sono ipotesi operative
+ * Ipotesi operative, non verità
  */
-const playerModel = {
-  stile: "indeterminato",      // prudente | assertivo | evasivo
-  strategia: "indeterminata",  // coerenza | ambiguità | minimizzazione
-  fragilita: 0                // 0–100
+let playerModel = {
+  stile: "indeterminato",
+  strategia: "indeterminata",
+  fragilita: 0,
+  rischioNarrativo: 0,
+  esposizione: 0
 };
+
+/* ===========================
+   MEMORIA LOCALE (PERSISTENZA)
+   =========================== */
+
+function loadPlayerModel() {
+  const saved = localStorage.getItem("FRINGE_PLAYER_MODEL");
+  if (saved) {
+    try {
+      playerModel = JSON.parse(saved);
+      console.log("Profilo giocatore ricaricato", playerModel);
+    } catch {
+      console.warn("Profilo corrotto, ripristino default");
+    }
+  }
+}
+
+function savePlayerModel() {
+  localStorage.setItem(
+    "FRINGE_PLAYER_MODEL",
+    JSON.stringify(playerModel)
+  );
+}
+
+/* ===========================
+   PRE-OSSERVAZIONE PREDITTIVA
+   =========================== */
+
+function predictiveCue() {
+  if (pressureLevel > 70 && playerModel.fragilita > 40) {
+    return "Qualunque esitazione ora verrà notata.";
+  }
+
+  if (playerModel.stile === "assertivo" && playerModel.esposizione > 30) {
+    return "Una risposta troppo sicura potrebbe sembrare costruita.";
+  }
+
+  if (playerModel.strategia === "ambiguità") {
+    return "La prossima risposta rischia di essere letta come una conferma.";
+  }
+
+  if (playerModel.rischioNarrativo > 40) {
+    return "Stai creando un precedente. Non passerà inosservato.";
+  }
+
+  return null;
+}
+
+/* ===========================
+   RENDER
+   =========================== */
+
 
 function render() {
   app.innerHTML = "";
@@ -28,8 +86,12 @@ function render() {
         Un preprint esterno suggerisce una fuga di conoscenza.<br>
         Tu sei <strong>Alex Riva</strong>.
       </p>
-      <button onclick="next()">Inizia</button>
+      <button id="startBtn">Inizia</button>
     `;
+
+    document
+      .getElementById("startBtn")
+      .addEventListener("click", next);
   }
 
   if (step === 1) {
@@ -38,9 +100,13 @@ function render() {
         <p><strong>Jonas Becker</strong></p>
         <p>«Hai mai discusso informalmente del fenomeno fuori dal laboratorio?»</p>
         <input id="a1" style="width:100%" />
-        <button onclick="answer(1)">Rispondi</button>
+        <button id="answer1">Rispondi</button>
       </div>
     `;
+
+    document
+      .getElementById("answer1")
+      .addEventListener("click", () => answer(1));
   }
 
   if (step === 2) {
@@ -49,9 +115,22 @@ function render() {
         <p><strong>Jonas Becker</strong></p>
         <p>«Quindi stai dicendo che <em>non potevano</em> sapere davvero?»</p>
         <input id="a2" style="width:100%" />
-        <button onclick="answer(2)">Rispondi</button>
+        <button id="answer2">Rispondi</button>
       </div>
     `;
+
+    document
+      .getElementById("answer2")
+      .addEventListener("click", () => answer(2));
+
+    const cue = predictiveCue();
+    if (cue) {
+      app.innerHTML += `
+        <p style="font-style:italic; opacity:0.6; margin-top:10px;">
+          ${cue}
+        </p>
+      `;
+    }
 
     if (pressureLevel > 50) {
       app.innerHTML += `
@@ -63,24 +142,57 @@ function render() {
   }
 
   if (step === 3) {
-    const narratorText = narratorOutput();
-    const tutorText = tutorOutput();
-    const judge = judgeOutput();
+    savePlayerModel();
+
+    if (!externalObservation) {
+      observeWithLLM({
+        playerModel,
+        pressureLevel,
+        step,
+        scenario: "FRINGE / LEAK"
+      }).then(result => {
+        externalObservation = result;
+        render();
+      });
+
+      app.innerHTML = `<p>Analisi in corso...</p>`;
+      return;
+    }
 
     app.innerHTML = `
       <div class="output">
         <h3>NARRATORE</h3>
-        <p>${narratorText}</p>
+        <p>${narratorOutput()}</p>
 
         <h3>TUTOR</h3>
-        <p>${tutorText}</p>
+        <p>${tutorOutput()}</p>
 
         <h3>GIUDICE</h3>
-        <pre>${JSON.stringify(judge, null, 2)}</pre>
+        <pre>${JSON.stringify(judgeOutput(), null, 2)}</pre>
+
+        ${
+          externalObservation?.osservazione
+            ? `
+          <h3>OSSERVATORE ESTERNO</h3>
+          <p style="opacity:0.8; font-style:italic;">
+            ${externalObservation.osservazione}
+          </p>
+          `
+            : ""
+        }
       </div>
     `;
   }
 }
+
+
+
+
+
+
+/* ===========================
+   LOGICA
+   =========================== */
 
 function next() {
   step++;
@@ -91,33 +203,35 @@ function answer(n) {
   const value = document.getElementById(`a${n}`).value.trim();
   answers.push(value);
 
-  // Pressione base
   if (value.length < 5) {
     increasePressure(30);
     playerModel.fragilita += 20;
+    playerModel.esposizione += 15;
   } else if (/non so|forse|boh|non ricordo/i.test(value)) {
     increasePressure(25);
     playerModel.stile = "evasivo";
-  } else if (value.length > 60) {
+    playerModel.rischioNarrativo += 10;
+  } else if (value.length > 70) {
     increasePressure(-10);
     playerModel.stile = "assertivo";
+    playerModel.esposizione += 20;
   } else {
     increasePressure(10);
     playerModel.stile = "prudente";
   }
 
-  // Osservazione di coerenza tra risposte
   if (n === 2) {
     const a1 = answers[0].toLowerCase();
     const a2 = answers[1].toLowerCase();
 
     const negazione = /no|mai|non/.test(a1);
-    const apertura = /si|potevano|forse|possibile/.test(a2);
+    const apertura = /si|forse|possibile|potevano/.test(a2);
 
     if (negazione && apertura) {
       increasePressure(35);
       playerModel.strategia = "ambiguità";
       playerModel.fragilita += 30;
+      playerModel.rischioNarrativo += 25;
     } else {
       playerModel.strategia = "coerenza";
     }
@@ -130,20 +244,24 @@ function increasePressure(amount) {
   pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel + amount));
 }
 
+/* ===========================
+   OUTPUT NARRATIVI
+   =========================== */
+
 function narratorOutput() {
-  if (playerModel.strategia === "ambiguità") {
+  if (playerModel.rischioNarrativo > 40) {
     return `
-      La tua posizione non crolla, ma cambia forma.<br>
-      Dove prima c’era una linea, ora c’è una curva.<br>
-      Qualcuno potrebbe seguirla. Qualcun altro perdersi.
+      Le tue parole hanno creato un precedente.<br>
+      Non è ancora una colpa,<br>
+      ma qualcuno potrebbe ricordarle.
     `;
   }
 
-  if (pressureLevel > 70) {
+  if (playerModel.strategia === "ambiguità") {
     return `
-      La pressione ha lasciato un segno.<br>
-      Non è una colpa, ma è visibile.<br>
-      E ciò che è visibile diventa discutibile.
+      La tua posizione non crolla, ma si piega.<br>
+      Le pieghe sono zone fertili.<br>
+      Anche per il sospetto.
     `;
   }
 
@@ -155,25 +273,33 @@ function narratorOutput() {
 }
 
 function tutorOutput() {
+  if (playerModel.esposizione > 30) {
+    return `
+      Hai lasciato tracce.<br>
+      Non tutte sono errori.<br>
+      Ma tutte raccontano qualcosa.
+    `;
+  }
+
   if (playerModel.stile === "evasivo") {
     return `
-      Evitare non è sempre fuggire.<br>
-      A volte è guadagnare tempo.<br>
-      Ma il tempo ha un costo.
+      Evitare è una tecnica.<br>
+      Funziona una volta.<br>
+      Raramente due.
     `;
   }
 
   if (playerModel.stile === "assertivo") {
     return `
-      Hai parlato come chi accetta il rischio.<br>
-      In FRINGE, questo viene sempre notato.
+      Ti sei esposto con sicurezza.<br>
+      In FRINGE, questo ha sempre un prezzo.
     `;
   }
 
   return `
-    Hai mantenuto una postura prudente.<br>
-    Non è neutralità.<br>
-    È una scelta.
+    Prudenza attiva.<br>
+    Non è silenzio.<br>
+    È controllo.
   `;
 }
 
@@ -184,13 +310,21 @@ function judgeOutput() {
     modello_giocatore: {
       stile: playerModel.stile,
       strategia: playerModel.strategia,
-      fragilita_stimata: playerModel.fragilita
+      fragilita_stimata: playerModel.fragilita,
+      rischio_narrativo: playerModel.rischioNarrativo,
+      esposizione: playerModel.esposizione
     },
     note: [
-      "Valutazione basata su osservazione comportamentale",
+      "Valutazione comportamentale multilivello",
+      "Pre-osservazione predittiva attiva",
       "Nessuna verifica di verità fattuale"
     ]
   };
 }
 
+/* ===========================
+   AVVIO
+   =========================== */
+
+loadPlayerModel();
 render();
