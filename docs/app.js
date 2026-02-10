@@ -23,6 +23,12 @@ let playerModel = {
 };
 
 /* ===========================
+   PERSONAGGI
+   =========================== */
+
+let partnerName = null;
+
+/* ===========================
    PERSISTENZA
    =========================== */
 
@@ -43,34 +49,34 @@ function savePlayerModel() {
 }
 
 /* ===========================
-   DOMANDE (INTERVENTI)
+   INTERVENTI COGNITIVI
    =========================== */
 
 const interventions = [
   {
     observer: "Magistrato",
     question:
-      "Descrivi con precisione perché ti trovavi lì e cosa stavi facendo."
-  },
-  {
-    observer: "Giornalista",
-    question:
-      "C’è qualcosa che non hai ritenuto necessario dire finora?"
+      "Durante quel turno eri formalmente responsabile della sala di controllo. Chi ha deciso la sostituzione e su quali basi?"
   },
   {
     observer: "Analista",
     question:
-      "Stai cercando di proteggere qualcuno, o solo te stesso?"
-  },
-  {
-    observer: "Magistrato",
-    question:
-      "Rileggi mentalmente le tue risposte precedenti. C’è una contraddizione?"
+      "Quando hai lasciato la sala, cosa ti ha fatto credere che tutto sarebbe rimasto sotto controllo?"
   },
   {
     observer: "Giornalista",
     question:
-      "Se questa versione diventasse pubblica, cosa verrebbe messo in dubbio?"
+      "Sei consapevole che una parte di questa vicenda, se raccontata fuori da qui, cambierebbe il modo in cui verrebbe letta all’interno dell’azienda?"
+  },
+  {
+    observer: "Magistrato",
+    question:
+      "Riguardando la sequenza degli eventi: in quale momento ritieni che il sistema abbia smesso di funzionare come previsto?"
+  },
+  {
+    observer: "Giornalista",
+    question:
+      "Se domani emergesse solo una versione parziale dei fatti, chi risulterebbe più esposto?"
   }
 ];
 
@@ -107,30 +113,60 @@ function evaluateAnswer(text) {
 function render() {
   app.innerHTML = "";
 
-  // STEP 0 — SCENARIO (rafforzato)
+  /* STEP 0a — SCELTA PARTNER */
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
-      <p><strong>Il colloquio impossibile</strong></p>
+      <p><strong>Sessione di valutazione preliminare</strong></p>
 
       <p>
-        Non sei qui per ricostruire i fatti.<br>
-        Sei qui perché <em>qualcuno</em> deve capire come leggerli.
+        Prima di iniziare, scegli chi è la persona con cui hai una relazione personale.
+      </p>
+
+      <button id="evaBtn">Eva (partner)</button>
+      <button id="adamoBtn">Adamo (partner)</button>
+    `;
+
+    document.getElementById("evaBtn").onclick = () => {
+      partnerName = "Eva";
+      step = 1;
+      render();
+    };
+
+    document.getElementById("adamoBtn").onclick = () => {
+      partnerName = "Adamo";
+      step = 1;
+      render();
+    };
+
+    return;
+  }
+
+  /* STEP 0b — SCENARIO */
+  if (step === 1) {
+    app.innerHTML = `
+      <p><strong>Il contesto</strong></p>
+
+      <p>
+        Lavori in un laboratorio dove vengono trattate informazioni sensibili.
+        Durante un turno di guardia, il tuo responsabile diretto, <strong>Walter</strong>,
+        ti ha chiesto di sostituirlo per alcune incombenze personali che non ha voluto specificare.
       </p>
 
       <p>
-        Fuori da questa stanza ci sono persone coinvolte indirettamente:
+        Accetti la sostituzione. In sala di controllo rimani insieme a <strong>Alex</strong>,
+        un tuo amico di lunga data.
       </p>
 
-      <ul>
-        <li>un responsabile che ti ha dato accesso e ora rischia per riflesso</li>
-        <li>un amico che condivideva confini informali del lavoro</li>
-        <li>un partner estraneo ai fatti, ma non alle conseguenze</li>
-      </ul>
+      <p>
+        Durante il turno ricevi una chiamata da <strong>${partnerName}</strong>,
+        dal capannone di logistica. Ti chiede di raggiunger${partnerName === "Eva" ? "la" : "lo"} subito.
+        Dopo una breve esitazione, lasci la sala, raccomandando ad Alex di avvisarti in caso di problemi.
+      </p>
 
       <p>
-        Nessuno di loro è presente.<br>
-        Ma ogni risposta che darai potrà avvicinarli o allontanarli dal problema.
+        Un’ora dopo, una visita ispettiva trova la sala di controllo sguarnita.
+        Nessuno dei tre — tu, Alex, Walter — è presente.
       </p>
 
       <p><em>
@@ -138,19 +174,20 @@ function render() {
         Stai decidendo come questa situazione verrà letta.
       </em></p>
 
-      <button id="startBtn">Inizia</button>
+      <button id="startBtn">Inizia la sessione</button>
     `;
 
     document.getElementById("startBtn").onclick = () => {
-      step++;
+      step = 2;
       render();
     };
+
     return;
   }
 
-  // STEP 1–5 — DOMANDE
-  if (step >= 1 && step <= interventions.length) {
-    const current = interventions[step - 1];
+  /* STEP 2–6 — INTERVENTI */
+  if (step >= 2 && step < 2 + interventions.length) {
+    const current = interventions[step - 2];
 
     app.innerHTML = `
       <h3>${current.observer}</h3>
@@ -175,8 +212,8 @@ function render() {
     return;
   }
 
-  // STEP FINALE — VALUTAZIONE
-  if (step > interventions.length) {
+  /* STEP FINALE — VALUTAZIONE */
+  if (step >= 2 + interventions.length) {
     savePlayerModel();
 
     if (!externalObservation) {
@@ -227,7 +264,7 @@ function narratorOutput() {
   if (pressureLevel > 60) {
     return "Ogni parola ha aumentato il peso della lettura.";
   }
-  return "Hai attraversato l’interrogatorio senza crollare.";
+  return "Hai attraversato la sessione senza un crollo evidente.";
 }
 
 function tutorOutput() {
