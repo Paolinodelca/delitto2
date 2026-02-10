@@ -107,21 +107,30 @@ function evaluateAnswer(text) {
 function render() {
   app.innerHTML = "";
 
-  // STEP 0 — SCENARIO
+  // STEP 0 — SCENARIO (rafforzato)
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
       <p><strong>Il colloquio impossibile</strong></p>
 
       <p>
-        Ti trovi in una stanza spoglia, illuminata al neon.<br>
-        Davanti a te siedono tre figure. Non parlano tra loro.<br>
-        Ognuna osserva per motivi diversi.
+        Non sei qui per ricostruire i fatti.<br>
+        Sei qui perché <em>qualcuno</em> deve capire come leggerli.
       </p>
 
       <p>
-        Non sei formalmente accusato.<br>
-        Ma la tua posizione è fragile.
+        Fuori da questa stanza ci sono persone coinvolte indirettamente:
+      </p>
+
+      <ul>
+        <li>un responsabile che ti ha dato accesso e ora rischia per riflesso</li>
+        <li>un amico che condivideva confini informali del lavoro</li>
+        <li>un partner estraneo ai fatti, ma non alle conseguenze</li>
+      </ul>
+
+      <p>
+        Nessuno di loro è presente.<br>
+        Ma ogni risposta che darai potrà avvicinarli o allontanarli dal problema.
       </p>
 
       <p><em>
@@ -131,6 +140,7 @@ function render() {
 
       <button id="startBtn">Inizia</button>
     `;
+
     document.getElementById("startBtn").onclick = () => {
       step++;
       render();
