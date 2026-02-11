@@ -49,39 +49,34 @@ function savePlayerModel() {
 }
 
 /* ===========================
-   INTERVENTI COGNITIVI
+   INTERVENTI
    =========================== */
 
 const interventions = [
   {
-    observer: "Osservazione",
     question:
       "Descrivi con precisione perché ti trovavi in sala di controllo e cosa stavi facendo all’inizio del turno."
   },
   {
-    observer: "Osservazione",
     question:
-      "Quando hai lasciato la sala, cosa ti ha fatto credere che il sistema sarebbe rimasto sotto controllo?"
+      "Quando hai lasciato la sala, cosa ti ha fatto ritenere accettabile farlo in quel momento?"
   },
   {
-    observer: "Osservazione",
     question:
-      "Se una parte di questa vicenda venisse raccontata fuori da qui, pensi che verrebbe letta allo stesso modo?"
+      "C’è un elemento di questa vicenda che, se raccontato all’esterno, cambierebbe il modo in cui verrebbe letta?"
   },
   {
-    observer: "Osservazione",
     question:
-      "Riguardando la sequenza degli eventi: in quale momento il sistema ha smesso di funzionare come previsto?"
+      "Riguardando la sequenza degli eventi: in quale punto il sistema ha smesso di funzionare come previsto?"
   },
   {
-    observer: "Osservazione",
     question:
-      "Se domani emergesse solo una versione parziale dei fatti, non sei tu quello che rischia più di tutti?"
+      "Se emergesse solo una versione parziale dei fatti, chi pensi che ne pagherebbe il prezzo più alto?"
   }
 ];
 
 /* ===========================
-   LOGICA DI OSSERVAZIONE
+   OSSERVAZIONE RISPOSTE
    =========================== */
 
 function evaluateAnswer(text) {
@@ -113,7 +108,7 @@ function evaluateAnswer(text) {
 function render() {
   app.innerHTML = "";
 
-  // STEP 0 — SCELTA PARTNER
+  /* STEP 0 — SCELTA PARTNER */
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
@@ -143,23 +138,23 @@ function render() {
     return;
   }
 
-  // STEP 1 — SCENARIO
+  /* STEP 1 — SCENARIO */
   if (step === 1) {
     app.innerHTML = `
       <p>
         Ti trovi davanti a una commissione interna.<br>
-        L’audizione si svolge a porte chiuse.<br>
+        L’audizione avviene a porte chiuse.<br>
         Le persone coinvolte nel disservizio vengono ascoltate separatamente.
       </p>
 
       <p>
-        Non è una seduta disciplinare.<br>
-        Non è un procedimento giudiziario.<br>
+        Non è un procedimento disciplinare.<br>
+        Non è un tribunale.<br>
         È una valutazione.
       </p>
 
       <p>
-        Durante il tuo turno di guardia al laboratorio, hai sostituito il tuo responsabile,
+        Durante il tuo turno di guardia al laboratorio hai sostituito il tuo responsabile,
         Walter, su sua richiesta.<br>
         In sala di controllo era presente anche Alex, un tuo amico di lunga data.
       </p>
@@ -176,10 +171,10 @@ function render() {
 
       <p><em>
         Quello che è successo è successo.<br>
-        Ora stai decidendo come le azioni di questa vicenda verranno lette.
+        Ora devi decidere come le azioni di questa vicenda verranno lette.
       </em></p>
 
-      <button id="startBtn">Inizia l’audizione</button>
+      <button id="startBtn">Avvia l’audizione</button>
     `;
 
     document.getElementById("startBtn").onclick = () => {
@@ -189,7 +184,7 @@ function render() {
     return;
   }
 
-  // STEP 2–6 — INTERVENTI
+  /* STEP 2–6 — DOMANDE */
   if (step >= 2 && step < interventions.length + 2) {
     const current = interventions[step - 2];
 
@@ -201,7 +196,7 @@ function render() {
       <button id="sendBtn">Invia risposta</button>
 
       <p style="opacity:0.6;margin-top:10px;">
-        Livello di esposizione: ${pressureLevel}
+        Stato di esposizione in valutazione
       </p>
     `;
 
@@ -215,7 +210,7 @@ function render() {
     return;
   }
 
-  // STEP FINALE — VALUTAZIONE
+  /* STEP FINALE */
   savePlayerModel();
 
   if (!externalObservation) {
@@ -228,7 +223,7 @@ function render() {
       render();
     });
 
-    app.innerHTML = `<p>Analisi in corso...</p>`;
+    app.innerHTML = `<p>Valutazione in corso...</p>`;
     return;
   }
 
@@ -240,12 +235,22 @@ function render() {
     <p>${tutorOutput()}</p>
 
     <h3>GIUDICE</h3>
-    <pre>${JSON.stringify(judgeOutput(), null, 2)}</pre>
+    <p><strong>Esito:</strong> ${judgeEsito()}</p>
+    <p><em>Profilo osservato:</em></p>
+    <ul>
+      <li>Stile comunicativo: ${playerModel.stile}</li>
+      <li>Strategia emersa: ${playerModel.strategia}</li>
+      <li>Fragilità esposta: ${playerModel.fragilita > 0 ? "sì" : "no"}</li>
+      <li>Rischio narrativo: ${playerModel.rischioNarrativo > 0 ? "presente" : "contenuto"}</li>
+    </ul>
+    <p style="opacity:0.7;">
+      Metodo di valutazione: comportamentale, non fattuale, sotto pressione.
+    </p>
 
     ${
       externalObservation?.osservazione
         ? `<h3>OSSERVATORE ESTERNO</h3>
-           <p style="opacity:0.8;font-style:italic;">
+           <p style="font-style:italic; opacity:0.85;">
              ${externalObservation.osservazione}
            </p>`
         : ""
@@ -259,34 +264,26 @@ function render() {
 
 function narratorOutput() {
   if (playerModel.strategia === "ambiguità") {
-    return "La tua posizione resta in equilibrio, ma apre più di una possibile lettura.";
+    return "La tua posizione resta sostenibile, ma lascia spazio a letture divergenti.";
   }
   if (pressureLevel > 60) {
-    return "Ogni risposta ha aumentato il peso interpretativo della vicenda.";
+    return "Ogni risposta ha contribuito ad aumentare il peso interpretativo della vicenda.";
   }
   return "Hai sostenuto l’audizione senza una frattura evidente.";
 }
 
 function tutorOutput() {
   if (playerModel.stile === "elusivo") {
-    return "Evitare è una strategia. Ma lascia tracce.";
+    return "Hai evitato l’esposizione diretta. Questo riduce l’impatto immediato, ma non cancella le tracce.";
   }
   if (playerModel.stile === "assertivo") {
-    return "Esporsi accelera la lettura, anche quando non la controlli.";
+    return "Hai scelto di esporre la tua posizione. Questo accelera la valutazione, nel bene e nel male.";
   }
-  return "Hai mantenuto una postura contenitiva.";
+  return "Hai mantenuto una postura di contenimento e controllo.";
 }
 
-function judgeOutput() {
-  return {
-    esito: pressureLevel > 70 ? "instabile" : "indeterminato",
-    modello_giocatore: playerModel,
-    note: [
-      "Valutazione comportamentale",
-      "Nessuna verifica fattuale",
-      "Osservazione sotto pressione"
-    ]
-  };
+function judgeEsito() {
+  return pressureLevel > 70 ? "posizione instabile" : "valutazione indeterminata";
 }
 
 /* ===========================
