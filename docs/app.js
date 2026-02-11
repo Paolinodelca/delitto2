@@ -174,7 +174,8 @@ function render() {
         Ora devi decidere come le azioni di questa vicenda verranno lette.
       </em></p>
 
-      <button id="startBtn">Avvia l’audizione</button>
+     <button id="startBtn">Prosegui</button>
+
     `;
 
     document.getElementById("startBtn").onclick = () => {
@@ -214,14 +215,24 @@ function render() {
   savePlayerModel();
 
   if (!externalObservation) {
-    observeWithLLM({
-      playerModel,
-      pressureLevel,
-      scenario: "FRINGE / LEAK"
-    }).then(result => {
-      externalObservation = result;
-      render();
-    });
+
+
+observeWithLLM({
+  scenario: "FRINGE / LEAK",
+  pressureLevel,
+  playerModel,
+  answers,
+  context: {
+    responsabile: "Walter",
+    amico: "Alex",
+    partner: partnerName
+  }
+}).then(result => {
+  externalObservation = result;
+  render();
+});
+
+
 
     app.innerHTML = `<p>Valutazione in corso...</p>`;
     return;
