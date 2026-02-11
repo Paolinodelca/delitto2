@@ -11,6 +11,12 @@ let externalObservation = null;
 const answers = [];
 
 /* ===========================
+   SCELTE INIZIALI
+   =========================== */
+
+let partnerName = "Eva";
+
+/* ===========================
    MODELLO GIOCATORE
    =========================== */
 
@@ -21,12 +27,6 @@ let playerModel = {
   rischioNarrativo: 0,
   esposizione: 0
 };
-
-/* ===========================
-   PERSONAGGI
-   =========================== */
-
-let partnerName = null;
 
 /* ===========================
    PERSISTENZA
@@ -54,38 +54,38 @@ function savePlayerModel() {
 
 const interventions = [
   {
-    observer: "Magistrato",
+    observer: "Osservazione",
     question:
-      "Durante quel turno eri formalmente responsabile della sala di controllo. Chi ha deciso la sostituzione e su quali basi?"
+      "Descrivi con precisione perché ti trovavi in sala di controllo e cosa stavi facendo all’inizio del turno."
   },
   {
-    observer: "Analista",
+    observer: "Osservazione",
     question:
-      "Quando hai lasciato la sala, cosa ti ha fatto credere che tutto sarebbe rimasto sotto controllo?"
+      "Quando hai lasciato la sala, cosa ti ha fatto credere che il sistema sarebbe rimasto sotto controllo?"
   },
   {
-    observer: "Giornalista",
+    observer: "Osservazione",
     question:
-      "Sei consapevole che una parte di questa vicenda, se raccontata fuori da qui, cambierebbe il modo in cui verrebbe letta all’interno dell’azienda?"
+      "Se una parte di questa vicenda venisse raccontata fuori da qui, pensi che verrebbe letta allo stesso modo?"
   },
   {
-    observer: "Magistrato",
+    observer: "Osservazione",
     question:
-      "Riguardando la sequenza degli eventi: in quale momento ritieni che il sistema abbia smesso di funzionare come previsto?"
+      "Riguardando la sequenza degli eventi: in quale momento il sistema ha smesso di funzionare come previsto?"
   },
   {
-    observer: "Giornalista",
+    observer: "Osservazione",
     question:
-      "Se domani emergesse solo una versione parziale dei fatti, chi risulterebbe più esposto?"
+      "Se domani emergesse solo una versione parziale dei fatti, non sei tu quello che rischia più di tutti?"
   }
 ];
 
 /* ===========================
-   LOGICA DI PRESSIONE
+   LOGICA DI OSSERVAZIONE
    =========================== */
 
 function evaluateAnswer(text) {
-  if (text.length < 10) {
+  if (text.length < 12) {
     pressureLevel += 20;
     playerModel.fragilita += 15;
     playerModel.esposizione += 10;
@@ -113,85 +113,88 @@ function evaluateAnswer(text) {
 function render() {
   app.innerHTML = "";
 
-  /* STEP 0a — SCELTA PARTNER */
+  // STEP 0 — SCELTA PARTNER
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
       <p><strong>Sessione di valutazione preliminare</strong></p>
 
       <p>
-        Prima di iniziare, scegli chi è la persona con cui hai una relazione personale.
+        Prima di iniziare, indica chi è la persona con cui hai una relazione personale
+        coinvolta indirettamente nella vicenda.
       </p>
 
-      <button id="evaBtn">Eva (partner)</button>
-      <button id="adamoBtn">Adamo (partner)</button>
+      <button id="eva">Eva</button>
+      <button id="adamo">Adamo</button>
     `;
 
-    document.getElementById("evaBtn").onclick = () => {
+    document.getElementById("eva").onclick = () => {
       partnerName = "Eva";
-      step = 1;
+      step++;
       render();
     };
 
-    document.getElementById("adamoBtn").onclick = () => {
+    document.getElementById("adamo").onclick = () => {
       partnerName = "Adamo";
-      step = 1;
+      step++;
       render();
     };
 
     return;
   }
 
-  /* STEP 0b — SCENARIO */
+  // STEP 1 — SCENARIO
   if (step === 1) {
     app.innerHTML = `
-      <p><strong>Il contesto</strong></p>
-
       <p>
-        Lavori in un laboratorio dove vengono trattate informazioni sensibili.
-        Durante un turno di guardia, il tuo responsabile diretto, <strong>Walter</strong>,
-        ti ha chiesto di sostituirlo per alcune incombenze personali che non ha voluto specificare.
+        Ti trovi davanti a una commissione interna.<br>
+        L’audizione si svolge a porte chiuse.<br>
+        Le persone coinvolte nel disservizio vengono ascoltate separatamente.
       </p>
 
       <p>
-        Accetti la sostituzione. In sala di controllo rimani insieme a <strong>Alex</strong>,
-        un tuo amico di lunga data.
+        Non è una seduta disciplinare.<br>
+        Non è un procedimento giudiziario.<br>
+        È una valutazione.
       </p>
 
       <p>
-        Durante il turno ricevi una chiamata da <strong>${partnerName}</strong>,
-        dal capannone di logistica. Ti chiede di raggiunger${partnerName === "Eva" ? "la" : "lo"} subito.
-        Dopo una breve esitazione, lasci la sala, raccomandando ad Alex di avvisarti in caso di problemi.
+        Durante il tuo turno di guardia al laboratorio, hai sostituito il tuo responsabile,
+        Walter, su sua richiesta.<br>
+        In sala di controllo era presente anche Alex, un tuo amico di lunga data.
       </p>
 
       <p>
-        Un’ora dopo, una visita ispettiva trova la sala di controllo sguarnita.
-        Nessuno dei tre — tu, Alex, Walter — è presente.
+        Durante il turno sei stato contattato da ${partnerName},
+        che si trovava al capannone logistico.<br>
+        Hai lasciato temporaneamente la sala, chiedendo ad Alex di avvisarti in caso di necessità.
+      </p>
+
+      <p>
+        Un’ispezione successiva ha trovato la sala di controllo sguarnita.
       </p>
 
       <p><em>
-        Non stai decidendo cosa è successo.<br>
-        Stai decidendo come questa situazione verrà letta.
+        Quello che è successo è successo.<br>
+        Ora stai decidendo come le azioni di questa vicenda verranno lette.
       </em></p>
 
-      <button id="startBtn">Inizia la sessione</button>
+      <button id="startBtn">Inizia l’audizione</button>
     `;
 
     document.getElementById("startBtn").onclick = () => {
-      step = 2;
+      step++;
       render();
     };
-
     return;
   }
 
-  /* STEP 2–6 — INTERVENTI */
-  if (step >= 2 && step < 2 + interventions.length) {
+  // STEP 2–6 — INTERVENTI
+  if (step >= 2 && step < interventions.length + 2) {
     const current = interventions[step - 2];
 
     app.innerHTML = `
-      <h3>${current.observer}</h3>
-      <p>${current.question}</p>
+      <p><strong>${current.question}</strong></p>
 
       <textarea id="answer" rows="4" style="width:100%"></textarea>
       <br><br>
@@ -212,45 +215,42 @@ function render() {
     return;
   }
 
-  /* STEP FINALE — VALUTAZIONE */
-  if (step >= 2 + interventions.length) {
-    savePlayerModel();
+  // STEP FINALE — VALUTAZIONE
+  savePlayerModel();
 
-    if (!externalObservation) {
-      observeWithLLM({
-        playerModel,
-        pressureLevel,
-        step,
-        scenario: "FRINGE / LEAK"
-      }).then(result => {
-        externalObservation = result;
-        render();
-      });
+  if (!externalObservation) {
+    observeWithLLM({
+      playerModel,
+      pressureLevel,
+      scenario: "FRINGE / LEAK"
+    }).then(result => {
+      externalObservation = result;
+      render();
+    });
 
-      app.innerHTML = `<p>Analisi in corso...</p>`;
-      return;
-    }
-
-    app.innerHTML = `
-      <h3>NARRATORE</h3>
-      <p>${narratorOutput()}</p>
-
-      <h3>TUTOR</h3>
-      <p>${tutorOutput()}</p>
-
-      <h3>GIUDICE</h3>
-      <pre>${JSON.stringify(judgeOutput(), null, 2)}</pre>
-
-      ${
-        externalObservation?.osservazione
-          ? `<h3>OSSERVATORE ESTERNO</h3>
-             <p style="opacity:0.8;font-style:italic;">
-               ${externalObservation.osservazione}
-             </p>`
-          : ""
-      }
-    `;
+    app.innerHTML = `<p>Analisi in corso...</p>`;
+    return;
   }
+
+  app.innerHTML = `
+    <h3>NARRATORE</h3>
+    <p>${narratorOutput()}</p>
+
+    <h3>TUTOR</h3>
+    <p>${tutorOutput()}</p>
+
+    <h3>GIUDICE</h3>
+    <pre>${JSON.stringify(judgeOutput(), null, 2)}</pre>
+
+    ${
+      externalObservation?.osservazione
+        ? `<h3>OSSERVATORE ESTERNO</h3>
+           <p style="opacity:0.8;font-style:italic;">
+             ${externalObservation.osservazione}
+           </p>`
+        : ""
+    }
+  `;
 }
 
 /* ===========================
@@ -259,22 +259,22 @@ function render() {
 
 function narratorOutput() {
   if (playerModel.strategia === "ambiguità") {
-    return "La tua posizione regge, ma lascia margini di interpretazione.";
+    return "La tua posizione resta in equilibrio, ma apre più di una possibile lettura.";
   }
   if (pressureLevel > 60) {
-    return "Ogni parola ha aumentato il peso della lettura.";
+    return "Ogni risposta ha aumentato il peso interpretativo della vicenda.";
   }
-  return "Hai attraversato la sessione senza un crollo evidente.";
+  return "Hai sostenuto l’audizione senza una frattura evidente.";
 }
 
 function tutorOutput() {
   if (playerModel.stile === "elusivo") {
-    return "Evitare è una tecnica. Ma ha un costo.";
+    return "Evitare è una strategia. Ma lascia tracce.";
   }
   if (playerModel.stile === "assertivo") {
-    return "Esporsi chiaramente accelera la valutazione.";
+    return "Esporsi accelera la lettura, anche quando non la controlli.";
   }
-  return "Hai mantenuto una postura di controllo.";
+  return "Hai mantenuto una postura contenitiva.";
 }
 
 function judgeOutput() {

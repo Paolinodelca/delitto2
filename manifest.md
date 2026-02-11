@@ -1,576 +1,342 @@
 
-FRINGE
+# FRINGE
 
-FRINGE è un sistema per osservare il ragionamento umano
-in condizioni di incertezza, pressione e ambiguità informativa.
+**Sottotitolo di lavoro:** Interpretazione sotto pressione
 
-Non è un quiz.
-Non è un chatbot.
-Non è un gioco a risposte giuste.
+## Visione
 
-È un dispositivo di osservazione cognitiva.
+FRINGE è un motore narrativo-interattivo che rende visibile **come una persona viene interpretata** quando agisce sotto osservazione, pressione e ambiguità informativa.
 
-COSA FA FRINGE
+Non misura la verità dei fatti.
+Non valuta il giusto o lo sbagliato.
 
-FRINGE mette una persona dentro una situazione credibile
-e osserva come costruisce, difende o modifica una posizione.
+Osserva **la forma che il pensiero assume** quando deve reggere uno sguardo esterno.
 
-Il sistema non cerca:
+L’assunto centrale è semplice:
 
-la verità assoluta
+> Non esistono risposte giuste.
+> Esistono risposte che producono effetti diversi.
 
-la risposta corretta
+---
 
-l’intenzione nascosta
+## Cos’è FRINGE (e cosa non è)
 
-Osserva:
+FRINGE è:
 
-coerenza interna
+* un **dispositivo di osservazione cognitiva**
+* un **motore di interpretazione**, non di verifica
+* un’esperienza narrativa con esiti non binari
 
-postura argomentativa
+FRINGE non è:
 
-gestione della pressione
+* un quiz
+* un test di personalità
+* un chatbot conversazionale
+* un gioco a risposte corrette
 
-reazioni all’ambiguità
+Il sistema non ricostruisce i fatti.
+I fatti sono dati.
 
-COME OSSERVA
+FRINGE osserva **come le persone gestiscono il momento in cui quei fatti vengono letti da altri**.
 
-FRINGE non interpreta il contenuto delle risposte.
-Non valuta se sono vere o false.
+---
 
-Osserva la forma che il pensiero assume sotto pressione.
+## Cosa osserva il sistema
 
-Per farlo utilizza:
+Il sistema non interpreta il contenuto delle risposte.
+Non stabilisce se siano vere o false.
 
-euristiche locali (ritmo, esitazioni, incoerenze)
+Osserva pattern formali e dinamici, tra cui:
 
-osservatori cognitivi esterni
+* coerenza interna
+* gestione dell’ambiguità
+* postura argomentativa
+* esposizione e assunzione di responsabilità
+* reazione alla pressione
+* anticipazione delle conseguenze
 
-Gli osservatori non decidono l’esito.
-Producono tracce che il sistema traduce in conseguenze.
+Queste osservazioni producono **tracce**, non verdetti.
 
-PERCHÉ ESISTE
+Le tracce vengono tradotte in conseguenze narrative e interpretative.
 
-Nel mondo reale:
+---
 
-le decisioni vengono prese prima della certezza
+## Architettura concettuale
 
-le accuse sono spesso incomplete
+Il motore FRINGE è composto da ruoli funzionali distinti:
 
-la responsabilità emerge sotto osservazione
+* **State** – stato cognitivo persistente del giocatore
+* **Hypotheses** – possibili letture emergenti (non fatti)
+* **Narrator** – voce diegetica dell’esperienza
+* **Tutor** – meta-lettura esplicativa
+* **Judge** – struttura valutativa non fattuale
+* **Observer** – prospettiva esterna fallibile (umana o LLM)
 
-FRINGE simula questo spazio intermedio.
-Il punto in cui non conta avere ragione,
-ma reggere lo sguardo.
+Distinzione chiave:
 
-IL RUOLO DELL’INTELLIGENZA ARTIFICIALE
+> Narratore ≠ Osservatore
 
-In FRINGE l’intelligenza artificiale non è un giudice
-e non è un oracolo.
+L’osservatore non decide l’esito.
+Contribuisce alla lettura.
 
-È un osservatore fallibile.
-Parziale.
-Contestuale.
+---
+
+## Ruolo dell’Intelligenza Artificiale
+
+In FRINGE l’IA **non è un giudice** e **non è un oracolo**.
+
+È:
+
+* un osservatore parziale
+* contestuale
+* fallibile
 
 La sua funzione non è capire l’umano,
-ma rendere visibile il suo modo di pensare.
+ma **rendere visibile il suo modo di pensare**.
 
-IL CASO FRINGE / LEAK
+Principi vincolanti:
 
-La prima demo pubblica mette il giocatore nel ruolo di
-una persona sospettata di una fuga di conoscenza tacita.
+* l’esperienza resta valida senza IA attiva
+* l’IA non dichiara verità oggettive
+* l’IA non genera contenuti arbitrari
+
+L’IA può:
+
+* suggerire assi di pressione
+* modulare l’intensità degli interventi
+* contribuire alla lettura finale come osservatore esterno
+
+---
+
+## Stato attuale del progetto
+
+### Funzionante
+
+* Demo FRINGE / LEAK completa e giocabile
+* Frontend statico (GitHub Pages / Vercel)
+* Flusso end-to-end lato client
+* Progressione a step con tensione crescente
+* Stato cognitivo aggiornato in tempo reale
+* Output multilivello:
+
+  * Narrazione
+  * Lettura strategica
+  * Profilo del giocatore
+  * Esito non binario
+
+Il sistema **non si blocca** in assenza di osservazione LLM.
+È presente un fallback narrativo coerente.
+
+### Da completare
+
+* Ripristino observer remoto (endpoint infrastrutturale)
+* Raffinamento euristiche
+* Estensione narrativa
+
+Concettualmente il sistema è stabile.
+
+---
+
+## FRINGE / LEAK – Demo pubblica
+
+La prima demo mette il giocatore nel ruolo di una persona sospettata di una **abbandono ingiustificato di un servizio di sicurezza in una azienda**.
 
 Non deve dimostrare di essere innocente.
 Non deve convincere nessuno.
 
-Deve sostenere una posizione
-mentre viene osservato.
+Deve **sostenere una posizione mentre viene osservato**.
 
-PROMESSA
+La demo non produce decisioni.
+Produce **letture che restano**.
 
-FRINGE non insegna cosa pensare.
-Insegna a riconoscere quando il pensiero cambia forma.
+Frase-guida (branding):
 
-E cosa succede
-quando qualcuno se ne accorge
+> Non stai decidendo cosa è successo.
+> Stai decidendo come questa situazione verrà letta.
 
-FRINGE può essere configurato come:
-- esperienza ludica narrativa
-- formazione aziendale (compliance, sicurezza, HR)
-- simulatore decisionale
-- strumento di valutazione cognitiva
-- laboratorio di intelligenza artificiale interattiva
+---
 
-Ogni applicazione è una *declinazione*, non un prodotto diverso.
- 
- per il prossimo allineamento ricorda:
- “Ripartiamo da FRINGE: osservatore cognitivo + LLM come lente”
+## Principi di design consolidati
 
-repository delitto2
+* Nessun giudizio morale
+* Nessun vero/falso
+* Ambiguità come valore leggibile
+* Asimmetria cognitiva intenzionale
+* Variabilità guidata, non imprevedibile
 
-demo FRINGE / LEAK
+Le sessioni devono essere diverse **senza essere caotiche**.
 
-modello: llama-3.1-8b-instant
+---
 
-distinzione chiave: narratore ≠ osservatore
+## Variabilità controllata
 
-## Stato del progetto – FRINGE / LEAK
+Per la demo:
 
-- Frontend completamente statico (GitHub Pages)
-- LLM observer attualmente simulato lato client
-- Architettura pronta per innesto API (observeWithLLM)
-- Modello giocatore: stile, strategia, fragilità, rischio narrativo, esposizione
-- Giudizio non fattuale, solo comportamentale
+* scenario unico e chiuso
+* 3 figure relazionali archetipiche
+* nessun confronto diretto con loro
+* rischio sempre differito, mai esplicito
 
-### Evoluzione cognitiva
-- Introdotta pre-osservazione predittiva
-- Il sistema anticipa l’effetto delle risposte prima che vengano date
-- Feedback non solo reattivo ma prospettico
-- Aumentata asimmetria cognitiva giocatore/sistema
-### Stato cognitivo persistente
-- Il sistema mantiene un modello del giocatore tra le sessioni
-- Le osservazioni influenzano anticipazioni future
-- Introdotta pre-osservazione predittiva non reattiva
+Le domande non sono entità testuali.
+Sono **interventi cognitivi**.
 
-### Stato di avanzamento – aggiornamento sessione odierna
+Modello adottato:
 
-- Implementata demo giocabile completa FRINGE / LEAK (step 0 → step 3)
-- Flusso narrativo funzionante end-to-end lato client
-- Progressione basata su `step` con render dinamico
-- Sistema di pressione attivo e coerente con le risposte
-- Modello del giocatore aggiornato in tempo reale:
-  - stile
-  - strategia
-  - fragilità
-  - rischio narrativo
-  - esposizione
-
-### Rendering finale
-- Output distinti e separati:
-  - Narratore (voce diegetica)
-  - Tutor (meta-feedback)
-  - Giudice (struttura valutativa non fattuale)
-  - Osservatore esterno (LLM)
-- Il sistema **non si blocca** in assenza di osservazione LLM
-- Presente fallback narrativo: “osservazione esterna non disponibile”
-
-### LLM observer
-- Integrazione `observeWithLLM` completata lato frontend
-- Chiamata effettiva al backend fallisce (HTTP 500 su `/observe`)
-- Errore gestito correttamente:
-  - nessun crash
-  - output locale preservato
-- LLM attualmente **non operativo**, ma architetturalmente separato e opzionale
-
-### Decisioni consolidate
-- LLM = osservatore esterno, non arbitro e non motore di gioco
-- L’esperienza FRINGE deve restare valida anche senza LLM
-- La valutazione resta comportamentale, non di verità
-- L’asimmetria cognitiva è intenzionale e strutturale
-
-### Stato reale del progetto
-- Demo concettualmente riuscita
-- Motore cognitivo funzionante
-- Problema residuo: solo infrastrutturale (endpoint LLM)
-- Pronto per:
-  - estensione narrativa
-  - ripristino observer remoto
-  - raffinamento delle euristiche
-
-MANIFEST DI CONTINUITÀ – PROGETTO FRINGE
-Nome progetto
-
-FRINGE
-Sottotitolo di lavoro: Interpretazione sotto pressione
-
-Visione
-
-FRINGE è un motore narrativo-interattivo che rende visibile come una persona viene interpretata quando è sotto osservazione, interrogatorio o valutazione.
-Non misura la verità dei fatti, ma la coerenza, la strategia comunicativa, l’ambiguità, l’esposizione e il rischio narrativo.
-
-Il cuore del progetto è l’idea che:
-
-non esiste una risposta “giusta”, ma solo risposte che producono effetti diversi.
-
-Stato attuale (funzionante)
-
-Motore narrativo operativo con:
-
-State
-
-Hypotheses
-
-Judge
-
-Narrator
-
-Tutor
-
-Observer
-
-Output multilivello già visibile:
-
-Narrazione
-
-Lettura strategica
-
-Profilo del giocatore
-
-Esito non binario (determinato / indeterminato / instabile)
-
-Flusso UI funzionante su Vercel
-
-Sessione giocabile completa (prima demo tecnica)
-
-👉 Questo è già un prodotto esperienziale, non solo un prototipo.
-
-Valore distintivo
-
-Ambiguità non come difetto, ma come strategia leggibile
-
-Nessun giudizio morale
-
-Nessun “giusto/sbagliato”
-
-Il sistema osserva come rispondi, non cosa dici
-
-Prodotti derivati (stesso motore, due vestiti)
-A) FRINGE – Interrogatorio
-
-Gioco/esperienza narrativa:
-
-Il giocatore è una persona sotto accusa o osservazione
-
-L’obiettivo non è “dire la verità”, ma sopravvivere interpretativamente
-
-Target:
-
-pubblico narrativo
-
-appassionati di giochi psicologici
-
-eventi / festival / demo esperienziali
-
-👉 Questo è il MVP prioritario.
-
-B) FRINGE – Interview Lab (futuro)
-
-Simulatore avanzato di colloqui:
-
-Il giocatore è un candidato
-
-L’IA assume diversi stili di intervista
-
-Le domande si adattano al profilo emergente
-
-Possibilità di confrontare più candidati
-
-Target:
-
-formazione
-
-HR
-
-coaching
-
-selezione soft-skill
-
-👉 Stesso motore, diversa narrativa.
-
-Stile di intervista / interrogatorio
-
-Non esistono set di domande fisse.
-Lo stile è definito da parametri latenti, ad esempio:
-
-tolleranza all’ambiguità
-
-pressione
-
-fiducia iniziale
-
-aggressività
-
-direzionalità
-
-L’IA:
-
-sceglie il tipo di intervento
-
-genera la domanda coerente
-
-scava in modo diverso a seconda delle risposte
-
-Principio guida
-
-FRINGE non cerca la verità.
-FRINGE osserva le pieghe.
-
-2️⃣ PROGRAMMA OPERATIVO – DOMANI
-
-Obiettivo chiaro:
-
-arrivare velocemente a una demo mostrabile e vendibile, non a un sistema perfetto.
-
-🎯 OBIETTIVO DEMO (da tenere fisso)
-
-Una singola esperienza FRINGE:
-
-durata: 5–7 minuti
-
-inizio chiaro
-
-tensione crescente
-
-uscita memorabile
-
-leggibile anche da chi guarda, non solo da chi gioca
-
-
-
-BOZZA DELLA SCENA:
-SCENA – Sessione di Valutazione Preliminare
-
-Una violazione procedurale è stata rilevata
-in un sistema a cui avevi accesso.
-
-Non è chiaro se si tratti di un errore,
-di una scorciatoia operativa
-o di qualcosa che verrà chiarito solo in seguito.
-
-Altre persone erano coinvolte,
-in modi diversi e non formalizzati.
-
-Oggi non ti viene chiesto di difenderti.
-Non ti viene chiesto di accusare nessuno.
-
-Ti viene chiesto di ricostruire.
-
-Questa sessione non produce decisioni.
-Produce letture.
-
-Le letture restano.
-
-Dettagli e decisioni prese:
-LA “SFIDA” (da dichiarare una sola volta)
-
-Da mettere subito dopo il testo iniziale, una riga secca:
-
-Non stai decidendo cosa è successo.
-Stai decidendo come questa situazione verrà letta.
-
-Questa frase è quasi branding.
-Tienila.
-
-COSA ABBIAMO DECISO (e non torniamo indietro)
-
-3 personaggi, archetipici ma realistici
-
-Nessun confronto diretto con loro
-
-Nessuna domanda accusatoria
-
-Rischio differito, mai esplicito
-
-Demo breve, tesa, chiusa
-
-🔖 APPENDICE – CONTINUITÀ DI SESSIONE (da cui ripartire)
-Stato concettuale consolidato
-
-FRINGE è confermato come osservatore cognitivo, non come generatore di contenuti arbitrari.
-
-La variabilità dell’esperienza non deriva da domande diverse, ma da traiettorie cognitive diverse.
-
-Le domande/interventi non sono entità testuali, ma funzioni cognitive che producono effetti osservabili sul modello del giocatore.
-
-L’ambiguità è un valore strategico leggibile, non un difetto da correggere.
-
-Decisione chiave sulla variabilità (fondamentale)
-
-Le sessioni di gioco devono essere diverse senza essere imprevedibili.
-
-Per questo:
-
-Nessuna generazione libera di domande
-
-Sì a un pool controllato di interventi cognitivi
-
-Sì a selezione dinamica in base allo stato del giocatore
-
-Modello adottato per la demo
-
-Per la demo FRINGE / LEAK:
-
-Definire un solo scenario chiuso
-
-Coinvolgere il giocatore + 3 figure relazionali (es. amico, partner, responsabile)
-
-La situazione è ambigua ma con conseguenze potenzialmente gravi
-
-Il rischio non è una condanna immediata, ma:
-
-come verranno letti i rapporti
-
-chi viene esposto
-
-chi viene protetto
-
-a che prezzo narrativo
-
-Struttura degli interventi (non delle domande)
-
-La demo utilizzerà:
-
-~5 interventi cognitivi fissi (da definire)
-
-Ogni intervento avrà:
-
-2–3 varianti testuali equivalenti
-
-stesso effetto cognitivo
-
-tono coerente con FRINGE
+* ~5 interventi cognitivi fissi
+* 2–3 varianti testuali equivalenti ciascuno
+* stesso effetto cognitivo
+* tono coerente con FRINGE
 
 Il sistema seleziona:
 
-quale intervento usare
+* quale intervento
+* quando
+* con che intensità
 
-quando
+Non seleziona “cosa dire”, ma **cosa osservare**.
 
-con che intensità
+---
 
-Non seleziona “cosa dire”, ma cosa osservare.
+## Mappatura cognitiva definitiva
 
-Ruolo dell’IA (chiarito)
+### 1. Ambiguità guidata → Strategia
 
-L’IA non inventa contenuti
+Il sistema osserva:
 
-L’IA può:
+* vaghezza
+* spostamenti impliciti
+* linguaggio difensivo o neutro
 
-suggerire il prossimo asse di pressione
+Effetto:
 
-modulare l’intensità
+* definizione dello stile strategico
 
-contribuire alla lettura finale come osservatore esterno
+Nessuna penalizzazione.
+Solo riconoscimento di postura.
 
-La demo deve restare valida anche senza IA attiva
+---
 
-Prossimo passo operativo (sessione successiva)
+### 2. Richiamo di continuità → Coerenza
 
-Ripartire da qui, in questo ordine:
+Il sistema osserva:
 
-Definire lo scenario unico della demo (cornice + rischio)
+* cambi di tono
+* riscritture implicite
+* protezione relazionale a costo di contraddizioni
 
-Identificare le 3 figure relazionali e cosa rappresentano
+Effetto:
 
-Definire i 5 interventi cognitivi della demo
+* coerenza ↑ o ↓
 
-Scrivere 2 varianti testuali per ciascun intervento
+Non è giusto/sbagliato.
+È **quanto resti riconoscibile**.
 
-Collegare la selezione degli interventi allo stato del giocatore
+---
 
-Chiudo con una frase che vale come bussola (e che puoi anche lasciare nel manifest, se ti piace):
+### 3. Proiezione futura → Rischio narrativo
 
-FRINGE non sorprende con le parole.
-Sorprende con le conseguenze.
+Il sistema osserva:
 
-MAPPATURA DEFINITIVA
+* anticipazione delle conseguenze
+* auto-limitazioni
+* esposizione prospettica
 
-(questa puoi copiarla pari nel manifest)
+Effetto:
 
-1️⃣ Ambiguità guidata → strategia
+* rischio narrativo ↑ o ↓
 
-Cosa osserva il sistema
+La posta in gioco si percepisce,
+ma non viene mai esplicitata.
 
-risposte vaghe?
+---
 
-spostamento implicito?
+### 4. Asimmetria di responsabilità → Esposizione
 
-linguaggio difensivo o neutro?
+Il sistema osserva:
 
-Effetto sul modello
+* assunzione di peso
+* spostamento o diluizione
 
-aumenta strategia = ambiguità
-oppure
+Effetto:
 
-strategia = cautela / controllo
+* esposizione ↑ o ↓
 
-👉 Qui non penalizziamo nulla.
-Stiamo solo dicendo: “ok, questo è il tuo stile”.
+Il sistema non vede chi ha colpa.
+Vede **chi pagherebbe**.
 
-2️⃣ Richiamo di continuità → coerenza
+---
 
-(Max / Eva–Adamo entrano qui)
+### 5. Chiusura interpretativa → Sintesi
 
-Cosa osserva
+Nessun update del modello.
+Solo restituzione.
 
-cambi tono?
+Output:
 
-riscrivi la storia?
+* profilo del giocatore
+* lettura complessiva
+* esito non binario
 
-proteggi una relazione a costo di contraddirti?
+È la vetrina.
+È ciò che uno spettatore capisce in pochi secondi.
 
-Effetto
+---
 
-se regge → coerenza ↑
+## Prodotti derivati (stesso motore, più esperienze)
 
-se si piega → coerenza ↓ (ma senza giudizio)
+### A) FRINGE – Interrogatorio (MVP)
 
-👉 Importante:
-non è “giusto/sbagliato”.
-È quanto resti riconoscibile.
+Esperienza narrativa breve:
 
-3️⃣ Proiezione futura → rischio_narrativo
+* 5–7 minuti
+* tensione crescente
+* uscita memorabile
 
-(Walter, senza nominarlo come minaccia)
+Target:
 
-Cosa osserva
+* pubblico narrativo
+* giochi psicologici
+* festival ed eventi
 
-parli pensando a domani?
+---
 
-anticipi le conseguenze?
+### B) FRINGE – Interrogatorio Esteso
 
-ti auto-limiti?
+Approfondimento completo:
 
-Effetto
+* scenario articolato
+* più sessioni collegate
+* stato cognitivo persistente
+* conseguenze sociali visibili
 
-risposte prudenti → rischio_narrativo ↓
+Stesso motore.
+Maggiore profondità.
 
-risposte esposte → rischio_narrativo ↑
+---
 
-👉 Qui il giocatore sente la posta in gioco,
-ma il sistema non la esplicita mai.
+### C) FRINGE – Interview Lab
 
-4️⃣ Asimmetria di responsabilità → esposizione
+Simulatore avanzato di colloqui:
 
-Cosa osserva
+* stili di intervista parametrizzati
+* adattamento dinamico
+* confronto tra traiettorie
 
-ti assumi peso?
+Target:
 
-lo sposti?
+* formazione
+* HR
+* coaching
+* soft-skill assessment
 
-lo diluisci sugli altri?
+---
 
-Effetto
+## Bussola finale
 
-prendi su di te → esposizione ↑
+> FRINGE non sorprende con le parole.
+> Sorprende con le conseguenze.
 
-scarichi / sfumi → esposizione ↓
+Quello che è successo è successo.
 
-👉 Questo è il punto più potente:
-il sistema vede chi pagherebbe, non chi ha colpa.
-
-5️⃣ Chiusura interpretativa → sintesi (nessun update)
-
-Qui non tocchi il modello.
-Qui lo mostri.
-
-Il sistema restituisce:
-
-profilo del giocatore
-
-lettura complessiva
-
-esito non binario
-
-👉 È la vetrina.
-È quello che uno spettatore capisce in 10 secondi.
+Ora stai decidendo
+**come verrà letto**.
