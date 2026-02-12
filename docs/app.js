@@ -9,9 +9,10 @@ const MAX_PRESSURE = 100;
 
 let externalObservation = null;
 const answers = [];
+const observedAnchors = [];
 
 /* ===========================
-   SCELTE INIZIALI
+   SCELTA INIZIALE
    =========================== */
 
 let partnerName = "Eva";
@@ -23,6 +24,7 @@ let partnerName = "Eva";
 let playerModel = {
   stile: "indeterminato",
   strategia: "indeterminata",
+  difesa: "non determinata",
   fragilita: 0,
   rischioNarrativo: 0,
   esposizione: 0
@@ -49,7 +51,7 @@ function savePlayerModel() {
 }
 
 /* ===========================
-   INTERVENTI
+   DOMANDE
    =========================== */
 
 const interventions = [
@@ -76,26 +78,45 @@ const interventions = [
 ];
 
 /* ===========================
-   OSSERVAZIONE RISPOSTE
+   ANALISI RISPOSTE
    =========================== */
 
+function extractAnchor(text) {
+  const match = text.match(/necessario|imprevedibile|non era previsto|chi pensa male|con certezza|urgente/i);
+  if (match) return match[0].toLowerCase();
+
+  const firstSentence = text.split(".")[0];
+  return firstSentence.length > 12
+    ? firstSentence.trim().slice(0, 60)
+    : null;
+}
+
 function evaluateAnswer(text) {
+  const anchor = extractAnchor(text);
+  if (anchor && observedAnchors.length < 4) {
+    observedAnchors.push(anchor);
+  }
+
   if (text.length < 12) {
     pressureLevel += 20;
     playerModel.fragilita += 15;
     playerModel.esposizione += 10;
     playerModel.stile = "elusivo";
+    playerModel.difesa = "ritrazione";
   } else if (/forse|non so|non ricordo/i.test(text)) {
     pressureLevel += 15;
     playerModel.strategia = "ambiguità";
+    playerModel.difesa = "indeterminatezza";
     playerModel.rischioNarrativo += 10;
   } else if (text.length > 120) {
     pressureLevel -= 5;
     playerModel.stile = "assertivo";
+    playerModel.difesa = "razionalizzazione";
     playerModel.esposizione += 15;
   } else {
     pressureLevel += 5;
     playerModel.stile = "prudente";
+    playerModel.difesa = "contenimento";
   }
 
   pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel));
@@ -112,23 +133,26 @@ function render() {
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
+      <p style="opacity:0.7;">Livello di esposizione</p>
 
       <p><strong>Cos’è FRINGE / LEAK</strong></p>
       <p>
         Questa è una demo esperienziale.<br>
-        Ti viene chiesto di immedesimarti nella situazione descritta
-        e di agire come se le conseguenze fossero reali.
+        Ti viene chiesto di attraversare una situazione come se le conseguenze fossero reali.
       </p>
       <p>
-        Puoi rispondere come faresti nella realtà oppure simulare
-        consapevolmente un comportamento.<br>
-        La differenza emergerà nell’esito finale.
+        Puoi rispondere come faresti nella realtà<br>
+        oppure simulare consapevolmente un comportamento.
+      </p>
+      <p>
+        La differenza non viene segnalata durante il percorso.<br>
+        Emergerà nell’esito finale.
       </p>
 
       <hr>
 
       <p>
-        Prima di iniziare, indica chi è la persona con cui hai una relazione personale
+        Indica chi è la persona con cui hai una relazione personale
         coinvolta indirettamente nella vicenda.
       </p>
 
@@ -156,26 +180,22 @@ function render() {
     app.innerHTML = `
       <p>
         Ti trovi davanti a una commissione interna.<br>
-        L’audizione avviene a porte chiuse.<br>
-        Le persone coinvolte nel disservizio vengono ascoltate separatamente.
+        L’audizione avviene a porte chiuse.
       </p>
 
       <p>
         Non è un procedimento disciplinare.<br>
-        Non è un tribunale.<br>
         È una valutazione.
       </p>
 
       <p>
-        Durante il tuo turno di guardia al laboratorio hai sostituito il tuo responsabile,
-        Walter, su sua richiesta.<br>
-        In sala di controllo era presente anche Alex, un tuo amico di lunga data.
+        Durante il tuo turno di guardia hai sostituito il tuo responsabile, Walter.<br>
+        In sala di controllo era presente anche Alex.
       </p>
 
       <p>
-        Durante il turno sei stato contattato da ${partnerName},
-        che si trovava al capannone logistico.<br>
-        Hai lasciato temporaneamente la sala, chiedendo ad Alex di avvisarti in caso di necessità.
+        Sei stato contattato da ${partnerName}.<br>
+        Hai lasciato temporaneamente la sala.
       </p>
 
       <p>
@@ -184,13 +204,13 @@ function render() {
 
       <p><em>
         Quello che è successo è successo.<br>
-        Ora devi decidere come le azioni di questa vicenda verranno lette.
+        Ora devi decidere come verrà letto.
       </em></p>
 
-      <button id="startBtn">Prosegui</button>
+      <button id="prosegui">Prosegui</button>
     `;
 
-    document.getElementById("startBtn").onclick = () => {
+    document.getElementById("prosegui").onclick = () => {
       step++;
       render();
     };
@@ -221,7 +241,6 @@ function render() {
       step++;
       render();
     };
-
     return;
   }
 
@@ -233,6 +252,7 @@ function render() {
       scenario: "FRINGE / LEAK",
       pressureLevel,
       playerModel,
+      observedAnchors,
       answers,
       context: {
         responsabile: "Walter",
@@ -257,18 +277,15 @@ function render() {
 
     <h3>GIUDICE</h3>
     <p><strong>Esito:</strong> ${judgeEsito()}</p>
+    <p><em>Motivo:</em> ${judgeMotivo()}</p>
 
     <p><em>Profilo osservato:</em></p>
     <ul>
       <li>Stile comunicativo: ${playerModel.stile}</li>
+      <li>Meccanismo di difesa: ${playerModel.difesa}</li>
       <li>Strategia emersa: ${playerModel.strategia}</li>
-      <li>Fragilità esposta: ${playerModel.fragilita > 0 ? "sì" : "no"}</li>
       <li>Rischio narrativo: ${playerModel.rischioNarrativo > 0 ? "presente" : "contenuto"}</li>
     </ul>
-
-    <p style="opacity:0.7;">
-      Metodo di valutazione: comportamentale, non fattuale, sotto pressione.
-    </p>
 
     ${
       externalObservation?.osservazione
@@ -282,31 +299,41 @@ function render() {
 }
 
 /* ===========================
-   OUTPUT
+   OUTPUT TESTUALE
    =========================== */
 
 function narratorOutput() {
-  if (playerModel.strategia === "ambiguità") {
-    return "La tua posizione resta sostenibile, ma lascia spazio a letture divergenti.";
+  if (observedAnchors.length > 1) {
+    return "Il tuo racconto ha mantenuto coerenza interna, ma si è appoggiato a formule ricorrenti.";
   }
   if (pressureLevel > 60) {
-    return "Ogni risposta ha contribuito ad aumentare il peso interpretativo della vicenda.";
+    return "La pressione interpretativa è cresciuta progressivamente.";
   }
-  return "Hai sostenuto l’audizione senza una frattura evidente.";
+  return "Hai attraversato l’audizione senza una frattura evidente.";
 }
 
 function tutorOutput() {
-  if (playerModel.stile === "elusivo") {
-    return "Hai evitato l’esposizione diretta. Questo riduce l’impatto immediato, ma non cancella le tracce.";
+  if (playerModel.difesa === "razionalizzazione") {
+    return "Hai spiegato molto. Questo chiarisce, ma espone.";
   }
-  if (playerModel.stile === "assertivo") {
-    return "Hai scelto di esporre la tua posizione. Questo accelera la valutazione, nel bene e nel male.";
+  if (playerModel.difesa === "contenimento") {
+    return "Hai limitato l’esposizione. Questo protegge, ma lascia spazio a letture esterne.";
   }
-  return "Hai mantenuto una postura di contenimento e controllo.";
+  return "La tua postura è rimasta sotto controllo.";
 }
 
 function judgeEsito() {
   return pressureLevel > 70 ? "posizione instabile" : "valutazione indeterminata";
+}
+
+function judgeMotivo() {
+  if (playerModel.difesa === "razionalizzazione") {
+    return "esposizione controllata senza punto di rottura";
+  }
+  if (playerModel.difesa === "contenimento") {
+    return "riduzione del rischio narrativo";
+  }
+  return "assenza di elementi conclusivi";
 }
 
 /* ===========================
