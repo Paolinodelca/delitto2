@@ -11,29 +11,50 @@ export async function observeWithLLM(payload) {
     }
 
     return await res.json();
-  } 
-  
-catch (err) {
-  console.warn("Osservazione LLM fallita");
+  } catch (err) {
+    console.warn("Osservazione LLM fallita, uso osservatore locale");
 
-  return {
-    osservazione: `
-Nel modo in cui hai attraversato l’audizione, emerge una scelta di fondo:
-ridurre l’esposizione personale, anche a costo di lasciare zone non chiarite.
-
-Hai evitato di spingere il racconto verso un singolo punto di rottura.
-Questo ha protetto alcune relazioni,
-ma ha anche reso più opaca la tua posizione.
-
-Non è una mancanza di informazioni.
-È una postura.
-
-Ed è così che verrà ricordata.
-    `.trim(),
-    errore: true
-  };
+    return {
+      osservazione: proceduralObservation(payload),
+      errore: true
+    };
+  }
 }
 
+function proceduralObservation({ pressureLevel, playerModel, observedAnchors }) {
+  const fragments = [];
 
+  if (pressureLevel > 70) {
+    fragments.push(
+      "La pressione accumulata durante l’audizione ha reso ogni risposta più pesante di quanto apparisse in superficie."
+    );
+  } else {
+    fragments.push(
+      "Hai mantenuto un controllo sufficiente sul ritmo dell’audizione."
+    );
+  }
 
+  if (playerModel.difesa === "razionalizzazione") {
+    fragments.push(
+      "Hai costruito una spiegazione coerente, ma fortemente orientata a giustificare le tue scelte."
+    );
+  }
+
+  if (playerModel.difesa === "indeterminatezza") {
+    fragments.push(
+      "In più punti hai lasciato margini interpretativi aperti, evitando di fissare una versione definitiva."
+    );
+  }
+
+  if (observedAnchors.length > 0) {
+    fragments.push(
+      `Alcune formulazioni sono tornate più volte (${observedAnchors.join(", ")}), diventando punti di appoggio del tuo racconto.`
+    );
+  }
+
+  fragments.push(
+    "Non è una questione di verità o menzogna. È il modo in cui la tua posizione si è resa abitabile per chi ascolta."
+  );
+
+  return fragments.join("\n\n");
 }
