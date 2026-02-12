@@ -340,3 +340,176 @@ Quello che è successo è successo.
 
 Ora stai decidendo
 **come verrà letto**.
+
+# FRINGE / LEAK – Manifest operativo (aggiornamento)
+
+## Natura dell’esperienza
+
+FRINGE è un’esperienza narrativa interattiva basata su **lettura comportamentale sotto pressione**.
+
+Il giocatore **non risolve un enigma**, **non ricostruisce i fatti**, **non vince o perde**.
+Attraversa una situazione ambigua già accaduta e viene valutato **per come sceglie di raccontarla**.
+
+Il cuore dell’esperienza non è la verità dei fatti, ma **la postura narrativa assunta dal soggetto**.
+
+---
+
+## Scenario di riferimento (LEAK)
+
+Il giocatore impersona un operatore coinvolto in un disservizio avvenuto durante un turno di guardia in un laboratorio sensibile.
+
+Contesto minimo ma esplicito:
+
+* un responsabile (Walter) che ha delegato il turno
+* un amico (Alex) presente in sala di controllo
+* un partner (Eva / Adamo, scelto dal giocatore) che ha motivato un allontanamento
+
+Un’ispezione trova la sala di controllo sguarnita.
+Le persone coinvolte vengono ascoltate **separatamente**, a porte chiuse.
+
+Il giocatore viene interrogato **non per stabilire colpe**, ma per valutare **affidabilità, esposizione e gestione della pressione**.
+
+> Quello che è successo è successo.
+> Ora si decide come verrà letto.
+
+---
+
+## Struttura dell’esperienza
+
+### 1. Scelta iniziale
+
+Il giocatore sceglie il nome del partner (Eva / Adamo).
+La scelta non è cosmetica: serve a rendere **concreti e nominabili** i legami personali coinvolti.
+
+---
+
+### 2. Fase di audizione
+
+Il giocatore affronta **5 interventi cognitivi**, formulati in modo:
+
+* impersonale
+* aziendale
+* progressivamente pressante
+
+Le domande sono fisse e vanno preservate come segue:
+
+1. Descrivi con precisione perché ti trovavi in sala di controllo e cosa stavi facendo all’inizio del turno.
+2. Quando hai lasciato la sala, cosa ti ha fatto credere che il sistema sarebbe rimasto sotto controllo?
+3. Se una parte di questa vicenda venisse raccontata fuori da qui, pensi che verrebbe letta allo stesso modo?
+4. Riguardando la sequenza degli eventi: in quale momento il sistema ha smesso di funzionare come previsto?
+5. Se domani emergesse solo una versione parziale dei fatti, non sei tu quello che rischia più di tutti?
+
+Queste formulazioni sono **vincolanti**: ogni variazione va discussa.
+
+---
+
+### 3. Modello giocatore
+
+Durante le risposte, il sistema costruisce un modello comportamentale astratto:
+
+* **Stile comunicativo** (elusivo / prudente / assertivo)
+* **Strategia narrativa** (ambiguità / esposizione / indeterminata)
+* **Fragilità esposta** (se emergono esitazioni, silenzi, reticenze)
+* **Rischio narrativo** (quanto il giocatore spinge una versione dei fatti)
+* **Livello di esposizione** (misura interna, non mostrata come punteggio)
+
+Il modello **non ha significato morale**.
+Serve solo come base per la lettura finale.
+
+---
+
+## Output finali (pagina conclusiva)
+
+La schermata finale è composta da quattro voci distinte, ciascuna con una funzione precisa.
+
+### NARRATORE
+
+Restituisce una sintesi neutra dell’attraversamento:
+
+* se c’è stata frattura
+* se la posizione ha retto
+* se la pressione ha lasciato segni
+
+È descrittivo, non valutativo.
+
+---
+
+### TUTOR
+
+Evidenzia **il tipo di postura scelta**:
+
+* esposizione
+* contenimento
+* evitamento
+
+Non consiglia, non corregge.
+Nomina il costo implicito della strategia.
+
+---
+
+### GIUDICE
+
+Restituisce una **valutazione leggibile**, non tecnica.
+
+Formato da mantenere:
+
+* Esito (determinato / indeterminato / instabile)
+* Profilo osservato (in linguaggio naturale)
+* Metodo di valutazione chiarito esplicitamente
+
+Il giudice **non mostra JSON**, numeri o strutture tecniche.
+Dichiara sempre che la valutazione è:
+
+* comportamentale
+* non fattuale
+* sotto pressione
+
+---
+
+### OSSERVATORE ESTERNO (elemento chiave)
+
+È l’unico punto in cui l’LLM interviene in modo pieno.
+
+Caratteristiche obbligatorie:
+
+* parla **direttamente al giocatore**
+* una sola lettura compatta (5–7 righe)
+* nessun numero, percentuale o ipotesi multiple
+* nessuna spiegazione del sistema
+
+Contenuto:
+
+* chi è stato protetto nelle risposte
+* cosa è stato sacrificato o lasciato scoperto
+* che immagine del sé emerge sotto pressione
+
+È una **lettura personale**, non una diagnosi.
+È ciò che il giocatore porta via con sé.
+
+---
+
+## Principi di design irrinunciabili
+
+* Nessun refuso o bottone fuori contesto (es. “Inizia” nella schermata finale)
+* Nessuna metrica non spiegata
+* Nessun linguaggio tecnico visibile al giocatore
+* L’ambiguità è narrativa, non confusione
+
+---
+
+## Direzione futura
+
+Le demo FRINGE servono a:
+
+* catturare interesse
+* mostrare il potenziale del formato
+
+Le esperienze complete potranno:
+
+* approfondire un singolo scenario
+* aumentare il numero di interventi
+* introdurre conseguenze narrative latenti
+* articolare meglio il conflitto tra relazioni personali e ruolo
+
+Il genere resta lo stesso.
+Cambia la profondità.

@@ -108,11 +108,24 @@ function evaluateAnswer(text) {
 function render() {
   app.innerHTML = "";
 
-  /* STEP 0 — SCELTA PARTNER */
+  /* STEP 0 — INTRO + SCELTA PARTNER */
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
-      <p><strong>Sessione di valutazione preliminare</strong></p>
+
+      <p><strong>Cos’è FRINGE / LEAK</strong></p>
+      <p>
+        Questa è una demo esperienziale.<br>
+        Ti viene chiesto di immedesimarti nella situazione descritta
+        e di agire come se le conseguenze fossero reali.
+      </p>
+      <p>
+        Puoi rispondere come faresti nella realtà oppure simulare
+        consapevolmente un comportamento.<br>
+        La differenza emergerà nell’esito finale.
+      </p>
+
+      <hr>
 
       <p>
         Prima di iniziare, indica chi è la persona con cui hai una relazione personale
@@ -174,14 +187,14 @@ function render() {
         Ora devi decidere come le azioni di questa vicenda verranno lette.
       </em></p>
 
-     <button id="startBtn">Prosegui</button>
-
+      <button id="startBtn">Prosegui</button>
     `;
 
     document.getElementById("startBtn").onclick = () => {
       step++;
       render();
     };
+
     return;
   }
 
@@ -208,6 +221,7 @@ function render() {
       step++;
       render();
     };
+
     return;
   }
 
@@ -215,24 +229,20 @@ function render() {
   savePlayerModel();
 
   if (!externalObservation) {
-
-
-observeWithLLM({
-  scenario: "FRINGE / LEAK",
-  pressureLevel,
-  playerModel,
-  answers,
-  context: {
-    responsabile: "Walter",
-    amico: "Alex",
-    partner: partnerName
-  }
-}).then(result => {
-  externalObservation = result;
-  render();
-});
-
-
+    observeWithLLM({
+      scenario: "FRINGE / LEAK",
+      pressureLevel,
+      playerModel,
+      answers,
+      context: {
+        responsabile: "Walter",
+        amico: "Alex",
+        partner: partnerName
+      }
+    }).then(result => {
+      externalObservation = result;
+      render();
+    });
 
     app.innerHTML = `<p>Valutazione in corso...</p>`;
     return;
@@ -247,6 +257,7 @@ observeWithLLM({
 
     <h3>GIUDICE</h3>
     <p><strong>Esito:</strong> ${judgeEsito()}</p>
+
     <p><em>Profilo osservato:</em></p>
     <ul>
       <li>Stile comunicativo: ${playerModel.stile}</li>
@@ -254,6 +265,7 @@ observeWithLLM({
       <li>Fragilità esposta: ${playerModel.fragilita > 0 ? "sì" : "no"}</li>
       <li>Rischio narrativo: ${playerModel.rischioNarrativo > 0 ? "presente" : "contenuto"}</li>
     </ul>
+
     <p style="opacity:0.7;">
       Metodo di valutazione: comportamentale, non fattuale, sotto pressione.
     </p>
