@@ -1,4 +1,4 @@
-iimport { observeWithLLM } from "./observerLLM.js";
+import { observeWithLLM } from "./observerLLM.js";
 
 const app = document.getElementById("app");
 console.log("FRINGE LIVE", Date.now());
