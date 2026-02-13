@@ -7,7 +7,10 @@ let step = 0;
 let pressureLevel = 0;
 const MAX_PRESSURE = 100;
 
-let externalObservation = null;
+let externalObservations = null;
+let voteRanking = { primo: null, secondo: null, terzo: null };
+
+
 const answers = [];
 const observedAnchors = [];
 
@@ -247,26 +250,30 @@ function render() {
   /* STEP FINALE */
   savePlayerModel();
 
-  if (!externalObservation) {
-    observeWithLLM({
-      scenario: "FRINGE / LEAK",
-      pressureLevel,
-      playerModel,
-      observedAnchors,
-      answers,
-      context: {
-        responsabile: "Walter",
-        amico: "Alex",
-        partner: partnerName
-      }
-    }).then(result => {
-      externalObservation = result;
-      render();
-    });
 
-    app.innerHTML = `<p>Valutazione in corso...</p>`;
-    return;
-  }
+if (!externalObservations) {
+  observeWithLLM({
+    scenario: "FRINGE / LEAK",
+    pressureLevel,
+    playerModel,
+    observedAnchors,
+    answers,
+    context: {
+      responsabile: "Walter",
+      amico: "Alex",
+      partner: partnerName
+    }
+  }).then(result => {
+    externalObservations = result.osservazioni;
+    render();
+  });
+
+  app.innerHTML = `<p>Valutazione in corso...</p>`;
+  return;
+}
+
+
+
 
   app.innerHTML = `
     <h3>NARRATORE</h3>
@@ -288,12 +295,20 @@ function render() {
     </ul>
 
     ${
-      externalObservation?.osservazione
-        ? `<h3>OSSERVATORE ESTERNO</h3>
-           <p style="font-style:italic; opacity:0.85;">
-             ${externalObservation.osservazione}
-           </p>`
-        : ""
+  <h3>OSSERVATORE ESTERNO</h3>
+
+${Object.entries(externalObservations).map(([key, text]) => `
+  <div style="margin-bottom:1.5rem;">
+    <p style="font-style:italic;">${text}</p>
+
+    <button onclick="vote('${key}','primo')">🥇 Primo</button>
+    <button onclick="vote('${key}','secondo')">🥈 Secondo</button>
+    <button onclick="vote('${key}','terzo')">🥉 Terzo</button>
+  </div>
+`).join("")}
+
+<button onclick="submitVote()">Conferma preferenze</button>
+
     }
   `;
 }
@@ -336,9 +351,66 @@ function judgeMotivo() {
   return "assenza di elementi conclusivi";
 }
 
+
+
 /* ===========================
    AVVIO
    =========================== */
 
 loadPlayerModel();
 render();
+
+function FinalObservations({ osservazioni }) {
+  const [ranking, setRanking] = React.useState({
+    primo: null,
+    secondo: null,
+    terzo: null
+  });
+
+  function vote(posizione, tipo) {
+    setRanking(prev => ({ ...prev, [posizione]: tipo }));
+  }
+
+  async function submitVote() {
+    await fetch("/api/vote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(ranking)
+    });
+  }
+
+  return (
+    <div>
+      <h2>Osservazioni finali</h2>
+
+      {Object.entries(osservazioni).map(([key, text]) => (
+        <div key={key} style={{ marginBottom: "2rem" }}>
+          <h3>{key.toUpperCase()}</h3>
+          <p>{text}</p>
+
+          <button onClick={() => vote("primo", key)}>🥇 Primo</button>
+          <button onClick={() => vote("secondo", key)}>🥈 Secondo</button>
+          <button onClick={() => vote("terzo", key)}>🥉 Terzo</button>
+        </div>
+      ))}
+
+      <button onClick={submitVote}>
+        Conferma preferenze
+      </button>
+    </div>
+  );
+}
+
+window.vote = function(tipo, posizione) {
+  voteRanking[posizione] = tipo;
+};
+
+window.submitVote = async function() {
+  await fetch("/api/vote", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(voteRanking)
+  });
+
+  alert("Preferenze registrate");
+};

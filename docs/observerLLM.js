@@ -15,9 +15,13 @@ export async function observeWithLLM(payload) {
     console.warn("Osservazione LLM fallita, uso osservatore locale");
 
     return {
-      osservazione: proceduralObservation(payload),
-      errore: true
-    };
+  osservazioni: {
+    fringe: data.choices[0].message.content,
+    psicologica: data.choices[0].message.content,
+    estrema: data.choices[0].message.content
+  }
+};
+
   }
 }
 

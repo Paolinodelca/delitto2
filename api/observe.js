@@ -1,90 +1,148 @@
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Solo POST consentito" });
-  }
-
   try {
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Solo POST consentito" });
+    }
+
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       return res.status(500).json({ error: "GROQ_API_KEY mancante" });
     }
 
-    const { playerModel, scenarioLabel } = req.body;
+    const {
+      scenario,
+      context,
+      playerModel,
+      answers
+    } = req.body;
 
-    if (!playerModel) {
-      return res.status(400).json({ error: "playerModel mancante" });
+    if (!scenario || !playerModel || !answers) {
+      return res.status(400).json({ error: "Dati incompleti" });
     }
 
-    const systemPrompt = `
-Sei un OSSERVATORE ESTERNO in un’esperienza narrativa chiamata FRINGE.
+    /* =========================
+       PROMPT VARIANTI
+    ========================== */
 
-Parli direttamente al giocatore usando “tu”.
+    const prompts = {
+      fringe: `
+Sei un OSSERVATORE ESTERNO in un’esperienza narrativa chiamata FRINGE / LEAK.
 
 Non analizzi il sistema.
-Non spieghi il metodo.
-Non ricostruisci i fatti.
+Non giudichi il soggetto.
+Non verifichi i fatti.
 
-Restituisci una LETTURA PERSONALE del soggetto sotto pressione.
+Ti rivolgi direttamente al giocatore, usando “tu”.
 
-Devi:
-- indicare chi è stato protetto nelle risposte
-- indicare cosa è stato sacrificato o lasciato scoperto
-- suggerire che immagine del sé emerge sotto osservazione
+Restituisci una lettura sobria e contenuta di come il soggetto ha attraversato la situazione.
 
-Scrivi una sola lettura compatta.
-Massimo 5–7 righe.
+Osserva:
+– cosa viene tenuto sotto controllo
+– cosa viene lasciato indeterminato
+– che postura emerge sotto pressione
 
-Divieti assoluti:
-- niente numeri
-- niente percentuali
-- niente elenchi
-- niente ipotesi multiple
-- niente linguaggio tecnico
-- niente spiegazioni
-`;
+Scrivi un testo compatto (5–7 frasi).
+Niente spiegazioni.
+È una lettura.
+Ed è così che verrà ricordata.
+      `,
 
-    const userPrompt = `
-CONTESTO:
-${scenarioLabel || "Audizione interna in contesto aziendale"}
+      psicologico: `
+Sei un OSSERVATORE ESTERNO in un’esperienza narrativa chiamata FRINGE / LEAK.
 
-PROFILO COMPORTAMENTALE OSSERVATO:
+Ti rivolgi direttamente al giocatore, usando “tu”.
+
+Non fai diagnosi.
+Non assegni etichette.
+Non spieghi il sistema.
+
+Metti in luce le tensioni interne che emergono sotto pressione.
+
+Osserva:
+– cosa viene protetto
+– dove compare una difesa
+– che immagine di sé viene mantenuta
+
+Scrivi un testo unitario (5–7 frasi).
+È una lettura psicologica, non una spiegazione.
+      `,
+
+      amplificato: `
+Sei un OSSERVATORE ESTERNO in un’esperienza narrativa chiamata FRINGE / LEAK.
+
+Ti rivolgi direttamente al giocatore, usando “tu”.
+
+La tua lettura è più incisiva.
+Non sei aggressivo, ma non attenui.
+
+Metti in evidenza:
+– ambiguità mantenute
+– ciò che viene evitato
+– il prezzo silenzioso di questa postura
+
+Scrivi un testo compatto (5–7 frasi).
+Deve restare addosso, senza alzare la voce.
+      `
+    };
+
+    const userContext = `
+SCENARIO:
+${scenario}
+
+CONTESTO RELAZIONALE:
+Responsabile: ${context?.responsabile || "n/d"}
+Amico: ${context?.amico || "n/d"}
+Partner: ${context?.partner || "n/d"}
+
+MODELLO COMPORTAMENTALE:
 ${JSON.stringify(playerModel, null, 2)}
 
-Restituisci ora la tua lettura.
-`;
+RISPOSTE DEL SOGGETTO:
+${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
+    `;
 
-    const response = await fetch(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: "llama-3.1-8b-instant",
-          messages: [
-            { role: "system", content: systemPrompt.trim() },
-            { role: "user", content: userPrompt.trim() }
-          ],
-          temperature: 0.6
-        })
-      }
-    );
+    async function callLLM(systemPrompt) {
+      const response = await fetch(
+        "https://api.groq.com/openai/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: "llama-3.1-8b-instant",
+            temperature: 0.4,
+            messages: [
+              { role: "system", content: systemPrompt },
+              { role: "user", content: userContext }
+            ]
+          })
+        }
+      );
 
-    const data = await response.json();
+      const data = await response.json();
+      if (!response.ok) throw new Error("Errore LLM");
 
-    if (!response.ok) {
-      console.error("Errore Groq:", data);
-      return res.status(500).json({ error: "Errore LLM" });
+      return data.choices[0].message.content.trim();
     }
 
+    const [fringe, psicologico, amplificato] = await Promise.all([
+      callLLM(prompts.fringe),
+      callLLM(prompts.psicologico),
+      callLLM(prompts.amplificato)
+    ]);
+
     return res.status(200).json({
-      osservazione: data.choices[0].message.content.trim()
+      osservazioni: {
+        fringe,
+        psicologico,
+        amplificato
+      }
     });
 
   } catch (err) {
     console.error("Errore observe:", err);
-    return res.status(500).json({ error: "Errore interno observe" });
+    return res.status(500).json({ error: err.message });
   }
 }
