@@ -1,69 +1,56 @@
 export default async function handler(req, res) {
-  try {
-    if (req.method !== "POST") {
-      return res.status(405).json({ error: "Solo POST consentito" });
-    }
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Solo POST consentito" });
+  }
 
+  try {
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       return res.status(500).json({ error: "GROQ_API_KEY mancante" });
     }
 
-    const { playerModel, pressureLevel, step, scenario } = req.body;
+    const { playerModel, scenarioLabel } = req.body;
 
     if (!playerModel) {
       return res.status(400).json({ error: "playerModel mancante" });
     }
 
     const systemPrompt = `
-
 Sei un OSSERVATORE ESTERNO in un’esperienza narrativa chiamata FRINGE.
 
-Il tuo compito non è analizzare il sistema,
-ma restituire una LETTURA PERSONALE del soggetto osservato.
+Parli direttamente al giocatore usando “tu”.
 
-Parli direttamente al giocatore, usando “tu”.
-
-Non stabilisci colpe.
-Non verifichi fatti.
+Non analizzi il sistema.
 Non spieghi il metodo.
+Non ricostruisci i fatti.
+
+Restituisci una LETTURA PERSONALE del soggetto sotto pressione.
 
 Devi:
-- indicare chi viene protetto nelle risposte
-- indicare cosa viene sacrificato o lasciato scoperto
-- suggerire che immagine del sé emerge sotto pressione
+- indicare chi è stato protetto nelle risposte
+- indicare cosa è stato sacrificato o lasciato scoperto
+- suggerire che immagine del sé emerge sotto osservazione
 
-Scrivi una sola lettura compatta (5–7 righe massimo).
+Scrivi una sola lettura compatta.
+Massimo 5–7 righe.
 
-È una lettura, non una spiegazione.
-È personale, non neutra.
-È sobria, ma non impersonale.
-
-Divieti espliciti:
+Divieti assoluti:
 - niente numeri
 - niente percentuali
 - niente elenchi
 - niente ipotesi multiple
-- niente linguaggio tecnico o valutativo
-
+- niente linguaggio tecnico
+- niente spiegazioni
 `;
 
     const userPrompt = `
+CONTESTO:
+${scenarioLabel || "Audizione interna in contesto aziendale"}
 
-SCENARIO:
-${scenario}
-
-CONTESTO RELAZIONALE:
-Responsabile: ${context.responsabile}
-Amico: ${context.amico}
-Partner: ${context.partner}
-
-MODELLO COMPORTAMENTALE:
+PROFILO COMPORTAMENTALE OSSERVATO:
 ${JSON.stringify(playerModel, null, 2)}
 
-RISPOSTE DEL SOGGETTO:
-${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
-
+Restituisci ora la tua lettura.
 `;
 
     const response = await fetch(
@@ -77,10 +64,10 @@ ${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
         body: JSON.stringify({
           model: "llama-3.1-8b-instant",
           messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: userPrompt }
+            { role: "system", content: systemPrompt.trim() },
+            { role: "user", content: userPrompt.trim() }
           ],
-          temperature: 0.4
+          temperature: 0.6
         })
       }
     );
@@ -89,15 +76,15 @@ ${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
 
     if (!response.ok) {
       console.error("Errore Groq:", data);
-      return res.status(500).json(data);
+      return res.status(500).json({ error: "Errore LLM" });
     }
 
     return res.status(200).json({
-      osservazione: data.choices[0].message.content
+      osservazione: data.choices[0].message.content.trim()
     });
 
   } catch (err) {
     console.error("Errore observe:", err);
-    return res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: "Errore interno observe" });
   }
 }
