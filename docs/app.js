@@ -8,36 +8,26 @@ let pressureLevel = 0;
 const MAX_PRESSURE = 100;
 
 let externalObservations = null;
-let voteRanking = { primo: null, secondo: null, terzo: null };
-
 const answers = [];
-const observedAnchors = [];
+let voteRanking = {};
+
+/* ===========================
+   SCELTE INIZIALI
+=========================== */
 
 let partnerName = "Eva";
+
+/* ===========================
+   MODELLO GIOCATORE
+=========================== */
 
 let playerModel = {
   stile: "indeterminato",
   strategia: "indeterminata",
-  difesa: "non determinata",
   fragilita: 0,
   rischioNarrativo: 0,
   esposizione: 0
 };
-
-/* ===========================
-   PERSISTENZA
-=========================== */
-
-function loadPlayerModel() {
-  const saved = localStorage.getItem("FRINGE_PLAYER_MODEL");
-  if (saved) {
-    try { playerModel = JSON.parse(saved); } catch {}
-  }
-}
-
-function savePlayerModel() {
-  localStorage.setItem("FRINGE_PLAYER_MODEL", JSON.stringify(playerModel));
-}
 
 /* ===========================
    DOMANDE
@@ -52,36 +42,26 @@ const interventions = [
 ];
 
 /* ===========================
-   ANALISI RISPOSTE
+   VALUTAZIONE RISPOSTE
 =========================== */
 
-function extractAnchor(text) {
-  const match = text.match(/necessario|imprevedibile|non era previsto|con certezza|urgente/i);
-  if (match) return match[0].toLowerCase();
-  const firstSentence = text.split(".")[0];
-  return firstSentence.length > 12 ? firstSentence.slice(0, 60) : null;
-}
-
 function evaluateAnswer(text) {
-  const anchor = extractAnchor(text);
-  if (anchor && observedAnchors.length < 4) observedAnchors.push(anchor);
-
   if (text.length < 12) {
     pressureLevel += 20;
+    playerModel.fragilita += 15;
+    playerModel.esposizione += 10;
     playerModel.stile = "elusivo";
-    playerModel.difesa = "ritrazione";
   } else if (/forse|non so|non ricordo/i.test(text)) {
     pressureLevel += 15;
     playerModel.strategia = "ambiguità";
-    playerModel.difesa = "indeterminatezza";
+    playerModel.rischioNarrativo += 10;
   } else if (text.length > 120) {
     pressureLevel -= 5;
     playerModel.stile = "assertivo";
-    playerModel.difesa = "razionalizzazione";
+    playerModel.esposizione += 15;
   } else {
     pressureLevel += 5;
     playerModel.stile = "prudente";
-    playerModel.difesa = "contenimento";
   }
 
   pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel));
@@ -94,71 +74,114 @@ function evaluateAnswer(text) {
 function render() {
   app.innerHTML = "";
 
+  /* STEP 0 — INTRO */
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
-      <p>Cos’è FRINGE / LEAK</p>
-      <p>Demo esperienziale. Leggi e comportati come se le conseguenze fossero reali.</p>
+
+      <p><strong>Cos’è FRINGE / LEAK</strong></p>
+      <p>
+        Questa è una demo esperienziale.<br>
+        Ti viene chiesto di immedesimarti nella situazione descritta
+        e di agire come se le conseguenze fossero reali.
+      </p>
+
+      <p>
+        Prima di iniziare, indica chi è la persona con cui hai una relazione personale
+        coinvolta indirettamente nella vicenda.
+      </p>
+
       <button id="eva">Eva</button>
       <button id="adamo">Adamo</button>
     `;
+
     document.getElementById("eva").onclick = () => { partnerName = "Eva"; step++; render(); };
     document.getElementById("adamo").onclick = () => { partnerName = "Adamo"; step++; render(); };
     return;
   }
 
+  /* STEP 1 — SCENARIO */
   if (step === 1) {
     app.innerHTML = `
-      <p>Audizione a porte chiuse. Non è un procedimento disciplinare.</p>
-      <button id="prosegui">Prosegui</button>
+      <p>
+        Ti trovi davanti a una commissione interna.<br>
+        L’audizione avviene a porte chiuse.
+      </p>
+
+      <p>
+        Durante il tuo turno di guardia hai sostituito il tuo responsabile, Walter.<br>
+        In sala di controllo era presente anche Alex, un tuo amico di lunga data.
+      </p>
+
+      <p>
+        Sei stato contattato da ${partnerName}, che si trovava al capannone logistico.<br>
+        Hai lasciato temporaneamente la sala, chiedendo ad Alex di avvisarti in caso di necessità.
+      </p>
+
+      <p>
+        Un’ispezione successiva ha trovato la sala di controllo sguarnita.
+      </p>
+
+      <p><em>
+        Quello che è successo è successo.<br>
+        Ora devi decidere come verrà letto.
+      </em></p>
+
+      <button id="startBtn">Prosegui</button>
     `;
-    document.getElementById("prosegui").onclick = () => { step++; render(); };
+
+    document.getElementById("startBtn").onclick = () => { step++; render(); };
     return;
   }
 
+  /* DOMANDE */
   if (step >= 2 && step < interventions.length + 2) {
-    const q = interventions[step - 2].question;
+    const current = interventions[step - 2];
     app.innerHTML = `
-      <p><strong>${q}</strong></p>
-      <textarea id="answer" rows="4" style="width:100%"></textarea>
-      <button id="send">Invia</button>
+      <p><strong>${current.question}</strong></p>
+      <textarea id="answer" rows="4" style="width:100%"></textarea><br><br>
+      <button id="sendBtn">Invia</button>
     `;
-    document.getElementById("send").onclick = () => {
-      const v = document.getElementById("answer").value.trim();
-      answers.push(v);
-      evaluateAnswer(v);
+
+    document.getElementById("sendBtn").onclick = () => {
+      const value = document.getElementById("answer").value.trim();
+      answers.push(value);
+      evaluateAnswer(value);
       step++;
       render();
     };
     return;
   }
 
-  savePlayerModel();
-
+  /* OSSERVAZIONI */
   if (!externalObservations) {
-    app.innerHTML = "<p>Valutazione in corso...</p>";
-    observeWithLLM({ scenario:"FRINGE", pressureLevel, playerModel, answers })
-      .then(r => { externalObservations = r.osservazioni; render(); });
+    app.innerHTML = `<p>Valutazione in corso...</p>`;
+    observeWithLLM({
+      pressureLevel,
+      playerModel,
+      answers,
+      context: { partner: partnerName, responsabile: "Walter", collega: "Alex" }
+    }).then(res => {
+      externalObservations = res.osservazioni;
+      render();
+    });
     return;
   }
 
+  /* VOTAZIONE */
   app.innerHTML = `
     <h3>OSSERVATORE ESTERNO</h3>
-   ${Object.entries(externalObservations).map(([k, t]) => `
-  <div style="margin-bottom: 1.5rem;">
-    <p><em>${t}</em></p>
-    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
-      <button style="font-size: 2rem; padding: 0.6rem 1rem; cursor: pointer;"
-        onclick="vote('${k}','primo')">🥇</button>
-      <button style="font-size: 2rem; padding: 0.6rem 1rem; cursor: pointer;"
-        onclick="vote('${k}','secondo')">🥈</button>
-      <button style="font-size: 2rem; padding: 0.6rem 1rem; cursor: pointer;"
-        onclick="vote('${k}','terzo')">🥉</button>
-    </div>
-  </div>
-`).join("")}
 
-    <button onclick="submitVote()">Conferma preferenze</button>
+    ${Object.entries(externalObservations).map(([k,t]) => `
+      <div style="margin-bottom:20px">
+        <p><em>${t}</em></p>
+        <button style="font-size:24px" onclick="vote('${k}','primo')">🥇</button>
+        <button style="font-size:24px" onclick="vote('${k}','secondo')">🥈</button>
+        <button style="font-size:24px" onclick="vote('${k}','terzo')">🥉</button>
+      </div>
+    `).join("")}
+
+    <button onclick="submitVote()">Invia preferenze</button>
   `;
 }
 
@@ -171,17 +194,22 @@ window.vote = function(tipo, pos) {
 };
 
 window.submitVote = async function() {
-  await fetch("/api/vote", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify(voteRanking)
-  });
-  alert("Preferenze registrate");
+  try {
+    const res = await fetch("/api/vote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ranking: voteRanking,
+        timestamp: Date.now()
+      })
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+    alert("Preferenze registrate");
+  } catch (e) {
+    console.error(e);
+    alert("Errore nel salvataggio");
+  }
 };
 
-/* ===========================
-   AVVIO
-=========================== */
-
-loadPlayerModel();
 render();
