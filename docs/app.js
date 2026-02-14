@@ -144,14 +144,20 @@ function render() {
 
   app.innerHTML = `
     <h3>OSSERVATORE ESTERNO</h3>
-    ${Object.entries(externalObservations).map(([k,t]) => `
-      <div>
-        <p><em>${t}</em></p>
-        <button onclick="vote('${k}','primo')">🥇</button>
-        <button onclick="vote('${k}','secondo')">🥈</button>
-        <button onclick="vote('${k}','terzo')">🥉</button>
-      </div>
-    `).join("")}
+   ${Object.entries(externalObservations).map(([k, t]) => `
+  <div style="margin-bottom: 1.5rem;">
+    <p><em>${t}</em></p>
+    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+      <button style="font-size: 2rem; padding: 0.6rem 1rem; cursor: pointer;"
+        onclick="vote('${k}','primo')">🥇</button>
+      <button style="font-size: 2rem; padding: 0.6rem 1rem; cursor: pointer;"
+        onclick="vote('${k}','secondo')">🥈</button>
+      <button style="font-size: 2rem; padding: 0.6rem 1rem; cursor: pointer;"
+        onclick="vote('${k}','terzo')">🥉</button>
+    </div>
+  </div>
+`).join("")}
+
     <button onclick="submitVote()">Conferma preferenze</button>
   `;
 }

@@ -4,16 +4,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SHEET_ENDPOINT;
-
-    if (!GOOGLE_SCRIPT_URL) {
-      return res.status(500).json({ error: "Endpoint Google non configurato" });
-    }
+    // Endpoint Google Apps Script (FRIGE_votes)
+    const GOOGLE_SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbwBnK0BA5vuAVNnic7frn0pZuTCudaKy-tO-iOyz7Frc53E3nsdQZDDPvCP25ABjo8E/exec";
 
     const response = await fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(req.body)
+      body: JSON.stringify({
+        ...req.body,
+        timestamp: new Date().toISOString(),
+        source: "FRINGE_LEAK"
+      })
     });
 
     if (!response.ok) {
