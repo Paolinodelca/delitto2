@@ -52,19 +52,21 @@ Sei un OSSERVATORE ESTERNO in un’esperienza narrativa chiamata FRINGE / LEAK.
 
 Ti rivolgi direttamente al giocatore, usando “tu”.
 
-Non fai diagnosi.
-Non assegni etichette.
-Non spieghi il sistema.
+Non introduci fatti nuovi.
+Non attribuisci intenzioni a terzi.
+Non interpreti eventi non esplicitamente dichiarati.
 
-Metti in luce le tensioni interne che emergono sotto pressione.
+Osservi esclusivamente:
+– il modo in cui il soggetto parla di sé
+– come gestisce la pressione narrativa
+– dove compaiono giustificazioni o difese formali
 
-Osserva:
-– cosa viene protetto
-– dove compare una difesa
-– che immagine di sé viene mantenuta
+Evita esempi inventati.
+Evita nomi non presenti nel contesto.
 
 Scrivi un testo unitario (5–7 frasi).
-È una lettura psicologica, non una spiegazione.
+È una lettura della postura, non della verità dei fatti.
+
       `,
 
       amplificato: `
@@ -142,7 +144,67 @@ ${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
     });
 
   } catch (err) {
-    console.error("Errore observe:", err);
-    return res.status(500).json({ error: err.message });
-  }
+  console.error("Errore observe:", err);
+
+  const fallback = proceduralObservation({
+    pressureLevel: req.body?.pressureLevel || 0,
+    playerModel: req.body?.playerModel || {},
+    observedAnchors: req.body?.observedAnchors || []
+  });
+
+  return res.status(200).json({
+    osservazioni: {
+      fringe: fallback,
+      psicologico: fallback,
+      amplificato: fallback
+    }
+  });
 }
+
+}
+
+const {
+  scenario,
+  context,
+  playerModel,
+  answers,
+  observedAnchors = []
+} = req.body;
+function proceduralObservation({ pressureLevel, playerModel, observedAnchors }) {
+  const fragments = [];
+
+  if (pressureLevel > 70) {
+    fragments.push(
+      "La pressione accumulata ha reso ogni risposta più carica di conseguenze di quanto apparisse."
+    );
+  } else {
+    fragments.push(
+      "Hai mantenuto un controllo sufficiente sul ritmo dell’audizione."
+    );
+  }
+
+  if (playerModel.difesa === "razionalizzazione") {
+    fragments.push(
+      "Hai costruito spiegazioni coerenti, orientate a rendere le tue scelte sostenibili."
+    );
+  }
+
+  if (playerModel.difesa === "indeterminatezza") {
+    fragments.push(
+      "In più punti hai evitato di fissare una versione definitiva dei fatti."
+    );
+  }
+
+  if (observedAnchors.length > 0) {
+    fragments.push(
+      `Alcune formulazioni sono tornate più volte (${observedAnchors.join(", ")}), diventando appigli narrativi.`
+    );
+  }
+
+  fragments.push(
+    "Non è una questione di verità o menzogna, ma di come la tua posizione si è resa abitabile per chi ascolta."
+  );
+
+  return fragments.join(" ");
+}
+

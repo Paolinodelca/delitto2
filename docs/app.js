@@ -44,7 +44,7 @@ const interventions = [
 ];
 
 /* ===========================
-   ANCORE (RECUPERATE)
+   ANCORE
 =========================== */
 
 function extractAnchor(text) {
@@ -93,14 +93,28 @@ function evaluateAnswer(text) {
 function render() {
   app.innerHTML = "";
 
-  /* STEP 0 — INTRO */
+  /* STEP 0 — INTRO ESTESA */
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
-      <p><strong>Cos’è FRINGE / LEAK</strong></p>
-      <p>Demo esperienziale. Agisci come se le conseguenze fossero reali.</p>
 
-      <p>Indica chi è la persona con cui hai una relazione personale coinvolta indirettamente.</p>
+      <p><strong>Contesto</strong></p>
+      <p>
+        Ti trovi coinvolto in una ricostruzione interna dei fatti.<br>
+        Non è un procedimento disciplinare, ma le conseguenze
+        dipenderanno da come la vicenda verrà interpretata.
+      </p>
+
+      <p>
+        Le domande che seguiranno non servono a stabilire una colpa,
+        ma a capire <em>come</em> una decisione è diventata accettabile
+        nel momento in cui è stata presa.
+      </p>
+
+      <p>
+        Prima di iniziare, indica chi è la persona con cui hai una relazione
+        personale coinvolta indirettamente nella vicenda.
+      </p>
 
       <button id="eva">Eva</button>
       <button id="adamo">Adamo</button>
@@ -114,19 +128,32 @@ function render() {
   /* STEP 1 — SCENARIO */
   if (step === 1) {
     app.innerHTML = `
-      <p>Audizione a porte chiuse. Non è un procedimento disciplinare.</p>
+      <p>
+        L’audizione avviene a porte chiuse.<br>
+        Nessun verbale ufficiale è stato ancora redatto.
+      </p>
 
       <p>
         Durante il turno hai sostituito il tuo responsabile, Walter.<br>
-        In sala di controllo era presente anche Alex.
+        In sala di controllo era presente anche Alex, un collega e amico.
       </p>
 
       <p>
-        Sei stato contattato da ${partnerName}.<br>
-        Hai lasciato temporaneamente la sala.
+        Sei stato contattato da ${partnerName}, che si trovava
+        al capannone logistico.<br>
+        Hai lasciato temporaneamente la sala,
+        chiedendo ad Alex di avvisarti in caso di necessità.
       </p>
 
-      <p><em>Ora devi decidere come verrà letta questa vicenda.</em></p>
+      <p>
+        Un’ispezione successiva ha rilevato che la sala di controllo
+        era sguarnita.
+      </p>
+
+      <p><em>
+        Quello che è successo è successo.<br>
+        Ora devi decidere come verrà letto.
+      </em></p>
 
       <button id="startBtn">Prosegui</button>
     `;
@@ -159,7 +186,7 @@ function render() {
     app.innerHTML = `<p>Valutazione in corso...</p>`;
 
     observeWithLLM({
-      scenario: "FRINGE / LEAK",          // 🔑 FIX CRITICO
+      scenario: "FRINGE / LEAK",
       pressureLevel,
       playerModel,
       answers,
@@ -186,7 +213,7 @@ function render() {
   app.innerHTML = `
     <h3>OSSERVATORE ESTERNO</h3>
 
-    ${Object.entries(externalObservations).map(([k,t]) => `
+    ${Object.entries(externalObservations).map(([k, t]) => `
       <div style="margin-bottom:20px">
         <p><em>${t}</em></p>
         <button style="font-size:2rem" onclick="vote('${k}','primo')">🥇</button>
