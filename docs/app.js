@@ -160,6 +160,8 @@ function render() {
       pressureLevel,
       playerModel,
       answers,
+
+      observedAnchors,   // 🔑 QUESTO È IL PEZZO MANCANTE
       context: { partner: partnerName, responsabile: "Walter", collega: "Alex" }
     }).then(res => {
       externalObservations = res.osservazioni;
