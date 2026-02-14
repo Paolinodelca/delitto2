@@ -9,7 +9,9 @@ const MAX_PRESSURE = 100;
 
 let externalObservations = null;
 const answers = [];
-let voteRanking = {};
+const observedAnchors = [];
+
+let voteRanking = { primo: null, secondo: null, terzo: null };
 
 /* ===========================
    SCELTE INIZIALI
@@ -42,10 +44,27 @@ const interventions = [
 ];
 
 /* ===========================
+   ANCORE (RECUPERATE)
+=========================== */
+
+function extractAnchor(text) {
+  const match = text.match(/necessario|imprevedibile|non era previsto|urgente|con certezza/i);
+  if (match) return match[0].toLowerCase();
+
+  const firstSentence = text.split(".")[0];
+  return firstSentence.length > 12 ? firstSentence.slice(0, 60) : null;
+}
+
+/* ===========================
    VALUTAZIONE RISPOSTE
 =========================== */
 
 function evaluateAnswer(text) {
+  const anchor = extractAnchor(text);
+  if (anchor && observedAnchors.length < 4) {
+    observedAnchors.push(anchor);
+  }
+
   if (text.length < 12) {
     pressureLevel += 20;
     playerModel.fragilita += 15;
@@ -78,18 +97,10 @@ function render() {
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
-
       <p><strong>Cos’è FRINGE / LEAK</strong></p>
-      <p>
-        Questa è una demo esperienziale.<br>
-        Ti viene chiesto di immedesimarti nella situazione descritta
-        e di agire come se le conseguenze fossero reali.
-      </p>
+      <p>Demo esperienziale. Agisci come se le conseguenze fossero reali.</p>
 
-      <p>
-        Prima di iniziare, indica chi è la persona con cui hai una relazione personale
-        coinvolta indirettamente nella vicenda.
-      </p>
+      <p>Indica chi è la persona con cui hai una relazione personale coinvolta indirettamente.</p>
 
       <button id="eva">Eva</button>
       <button id="adamo">Adamo</button>
@@ -103,29 +114,19 @@ function render() {
   /* STEP 1 — SCENARIO */
   if (step === 1) {
     app.innerHTML = `
+      <p>Audizione a porte chiuse. Non è un procedimento disciplinare.</p>
+
       <p>
-        Ti trovi davanti a una commissione interna.<br>
-        L’audizione avviene a porte chiuse.
+        Durante il turno hai sostituito il tuo responsabile, Walter.<br>
+        In sala di controllo era presente anche Alex.
       </p>
 
       <p>
-        Durante il tuo turno di guardia hai sostituito il tuo responsabile, Walter.<br>
-        In sala di controllo era presente anche Alex, un tuo amico di lunga data.
+        Sei stato contattato da ${partnerName}.<br>
+        Hai lasciato temporaneamente la sala.
       </p>
 
-      <p>
-        Sei stato contattato da ${partnerName}, che si trovava al capannone logistico.<br>
-        Hai lasciato temporaneamente la sala, chiedendo ad Alex di avvisarti in caso di necessità.
-      </p>
-
-      <p>
-        Un’ispezione successiva ha trovato la sala di controllo sguarnita.
-      </p>
-
-      <p><em>
-        Quello che è successo è successo.<br>
-        Ora devi decidere come verrà letto.
-      </em></p>
+      <p><em>Ora devi decidere come verrà letta questa vicenda.</em></p>
 
       <button id="startBtn">Prosegui</button>
     `;
@@ -156,17 +157,28 @@ function render() {
   /* OSSERVAZIONI */
   if (!externalObservations) {
     app.innerHTML = `<p>Valutazione in corso...</p>`;
+
     observeWithLLM({
+      scenario: "FRINGE / LEAK",          // 🔑 FIX CRITICO
       pressureLevel,
       playerModel,
       answers,
-
-      observedAnchors,   // 🔑 QUESTO È IL PEZZO MANCANTE
-      context: { partner: partnerName, responsabile: "Walter", collega: "Alex" }
-    }).then(res => {
+      observedAnchors,
+      context: {
+        partner: partnerName,
+        responsabile: "Walter",
+        amico: "Alex"
+      }
+    })
+    .then(res => {
       externalObservations = res.osservazioni;
       render();
+    })
+    .catch(err => {
+      console.error(err);
+      app.innerHTML = "<p>Errore durante la valutazione.</p>";
     });
+
     return;
   }
 
@@ -177,9 +189,9 @@ function render() {
     ${Object.entries(externalObservations).map(([k,t]) => `
       <div style="margin-bottom:20px">
         <p><em>${t}</em></p>
-        <button style="font-size:24px" onclick="vote('${k}','primo')">🥇</button>
-        <button style="font-size:24px" onclick="vote('${k}','secondo')">🥈</button>
-        <button style="font-size:24px" onclick="vote('${k}','terzo')">🥉</button>
+        <button style="font-size:2rem" onclick="vote('${k}','primo')">🥇</button>
+        <button style="font-size:2rem" onclick="vote('${k}','secondo')">🥈</button>
+        <button style="font-size:2rem" onclick="vote('${k}','terzo')">🥉</button>
       </div>
     `).join("")}
 
@@ -196,13 +208,18 @@ window.vote = function(tipo, pos) {
 };
 
 window.submitVote = async function() {
+  if (!voteRanking.primo || !voteRanking.secondo || !voteRanking.terzo) {
+    alert("Seleziona tutte e tre le preferenze");
+    return;
+  }
+
   try {
     const res = await fetch("/api/vote", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        ranking: voteRanking,
-        timestamp: Date.now()
+        ...voteRanking,
+        scenario: "FRINGE / LEAK"
       })
     });
 
