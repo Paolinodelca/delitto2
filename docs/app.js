@@ -12,6 +12,24 @@ const answers = [];
 const observedAnchors = [];
 
 let voteRanking = { primo: null, secondo: null, terzo: null };
+let votedButtons = { primo: null, secondo: null, terzo: null };
+let voteSubmitted = false;
+
+/* ===========================
+   STILE (una sola volta)
+=========================== */
+const style = document.createElement("style");
+style.innerHTML = `
+  .selected-vote {
+    outline: 3px solid black;
+    background-color: #ddd;
+  }
+  button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+document.head.appendChild(style);
 
 /* ===========================
    SCELTE INIZIALI
@@ -93,85 +111,31 @@ function evaluateAnswer(text) {
 function render() {
   app.innerHTML = "";
 
-  /* STEP 0 — INTRO */
+  /* STEP 0 */
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
-
       <p><strong>Contesto</strong></p>
-      <p>
-        Ti trovi coinvolto in una ricostruzione interna dei fatti.<br>
-        Non è un procedimento disciplinare, ma le conseguenze
-        dipenderanno da come la vicenda verrà interpretata.
-      </p>
-
-      <p>
-        Le domande che seguiranno non servono a stabilire una colpa,
-        ma a capire <em>come</em> una decisione è diventata accettabile
-        nel momento in cui è stata presa.
-      </p>
-
-      <p>
-        Prima di iniziare, indica chi è la persona con cui hai una relazione
-        affettiva stabile, coinvolta indirettamente nella vicenda.
-      </p>
-
+      <p>Ricostruzione interna dei fatti. Le conseguenze dipendono da come la vicenda verrà letta.</p>
+      <p>Indica la persona con cui hai una relazione affettiva stabile.</p>
       <button id="eva">Eva</button>
       <button id="adamo">Adamo</button>
     `;
-
     document.getElementById("eva").onclick = () => { partnerName = "Eva"; step++; render(); };
     document.getElementById("adamo").onclick = () => { partnerName = "Adamo"; step++; render(); };
     return;
   }
 
-  /* STEP 1 — SCENARIO (RAFFORZATO) */
+  /* STEP 1 */
   if (step === 1) {
     app.innerHTML = `
-      <p>
-        L’audizione avviene a porte chiuse.<br>
-        Nessun verbale ufficiale è stato ancora redatto.
-      </p>
-
-      <p>
-        L’azienda per cui lavori sviluppa tecnologie sensibili e riservate.<br>
-        La sicurezza del perimetro non è una formalità, ma una condizione essenziale.
-      </p>
-
-      <p>
-        Durante il turno hai sostituito il tuo responsabile diretto, <strong>Walter</strong>.<br>
-        Walter è noto per una gestione severa e per tutelare prima i propri interessi,
-        poi quelli dell’azienda.
-      </p>
-
-      <p>
-        In sala di controllo era presente anche <strong>Alex</strong>,<br>
-        un collega con cui hai un rapporto di fiducia personale.
-      </p>
-
-      <p>
-        Sei stato contattato da <strong>${partnerName}</strong>,<br>
-        con cui condividi una relazione affettiva stabile e un possibile progetto di vita.
-      </p>
-
-      <p>
-        Ti sei allontanato temporaneamente dalla sala,
-        chiedendo ad Alex di avvisarti in caso di necessità.
-      </p>
-
-      <p>
-        Un’ispezione successiva ha rilevato che la sala di controllo
-        era sguarnita.
-      </p>
-
-      <p><em>
-        Quello che è successo è successo.<br>
-        Ora devi decidere come verrà letto.
-      </em></p>
-
+      <p>L’azienda sviluppa tecnologie sensibili. La sicurezza del perimetro è essenziale.</p>
+      <p>Hai sostituito il responsabile diretto <strong>Walter</strong>, noto per una gestione severa.</p>
+      <p>Con te in sala c’era <strong>Alex</strong>, collega e confidente.</p>
+      <p><strong>${partnerName}</strong> ti ha contattato dal capannone logistico.</p>
+      <p>Ti sei allontanato temporaneamente. Un’ispezione ha rilevato la sala sguarnita.</p>
       <button id="startBtn">Prosegui</button>
     `;
-
     document.getElementById("startBtn").onclick = () => { step++; render(); };
     return;
   }
@@ -184,7 +148,6 @@ function render() {
       <textarea id="answer" rows="4" style="width:100%"></textarea><br><br>
       <button id="sendBtn">Invia</button>
     `;
-
     document.getElementById("sendBtn").onclick = () => {
       const value = document.getElementById("answer").value.trim();
       answers.push(value);
@@ -198,7 +161,6 @@ function render() {
   /* OSSERVAZIONI */
   if (!externalObservations) {
     app.innerHTML = `<p>Valutazione in corso...</p>`;
-
     observeWithLLM({
       scenario: "FRINGE / LEAK",
       pressureLevel,
@@ -206,22 +168,19 @@ function render() {
       answers,
       observedAnchors,
       context: {
-        soggetto: "giocatore",
         partner: partnerName,
         responsabile: "Walter",
         amico: "Alex",
-        azienda: "sviluppo di tecnologie sensibili"
+        azienda: "tecnologie sensibili"
       }
     })
     .then(res => {
       externalObservations = res.osservazioni;
       render();
     })
-    .catch(err => {
-      console.error(err);
+    .catch(() => {
       app.innerHTML = "<p>Errore durante la valutazione.</p>";
     });
-
     return;
   }
 
@@ -232,13 +191,13 @@ function render() {
     ${Object.entries(externalObservations).map(([k, t]) => `
       <div style="margin-bottom:20px">
         <p><em>${t}</em></p>
-        <button style="font-size:2rem" onclick="vote('${k}','primo')">🥇</button>
-        <button style="font-size:2rem" onclick="vote('${k}','secondo')">🥈</button>
-        <button style="font-size:2rem" onclick="vote('${k}','terzo')">🥉</button>
+        <button style="font-size:2rem" onclick="vote(this,'${k}','primo')">🥇</button>
+        <button style="font-size:2rem" onclick="vote(this,'${k}','secondo')">🥈</button>
+        <button style="font-size:2rem" onclick="vote(this,'${k}','terzo')">🥉</button>
       </div>
     `).join("")}
 
-    <button onclick="submitVote()">Invia preferenze</button>
+    <button id="submitVoteBtn" onclick="submitVote()">Invia preferenze</button>
   `;
 }
 
@@ -246,30 +205,41 @@ function render() {
    VOTI
 =========================== */
 
-window.vote = function(tipo, pos) {
+window.vote = function(btn, tipo, pos) {
+  if (voteSubmitted) return;
+
+  if (votedButtons[pos]) {
+    votedButtons[pos].classList.remove("selected-vote");
+  }
+
   voteRanking[pos] = tipo;
+  btn.classList.add("selected-vote");
+  votedButtons[pos] = btn;
 };
 
 window.submitVote = async function() {
+  if (voteSubmitted) return;
+
   if (!voteRanking.primo || !voteRanking.secondo || !voteRanking.terzo) {
     alert("Seleziona tutte e tre le preferenze");
     return;
   }
 
+  voteSubmitted = true;
+  document.getElementById("submitVoteBtn").disabled = true;
+
   try {
     const res = await fetch("/api/vote", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...voteRanking,
-        scenario: "FRINGE / LEAK"
-      })
+      body: JSON.stringify({ ...voteRanking, scenario: "FRINGE / LEAK" })
     });
 
-    if (!res.ok) throw new Error(await res.text());
+    if (!res.ok) throw new Error();
     alert("Preferenze registrate");
-  } catch (e) {
-    console.error(e);
+  } catch {
+    voteSubmitted = false;
+    document.getElementById("submitVoteBtn").disabled = false;
     alert("Errore nel salvataggio");
   }
 };
