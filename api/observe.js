@@ -22,42 +22,99 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Dati incompleti" });
     }
 
+    /* =========================
+       PROMPT — RUOLI BLOCCATI
+    ========================== */
+
     const prompts = {
       fringe: `
 Sei un OSSERVATORE ESTERNO in un’esperienza narrativa chiamata FRINGE / LEAK.
-Ti rivolgi direttamente al giocatore, usando “tu”.
-Osservi postura, controllo e indeterminatezza.
-Scrivi 5–7 frasi. Nessuna spiegazione.
+
+Il soggetto osservato è SEMPRE e SOLO il giocatore.
+Ti rivolgi esclusivamente al giocatore usando “tu”.
+
+Walter è il responsabile gerarchico.
+Alex è un collega e confidente.
+Il partner è una relazione affettiva del giocatore.
+NESSUNO di loro è il soggetto dell’osservazione.
+
+Non giudichi.
+Non analizzi il sistema.
+Non attribuisci intenzioni a terzi.
+
+Osservi:
+– postura sotto pressione
+– ciò che viene tenuto sotto controllo
+– ciò che resta indeterminato
+
+Scrivi 5–7 frasi.
+È una lettura, non una spiegazione.
       `,
+
       psicologico: `
 Sei un OSSERVATORE ESTERNO.
-Osservi difese, giustificazioni, esposizione.
-Scrivi 5–7 frasi, tono sobrio.
+
+Il soggetto osservato è SEMPRE e SOLO il giocatore.
+Walter, Alex e il partner NON sono mai il soggetto.
+
+Ti rivolgi al giocatore usando “tu”.
+Non introduci fatti nuovi.
+Non interpreti azioni di terzi.
+
+Osservi:
+– difese
+– giustificazioni
+– gestione dell’esposizione
+
+Scrivi 5–7 frasi.
+Tono sobrio, unitario.
       `,
+
       amplificato: `
 Sei un OSSERVATORE ESTERNO.
-Rendi visibile ciò che è stato evitato.
-Scrivi 5–7 frasi, incisive ma contenute.
+
+Il soggetto osservato è SEMPRE e SOLO il giocatore.
+Gli altri personaggi servono solo come contesto.
+
+Rendi visibile:
+– ciò che viene evitato
+– il costo silenzioso di questa postura
+– le ambiguità mantenute
+
+Scrivi 5–7 frasi.
+Incisive, senza alzare la voce.
       `
     };
+
+    /* =========================
+       CONTESTO STRUTTURATO
+    ========================== */
 
     const userContext = `
 SCENARIO:
 ${scenario}
 
-CONTESTO:
-Responsabile: ${context?.responsabile || "n/d"}
-Amico: ${context?.amico || "n/d"}
-Partner: ${context?.partner || "n/d"}
+RUOLI (NON AMBIGUI):
+- Soggetto osservato: GIOCATORE
+- Responsabile gerarchico: ${context?.responsabile || "Walter"}
+- Collega / confidente: ${context?.amico || "Alex"}
+- Partner affettivo: ${context?.partner || "n/d"}
 
-MODELLO:
+AMBIENTE:
+Azienda che sviluppa tecnologie sensibili e riservate.
+La sicurezza del perimetro è critica e non formale.
+
+MODELLO COMPORTAMENTALE DEL GIOCATORE:
 ${JSON.stringify(playerModel, null, 2)}
 
-RISPOSTE:
+RISPOSTE DEL GIOCATORE:
 ${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
 
-ANCORE:
+ANCORE RICORRENTI:
 ${observedAnchors.join(", ")}
+
+NOTA:
+Le osservazioni devono riguardare SOLO il giocatore.
     `;
 
     async function callLLM(systemPrompt) {

@@ -93,7 +93,7 @@ function evaluateAnswer(text) {
 function render() {
   app.innerHTML = "";
 
-  /* STEP 0 — INTRO ESTESA */
+  /* STEP 0 — INTRO */
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
@@ -113,7 +113,7 @@ function render() {
 
       <p>
         Prima di iniziare, indica chi è la persona con cui hai una relazione
-        personale coinvolta indirettamente nella vicenda.
+        affettiva stabile, coinvolta indirettamente nella vicenda.
       </p>
 
       <button id="eva">Eva</button>
@@ -125,7 +125,7 @@ function render() {
     return;
   }
 
-  /* STEP 1 — SCENARIO */
+  /* STEP 1 — SCENARIO (RAFFORZATO) */
   if (step === 1) {
     app.innerHTML = `
       <p>
@@ -134,14 +134,28 @@ function render() {
       </p>
 
       <p>
-        Durante il turno hai sostituito il tuo responsabile, Walter.<br>
-        In sala di controllo era presente anche Alex, un collega e amico.
+        L’azienda per cui lavori sviluppa tecnologie sensibili e riservate.<br>
+        La sicurezza del perimetro non è una formalità, ma una condizione essenziale.
       </p>
 
       <p>
-        Sei stato contattato da ${partnerName}, che si trovava
-        al capannone logistico.<br>
-        Hai lasciato temporaneamente la sala,
+        Durante il turno hai sostituito il tuo responsabile diretto, <strong>Walter</strong>.<br>
+        Walter è noto per una gestione severa e per tutelare prima i propri interessi,
+        poi quelli dell’azienda.
+      </p>
+
+      <p>
+        In sala di controllo era presente anche <strong>Alex</strong>,<br>
+        un collega con cui hai un rapporto di fiducia personale.
+      </p>
+
+      <p>
+        Sei stato contattato da <strong>${partnerName}</strong>,<br>
+        con cui condividi una relazione affettiva stabile e un possibile progetto di vita.
+      </p>
+
+      <p>
+        Ti sei allontanato temporaneamente dalla sala,
         chiedendo ad Alex di avvisarti in caso di necessità.
       </p>
 
@@ -192,9 +206,11 @@ function render() {
       answers,
       observedAnchors,
       context: {
+        soggetto: "giocatore",
         partner: partnerName,
         responsabile: "Walter",
-        amico: "Alex"
+        amico: "Alex",
+        azienda: "sviluppo di tecnologie sensibili"
       }
     })
     .then(res => {
