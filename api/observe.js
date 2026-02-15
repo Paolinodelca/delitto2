@@ -1,89 +1,43 @@
 export default async function handler(req, res) {
-  try {
-    if (req.method !== "POST") {
-      return res.status(405).json({ error: "Solo POST consentito" });
-    }
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Solo POST consentito" });
+  }
 
+  try {
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
-      return res.status(500).json({ error: "GROQ_API_KEY mancante" });
+      throw new Error("GROQ_API_KEY mancante");
     }
 
     const {
       scenario,
       context,
       playerModel,
-      answers
+      answers,
+      observedAnchors = [],
+      pressureLevel = 0
     } = req.body;
 
     if (!scenario || !playerModel || !answers) {
       return res.status(400).json({ error: "Dati incompleti" });
     }
 
-    /* =========================
-       PROMPT VARIANTI
-    ========================== */
-
     const prompts = {
       fringe: `
 Sei un OSSERVATORE ESTERNO in un’esperienza narrativa chiamata FRINGE / LEAK.
-
-Non analizzi il sistema.
-Non giudichi il soggetto.
-Non verifichi i fatti.
-
 Ti rivolgi direttamente al giocatore, usando “tu”.
-
-Restituisci una lettura sobria e contenuta di come il soggetto ha attraversato la situazione.
-
-Osserva:
-– cosa viene tenuto sotto controllo
-– cosa viene lasciato indeterminato
-– che postura emerge sotto pressione
-
-Scrivi un testo compatto (5–7 frasi).
-Niente spiegazioni.
-È una lettura.
-Ed è così che verrà ricordata.
+Osservi postura, controllo e indeterminatezza.
+Scrivi 5–7 frasi. Nessuna spiegazione.
       `,
-
       psicologico: `
-Sei un OSSERVATORE ESTERNO in un’esperienza narrativa chiamata FRINGE / LEAK.
-
-Ti rivolgi direttamente al giocatore, usando “tu”.
-
-Non introduci fatti nuovi.
-Non attribuisci intenzioni a terzi.
-Non interpreti eventi non esplicitamente dichiarati.
-
-Osservi esclusivamente:
-– il modo in cui il soggetto parla di sé
-– come gestisce la pressione narrativa
-– dove compaiono giustificazioni o difese formali
-
-Evita esempi inventati.
-Evita nomi non presenti nel contesto.
-
-Scrivi un testo unitario (5–7 frasi).
-È una lettura della postura, non della verità dei fatti.
-
+Sei un OSSERVATORE ESTERNO.
+Osservi difese, giustificazioni, esposizione.
+Scrivi 5–7 frasi, tono sobrio.
       `,
-
       amplificato: `
-Sei un OSSERVATORE ESTERNO in un’esperienza narrativa chiamata FRINGE / LEAK.
-
-Ti rivolgi direttamente al giocatore, usando “tu”.
-
-La tua lettura è più incisiva.
-Non sei aggressivo, ma non attenui.
-
-Metti in evidenza:
-– ambiguità mantenute
-– ciò che viene evitato
-– il prezzo silenzioso di questa postura
-
-Scrivi un testo compatto (5–7 frasi).
-Deve restare addosso, senza alzare la voce.
+Sei un OSSERVATORE ESTERNO.
+Rendi visibile ciò che è stato evitato.
+Scrivi 5–7 frasi, incisive ma contenute.
       `
     };
 
@@ -91,16 +45,19 @@ Deve restare addosso, senza alzare la voce.
 SCENARIO:
 ${scenario}
 
-CONTESTO RELAZIONALE:
+CONTESTO:
 Responsabile: ${context?.responsabile || "n/d"}
 Amico: ${context?.amico || "n/d"}
 Partner: ${context?.partner || "n/d"}
 
-MODELLO COMPORTAMENTALE:
+MODELLO:
 ${JSON.stringify(playerModel, null, 2)}
 
-RISPOSTE DEL SOGGETTO:
+RISPOSTE:
 ${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
+
+ANCORE:
+${observedAnchors.join(", ")}
     `;
 
     async function callLLM(systemPrompt) {
@@ -123,9 +80,11 @@ ${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
         }
       );
 
-      const data = await response.json();
-      if (!response.ok) throw new Error("Errore LLM");
+      if (!response.ok) {
+        throw new Error("Errore LLM");
+      }
 
+      const data = await response.json();
       return data.choices[0].message.content.trim();
     }
 
@@ -136,75 +95,54 @@ ${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
     ]);
 
     return res.status(200).json({
-      osservazioni: {
-        fringe,
-        psicologico,
-        amplificato
-      }
+      osservazioni: { fringe, psicologico, amplificato }
     });
 
   } catch (err) {
-  console.error("Errore observe:", err);
+    console.error("Observe fallback:", err);
 
-  const fallback = proceduralObservation({
-    pressureLevel: req.body?.pressureLevel || 0,
-    playerModel: req.body?.playerModel || {},
-    observedAnchors: req.body?.observedAnchors || []
-  });
+    const fallback = proceduralObservation({
+      pressureLevel: req.body?.pressureLevel || 0,
+      playerModel: req.body?.playerModel || {},
+      observedAnchors: req.body?.observedAnchors || []
+    });
 
-  return res.status(200).json({
-    osservazioni: {
-      fringe: fallback,
-      psicologico: fallback,
-      amplificato: fallback
-    }
-  });
+    return res.status(200).json({
+      osservazioni: {
+        fringe: fallback,
+        psicologico: fallback,
+        amplificato: fallback
+      }
+    });
+  }
 }
 
-}
+/* ===========================
+   OSSERVAZIONE PROCEDURALE
+=========================== */
 
-const {
-  scenario,
-  context,
-  playerModel,
-  answers,
-  observedAnchors = []
-} = req.body;
 function proceduralObservation({ pressureLevel, playerModel, observedAnchors }) {
   const fragments = [];
 
   if (pressureLevel > 70) {
-    fragments.push(
-      "La pressione accumulata ha reso ogni risposta più carica di conseguenze di quanto apparisse."
-    );
+    fragments.push("La pressione ha reso ogni risposta più carica di conseguenze.");
   } else {
-    fragments.push(
-      "Hai mantenuto un controllo sufficiente sul ritmo dell’audizione."
-    );
+    fragments.push("Hai mantenuto una continuità narrativa senza forzature.");
   }
 
-  if (playerModel.difesa === "razionalizzazione") {
-    fragments.push(
-      "Hai costruito spiegazioni coerenti, orientate a rendere le tue scelte sostenibili."
-    );
-  }
-
-  if (playerModel.difesa === "indeterminatezza") {
-    fragments.push(
-      "In più punti hai evitato di fissare una versione definitiva dei fatti."
-    );
+  if (playerModel.stile === "elusivo") {
+    fragments.push("Hai ridotto l’esposizione lasciando spazio all’indeterminatezza.");
   }
 
   if (observedAnchors.length > 0) {
     fragments.push(
-      `Alcune formulazioni sono tornate più volte (${observedAnchors.join(", ")}), diventando appigli narrativi.`
+      `Alcune formulazioni sono tornate più volte (${observedAnchors.join(", ")}).`
     );
   }
 
   fragments.push(
-    "Non è una questione di verità o menzogna, ma di come la tua posizione si è resa abitabile per chi ascolta."
+    "Non è una questione di verità, ma di come la tua posizione si è resa leggibile."
   );
 
   return fragments.join(" ");
 }
-

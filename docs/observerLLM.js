@@ -6,39 +6,42 @@ export async function observeWithLLM(payload) {
       body: JSON.stringify(payload)
     });
 
-    if (!res.ok) throw new Error("LLM not available");
+    if (!res.ok) throw new Error("LLM non disponibile");
     return await res.json();
 
   } catch {
     const anchors = extractAnchors(payload.answers || []);
 
+    const fallback = proceduralObservation(
+      payload.pressureLevel || 0,
+      payload.playerModel || {},
+      anchors
+    );
+
     return {
       osservazioni: {
-        fringe: proceduralObservation(payload, anchors, "fringe"),
-        psicologica: proceduralObservation(payload, anchors, "psicologica"),
-        estrema: proceduralObservation(payload, anchors, "estrema")
+        fringe: fallback,
+        psicologico: fallback,
+        amplificato: fallback
       }
     };
   }
 }
 
 /* ===========================
-   ESTRAZIONE ANCORE
+   ANCORE
 =========================== */
 
 function extractAnchors(answers) {
   const counts = {};
-  const blacklist = ["che", "per", "con", "non", "una", "sono", "come", "quando", "quello"];
+  const blacklist = ["che", "per", "con", "non", "sono", "come", "quando"];
 
   answers.forEach(a => {
-    a
-      .toLowerCase()
+    a.toLowerCase()
       .replace(/[^\w\s]/g, "")
       .split(/\s+/)
       .filter(w => w.length > 4 && !blacklist.includes(w))
-      .forEach(w => {
-        counts[w] = (counts[w] || 0) + 1;
-      });
+      .forEach(w => counts[w] = (counts[w] || 0) + 1);
   });
 
   return Object.entries(counts)
@@ -47,31 +50,14 @@ function extractAnchors(answers) {
     .slice(0, 3);
 }
 
-/* ===========================
-   OSSERVAZIONE PROCEDURALE
-=========================== */
-
-function proceduralObservation({ pressureLevel, playerModel }, anchors, mode) {
-  let text = "";
-
-  if (mode === "fringe") {
-    text = pressureLevel > 60
-      ? "La pressione ha spinto il tuo racconto verso una tenuta formale più che sostanziale."
-      : "Hai mantenuto una continuità narrativa senza forzare una versione definitiva.";
-  }
-
-  if (mode === "psicologica") {
-    text = playerModel.stile === "elusivo"
-      ? "Hai ridotto l’esposizione emotiva lasciando che fossero le omissioni a parlare."
-      : "Hai accettato una certa esposizione, ma senza renderla centrale.";
-  }
-
-  if (mode === "estrema") {
-    text = "Non è ciò che hai detto a definire la lettura finale, ma lo spazio che hai lasciato agli altri.";
-  }
+function proceduralObservation(pressureLevel, playerModel, anchors) {
+  let text =
+    pressureLevel > 60
+      ? "La pressione ha guidato le risposte verso una tenuta formale."
+      : "Hai mantenuto una postura controllata senza chiudere il senso.";
 
   if (anchors.length > 0) {
-    text += ` Alcuni elementi sono tornati più volte (${anchors.join(", ")}), diventando punti di appoggio impliciti.`;
+    text += ` Alcuni elementi sono tornati più volte (${anchors.join(", ")}).`;
   }
 
   return text;
