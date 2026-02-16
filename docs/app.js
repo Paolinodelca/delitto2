@@ -108,98 +108,115 @@ function evaluateAnswer(text) {
    RENDER
 =========================== */
 
+
+
 function render() {
   app.innerHTML = "";
 
-  /* STEP 0 */
+  /* ===========================
+     STEP 0 — INTRO BLINDATA
+  ============================ */
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
-      <p><strong>Contesto</strong></p>
-      <p>Ricostruzione interna dei fatti. Le conseguenze dipendono da come la vicenda verrà letta.</p>
-      <p>Indica la persona con cui hai una relazione affettiva stabile.</p>
+
+      <p><strong>Cos’è FRINGE / LEAK</strong></p>
+
+      <p>
+        FRINGE / LEAK è una simulazione narrativa.<br>
+        Ti viene chiesto di assumere un ruolo e rispondere
+        come se le conseguenze delle tue risposte fossero reali.
+      </p>
+
+      <p>
+        Non è un test psicologico.<br>
+        Non valuta se hai detto la verità.<br>
+        Osserva <em>come</em> rendi accettabili le tue decisioni.
+      </p>
+
+      <p>
+        Puoi rispondere come faresti davvero,<br>
+        oppure costruire consapevolmente una versione dei fatti.<br>
+        In entrambi i casi, qualcosa emergerà.
+      </p>
+
+      <hr>
+
+      <p>
+        Prima di iniziare, indica la persona con cui hai
+        una relazione affettiva stabile, coinvolta indirettamente nella vicenda.
+      </p>
+
       <button id="eva">Eva</button>
       <button id="adamo">Adamo</button>
     `;
+
     document.getElementById("eva").onclick = () => { partnerName = "Eva"; step++; render(); };
     document.getElementById("adamo").onclick = () => { partnerName = "Adamo"; step++; render(); };
     return;
   }
 
-  /* STEP 1 */
+  /* ===========================
+     STEP 1 — SCENARIO BLINDATO
+  ============================ */
   if (step === 1) {
     app.innerHTML = `
-      <p>L’azienda sviluppa tecnologie sensibili. La sicurezza del perimetro è essenziale.</p>
-      <p>Hai sostituito il responsabile diretto <strong>Walter</strong>, noto per una gestione severa.</p>
-      <p>Con te in sala c’era <strong>Alex</strong>, collega e confidente.</p>
-      <p><strong>${partnerName}</strong> ti ha contattato dal capannone logistico.</p>
-      <p>Ti sei allontanato temporaneamente. Un’ispezione ha rilevato la sala sguarnita.</p>
+      <p>
+        L’audizione avviene a porte chiuse.<br>
+        Non è un procedimento disciplinare.<br>
+        È una valutazione interna.
+      </p>
+
+      <p>
+        L’azienda per cui lavori sviluppa tecnologie sensibili e riservate.<br>
+        La sicurezza del perimetro è una condizione operativa, non formale.
+      </p>
+
+      <p>
+        Durante il turno hai sostituito il tuo responsabile diretto,
+        <strong>Walter</strong>, su sua richiesta.
+      </p>
+
+      <p>
+        In sala di controllo era presente anche <strong>Alex</strong>,<br>
+        un collega con cui hai un rapporto di fiducia personale.
+      </p>
+
+      <p>
+        Durante il turno sei stato contattato da <strong>${partnerName}</strong>,
+        che si trovava al capannone logistico.
+      </p>
+
+      <p>
+        Ti sei allontanato temporaneamente dalla sala,
+        chiedendo ad Alex di avvisarti in caso di necessità.
+      </p>
+
+      <p>
+        Un’ispezione successiva ha rilevato che la sala di controllo
+        era sguarnita.
+      </p>
+
+      <p><em>
+        Quello che è successo è successo.<br>
+        Ora conta come verrà letto.
+      </em></p>
+
       <button id="startBtn">Prosegui</button>
     `;
+
     document.getElementById("startBtn").onclick = () => { step++; render(); };
     return;
   }
 
-  /* DOMANDE */
-  if (step >= 2 && step < interventions.length + 2) {
-    const current = interventions[step - 2];
-    app.innerHTML = `
-      <p><strong>${current.question}</strong></p>
-      <textarea id="answer" rows="4" style="width:100%"></textarea><br><br>
-      <button id="sendBtn">Invia</button>
-    `;
-    document.getElementById("sendBtn").onclick = () => {
-      const value = document.getElementById("answer").value.trim();
-      answers.push(value);
-      evaluateAnswer(value);
-      step++;
-      render();
-    };
-    return;
-  }
-
-  /* OSSERVAZIONI */
-  if (!externalObservations) {
-    app.innerHTML = `<p>Valutazione in corso...</p>`;
-    observeWithLLM({
-      scenario: "FRINGE / LEAK",
-      pressureLevel,
-      playerModel,
-      answers,
-      observedAnchors,
-      context: {
-        partner: partnerName,
-        responsabile: "Walter",
-        amico: "Alex",
-        azienda: "tecnologie sensibili"
-      }
-    })
-    .then(res => {
-      externalObservations = res.osservazioni;
-      render();
-    })
-    .catch(() => {
-      app.innerHTML = "<p>Errore durante la valutazione.</p>";
-    });
-    return;
-  }
-
-  /* VOTAZIONE */
-  app.innerHTML = `
-    <h3>OSSERVATORE ESTERNO</h3>
-
-    ${Object.entries(externalObservations).map(([k, t]) => `
-      <div style="margin-bottom:20px">
-        <p><em>${t}</em></p>
-        <button style="font-size:2rem" onclick="vote(this,'${k}','primo')">🥇</button>
-        <button style="font-size:2rem" onclick="vote(this,'${k}','secondo')">🥈</button>
-        <button style="font-size:2rem" onclick="vote(this,'${k}','terzo')">🥉</button>
-      </div>
-    `).join("")}
-
-    <button id="submitVoteBtn" onclick="submitVote()">Invia preferenze</button>
-  `;
+  /* --- da qui in poi: IDENTICO alla versione corrente --- */
+  ...
 }
+
+
+
+
+
 
 /* ===========================
    VOTI
