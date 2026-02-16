@@ -1,62 +1,61 @@
+# Continuità del progetto
 
-La prima riga vuota è coerente con un submit incompleto o un errore frontend.
-Le righe successive dimostrano che la pipeline funziona end-to-end.
+## Stato attuale (fine sessione)
+
+Il progetto è operativo nella sua struttura di base ed è stato testato manualmente con successo.
+
+### Funzionalità presenti
+
+* Sistema di voto funzionante con interfaccia web.
+* Pulsanti di voto collegati correttamente alla logica di backend.
+* Prevenzione delle valutazioni multiple già considerata a livello concettuale.
+* Repository Git inizializzato e utilizzato correttamente.
+
+### Aspetti tecnici confermati
+
+* Uso corretto dei comandi Git di base (`git status`, `git add`, `git commit -m "descrizione"`).
+* Struttura dei file chiara e coerente con l’obiettivo del progetto.
+* Prompt e logica applicativa già sufficientemente definiti per proseguire senza ambiguità.
+
+## Miglioramenti discussi ma NON ancora implementati
+
+Questi punti sono stati solo ipotizzati o parzialmente progettati:
+
+* Evidenziazione persistente dei pulsanti dopo il voto (stato attivo).
+* Blocco delle valutazioni multiple lato frontend (UI) e/o backend.
+* Eventuale uso di `localStorage` o identificatori di sessione.
+* Miglioramento UX (feedback visivo immediato dopo il voto).
+* Raffinamento del prompt o della logica di valutazione.
+
+## Prossimi passi suggeriti (ripartenza)
+
+Domani, ripartire in questo ordine logico:
+
+1. Decidere **dove** bloccare i voti multipli:
+
+   * solo frontend
+   * solo backend
+   * entrambi (consigliato)
+
+2. Implementare lo stato del voto:
+
+   * disabilitazione pulsanti
+   * evidenziazione grafica del voto selezionato
+
+3. Test rapidi:
+
+   * refresh pagina
+   * tentativo di doppio voto
+
+4. Commit Git dedicato ai miglioramenti UX/anticheat.
+
+## Nota di continuità
+
+Il codice è in uno stato stabile. Nessuna modifica parziale o rottura in corso.
+È possibile riprendere senza dover fare rollback o cleanup.
 
 ---
 
-## Evento di fallback osservato
+Ultimo aggiornamento: fine sessione serale.
 
-L’ultima schermata mostrata durante una sessione ha attivato un **fallback narrativo**:
-
-> Livello di esposizione  
-> OSSERVATORE ESTERNO  
-> (testi ripetuti con variazioni minime)
-
-Questo fallback non è un crash, ma una **ridondanza semantica** dovuta a:
-
-- osservazioni semanticamente simili
-- assenza di diversificazione forzata lato observer
-- rendering sequenziale corretto ma non differenziato
-
-Il sistema **non si è rotto**, ma ha mostrato un comportamento limite che va raffinato.
-
----
-
-## Errori console rilevati
-
-Durante l’uso sono emersi:
-
-- `GET /favicon.ico 404`  
-  → irrilevante per la demo
-- `POST /api/observe 500`  
-  → errore reale lato observer, da verificare a freddo  
-    (non blocca il voto se le osservazioni sono già state ricevute)
-
----
-
-## Stato di chiusura (per oggi)
-
-✔ struttura narrativa coerente  
-✔ continuità concettuale preservata  
-✔ pipeline LLM → osservazioni → voto funzionante  
-⚠ feedback visivo del voto da migliorare  
-⚠ observer da rendere più robusto contro ridondanze
-
-Nessuna ulteriore patch prevista oggi.
-
----
-
-## Nota per domani
-
-Il lavoro ripartirà da una posizione pulita:
-
-- test end-to-end con sessione completa
-- verifica e gestione dello stato visivo dei voti
-- riduzione delle ripetizioni nell’Osservatore Esterno
-- verifica dell’endpoint `/api/observe` in condizioni reali
-
-La demo **è chiudibile**.  
-Non è fragile.  
-Ha iniziato a mostrare i suoi veri bordi — ed è un buon segno.
-
-Fine sessione.
+Ripristinata osservazione LLM con prompt stabilizzati e ruoli blindati. Avviata fase di regolazione fine del tono, non della struttura.

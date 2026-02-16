@@ -23,84 +23,98 @@ export default async function handler(req, res) {
     }
 
     /* =========================
-       PROMPT — RUOLI BLOCCATI
+       PROMPT — VERSIONE STABILE
     ========================== */
 
-   const prompts = {
-  fringe: `
-Sei un OSSERVATORE ESTERNO in un’esperienza narrativa chiamata FRINGE / LEAK.
+    const prompts = {
+      fringe: `
+Sei un OSSERVATORE ESTERNO nell’esperienza FRINGE / LEAK.
 Ti rivolgi direttamente al giocatore usando “tu”.
 
-NON fare riferimento a:
-- voce
-- tono
-- linguaggio del corpo
-- stati emotivi interni non espressi
+NON:
+- riscrivere lo scenario
+- riassumere i fatti
+- reinterpretare i ruoli
+- introdurre nuovi elementi narrativi
 
-Osserva solo:
-- formulazioni
-- ripetizioni
-- omissioni
-- spostamenti di responsabilità
-- continuità o fratture narrative
+PUOI OSSERVARE SOLO:
+- come vengono formulate le risposte
+- cosa viene ripetuto
+- cosa viene evitato
+- dove la responsabilità viene spostata o diluita
 
-Scrivi 5–7 frasi brevi.
-Non spiegare. Non diagnosticare.
-  `,
-  psicologico: `
+Scrivi 5–7 frasi.
+Frasi asciutte.
+Ogni frase deve contenere un’osservazione distinta.
+      `,
+
+      psicologico: `
 Sei un OSSERVATORE ESTERNO.
-Non sei uno psicologo e non fai diagnosi.
+Non fai diagnosi. Non usi linguaggio clinico.
 
-NON usare termini clinici o valutativi (insicurezza, fragilità, autostima, ecc.).
-NON spiegare motivazioni interne.
+NON:
+- nominare emozioni interne
+- spiegare motivazioni
+- giustificare il giocatore
 
-Rendi visibili solo le difese e le giustificazioni così come emergono dal testo.
+OSSERVA:
+- difese testuali
+- giustificazioni implicite
+- punti in cui il racconto si protegge
+
 Scrivi 5–7 frasi sobrie.
-  `,
-  amplificato: `
+Nessuna conclusione finale.
+      `,
+
+      amplificato: `
 Sei un OSSERVATORE ESTERNO.
-Rendi visibile ciò che è stato evitato o lasciato implicito.
+Rendi leggibile ciò che emerge per sottrazione.
 
-NON attribuire intenzioni.
-NON usare metafore corporee o vocali.
+NON:
+- attribuire intenzioni
+- usare metafore
+- riscrivere o correggere il racconto
 
-Scrivi 5–7 frasi incisive ma contenute.
-  `
-};
+EVIDENZIA:
+- ciò che non viene detto
+- ciò che viene lasciato sospeso
+- le conseguenze implicite della forma del racconto
 
-
-
-
+Scrivi 5–7 frasi.
+Tono netto, non teatrale.
+      `
+    };
 
     /* =========================
-       CONTESTO STRUTTURATO
+       CONTESTO BLINDATO
     ========================== */
 
     const userContext = `
-SCENARIO:
+SCENARIO (IMMUTABILE):
 ${scenario}
 
-RUOLI (NON AMBIGUI):
+RUOLI — NON INTERPRETABILI:
 - Soggetto osservato: GIOCATORE
 - Responsabile gerarchico: ${context?.responsabile || "Walter"}
 - Collega / confidente: ${context?.amico || "Alex"}
 - Partner affettivo: ${context?.partner || "n/d"}
 
 AMBIENTE:
-Azienda che sviluppa tecnologie sensibili e riservate.
-La sicurezza del perimetro è critica e non formale.
+Azienda che sviluppa tecnologie sensibili.
+La sicurezza è sostanziale, non simbolica.
 
-MODELLO COMPORTAMENTALE DEL GIOCATORE:
+MODELLO COMPORTAMENTALE (INDICATIVO):
 ${JSON.stringify(playerModel, null, 2)}
 
-RISPOSTE DEL GIOCATORE:
+RISPOSTE FORNITE DAL GIOCATORE:
 ${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
 
-ANCORE RICORRENTI:
+RICORRENZE OSSERVATE:
 ${observedAnchors.join(", ")}
 
-NOTA:
-Le osservazioni devono riguardare SOLO il giocatore.
+ISTRUZIONE FINALE:
+Non valutare la verità dei fatti.
+Osserva solo come il giocatore ha scelto di esporsi.
     `;
 
     async function callLLM(systemPrompt) {
@@ -161,30 +175,30 @@ Le osservazioni devono riguardare SOLO il giocatore.
 }
 
 /* ===========================
-   OSSERVAZIONE PROCEDURALE
+   FALLBACK PROCEDURALE
 =========================== */
 
 function proceduralObservation({ pressureLevel, playerModel, observedAnchors }) {
   const fragments = [];
 
   if (pressureLevel > 70) {
-    fragments.push("La pressione ha reso ogni risposta più carica di conseguenze.");
+    fragments.push("La pressione ha reso ogni risposta più densa di implicazioni.");
   } else {
-    fragments.push("Hai mantenuto una continuità narrativa senza forzature.");
+    fragments.push("Il racconto mantiene una continuità senza forzature evidenti.");
   }
 
   if (playerModel.stile === "elusivo") {
-    fragments.push("Hai ridotto l’esposizione lasciando spazio all’indeterminatezza.");
+    fragments.push("L’esposizione è stata ridotta attraverso formulazioni caute.");
   }
 
   if (observedAnchors.length > 0) {
     fragments.push(
-      `Alcune formulazioni sono tornate più volte (${observedAnchors.join(", ")}).`
+      `Alcuni elementi ritornano più volte (${observedAnchors.join(", ")}).`
     );
   }
 
   fragments.push(
-    "Non è una questione di verità, ma di come la tua posizione si è resa leggibile."
+    "La lettura finale dipende da come questa posizione verrà interpretata."
   );
 
   return fragments.join(" ");
