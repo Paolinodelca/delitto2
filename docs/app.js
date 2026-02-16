@@ -209,6 +209,78 @@ function render() {
     return;
   }
 
+
+  /* ===========================
+     DOMANDE
+  ============================ */
+  if (step >= 2 && step < interventions.length + 2) {
+    const current = interventions[step - 2];
+    app.innerHTML = `
+      <p><strong>${current.question}</strong></p>
+      <textarea id="answer" rows="4" style="width:100%"></textarea><br><br>
+      <button id="sendBtn">Invia</button>
+    `;
+
+    document.getElementById("sendBtn").onclick = () => {
+      const value = document.getElementById("answer").value.trim();
+      answers.push(value);
+      evaluateAnswer(value);
+      step++;
+      render();
+    };
+    return;
+  }
+
+  /* ===========================
+     OSSERVAZIONI
+  ============================ */
+  if (!externalObservations) {
+    app.innerHTML = `<p>Valutazione in corso...</p>`;
+
+    observeWithLLM({
+      scenario: "FRINGE / LEAK",
+      pressureLevel,
+      playerModel,
+      answers,
+      observedAnchors,
+      context: {
+        partner: partnerName,
+        responsabile: "Walter",
+        amico: "Alex",
+        azienda: "tecnologie sensibili"
+      }
+    })
+    .then(res => {
+      externalObservations = res.osservazioni;
+      render();
+    })
+    .catch(err => {
+      console.error(err);
+      app.innerHTML = "<p>Errore durante la valutazione.</p>";
+    });
+
+    return;
+  }
+
+  /* ===========================
+     VOTAZIONE
+  ============================ */
+  app.innerHTML = `
+    <h3>OSSERVATORE ESTERNO</h3>
+
+    ${Object.entries(externalObservations).map(([k, t]) => `
+      <div style="margin-bottom:20px">
+        <p><em>${t}</em></p>
+        <button style="font-size:2rem" onclick="vote(this,'${k}','primo')">🥇</button>
+        <button style="font-size:2rem" onclick="vote(this,'${k}','secondo')">🥈</button>
+        <button style="font-size:2rem" onclick="vote(this,'${k}','terzo')">🥉</button>
+      </div>
+    `).join("")}
+
+    <button id="submitVoteBtn" onclick="submitVote()">Invia preferenze</button>
+  `;
+
+
   /* --- da qui in poi: IDENTICO alla versione corrente --- */
 
 }
