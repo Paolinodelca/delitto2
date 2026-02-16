@@ -210,7 +210,7 @@ function render() {
   }
 
   /* --- da qui in poi: IDENTICO alla versione corrente --- */
-  ...
+
 }
 
 
