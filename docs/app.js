@@ -28,6 +28,21 @@ style.innerHTML = `
     opacity: 0.5;
     cursor: not-allowed;
   }
+  .didascalia {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  font-size: 0.9rem;
+}
+
+.didascalia .colonna {
+  line-height: 1.4;
+}
+
 `;
 document.head.appendChild(style);
 
@@ -60,6 +75,30 @@ const interventions = [
   { question: "Riguardando la sequenza degli eventi: in quale punto il sistema ha smesso di funzionare come previsto?" },
   { question: "Se emergesse solo una versione parziale dei fatti, chi pensi che ne pagherebbe il prezzo più alto?" }
 ];
+
+/* ===========================
+   DIDASCALIA
+=========================== */
+
+function renderDidascalia() {
+  return `
+    <div class="didascalia">
+      <div class="colonna">
+        <strong>Contesto</strong><br>
+        Lavori in una azienda con alto standard di sicurezza.<br>
+        Hai svolto il turno in sostituzione del tuo responsabile (Walter).<br>
+        Per un breve periodo hai creato una potenziale falla nella sicurezza dell’azienda.
+      </div>
+      <div class="colonna">
+        <strong>Ruoli</strong><br>
+        <strong>Walter</strong> – è il tuo responsabile diretto che hai dovuto sostituire nella sala di controllo.<br>
+        <strong>Alex</strong> – tuo collega e caro amico, è presente con te in sala controllo.<br>
+        <strong>${partnerName}</strong> – è da un paio di anni il tuo partner e ti ha chiamato con urgenza dal capannone di Logistica.
+      </div>
+    </div>
+  `;
+}
+
 
 /* ===========================
    ANCORE
@@ -215,11 +254,16 @@ function render() {
   ============================ */
   if (step >= 2 && step < interventions.length + 2) {
     const current = interventions[step - 2];
+    
+    
     app.innerHTML = `
-      <p><strong>${current.question}</strong></p>
-      <textarea id="answer" rows="4" style="width:100%"></textarea><br><br>
-      <button id="sendBtn">Invia</button>
-    `;
+  ${renderDidascalia()}
+
+  <p><strong>${current.question}</strong></p>
+  <textarea id="answer" rows="3" style="width:100%"></textarea><br><br>
+  <button id="sendBtn">Invia</button>
+`;
+
 
     document.getElementById("sendBtn").onclick = () => {
       const value = document.getElementById("answer").value.trim();
