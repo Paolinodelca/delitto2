@@ -83,21 +83,23 @@ const interventions = [
 function renderDidascalia() {
   return `
     <div class="didascalia">
-      <div class="colonna">
-        <strong>Contesto</strong><br>
-        Lavori in una azienda con alto standard di sicurezza.<br>
-        Hai svolto il turno in sostituzione del tuo responsabile (Walter).<br>
-        Per un breve periodo hai creato una potenziale falla nella sicurezza dell’azienda.
+      <strong>CONTESTO OPERATIVO</strong>
+      <div>
+        Lavori in un’azienda con elevati standard di sicurezza.<br>
+        Durante il turno hai sostituito il tuo responsabile diretto.<br>
+        Per un breve periodo hai creato una potenziale falla nel perimetro di sicurezza.
       </div>
-      <div class="colonna">
-        <strong>Ruoli</strong><br>
-        <strong>Walter</strong> – è il tuo responsabile diretto che hai dovuto sostituire nella sala di controllo.<br>
-        <strong>Alex</strong> – tuo collega e caro amico, è presente con te in sala controllo.<br>
-        <strong>${partnerName}</strong> – è da un paio di anni il tuo partner e ti ha chiamato con urgenza dal capannone di Logistica.
+
+      <strong>PERSONE COINVOLTE</strong>
+      <div>
+        <strong>Walter</strong> – tuo responsabile diretto, assente durante il turno che hai coperto.<br>
+        <strong>Alex</strong> – tuo collega e amico personale, presente con te in sala di controllo.<br>
+        <strong>${partnerName}</strong> – tuo partner, ti ha contattato con urgenza dal capannone di logistica.
       </div>
     </div>
   `;
 }
+
 
 
 /* ===========================
