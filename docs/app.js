@@ -1,4 +1,5 @@
-import { observeWithLLM } from "./observerLLM.js";
+import { observeProcedural } from "./observerLLM.js";
+
 
 const app = document.getElementById("app");
 console.log("FRINGE LIVE", Date.now());
@@ -256,7 +257,7 @@ function render() {
   if (!externalObservations) {
     app.innerHTML = `<p>Valutazione in corso...</p>`;
 
-    observeWithLLM({
+    observeProcedural({
       pressureLevel,
       playerModel,
       answers
