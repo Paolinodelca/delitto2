@@ -114,12 +114,29 @@ function renderObservations(result) {
     return;
   }
 
-  result.osservazioni.forEach(o => {
+  const labels = {
+    fringe: "FRINGE / LEAK — Lettura istituzionale",
+    psicologico: "Lettura psicologica (assumendo risposte sincere)",
+    amplificato: "Lettura amplificata (ipotesi di messa in scena)"
+  };
+
+  Object.entries(result.osservazioni).forEach(([key, text]) => {
+    const section = document.createElement("div");
+    section.style.marginBottom = "16px";
+
+    const title = document.createElement("strong");
+    title.textContent = labels[key] || key;
+
     const p = document.createElement("p");
-    p.textContent = o;
-    container.appendChild(p);
+    p.style.marginTop = "4px";
+    p.textContent = text;
+
+    section.appendChild(title);
+    section.appendChild(p);
+    container.appendChild(section);
   });
 }
+
 
 
 
