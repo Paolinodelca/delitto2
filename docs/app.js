@@ -129,7 +129,7 @@ function renderObservations(result) {
 /* ===========================
    RENDER
 =========================== */
-function render() {
+async function render() {
   app.innerHTML = "";
 
   /* STEP 0 — INTRO */
@@ -277,18 +277,43 @@ function render() {
   }
 
   /* OSSERVAZIONI */
-  if (!externalObservations) {
-    app.innerHTML = `<p>Valutazione in corso...</p>`;
+/* OSSERVAZIONI */
+if (!externalObservations) {
+  app.innerHTML = `
+    <h3>Valutazione in corso…</h3>
+    <div id="output"></div>
+  `;
 
-     const result =  observeProcedural({
-      pressureLevel,
-      playerModel,
-      answers
-    }) ;
-    renderObservations(result);
+  (async () => {
+    try {
+      const result = await observeProcedural({
+        pressureLevel,
+        playerModel,
+        answers
+      });
 
-    return;
-  }
+      console.log("RISULTATO OSSERVATORE", result);
+
+      externalObservations = result;
+      renderObservations(result);
+
+      // dopo aver mostrato le osservazioni,
+      // passi alla votazione
+      setTimeout(() => {
+        step++;
+        render();
+      }, 1200);
+
+    } catch (err) {
+      console.error("Errore observeProcedural:", err);
+      document.getElementById("output").textContent =
+        "Errore durante la valutazione.";
+    }
+  })();
+
+  return;
+}
+
 
   /* VOTAZIONE */
   app.innerHTML = `
