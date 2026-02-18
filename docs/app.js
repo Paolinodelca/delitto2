@@ -103,6 +103,29 @@ function evaluateAnswer(text) {
   pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel));
 }
 
+function renderObservations(result) {
+  const container = document.getElementById("output");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (!result || !result.osservazioni) {
+    container.textContent = "Nessuna osservazione disponibile.";
+    return;
+  }
+
+  result.osservazioni.forEach(o => {
+    const p = document.createElement("p");
+    p.textContent = o;
+    container.appendChild(p);
+  });
+}
+
+
+
+
+
+
 /* ===========================
    RENDER
 =========================== */
