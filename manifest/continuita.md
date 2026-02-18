@@ -39,3 +39,7 @@ Questa demo simula un’indagine narrativa: osservi indizi, formuli ipotesi e va
 * Rifinire microcopy della didascalia.
 * Test rapido con 2–3 utenti.
 * Tarare pesi del profilo di esito.
+
+Inserita sintesi canonica per fissare il frame interpretativo:
+il gioco non valuta i fatti ma la costruzione narrativa della responsabilità.
+La didascalia diventa elemento funzionale e non decorativo.

@@ -1,64 +1,36 @@
 export async function observeWithLLM(payload) {
-  try {
-    const res = await fetch("/api/observe", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
+  const { pressureLevel, playerModel, inputQualities } = payload;
 
-    if (!res.ok) throw new Error("LLM non disponibile");
-    return await res.json();
+  const blanks = inputQualities.filter(q => q === "blank").length;
+  const nonsense = inputQualities.filter(q => q === "nonsense").length;
+  const hostile = inputQualities.filter(q => q === "hostile").length;
+  const valid = inputQualities.filter(q => q === "valid").length;
 
-  } catch {
-    const anchors = extractAnchors(payload.answers || []);
+  let text = "";
 
-    const fallback = proceduralObservation(
-      payload.pressureLevel || 0,
-      payload.playerModel || {},
-      anchors
-    );
-
-    return {
-      osservazioni: {
-        fringe: fallback,
-        psicologico: fallback,
-        amplificato: fallback
-      }
-    };
-  }
-}
-
-/* ===========================
-   ANCORE
-=========================== */
-
-function extractAnchors(answers) {
-  const counts = {};
-  const blacklist = ["che", "per", "con", "non", "sono", "come", "quando"];
-
-  answers.forEach(a => {
-    a.toLowerCase()
-      .replace(/[^\w\s]/g, "")
-      .split(/\s+/)
-      .filter(w => w.length > 4 && !blacklist.includes(w))
-      .forEach(w => counts[w] = (counts[w] || 0) + 1);
-  });
-
-  return Object.entries(counts)
-    .filter(([, n]) => n >= 2)
-    .map(([w]) => w)
-    .slice(0, 3);
-}
-
-function proceduralObservation(pressureLevel, playerModel, anchors) {
-  let text =
-    pressureLevel > 60
-      ? "La pressione ha guidato le risposte verso una tenuta formale."
-      : "Hai mantenuto una postura controllata senza chiudere il senso.";
-
-  if (anchors.length > 0) {
-    text += ` Alcuni elementi sono tornati più volte (${anchors.join(", ")}).`;
+  if (valid === 0) {
+    text =
+      "Non sono emerse risposte interpretabili. " +
+      "Il silenzio e l’assenza di contenuto impediscono qualsiasi attribuzione di responsabilità narrativa.";
+  } else if (blanks > valid) {
+    text =
+      "Le omissioni superano le risposte fornite. " +
+      "Il profilo risultante è opaco: la mancanza di esposizione blocca l’analisi.";
+  } else if (hostile > 0) {
+    text =
+      "Sono state rilevate risposte provocatorie. " +
+      "La strategia sembra orientata a disturbare il quadro piuttosto che chiarirlo.";
+  } else {
+    text =
+      "Le risposte fornite consentono una lettura parziale. " +
+      "Il quadro resta coerente ma incompleto.";
   }
 
-  return text;
+  return {
+    osservazioni: {
+      fringe: text,
+      psicologico: text,
+      amplificato: text
+    }
+  };
 }
