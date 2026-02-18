@@ -257,14 +257,12 @@ function render() {
   if (!externalObservations) {
     app.innerHTML = `<p>Valutazione in corso...</p>`;
 
-    observeProcedural({
+     const result =  observeProcedural({
       pressureLevel,
       playerModel,
       answers
-    }).then(res => {
-      externalObservations = res.osservazioni;
-      render();
-    });
+    }) ;
+    renderObservations(result);
 
     return;
   }
