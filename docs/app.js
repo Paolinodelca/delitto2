@@ -134,8 +134,76 @@ function renderIntro() {
    ====================================================== */
 
 function renderObservations(observations) {
-  currentObservations = observations;
+  // ✅ 1) Recupero robusto dei dati (evita crash tipo "cannot read fringe of undefined")
+  const data =
+    observations ||
+    window.OBSERVATIONS_DATA ||
+    window.currentObservations ||
+    currentObservations ||
+    null;
 
+  // ✅ 2) Se manca tutto, mostra un messaggio e NON crasha
+  if (!data || typeof data !== "object") {
+    console.error("renderObservations: osservazioni mancanti/invalidi", {
+      observations,
+      OBSERVATIONS_DATA: window.OBSERVATIONS_DATA,
+      currentObservations: window.currentObservations,
+      currentObservationsVar: currentObservations
+    });
+
+    const root = el("app");
+    clear(root);
+
+    const header = document.createElement("div");
+    header.className = "header";
+    header.innerHTML = `
+      <h1>${GAME_CONFIG.scenario}</h1>
+      <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
+      <h2>OSSERVAZIONI DELL’OSSERVATORE</h2>
+    `;
+
+    const container = document.createElement("div");
+    container.className = "observations";
+    container.innerHTML = `<p>Nessuna osservazione disponibile (errore di caricamento).</p>`;
+
+    const retry = document.createElement("button");
+    retry.className = "primary";
+    retry.textContent = "Riprova";
+    retry.onclick = () => location.reload();
+
+    root.appendChild(header);
+    root.appendChild(container);
+    root.appendChild(retry);
+    return;
+  }
+
+  // ✅ 3) Normalizza: vogliamo SEMPRE stringhe, mai oggetti/undefined
+  const normalized = {
+    fringe:
+      typeof data.fringe === "string"
+        ? data.fringe
+        : data.fringe
+          ? JSON.stringify(data.fringe)
+          : "",
+    psicologico:
+      typeof data.psicologico === "string"
+        ? data.psicologico
+        : data.psicologico
+          ? JSON.stringify(data.psicologico)
+          : "",
+    amplificato:
+      typeof data.amplificato === "string"
+        ? data.amplificato
+        : data.amplificato
+          ? JSON.stringify(data.amplificato)
+          : ""
+  };
+
+  // ✅ 4) Salva stato (così renderVoting può leggerlo)
+  currentObservations = normalized;
+  window.currentObservations = normalized;
+
+  // ✅ 5) Render (uguale al tuo, ma usando normalized)
   const root = el("app");
   clear(root);
 
@@ -150,23 +218,29 @@ function renderObservations(observations) {
   const container = document.createElement("div");
   container.className = "observations";
 
-  container.appendChild(renderObservationBlock(
-    "FRINGE / LEAK",
-    "Lettura istituzionale, prudente, esterna.",
-    observations.fringe
-  ));
+  container.appendChild(
+    renderObservationBlock(
+      "FRINGE / LEAK",
+      "Lettura istituzionale, prudente, esterna.",
+      normalized.fringe || "Nessun testo disponibile."
+    )
+  );
 
-  container.appendChild(renderObservationBlock(
-    "PSICOLOGICO",
-    "Assumendo che le risposte siano sincere.",
-    observations.psicologico
-  ));
+  container.appendChild(
+    renderObservationBlock(
+      "PSICOLOGICO",
+      "Assumendo che le risposte siano sincere.",
+      normalized.psicologico || "Nessun testo disponibile."
+    )
+  );
 
-  container.appendChild(renderObservationBlock(
-    "AMPLIFICATO",
-    "Assumendo che le risposte siano una messa in scena o casuali.",
-    observations.amplificato
-  ));
+  container.appendChild(
+    renderObservationBlock(
+      "AMPLIFICATO",
+      "Assumendo che le risposte siano una messa in scena o casuali.",
+      normalized.amplificato || "Nessun testo disponibile."
+    )
+  );
 
   const proceed = document.createElement("button");
   proceed.className = "primary";
@@ -179,6 +253,7 @@ function renderObservations(observations) {
 
   fadeIn(container);
 }
+
 
 function renderObservationBlock(title, subtitle, text) {
   const box = document.createElement("div");
