@@ -22,8 +22,17 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Dati incompleti" });
     }
 
+    // Qualità input (blindatura anti “invenzioni” quando è tutto vuoto)
+    const trimmedAnswers = Array.isArray(answers) ? answers.map(a => (a ?? "").toString().trim()) : [];
+    const blankCount = trimmedAnswers.filter(a => a.length === 0).length;
+    const shortCount = trimmedAnswers.filter(a => a.length > 0 && a.length < 10).length;
+    const total = trimmedAnswers.length;
+
     /* =========================
-       PROMPT — VERSIONE RIFLESSIVA
+       PROMPT — VERSIONE DIFFERENZIATA
+       Regola scolpita:
+       - PSICOLOGICO = cosa fa il testo (meccanismi)
+       - AMPLIFICATO = a cosa potrebbe servire quel testo (2 mondi possibili)
     ========================== */
 
     const prompts = {
@@ -36,11 +45,15 @@ NON:
 - riassumere i fatti
 - correggere il racconto
 - suggerire cosa sarebbe stato giusto fare
+- inventare dettagli non presenti nelle risposte
 
 OSSERVA SOLO:
 - come scegli di esporre i fatti
 - dove il linguaggio si fa prudente o formale
-- come la responsabilità viene distribuita
+- come vengono distribuite le parti “operative” del racconto (azioni, tempi, ruoli)
+
+VINCOLO:
+Se molte risposte sono vuote o brevissime, dillo esplicitamente e limita l’osservazione a questo.
 
 Scrivi 5–7 frasi.
 Tono neutro.
@@ -50,40 +63,53 @@ Nessuna frase deve chiudere il senso complessivo.
       psicologico: `
 Sei un OSSERVATORE ESTERNO.
 Non fai diagnosi. Non utilizzi linguaggio clinico.
-Non attribuisci stati mentali.
+Non attribuisci stati mentali. Non “spieghi” motivazioni.
+
+OBIETTIVO:
+Descrivi SOLO i meccanismi del testo (cosa fa il racconto), non “cosa significa la persona”.
 
 OSSERVA:
-- come il racconto si protegge
-- dove compaiono giustificazioni implicite
-- quali passaggi restano non esplorati
+- omissioni e buchi (cosa non viene detto)
+- forme di cautela (“si”, “per un breve periodo”, formule impersonali)
+- giustificazioni IMPLICITE (senza etichettarle)
+- slittamenti di registro (formale/informale) e dove avvengono
+- passaggi non esplorati
 
-NON:
-- trarre conclusioni
-- nominare emozioni
-- interpretare intenzioni
+NON USARE MAI queste parole (o equivalenti):
+“difesa”, “colpa”, “responsabilità”, “scaricare”, “trasferire”, “manipolazione”.
+
+VINCOLO:
+Se molte risposte sono vuote o brevissime, limita il testo a: effetto delle omissioni + cosa resta non esplorato. NON inventare.
 
 Scrivi 5–7 frasi sobrie.
+Stile: “Compare… / Si nota… / Resta non detto…”.
 Il testo deve rimanere aperto.
       `,
 
       amplificato: `
 Sei un OSSERVATORE ESTERNO.
 
-Considera due ipotesi parallele:
-1) Le risposte riflettono il modo abituale di pensare e agire del giocatore.
-2) Le risposte sono state costruite deliberatamente per ottenere un certo effetto.
+Nota: qui NON devi ripetere PSICOLOGICO.
+PSICOLOGICO descrive “cosa fa il testo”.
+Qui devi descrivere “a cosa potrebbe servire quel testo”, in due mondi possibili.
 
-Per ciascuna ipotesi:
-- descrivi cosa emerge dal modo in cui il racconto è stato costruito
-- senza stabilire quale ipotesi sia vera
+Considera due ipotesi parallele (nella stessa risposta, con etichette chiare):
 
-NON:
-- giudicare
-- diagnosticare
-- concludere
+IPOTESI 1 — SINCERO (abitudine):
+- descrivi un PATTERN DI DECISIONE abituale che si può dedurre dalla forma (es. uso dell’urgenza come cornice, delega, priorità, gestione del rischio)
+- evita giudizi morali e conclusioni
 
-Scrivi 6–8 frasi totali.
-Il testo deve rimanere volutamente ambiguo.
+IPOTESI 2 — MESSA IN SCENA / CASUALE (regia):
+- descrivi un PATTERN DI REGIA NARRATIVA (obiettivo retorico): come il testo prova a ottenere un effetto (es. costruire antagonista, posizionarsi come risolutore, creare complicità, minimizzare attrito)
+- ancora: niente diagnosi, niente “verdetti”
+
+VINCOLI:
+- NON dire quale ipotesi è vera.
+- NON inventare dettagli non presenti.
+- Se molte risposte sono vuote/brevissime: IPOTESI 1 = “non emerge pattern”; IPOTESI 2 = “l’effetto è opacità/assenza di materiale”.
+
+Scrivi 6–8 frasi totali (non per ipotesi).
+Il testo deve restare volutamente ambiguo ma leggibile.
       `
     };
 
@@ -105,11 +131,16 @@ AMBIENTE:
 Azienda che sviluppa tecnologie sensibili.
 La sicurezza è una condizione operativa, non simbolica.
 
+QUALITÀ INPUT (solo per evitare invenzioni):
+- totale risposte: ${total}
+- risposte vuote: ${blankCount}
+- risposte molto brevi (<10 char): ${shortCount}
+
 MODELLO COMPORTAMENTALE (INDICATIVO):
 ${JSON.stringify(playerModel, null, 2)}
 
 RISPOSTE FORNITE DAL GIOCATORE:
-${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
+${trimmedAnswers.map((a, i) => `${i + 1}. ${a || "[vuoto]"}`).join("\n")}
 
 RICORRENZE OSSERVATE:
 ${observedAnchors.length > 0 ? observedAnchors.join(", ") : "nessuna esplicita"}
@@ -144,7 +175,7 @@ Osserva esclusivamente la forma dell’esposizione.
       }
 
       const data = await response.json();
-      return data.choices[0].message.content.trim();
+      return data.choices?.[0]?.message?.content?.trim() || "";
     }
 
     const [fringe, psicologico, amplificato] = await Promise.all([
