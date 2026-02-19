@@ -1,6 +1,5 @@
 import { observeProcedural } from "./observerLLM.js";
 
-
 const app = document.getElementById("app");
 console.log("FRINGE LIVE", Date.now());
 
@@ -10,44 +9,10 @@ const MAX_PRESSURE = 100;
 
 let externalObservations = null;
 const answers = [];
-const observedAnchors = [];
 
 let voteRanking = { primo: null, secondo: null, terzo: null };
 let votedButtons = { primo: null, secondo: null, terzo: null };
 let voteSubmitted = false;
-
-/* ===========================
-   STILE
-=========================== */
-const style = document.createElement("style");
-style.innerHTML = `
-  .selected-vote {
-    outline: 3px solid black;
-    background-color: #ddd;
-  }
-  button[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-  .didascalia {
-    color: #111;
-    padding: 12px;
-    margin-bottom: 16px;
-    background: #eeeeee;
-    border: 1px solid #999;
-    font-size: 0.9rem;
-    line-height: 1.4;
-  }
-  .didascalia strong {
-    color: #000;
-  }
-`;
-document.head.appendChild(style);
-
-/* ===========================
-   SCELTE INIZIALI
-=========================== */
-let partnerName = "Eva";
 
 /* ===========================
    MODELLO GIOCATORE
@@ -84,14 +49,13 @@ function renderDidascalia() {
       <br><br>
       <strong>Persone coinvolte</strong><br>
       <strong>Walter</strong> – tuo responsabile diretto.<br>
-      <strong>Alex</strong> – collega e amico personale, presente in sala di controllo.<br>
-      <strong>${partnerName}</strong> – tuo/a partner, al capannone logistico.
+      <strong>Alex</strong> – collega e amico personale, presente in sala di controllo.
     </div>
   `;
 }
 
 /* ===========================
-   VALUTAZIONE RISPOSTE (BASE)
+   VALUTAZIONE BASE
 =========================== */
 function evaluateAnswer(text) {
   if (text.length < 12) {
@@ -103,186 +67,50 @@ function evaluateAnswer(text) {
   pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel));
 }
 
-function renderObservations(result) {
-  const container = document.getElementById("output");
-  if (!container) return;
+/* ===========================
+   OSSERVAZIONI – RENDER
+=========================== */
+function renderObservationsBlock(osservazioni) {
+  return `
+    <h3>OSSERVAZIONI DELL’OSSERVATORE</h3>
 
-  container.innerHTML = "";
+    <p><strong>FRINGE / LEAK</strong><br>${osservazioni.fringe}</p>
+    <p><strong>PSICOLOGICO</strong><br>${osservazioni.psicologico}</p>
+    <p><strong>AMPLIFICATO</strong><br>${osservazioni.amplificato}</p>
 
-  if (!result || !result.osservazioni) {
-    container.textContent = "Nessuna osservazione disponibile.";
-    return;
-  }
-
-  const labels = {
-    fringe: "FRINGE / LEAK — Lettura istituzionale",
-    psicologico: "Lettura psicologica (assumendo risposte sincere)",
-    amplificato: "Lettura amplificata (ipotesi di messa in scena)"
-  };
-
-  Object.entries(result.osservazioni).forEach(([key, text]) => {
-    const section = document.createElement("div");
-    section.style.marginBottom = "16px";
-
-    const title = document.createElement("strong");
-    title.textContent = labels[key] || key;
-
-    const p = document.createElement("p");
-    p.style.marginTop = "4px";
-    p.textContent = text;
-
-    section.appendChild(title);
-    section.appendChild(p);
-    container.appendChild(section);
-  });
+    <button id="continueToVote">Prosegui</button>
+  `;
 }
 
-
-
-
-
-
-
 /* ===========================
-   RENDER
+   RENDER PRINCIPALE
 =========================== */
 async function render() {
   app.innerHTML = "";
 
-  /* STEP 0 — INTRO */
+  /* INTRO */
   if (step === 0) {
     app.innerHTML = `
       <h2>FRINGE / LEAK</h2>
-
-      <p>
-        FRINGE / LEAK è una simulazione narrativa.<br>
-        Ti viene chiesto di assumere un ruolo e rispondere
-        come se le conseguenze delle tue risposte fossero reali.
-      </p>
-
-      <p>
-        Non è un test psicologico.<br>
-        Non valuta se hai detto la verità.<br>
-        Osserva <em>come</em> rendi accettabili le tue decisioni.
-      </p>
-
-      <p>
-        Prima di iniziare, indica la persona con cui hai
-        una relazione affettiva stabile, coinvolta indirettamente nella vicenda.
-      </p>
-
-      <button id="eva">Eva</button>
-      <button id="adamo">Adamo</button>
+      <p>Quello che è successo è successo.<br>Ora devi decidere come verrà letto.</p>
+      <button id="startBtn">Inizia</button>
     `;
-
-    document.getElementById("eva").onclick = () => {
-      partnerName = "Eva";
-      step++;
-      render();
-    };
-    document.getElementById("adamo").onclick = () => {
-      partnerName = "Adamo";
-      step++;
-      render();
-    };
-    return;
-  }
-
-  /* STEP 1 — SCENARIO */
-  if (step === 1) {
-    app.innerHTML = `
-      <p>
-        Tu lavori per <strong>Saturn Way</strong>, un’azienda di ricerca avanzata
-        i cui standard di sicurezza sono molto alti.
-      </p>
-
-      <p>
-        Ti trovi davanti a una commissione interna di Saturn Way
-        perché durante un tuo turno di guardia si è verificato un disservizio.
-      </p>
-
-      <p>
-        L’audizione avviene a porte chiuse.<br>
-        Le persone coinvolte vengono ascoltate separatamente.
-      </p>
-
-      <p>
-        Non è un procedimento disciplinare.<br>
-        Non è un tribunale.<br>
-        È una valutazione.
-      </p>
-
-      <p>
-        Durante il turno hai sostituito il tuo responsabile, <strong>Walter</strong>.<br>
-        In sala di controllo era presente anche <strong>Alex</strong>,
-        un tuo caro amico.
-      </p>
-
-      <p>
-        Durante il turno sei stato contattato da <strong>${partnerName}</strong>,
-        che si trovava al capannone logistico.
-      </p>
-
-      <p>
-        Hai lasciato temporaneamente la sala,
-        chiedendo ad Alex di avvisarti in caso di necessità.
-      </p>
-
-      <p>
-        Un’ispezione successiva ha trovato la sala di controllo sguarnita.
-      </p>
-
-      <p><em>
-        Quello che è successo è successo.<br>
-        Ora devi decidere come verrà letto.
-      </em></p>
-
-      <button id="startBtn">Prosegui</button>
-    `;
-
     document.getElementById("startBtn").onclick = () => {
-      step++;
-      render();
-    };
-    return;
-  }
-
-  /* STEP 2 — MICROCOPY */
-  if (step === 2) {
-    app.innerHTML = `
-      <p>
-        Questa non è una ricostruzione dei fatti.
-      </p>
-      <p>
-        È una valutazione di come rendi accettabili le tue decisioni.
-      </p>
-      <p>
-        Non ti viene chiesto di dire cosa è successo davvero,<br>
-        ma quale versione dei fatti scegli di sostenere
-        quando sai che verrà letta, analizzata e interpretata.
-      </p>
-
-      <button id="continueBtn">Continua</button>
-    `;
-
-    document.getElementById("continueBtn").onclick = () => {
-      step++;
+      step = 1;
       render();
     };
     return;
   }
 
   /* DOMANDE */
-  if (step >= 3 && step < interventions.length + 3) {
-    const current = interventions[step - 3];
-
+  if (step >= 1 && step <= interventions.length) {
+    const current = interventions[step - 1];
     app.innerHTML = `
       ${renderDidascalia()}
       <p><strong>${current.question}</strong></p>
       <textarea id="answer" rows="3" style="width:100%"></textarea><br><br>
       <button id="sendBtn">Invia</button>
     `;
-
     document.getElementById("sendBtn").onclick = () => {
       const value = document.getElementById("answer").value.trim();
       answers.push(value);
@@ -293,58 +121,34 @@ async function render() {
     return;
   }
 
-  /* OSSERVAZIONI */
-/* OSSERVAZIONI */
-if (!externalObservations) {
-  app.innerHTML = `
-    <h3>Valutazione in corso…</h3>
-    <div id="output"></div>
-  `;
+  /* OSSERVAZIONE (BLOCCO DEDICATO) */
+  if (!externalObservations) {
+    app.innerHTML = `<p>Valutazione in corso…</p>`;
 
-  (async () => {
-    try {
-      const result = await observeProcedural({
-        pressureLevel,
-        playerModel,
-        answers
-      });
+    const result = await observeProcedural({
+      pressureLevel,
+      playerModel,
+      answers
+    });
 
-      console.log("RISULTATO OSSERVATORE", result);
+    externalObservations = result.osservazioni;
 
-      externalObservations = result;
-      renderObservations(result);
-
-      // dopo aver mostrato le osservazioni,
-      // passi alla votazione
-      setTimeout(() => {
+    // RALLENTAMENTO VOLUTO
+    setTimeout(() => {
+      app.innerHTML = renderObservationsBlock(externalObservations);
+      document.getElementById("continueToVote").onclick = () => {
         step++;
         render();
-      }, 1200);
+      };
+    }, 800);
 
-    } catch (err) {
-      console.error("Errore observeProcedural:", err);
-      document.getElementById("output").textContent =
-        "Errore durante la valutazione.";
-    }
-  })();
+    return;
+  }
 
-  return;
-}
-
-
-  /* VOTAZIONE */
+  /* VOTO */
   app.innerHTML = `
     <h3>OSSERVATORE ESTERNO</h3>
-
-    <p>
-      Di seguito trovi tre letture indipendenti dello stesso materiale.
-    </p>
-    <p>
-      Assegna:
-      🥇 alla più convincente,
-      🥈 alla seconda,
-      🥉 alla terza.
-    </p>
+    <p>Assegna una preferenza alle tre letture.</p>
 
     ${Object.entries(externalObservations).map(([k, t]) => `
       <div style="margin-bottom:20px">
@@ -374,18 +178,13 @@ window.vote = function(btn, tipo, pos) {
   votedButtons[pos] = btn;
 };
 
-window.submitVote = async function() {
-  if (voteSubmitted) return;
-
+window.submitVote = function() {
   if (!voteRanking.primo || !voteRanking.secondo || !voteRanking.terzo) {
     alert("Assegna tutte e tre le preferenze");
     return;
   }
-
   voteSubmitted = true;
-  document.getElementById("submitVoteBtn").disabled = true;
-
-  alert("Preferenze registrate. Grazie per il feedback.");
+  alert("Preferenze registrate. Grazie.");
 };
 
 render();
