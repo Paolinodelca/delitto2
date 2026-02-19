@@ -111,12 +111,22 @@ function renderIntro() {
   context.className = "context";
   context.innerHTML = GAME_CONFIG.contextBox;
 
+  const proceed = document.createElement("button");
+  proceed.className = "primary";
+  proceed.textContent = "Inizia";
+  proceed.onclick = async () => {
+    // qui in futuro potrà arrivare da fetch / config esterna
+    renderObservations(window.OBSERVATIONS_DATA);
+  };
+
   root.appendChild(header);
   root.appendChild(intro);
   root.appendChild(context);
+  root.appendChild(proceed);
 
-  fadeIn(intro);
+  fadeIn(root);
 }
+
 
 
 /* ======================================================
