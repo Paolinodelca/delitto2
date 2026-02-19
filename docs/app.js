@@ -1,263 +1,307 @@
-import { observeProcedural } from "./observerLLM.js";
+/**********************************************************
+ * FRINGE / LEAK – docs/app.js (CANONICO)
+ * --------------------------------------------------------
+ * - UI stabile
+ * - Osservazioni = oggetto
+ * - Voto singolo, persistente
+ * - Pronto per futura configurazione data-driven
+ **********************************************************/
 
-const app = document.getElementById("app");
-console.log("FRINGE LIVE", Date.now());
+/* ======================================================
+   CONFIGURAZIONE BASE (NON LOGICA, SOLO DATI)
+   In futuro potrà arrivare da JSON / CSV / Google Sheet
+   ====================================================== */
 
-let step = 0;
-let pressureLevel = 0;
-const MAX_PRESSURE = 100;
+const GAME_CONFIG = {
+  scenario: "FRINGE / LEAK",
+  exposureLabel: "Livello di esposizione",
 
-let externalObservations = null;
-const answers = [];
+  introText: `
+<p><strong>Questo non è un test.</strong></p>
 
-let voteRanking = { primo: null, secondo: null, terzo: null };
-let votedButtons = { primo: null, secondo: null, terzo: null };
-let voteSubmitted = false;
+<p>
+Quello che è successo è successo.<br>
+Ora devi decidere come verrà letto.
+</p>
 
-/* ===========================
-   STILE
-=========================== */
-const style = document.createElement("style");
-style.innerHTML = `
-  body { font-family: system-ui, sans-serif; }
+<p>
+Questa non è una ricostruzione dei fatti.<br>
+È una valutazione di come rendi accettabili le tue decisioni.
+</p>
 
-  .didascalia {
-    color: #111;
-    padding: 14px;
-    margin-bottom: 20px;
-    background: #f0f0f0;
-    border: 1px solid #999;
-    font-size: 0.9rem;
-    line-height: 1.4;
-  }
+<p>
+Non ti viene chiesto di dire cosa è successo davvero,<br>
+ma quale versione dei fatti scegli di sostenere
+sapendo che verrà letta, analizzata e interpretata.
+</p>
+`,
 
-  .question-box {
-    border-left: 6px solid #000;
-    padding: 16px;
-    margin: 20px 0;
-    background: #fafafa;
-    animation: fadeIn 0.4s ease;
-  }
+  contextBox: `
+<h3>Contesto operativo</h3>
+<p>
+Saturn Way è un’azienda di ricerca avanzata con standard di sicurezza molto elevati.
+Durante il turno hai sostituito il tuo responsabile diretto <strong>in sala di controllo</strong>.
+Per un breve periodo si è creata una potenziale falla <strong>nei processi di sicurezza</strong>.
+</p>
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  textarea {
-    width: 100%;
-    font-size: 1rem;
-  }
-
-  .observer-block {
-    margin-bottom: 28px;
-    padding: 14px;
-    border: 1px solid #ccc;
-    background: #fafafa;
-  }
-
-  .observer-block h4 {
-    margin-top: 0;
-  }
-
-  .vote-btn {
-    font-size: 1.6rem;
-    padding: 10px 16px;
-    margin-right: 10px;
-    cursor: pointer;
-  }
-
-  .selected-vote {
-    outline: 4px solid black;
-    background-color: #ddd;
-  }
-
-  button[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-document.head.appendChild(style);
-
-/* ===========================
-   SCELTE INIZIALI
-=========================== */
-let partnerName = "Eva";
-
-/* ===========================
-   MODELLO GIOCATORE
-=========================== */
-let playerModel = {
-  fragilita: 0
+<h4>Persone coinvolte</h4>
+<ul>
+  <li><strong>Walter</strong> – tuo responsabile diretto</li>
+  <li><strong>Alex</strong> – collega e amico personale, presente in sala di controllo</li>
+  <li><strong>Eva / Adamo</strong> – tuo partner da un paio di anni</li>
+</ul>
+`
 };
 
-/* ===========================
-   DOMANDE
-=========================== */
-const interventions = [
-  { question: "Descrivi con precisione perché ti trovavi in sala di controllo e cosa stavi facendo all’inizio del turno." },
-  { question: "Quando hai lasciato la sala, cosa ti ha fatto ritenere accettabile farlo in quel momento?" },
-  { question: "C’è un elemento di questa vicenda che, se raccontato all’esterno, cambierebbe il modo in cui verrebbe letta?" },
-  { question: "Riguardando la sequenza degli eventi: in quale punto il sistema ha smesso di funzionare come previsto?" },
-  { question: "Se emergesse solo una versione parziale dei fatti, chi pensi che ne pagherebbe il prezzo più alto?" }
-];
 
-/* ===========================
-   DIDASCALIA
-=========================== */
-function renderDidascalia() {
-  return `
-    <div class="didascalia">
-      <strong>Contesto operativo</strong><br>
-      Saturn Way è un’azienda di ricerca avanzata con standard di sicurezza molto elevati.
-      Durante il turno hai sostituito il tuo responsabile diretto <strong>in sala di controllo</strong>.
-      Per un breve periodo si è creata una potenziale falla nei <strong>processi di sicurezza</strong>.
-      <br><br>
-      <strong>Persone coinvolte</strong><br>
-      <strong>Walter</strong> – tuo responsabile diretto.<br>
-      <strong>Alex</strong> – collega e amico personale, presente in sala di controllo.<br>
-      <strong>${partnerName}</strong> – tuo partner da un paio d’anni, coinvolto indirettamente.
-    </div>
+/* ======================================================
+   STATO UI
+   ====================================================== */
+
+let currentObservations = null;
+let voteState = {
+  primo: null,
+  secondo: null,
+  terzo: null,
+  locked: false
+};
+
+
+/* ======================================================
+   UTILITIES
+   ====================================================== */
+
+function el(id) {
+  return document.getElementById(id);
+}
+
+function clear(node) {
+  node.innerHTML = "";
+}
+
+function fadeIn(node) {
+  node.style.opacity = 0;
+  node.style.transition = "opacity 0.6s ease";
+  requestAnimationFrame(() => {
+    node.style.opacity = 1;
+  });
+}
+
+
+/* ======================================================
+   RENDER INTRO + CONTESTO
+   ====================================================== */
+
+function renderIntro() {
+  const root = el("app");
+  clear(root);
+
+  const header = document.createElement("div");
+  header.className = "header";
+  header.innerHTML = `
+    <h1>${GAME_CONFIG.scenario}</h1>
+    <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
   `;
+
+  const intro = document.createElement("div");
+  intro.className = "intro";
+  intro.innerHTML = GAME_CONFIG.introText;
+
+  const context = document.createElement("div");
+  context.className = "context";
+  context.innerHTML = GAME_CONFIG.contextBox;
+
+  root.appendChild(header);
+  root.appendChild(intro);
+  root.appendChild(context);
+
+  fadeIn(intro);
 }
 
-/* ===========================
-   VALUTAZIONE BASE
-=========================== */
-function evaluateAnswer(text) {
-  if (text.length < 12) {
-    pressureLevel += 20;
-    playerModel.fragilita += 10;
-  } else {
-    pressureLevel += 5;
-  }
-  pressureLevel = Math.min(MAX_PRESSURE, pressureLevel);
+
+/* ======================================================
+   OSSERVAZIONI
+   ====================================================== */
+
+function renderObservations(observations) {
+  currentObservations = observations;
+
+  const root = el("app");
+  clear(root);
+
+  const header = document.createElement("div");
+  header.className = "header";
+  header.innerHTML = `
+    <h1>${GAME_CONFIG.scenario}</h1>
+    <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
+    <h2>OSSERVAZIONI DELL’OSSERVATORE</h2>
+  `;
+
+  const container = document.createElement("div");
+  container.className = "observations";
+
+  container.appendChild(renderObservationBlock(
+    "FRINGE / LEAK",
+    "Lettura istituzionale, prudente, esterna.",
+    observations.fringe
+  ));
+
+  container.appendChild(renderObservationBlock(
+    "PSICOLOGICO",
+    "Assumendo che le risposte siano sincere.",
+    observations.psicologico
+  ));
+
+  container.appendChild(renderObservationBlock(
+    "AMPLIFICATO",
+    "Assumendo che le risposte siano una messa in scena o casuali.",
+    observations.amplificato
+  ));
+
+  const proceed = document.createElement("button");
+  proceed.className = "primary";
+  proceed.textContent = "Prosegui";
+  proceed.onclick = renderVoting;
+
+  root.appendChild(header);
+  root.appendChild(container);
+  root.appendChild(proceed);
+
+  fadeIn(container);
 }
 
-/* ===========================
-   RENDER
-=========================== */
-function render() {
-  app.innerHTML = "";
+function renderObservationBlock(title, subtitle, text) {
+  const box = document.createElement("div");
+  box.className = "observation";
 
-  /* INTRO */
-  if (step === 0) {
-    app.innerHTML = `
-      <h2>FRINGE / LEAK</h2>
-      <p>Simulazione narrativa di esposizione della responsabilità.</p>
-      <p>Indica il nome del tuo partner:</p>
-      <button id="eva">Eva</button>
-      <button id="adamo">Adamo</button>
-    `;
-    document.getElementById("eva").onclick = () => { partnerName = "Eva"; step++; render(); };
-    document.getElementById("adamo").onclick = () => { partnerName = "Adamo"; step++; render(); };
-    return;
-  }
+  box.innerHTML = `
+    <h3>${title}</h3>
+    <p class="subtitle">${subtitle}</p>
+    <p class="content">${text}</p>
+  `;
 
-  /* SCENARIO */
-  if (step === 1) {
-    app.innerHTML = `
-      <p><em>Quello che è successo è successo.<br>Ora devi decidere come verrà letto.</em></p>
-      <button id="startBtn">Prosegui</button>
-    `;
-    document.getElementById("startBtn").onclick = () => { step++; render(); };
-    return;
-  }
+  return box;
+}
 
-  /* MICROCOPY */
-  if (step === 2) {
-    app.innerHTML = `
-      <p>Questa non è una ricostruzione dei fatti.</p>
-      <p>È una valutazione di come rendi accettabili le tue decisioni.</p>
-      <button id="continueBtn">Continua</button>
-    `;
-    document.getElementById("continueBtn").onclick = () => { step++; render(); };
-    return;
-  }
 
-  /* DOMANDE */
-  if (step >= 3 && step < interventions.length + 3) {
-    const current = interventions[step - 3];
-    app.innerHTML = `
-      ${renderDidascalia()}
-      <div class="question-box">
-        <strong>${current.question}</strong>
-      </div>
-      <textarea id="answer" rows="4"></textarea><br><br>
-      <button id="sendBtn">Invia</button>
-    `;
-    document.getElementById("sendBtn").onclick = () => {
-      const value = document.getElementById("answer").value.trim();
-      answers.push(value);
-      evaluateAnswer(value);
-      step++;
-      render();
-    };
-    return;
-  }
+/* ======================================================
+   VOTAZIONE
+   ====================================================== */
 
-  /* OSSERVAZIONI */
-  if (!externalObservations) {
-    app.innerHTML = `<p>Valutazione in corso…</p>`;
-    observeProcedural({ pressureLevel, playerModel, answers })
-      .then(result => {
-        externalObservations = result.osservazioni;
-        render();
-      });
-    return;
-  }
+function renderVoting() {
+  const root = el("app");
+  clear(root);
 
-  /* VOTAZIONE */
-  app.innerHTML = `
-    <h3>OSSERVATORE ESTERNO</h3>
+  voteState = { primo: null, secondo: null, terzo: null, locked: false };
+
+  const header = document.createElement("div");
+  header.className = "header";
+  header.innerHTML = `
+    <h1>${GAME_CONFIG.scenario}</h1>
+    <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
+    <h2>OSSERVATORE ESTERNO</h2>
     <p>
-      Assegna una preferenza:
-      🥇 più convincente,
-      🥈 seconda,
-      🥉 terza.
+      Assegna una preferenza:<br>
+      🥇 più convincente · 🥈 seconda · 🥉 terza
     </p>
-
-    ${Object.entries(externalObservations).map(([key, text]) => `
-      <div class="observer-block">
-        <p>${text}</p>
-        <button class="vote-btn" onclick="vote(this,'${key}','primo')">🥇</button>
-        <button class="vote-btn" onclick="vote(this,'${key}','secondo')">🥈</button>
-        <button class="vote-btn" onclick="vote(this,'${key}','terzo')">🥉</button>
-      </div>
-    `).join("")}
-
-    <button id="submitVoteBtn">Invia preferenze</button>
   `;
 
-  document.getElementById("submitVoteBtn").onclick = submitVote;
+  const container = document.createElement("div");
+  container.className = "vote-container";
+
+  container.appendChild(renderVoteItem("fringe", currentObservations.fringe));
+  container.appendChild(renderVoteItem("psicologico", currentObservations.psicologico));
+  container.appendChild(renderVoteItem("amplificato", currentObservations.amplificato));
+
+  const send = document.createElement("button");
+  send.className = "primary";
+  send.textContent = "Invia preferenze";
+  send.onclick = submitVote;
+
+  root.appendChild(header);
+  root.appendChild(container);
+  root.appendChild(send);
+
+  fadeIn(container);
 }
 
-/* ===========================
-   VOTI
-=========================== */
-window.vote = function(btn, tipo, pos) {
-  if (voteSubmitted) return;
+function renderVoteItem(key, text) {
+  const box = document.createElement("div");
+  box.className = "vote-item";
 
-  if (votedButtons[pos]) {
-    votedButtons[pos].classList.remove("selected-vote");
-  }
+  const content = document.createElement("p");
+  content.textContent = text;
 
-  voteRanking[pos] = tipo;
-  btn.classList.add("selected-vote");
-  votedButtons[pos] = btn;
-};
+  const buttons = document.createElement("div");
+  buttons.className = "medals";
 
-function submitVote() {
-  if (voteSubmitted) return;
+  ["primo", "secondo", "terzo"].forEach(rank => {
+    const btn = document.createElement("button");
+    btn.className = "medal";
+    btn.textContent = rank === "primo" ? "🥇" : rank === "secondo" ? "🥈" : "🥉";
+    btn.onclick = () => assignVote(rank, key, btn);
+    buttons.appendChild(btn);
+  });
 
-  if (!voteRanking.primo || !voteRanking.secondo || !voteRanking.terzo) {
-    alert("Assegna tutte e tre le preferenze.");
+  box.appendChild(content);
+  box.appendChild(buttons);
+
+  return box;
+}
+
+function assignVote(rank, key, btn) {
+  if (voteState.locked) return;
+
+  voteState[rank] = key;
+
+  btn.parentElement.querySelectorAll("button").forEach(b =>
+    b.classList.remove("selected")
+  );
+  btn.classList.add("selected");
+}
+
+async function submitVote() {
+  if (voteState.locked) return;
+
+  const { primo, secondo, terzo } = voteState;
+  if (!primo || !secondo || !terzo) {
+    alert("Devi assegnare tutte e tre le preferenze.");
     return;
   }
 
-  voteSubmitted = true;
-  document.getElementById("submitVoteBtn").disabled = true;
-  alert("Preferenze registrate. Grazie.");
+  try {
+    voteState.locked = true;
+
+    const res = await fetch("/api/vote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        primo,
+        secondo,
+        terzo,
+        scenario: GAME_CONFIG.scenario
+      })
+    });
+
+    if (!res.ok) throw new Error("Errore invio voto");
+
+    el("app").innerHTML = `
+      <h2>Preferenze registrate</h2>
+      <p>La tua valutazione è stata acquisita.</p>
+    `;
+  } catch (err) {
+    voteState.locked = false;
+    alert("Errore durante l’invio della votazione.");
+    console.error(err);
+  }
 }
 
-render();
+
+/* ======================================================
+   AVVIO
+   ====================================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+  renderIntro();
+});
+
