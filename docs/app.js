@@ -91,6 +91,44 @@ function fadeIn(node) {
 /* ======================================================
    RENDER INTRO + CONTESTO
    ====================================================== */
+async function fetchObservationsFromAPI() {
+  // Payload minimo coerente con api/observe.js
+  const payload = {
+    scenario: GAME_CONFIG.scenario,
+    context: {
+      responsabile: "Walter",
+      amico: "Alex",
+      partner: "Eva / Adamo"
+    },
+    playerModel: {
+      stile: "indeterminato",
+      strategia: "indeterminata",
+      fragilita: 0,
+      rischioNarrativo: 0,
+      esposizione: 0
+    },
+    answers: [],            // in questa versione “intro-only” sono vuote
+    observedAnchors: [],
+    pressureLevel: 0
+  };
+
+  const res = await fetch("/api/observe", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+
+  if (!res.ok) {
+    const txt = await res.text().catch(() => "");
+    throw new Error(`observe API error: ${res.status} ${txt}`);
+  }
+
+  const json = await res.json();
+  // json deve essere: { osservazioni: { fringe, psicologico, amplificato } }
+  return json.osservazioni;
+}
+
+
 
 function renderIntro() {
   const root = el("app");
@@ -114,10 +152,44 @@ function renderIntro() {
   const proceed = document.createElement("button");
   proceed.className = "primary";
   proceed.textContent = "Inizia";
-  proceed.onclick = async () => {
-    // qui in futuro potrà arrivare da fetch / config esterna
-    renderObservations(window.OBSERVATIONS_DATA);
-  };
+ 
+
+
+ proceed.onclick = async () => {
+  const root = el("app");
+  clear(root);
+
+  // UI di attesa (niente schermate “vuote”)
+  const header2 = document.createElement("div");
+  header2.className = "header";
+  header2.innerHTML = `
+    <h1>${GAME_CONFIG.scenario}</h1>
+    <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
+    <h2>OSSERVAZIONI DELL’OSSERVATORE</h2>
+    <p>Valutazione in corso…</p>
+  `;
+  root.appendChild(header2);
+
+  try {
+    const obs = await fetchObservationsFromAPI();
+    renderObservations(obs);
+  } catch (err) {
+    console.error("Errore fetchObservationsFromAPI:", err);
+
+    // fallback coerente (oggetto, non array)
+    renderObservations({
+      fringe:
+        "Nessun contenuto è stato fornito: la lettura istituzionale resta sospesa.",
+      psicologico:
+        "Assumendo sincerità, l’assenza di esposizione indica contenimento e ritiro narrativo.",
+      amplificato:
+        "Assumendo messa in scena/casualità, il profilo suggerisce distacco e non-collaborazione."
+    });
+  }
+};
+
+
+
 
   root.appendChild(header);
   root.appendChild(intro);
