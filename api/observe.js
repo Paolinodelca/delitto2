@@ -48,6 +48,9 @@ NON:
 - giudicare moralmente (es. “innocenza”, “colpa”, “furbo”, “manipolazione”)
 - citare o riportare numeri/etichette del playerModel o pressureLevel (es. “75%”, “fragilità bassa”, “stile assertivo”)
 - introdurre nomi diversi da: Walter, Alex, (partner)
+- Non usare frasi di chiusura: ‘In generale’, ‘In sintesi’, ‘Complessivamente’.
+
+Evita ‘suggerisce che’, ‘cerca di’, ‘minimizza’: descrivi solo cosa accade nel testo.
 
 OSSERVA SOLO LA FORMA:
 - cosa metti in primo piano vs cosa resta sullo sfondo
@@ -97,42 +100,41 @@ Niente markdown.
 Evita formulazioni che implicano intenzioni (‘cerca di…’, ‘vuole…’). Preferisci ‘l’effetto è…’.
 `,
 
-
-  amplificato: `
+amplificato: `
 Sei un OSSERVATORE ESTERNO.
 
-QUI NON devi ripetere PSICOLOGICO.
-PSICOLOGICO = impressione sul lettore.
+QUI NON devi ripetere LETTURA RELAZIONALE.
+LETTURA RELAZIONALE = impressione sul lettore.
 QUI = interpretazione del PATTERN: decisione vs regia narrativa.
 
-Produci due ipotesi PARALLELE nella stessa risposta, con etichette testuali:
-IPOTESI 1 — SINCERO
-IPOTESI 2 — MESSA IN SCENA
-Non usare markdown.
+Formato obbligatorio (testo semplice, niente markdown):
+IPOTESI 1 — SINCERO:
+[4 frasi]
+IPOTESI 2 — MESSA IN SCENA:
+[4 frasi]
+
+DIVIETI (assoluti):
+- Niente elenchi puntati, niente "-" e niente numerazioni.
+- Non usare formulazioni di intenzione: “cerca di”, “vuole”, “per evitare”, “strategia per”.
+- Non usare parole da verdetto: “colpa”, “responsabilità”, “scaricare”, “manipolazione”, “mentire”.
+- Non citare playerModel/pressureLevel/contatori.
+- Non introdurre nomi diversi da: Walter, Alex, (partner).
 
 IPOTESI 1 — SINCERO:
-- descrivi un PATTERN DI DECISIONE che si intravede nella forma:
-  priorità, trade-off, criteri, gestione rischio, delega, urgenza, ecc.
-- parla di “tendenza/schema”, non di verità dei fatti
+Descrivi un pattern di decisione che si intravede dalla forma: priorità, trade-off, criteri, gestione rischio, delega, urgenza, soglie di accettabilità. Parla di “tendenza/schema”, non di verità dei fatti.
 
 IPOTESI 2 — MESSA IN SCENA:
-- descrivi un PATTERN DI REGIA NARRATIVA:
-  costruzione del personaggio, scelta dell’antagonista/alleato,
-  controllo del frame, ricerca di leggibilità/ammissibilità, teatralità sobria
-- NON parlare dell’effetto psicologico sul lettore (quello era PSICOLOGICO)
+Descrivi un pattern di regia narrativa: costruzione del personaggio, scelta di antagonista/alleato, gestione del frame, ricerca di leggibilità/ammissibilità, controllo della sospettabilità, teatralità sobria. NON parlare dell’effetto psicologico sul lettore.
 
-VINCOLI:
-- NON dire quale ipotesi è vera.
-- NON citare playerModel/pressureLevel.
-- NON introdurre nomi diversi da: Walter, Alex, (partner).
-- Se molte risposte sono vuote/brevissime:
-  IPOTESI 1 = “non emerge uno schema decisionale”
-  IPOTESI 2 = “la regia è ridotta a opacità/assenza di materiale”
+Se molte risposte sono vuote/brevissime:
+- IPOTESI 1: “non emerge uno schema decisionale”
+- IPOTESI 2: “la regia è ridotta a opacità/assenza di materiale”
 
-Scrivi 6–8 frasi totali.
-Ambiguo ma leggibile.
-  `
+Tono: ambiguo ma leggibile.
+
+ `
 };
+
 
 
     /* =========================

@@ -580,9 +580,13 @@ function renderVoting() {
     <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
     <h2>OSSERVATORE ESTERNO</h2>
     <p>
-      Assegna un ranking alle tre letture:<br>
-      🥇 più convincente · 🥈 seconda · 🥉 terza
-    </p>
+  Per ogni lettura, scegli UNA medaglia.<br>
+  <strong>🥇 = 1ª scelta</strong> · <strong>🥈 = 2ª</strong> · <strong>🥉 = 3ª</strong>
+  </p>
+  <p class="hint">
+  Alla fine, dovrai aver assegnato tutte e tre le medaglie (una per posto).
+  </p>
+
     <p class="hint">
       Dopo l’invio la votazione viene bloccata (una sola votazione per giocata).
     </p>
@@ -621,7 +625,14 @@ function renderVoteItem(key, text) {
   ["primo", "secondo", "terzo"].forEach(rank => {
     const btn = document.createElement("button");
     btn.className = "medal";
+    
+    const label = rank === "primo" ? "1°" : rank === "secondo" ? "2°" : "3°";
     btn.textContent = rank === "primo" ? "🥇" : rank === "secondo" ? "🥈" : "🥉";
+    btn.setAttribute("aria-label", `Assegna ${label} posto`);
+    btn.title = `Assegna ${label} posto`;
+    btn.innerHTML = `${btn.textContent}<div style="font-size:0.8rem;margin-top:4px;">${label}</div>`;
+
+    
     btn.onclick = () => assignVote(rank, key, btn);
     buttons.appendChild(btn);
   });
@@ -634,6 +645,10 @@ function renderVoteItem(key, text) {
 
 function assignVote(rank, key, btn) {
   if (voteState.locked) return;
+  
+  Object.keys(voteState).forEach(r => {
+  if (r !== "locked" && r !== rank && voteState[r] === key) voteState[r] = null;
+  });
 
   voteState[rank] = key;
 
