@@ -503,14 +503,15 @@ function renderObservations(observations) {
 
   const header = document.createElement("div");
   header.className = "header";
+ 
   header.innerHTML = `
-    <h1>${GAME_CONFIG.scenario}</h1>
-    <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
-    <h2>OSSERVAZIONI DELL’OSSERVATORE</h2>
-    <p class="hint">
-      Nota: <strong>AMPLIFICATO</strong> contiene due ipotesi parallele (sincero vs messa in scena) nella stessa lettura.
-    </p>
-  `;
+  <h1>${GAME_CONFIG.scenario}</h1>
+  <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
+  <h2>TRACCE NEL RACCONTO</h2>
+`;
+
+
+
 
   // normalizza: vogliamo stringhe
   const normalized = {
@@ -524,23 +525,34 @@ function renderObservations(observations) {
   const container = document.createElement("div");
   container.className = "observations";
 
+
   container.appendChild(renderObservationBlock(
     "FRINGE / LEAK",
     "Lettura istituzionale, prudente, esterna.",
     normalized.fringe
   ));
 
-  container.appendChild(renderObservationBlock(
-    "PSICOLOGICO",
-    "Assumendo che le risposte siano sincere (non clinico, non conclusivo).",
-    normalized.psicologico
-  ));
 
   container.appendChild(renderObservationBlock(
-    "AMPLIFICATO",
-    "Due ipotesi parallele: sincero vs messa in scena/casualità.",
-    normalized.amplificato
-  ));
+  "LETTURA RELAZIONALE",
+  "Impressione generata dalla forma dell’esposizione (non clinico, non conclusivo).",
+  normalized.psicologico
+));
+
+
+
+const ampNote = document.createElement("p");
+ampNote.className = "hint";
+ampNote.innerHTML = `Nota: <strong>AMPLIFICATO</strong> contiene due ipotesi parallele (sincero vs messa in scena) nella stessa lettura.`;
+container.appendChild(ampNote);
+
+container.appendChild(renderObservationBlock(
+  "AMPLIFICATO",
+  "Due ipotesi parallele: sincero vs messa in scena/casualità.",
+  normalized.amplificato
+));
+
+
 
   const proceed = document.createElement("button");
   proceed.className = "primary";
