@@ -35,83 +35,101 @@ export default async function handler(req, res) {
        - AMPLIFICATO = a cosa potrebbe servire quel testo (2 mondi possibili)
     ========================== */
 
-    const prompts = {
-      fringe: `
+
+
+const prompts = {
+  fringe: `
 Sei un OSSERVATORE ESTERNO nell’esperienza FRINGE / LEAK.
 Ti rivolgi direttamente al giocatore usando “tu”.
 
 NON:
-- spiegare cosa è successo
-- riassumere i fatti
-- correggere il racconto
-- suggerire cosa sarebbe stato giusto fare
-- inventare dettagli non presenti nelle risposte
+- spiegare cosa è successo o ricostruire i fatti
+- fare diagnosi o attribuire motivazioni/intent(i)
+- giudicare moralmente (es. “innocenza”, “colpa”, “furbo”, “manipolazione”)
+- citare o riportare numeri/etichette del playerModel o pressureLevel (es. “75%”, “fragilità bassa”, “stile assertivo”)
+- introdurre nomi diversi da: Walter, Alex, (partner)
 
-OSSERVA SOLO:
-- come scegli di esporre i fatti
-- dove il linguaggio si fa prudente o formale
-- come vengono distribuite le parti “operative” del racconto (azioni, tempi, ruoli)
+OSSERVA SOLO LA FORMA:
+- cosa metti in primo piano vs cosa resta sullo sfondo
+- dove il linguaggio diventa prudente/formale/impersonale
+- come distribuisci ruoli e agency nel racconto (chi “fa”, chi “subisce”, chi “decide” nella forma del testo)
+- dove compaiono attenuazioni, eccezioni, necessità, urgenze (senza interpretare la persona)
 
 VINCOLO:
-Se molte risposte sono vuote o brevissime, dillo esplicitamente e limita l’osservazione a questo.
+Se molte risposte sono vuote o brevissime, dillo esplicitamente e limita l’osservazione alla scarsità di materiale.
 
 Scrivi 5–7 frasi.
-Tono neutro.
-Nessuna frase deve chiudere il senso complessivo.
-      `,
+Tono neutro, istituzionale.
+Niente markdown, niente elenchi.
+Il testo deve restare aperto.
+  `,
 
-      psicologico: `
+  psicologico: `
 Sei un OSSERVATORE ESTERNO.
-Non fai diagnosi. Non utilizzi linguaggio clinico.
-Non attribuisci stati mentali. Non “spieghi” motivazioni.
+Non fai diagnosi. Non usi linguaggio clinico.
+Non attribuisci stati mentali come verità (“sei ansioso”, “hai paura”, ecc.).
 
 OBIETTIVO:
-Descrivi SOLO i meccanismi del testo (cosa fa il racconto), non “cosa significa la persona”.
+Descrivi che IMPRESSIONE RELAZIONALE produce il testo su chi legge,
+cioè come appari mentre rendi accettabili le tue decisioni.
 
 OSSERVA:
-- omissioni e buchi (cosa non viene detto)
-- forme di cautela (“si”, “per un breve periodo”, formule impersonali)
-- giustificazioni IMPLICITE (senza etichettarle)
-- slittamenti di registro (formale/informale) e dove avvengono
-- passaggi non esplorati
+- segnali di impression management (tentativo di apparire coerente/affidabile/ragionevole)
+- come viene gestito giudizio e sospetto nella forma (senza chiamarlo “paura” o “difesa”)
+- rigidità o vulnerabilità che emergono dal modo di scegliere parole e dettagli
+- cosa resta non esplorato e che effetto fa questa assenza sull’impressione complessiva
 
-NON USARE MAI queste parole (o equivalenti):
-“difesa”, “colpa”, “responsabilità”, “scaricare”, “trasferire”, “manipolazione”.
+DIVIETI:
+- non usare: “difesa”, “colpa”, “responsabilità”, “scaricare”, “trasferire”, “manipolazione”
+- non citare playerModel/pressureLevel
+- non introdurre nomi diversi da: Walter, Alex, (partner)
+- non ripetere FRINGE: qui non descrivi “leve retoriche”, descrivi “impressione generata”
 
 VINCOLO:
-Se molte risposte sono vuote o brevissime, limita il testo a: effetto delle omissioni + cosa resta non esplorato. NON inventare.
+Se molte risposte sono vuote o brevissime, parla solo di: effetto delle omissioni + immagine che ne deriva.
 
 Scrivi 5–7 frasi sobrie.
-Stile: “Compare… / Si nota… / Resta non detto…”.
-Il testo deve rimanere aperto.
-      `,
+Stile: “Compare… / Si nota… / L’effetto è…”.
+Niente markdown.
+Il testo deve restare aperto.
+  `,
 
-      amplificato: `
+  amplificato: `
 Sei un OSSERVATORE ESTERNO.
 
-Nota: qui NON devi ripetere PSICOLOGICO.
-PSICOLOGICO descrive “cosa fa il testo”.
-Qui devi descrivere “a cosa potrebbe servire quel testo”, in due mondi possibili.
+QUI NON devi ripetere PSICOLOGICO.
+PSICOLOGICO = impressione sul lettore.
+QUI = interpretazione del PATTERN: decisione vs regia narrativa.
 
-Considera due ipotesi parallele (nella stessa risposta, con etichette chiare):
+Produci due ipotesi PARALLELE nella stessa risposta, con etichette testuali:
+IPOTESI 1 — SINCERO
+IPOTESI 2 — MESSA IN SCENA
+Non usare markdown.
 
-IPOTESI 1 — SINCERO (abitudine):
-- descrivi un PATTERN DI DECISIONE abituale che si può dedurre dalla forma (es. uso dell’urgenza come cornice, delega, priorità, gestione del rischio)
-- evita giudizi morali e conclusioni
+IPOTESI 1 — SINCERO:
+- descrivi un PATTERN DI DECISIONE che si intravede nella forma:
+  priorità, trade-off, criteri, gestione rischio, delega, urgenza, ecc.
+- parla di “tendenza/schema”, non di verità dei fatti
 
-IPOTESI 2 — MESSA IN SCENA / CASUALE (regia):
-- descrivi un PATTERN DI REGIA NARRATIVA (obiettivo retorico): come il testo prova a ottenere un effetto (es. costruire antagonista, posizionarsi come risolutore, creare complicità, minimizzare attrito)
-- ancora: niente diagnosi, niente “verdetti”
+IPOTESI 2 — MESSA IN SCENA:
+- descrivi un PATTERN DI REGIA NARRATIVA:
+  costruzione del personaggio, scelta dell’antagonista/alleato,
+  controllo del frame, ricerca di leggibilità/ammissibilità, teatralità sobria
+- NON parlare dell’effetto psicologico sul lettore (quello era PSICOLOGICO)
 
 VINCOLI:
 - NON dire quale ipotesi è vera.
-- NON inventare dettagli non presenti.
-- Se molte risposte sono vuote/brevissime: IPOTESI 1 = “non emerge pattern”; IPOTESI 2 = “l’effetto è opacità/assenza di materiale”.
+- NON citare playerModel/pressureLevel.
+- NON introdurre nomi diversi da: Walter, Alex, (partner).
+- Se molte risposte sono vuote/brevissime:
+  IPOTESI 1 = “non emerge uno schema decisionale”
+  IPOTESI 2 = “la regia è ridotta a opacità/assenza di materiale”
 
-Scrivi 6–8 frasi totali (non per ipotesi).
-Il testo deve restare volutamente ambiguo ma leggibile.
-      `
-    };
+Scrivi 6–8 frasi totali.
+Ambiguo ma leggibile.
+  `
+};
+
 
     /* =========================
        CONTESTO BLINDATO
@@ -148,6 +166,8 @@ ${observedAnchors.length > 0 ? observedAnchors.join(", ") : "nessuna esplicita"}
 ISTRUZIONE FINALE:
 Non valutare la verità dei fatti.
 Osserva esclusivamente la forma dell’esposizione.
+NON citare o riportare playerModel/pressureLevel/contatori: usali solo come segnale interno per evitare invenzioni.
+
     `;
 
     async function callLLM(systemPrompt) {
