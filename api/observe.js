@@ -92,6 +92,8 @@ Scrivi 5–7 frasi sobrie.
 Stile: “Compare… / Si nota… / L’effetto è…”.
 Niente markdown.
 Il testo deve restare aperto.
+Se stai per usare una parola vietata, sostituiscila con una descrizione neutra (es. ‘spostamento’, ‘attenuazione’, ‘presa di distanza’, ‘cornice’).
+Se stai per usare un nome non presente nel contesto, omettilo.
   `,
 
   amplificato: `
