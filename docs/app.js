@@ -159,14 +159,16 @@ style.innerHTML = `
   .contextBox ul { margin: 6px 0 0 18px; }
 
   .questionBox {
-    background: #111827;
-    color: #fff;
-    padding: 14px;
-    border-radius: 12px;
-    margin: 12px 0;
-    font-size: 1.05rem;
-    line-height: 1.4;
+  background: linear-gradient(135deg, #1e3a8a, #1e40af);
+  color: #ffffff;
+  padding: 16px;
+  border-radius: 14px;
+  margin: 14px 0;
+  font-size: 1.1rem;
+  line-height: 1.5;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
   }
+
 
   textarea {
     width: 100%;
@@ -224,20 +226,54 @@ style.innerHTML = `
     color: #111;
   }
 
-  .medals { display: flex; gap: 10px; margin-top: 10px; }
-  .medal {
-    font-size: 1.8rem;       /* ✅ più grandi */
-    line-height: 1;
-    padding: 10px 14px;      /* ✅ tappabile su mobile */
-    border-radius: 14px;
-    border: 2px solid #333;
-    background: #f3f3f3;
-    cursor: pointer;
-  }
-  .medal.selected {
-    outline: 4px solid #000; /* ✅ evidenza */
-    background: #ddd;
-  }
+
+ .medals {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.medal {
+  font-size: 2.6rem;
+  line-height: 1;
+  padding: 14px 18px;
+  border-radius: 16px;
+  border: 3px solid #222;
+  background: #f3f3f3;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.medal.selected {
+  outline: 5px solid #000;
+  transform: scale(1.05);
+}
+
+
+.medal[data-rank="primo"] {
+  background: #facc15;
+}
+
+.medal[data-rank="secondo"] {
+  background: #d1d5db;
+}
+
+.medal[data-rank="terzo"] {
+  background: #b45309;
+  color: white;
+}
+
+
+.medal.selected {
+  outline: 5px solid #000;
+  transform: scale(1.05);
+}
+
+
 
   .hint { opacity: 0.9; margin-top: 6px; }
 
@@ -422,6 +458,16 @@ function render() {
     contextHTML.innerHTML = renderContextBox();
 
     const question = document.createElement("div");
+
+    question.style.opacity = 0;
+    question.style.transform = "translateY(10px)";
+    setTimeout(() => {
+    question.style.transition = "all 0.4s ease";
+    question.style.opacity = 1;
+    question.style.transform = "translateY(0)";
+    }, 50);
+
+
     question.className = "questionBox";
     question.textContent = GAME_CONFIG.questions[qIndex];
 
@@ -624,6 +670,9 @@ function renderVoteItem(key, text) {
 
   ["primo", "secondo", "terzo"].forEach(rank => {
     const btn = document.createElement("button");
+
+    btn.dataset.rank = rank;
+
     btn.className = "medal";
     
     const label = rank === "primo" ? "1°" : rank === "secondo" ? "2°" : "3°";

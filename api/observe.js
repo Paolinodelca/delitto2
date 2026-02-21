@@ -119,6 +119,7 @@ DIVIETI (assoluti):
 - Non usare parole da verdetto: “colpa”, “responsabilità”, “scaricare”, “manipolazione”, “mentire”.
 - Non citare playerModel/pressureLevel/contatori.
 - Non introdurre nomi diversi da: Walter, Alex, (partner).
+- Non usare formule che giudicano la completezza (“non spiega chiaramente”, “non è chiaro perché”, “manca…”). Se un elemento non è dettagliato, descrivilo come “resta fuori campo” o “rimane implicito”.
 
 IPOTESI 1 — SINCERO:
 Descrivi un pattern di decisione che si intravede dalla forma: priorità, trade-off, criteri, gestione rischio, delega, urgenza, soglie di accettabilità. Parla di “tendenza/schema”, non di verità dei fatti.
