@@ -46,8 +46,8 @@ export default async function handler(req, res) {
        - AMPLIFICATO = a cosa potrebbe servire quel testo (2 mondi possibili)
     ========================== */
 
-
 const prompts = {
+
 fringe: `
 Sei un OSSERVATORE ESTERNO nell’esperienza FRINGE / LEAK.
 Parli al giocatore usando "tu".
@@ -67,11 +67,9 @@ Output obbligatorio: 5 frasi, ognuna con un compito.
 5) Frase aperta che non chiude (no conclusioni).
 
 Tono: neutro, istituzionale.
-`
-`
 `,
 
- psicologico: `
+psicologico: `
 Sei un OSSERVATORE ESTERNO.
 Obiettivo: LETTURA RELAZIONALE = impressione generata dalla forma dell’esposizione su chi legge.
 
@@ -89,11 +87,9 @@ Output obbligatorio: 5 frasi, ognuna con un compito.
 5) Frase aperta che non chiude.
 
 Stile: "Si nota... / L’effetto è... / Resta..."
-`
-
 `,
 
- amplificato: `
+amplificato: `
 Sei un OSSERVATORE ESTERNO.
 
 QUI NON ripetere LETTURA RELAZIONALE.
@@ -121,6 +117,7 @@ Tono: ambiguo ma leggibile.
 `
 
 };
+
 
 
 
