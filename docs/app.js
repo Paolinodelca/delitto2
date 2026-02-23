@@ -135,6 +135,13 @@ let voteState = {
 
 const style = document.createElement("style");
 style.innerHTML = `
+  .voteLegend {
+  font-size: 1.2rem;
+  line-height: 1.4;
+  margin-top: 8px;
+  }
+  .voteLegend strong { font-weight: 800; }
+
   .header h1 { margin: 0 0 6px 0; }
   .exposure { opacity: 0.8; margin-bottom: 10px; }
 
@@ -626,9 +633,10 @@ function renderVoting() {
     <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
     <h2>OSSERVATORE ESTERNO</h2>
     <p>
-  Per ogni lettura, scegli UNA medaglia.<br>
-  <strong>🥇 = 1ª scelta</strong> · <strong>🥈 = 2ª</strong> · <strong>🥉 = 3ª</strong>
-  </p>
+    <p class="voteLegend">
+    Per ogni lettura, scegli UNA medaglia.<br>
+    <strong>🥇 1ª scelta</strong> · <strong>🥈 2ª</strong> · <strong>🥉 3ª</strong>
+    </p>
   <p class="hint">
   Alla fine, dovrai aver assegnato tutte e tre le medaglie (una per posto).
   </p>
@@ -694,18 +702,18 @@ function renderVoteItem(key, text) {
 
 function assignVote(rank, key, btn) {
   if (voteState.locked) return;
-  
-  Object.keys(voteState).forEach(r => {
-  if (r !== "locked" && r !== rank && voteState[r] === key) voteState[r] = null;
+
+  // se questa lettura era già assegnata a un altro rank, liberala
+  ["primo", "secondo", "terzo"].forEach(r => {
+    if (r !== rank && voteState[r] === key) voteState[r] = null;
   });
 
   voteState[rank] = key;
 
-  // evidenzia SOLO questo bottone all’interno del suo gruppo (primo/secondo/terzo)
-  // e lascia gli altri gruppi indipendenti
   btn.parentElement.querySelectorAll("button").forEach(b => b.classList.remove("selected"));
   btn.classList.add("selected");
 }
+
 
 async function submitVote() {
   if (voteState.locked) return;
@@ -714,6 +722,11 @@ async function submitVote() {
   if (!primo || !secondo || !terzo) {
     alert("Devi assegnare tutte e tre le preferenze.");
     return;
+  }
+  const unique = new Set([primo, secondo, terzo]);
+  if (unique.size !== 3) {
+  alert("Ogni lettura può ricevere una sola medaglia. Scegli tre letture diverse (🥇🥈🥉).");
+  return;
   }
 
   const sendBtn = el("sendVote");

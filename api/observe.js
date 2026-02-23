@@ -51,6 +51,7 @@ NON:
 - Non usare frasi di chiusura: ‘In generale’, ‘In sintesi’, ‘Complessivamente’.
 
 Evita ‘suggerisce che’, ‘cerca di’, ‘minimizza’: descrivi solo cosa accade nel testo.
+NON usare i due punti seguiti da elenco (‘In particolare: …’). Niente trattini ‘-’.
 
 OSSERVA SOLO LA FORMA:
 - cosa metti in primo piano vs cosa resta sullo sfondo
@@ -66,7 +67,9 @@ Tono neutro, istituzionale.
 Niente markdown, niente elenchi.
 il testo deve restare aperto.
 Non usare frasi di chiusura (‘In sintesi’, ‘In generale’, ‘Complessivamente’).
-  `,
+Se violi un divieto (parole vietate, elenchi, giudizi), riscrivi da capo rispettando i vincoli.
+
+`,
 
 
 psicologico: `
@@ -98,9 +101,12 @@ Stile: “Si nota… / L’effetto è… / Resta…”.
 Il testo deve restare aperto.
 Niente markdown.
 Evita formulazioni che implicano intenzioni (‘cerca di…’, ‘vuole…’). Preferisci ‘l’effetto è…’.
+Se violi un divieto (parole vietate, elenchi, giudizi), riscrivi da capo rispettando i vincoli.
+  
 `,
 
 amplificato: `
+Scrivi la parola: [AMP-V3] nella prima riga, poi prosegui.
 Sei un OSSERVATORE ESTERNO.
 
 QUI NON devi ripetere LETTURA RELAZIONALE.
@@ -120,6 +126,9 @@ DIVIETI (assoluti):
 - Non citare playerModel/pressureLevel/contatori.
 - Non introdurre nomi diversi da: Walter, Alex, (partner).
 - Non usare formule che giudicano la completezza (“non spiega chiaramente”, “non è chiaro perché”, “manca…”). Se un elemento non è dettagliato, descrivilo come “resta fuori campo” o “rimane implicito”.
+- “responsabilità”, “colpa”, “incolpare”, “scaricare”, “colpevole”, “onesto”, “verità”, “mentire”
+
+Se serve parlare di agency, usa: ‘agenzia’, ‘attribuzione dell’azione’, ‘fuori campo’, ‘cornice’, ‘soglia di accettabilità’.
 
 IPOTESI 1 — SINCERO:
 Descrivi un pattern di decisione che si intravede dalla forma: priorità, trade-off, criteri, gestione rischio, delega, urgenza, soglie di accettabilità. Parla di “tendenza/schema”, non di verità dei fatti.
@@ -132,7 +141,7 @@ Se molte risposte sono vuote/brevissime:
 - IPOTESI 2: “la regia è ridotta a opacità/assenza di materiale”
 
 Tono: ambiguo ma leggibile.
-
+Se violi un divieto (parole vietate, elenchi, giudizi), riscrivi da capo rispettando i vincoli.
  `
 };
 
