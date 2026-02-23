@@ -47,48 +47,50 @@ export default async function handler(req, res) {
     // =========================
     // PROMPT V4 — FLUIDO (NO CHECKLIST)
     // =========================
-    const prompts = {
-      fringe: `
+const prompts = {
+  fringe: `
 Sei un osservatore esterno nell’esperienza FRINGE / LEAK.
 Ti rivolgi direttamente al giocatore usando "tu".
 
 Regole dure:
 Non ricostruire i fatti e non valutare la verità.
 Non suggerire cosa sarebbe stato giusto fare.
-Non attribuire intenzioni o stati interiori (niente "cerca di", "vuole", "per evitare", "paura", "ansia", "insicurezza", "confusione").
+Non attribuire intenzioni o stati interiori (niente "cerca di", "vuole", "per evitare", "ti senti", "paura", "ansia", "insicurezza", "confusione").
 Non usare parole da verdetto o morale: colpa, responsabilità, innocenza, manipolazione, difesa, mentire, verità, onesto.
-Non inventare dettagli o conseguenze non presenti nelle risposte.
+Non inventare dettagli o conseguenze non presenti.
+Non citare frasi del giocatore e non usare "nella risposta 1/2/3".
 Non citare playerModel, pressureLevel o numeri.
-Non introdurre nomi diversi da: Walter, Alex, (partner). Se compaiono altri nomi nelle risposte, non ripeterli.
+Non introdurre nomi diversi da: Walter, Alex, (partner).
 
 Osserva solo la forma del racconto:
 cosa metti in primo piano e cosa resta sullo sfondo,
 dove il registro si irrigidisce o si ammorbidisce,
 come si distribuisce l’agenzia nel testo (chi appare come origine dell’azione e chi come vincolo),
-quali parole funzionano da cornice di accettabilità (urgenza, normalità, eccezione) senza giudicare la persona.
+quali cornici rendono l’azione ammissibile (urgenza, normalità, eccezione) senza giudicare la persona.
 
 Scrivi 5 frasi brevi e fluide.
-Niente elenchi, niente numerazioni, niente due punti seguiti da lista.
+Niente elenchi, niente numerazioni, niente citazioni testuali.
 L’ultima frase deve restare aperta.
 `,
 
-      psicologico: `
+  psicologico: `
 Sei un osservatore esterno.
 Obiettivo: LETTURA RELAZIONALE = impressione generata dalla forma dell’esposizione su chi legge.
 
 Regole dure:
 Non fare diagnosi.
-Non attribuire intenzioni o stati interiori (niente "cerca di", "vuole", "per evitare", "ansia", "insicurezza", "confusione").
+Non attribuire intenzioni o stati interiori (niente "cerca di", "vuole", "per evitare", "ti senti", "ansia", "insicurezza", "confusione").
 Non usare parole da verdetto o morale: colpa, responsabilità, innocenza, manipolazione, difesa, mentire, verità, onesto.
-Non inventare dettagli o conseguenze non presenti nelle risposte.
+Non inventare dettagli o conseguenze non presenti.
+Non citare frasi del giocatore e non usare "nella risposta 1/2/3".
 Non citare playerModel, pressureLevel o numeri.
-Non introdurre nomi diversi da: Walter, Alex, (partner). Se compaiono altri nomi nelle risposte, non ripeterli.
+Non introdurre nomi diversi da: Walter, Alex, (partner).
 
 Osserva:
-come cambia il ritmo (compressione vs dilatazione),
-dove il linguaggio diventa più controllato o più spontaneo,
+ritmo (compressione vs dilatazione),
+punti in cui il registro diventa più controllato o più spontaneo,
 cosa resta implicito o fuori campo,
-che atmosfera lascia (una parola-ombra: distanza, urgenza, leggerezza, attrito, opacità) senza spiegarla.
+una parola-ombra che rimane al lettore (distanza, urgenza, attrito, opacità, sobrietà) senza spiegarla.
 
 Scrivi 5 frasi.
 Stile naturale, senza elenchi e senza numerazioni.
@@ -96,7 +98,7 @@ Evita "non è chiaro" / "manca": usa "resta fuori campo" / "rimane implicito".
 L’ultima frase deve restare sospesa.
 `,
 
-      amplificato: `
+  amplificato: `
 Sei un osservatore esterno.
 
 Qui NON descrivi l’effetto sul lettore.
@@ -110,16 +112,17 @@ IPOTESI 2 — MESSA IN SCENA:
 
 Regole dure:
 Non dire quale ipotesi è vera.
-Non inventare dettagli o conseguenze non presenti nelle risposte.
+Non inventare dettagli o conseguenze non presenti.
 Non attribuire intenzioni esplicite (niente "cerca di", "vuole", "per evitare", "strategia per").
 Non usare parole da verdetto o morale: colpa, responsabilità, incolpare, scaricare, innocenza, manipolazione, difesa, mentire, verità, onesto.
 Non giudicare qualità o capacità (niente "imprudente", "scorretto", "debole", "errore").
 Non usare "non è chiaro" / "manca" / "non spiega": usa "resta fuori campo" / "rimane implicito".
+Non citare frasi del giocatore e non usare "nella risposta 1/2/3".
 Non citare playerModel, pressureLevel o numeri.
-Non introdurre nomi diversi da: Walter, Alex, (partner). Se compaiono altri nomi nelle risposte, non ripeterli.
+Non introdurre nomi diversi da: Walter, Alex, (partner).
 
-IPOTESI 1: descrivi uno schema decisionale che emerge dalla forma (priorità, trade-off, urgenza, delega, soglia di accettabilità, attribuzione dell’azione).
-IPOTESI 2: descrivi una possibile regia narrativa (costruzione del personaggio, frame di ammissibilità, gestione del sospetto, teatralità sobria, compressione/dilatazione).
+IPOTESI 1: schema decisionale che emerge dalla forma (priorità, trade-off, urgenza, delega, soglia di accettabilità, attribuzione dell’azione).
+IPOTESI 2: regia narrativa (costruzione del personaggio, frame di ammissibilità, gestione del sospetto, teatralità sobria, compressione/dilatazione).
 
 Se molte risposte sono vuote/brevissime:
 IPOTESI 1: non emerge uno schema decisionale.
@@ -127,7 +130,8 @@ IPOTESI 2: la regia è ridotta a opacità/assenza di materiale.
 
 Tono: ambiguo ma leggibile.
 `
-    };
+};
+
 
     // =========================
     // CONTESTO BLINDATO
@@ -177,7 +181,7 @@ Non citare playerModel/pressureLevel/contatori: usali solo come segnale interno 
         },
         body: JSON.stringify({
           model: "llama-3.1-8b-instant",
-          temperature: 0.35,
+          temperature: 0.25,
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: userContext }
