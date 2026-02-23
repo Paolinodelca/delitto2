@@ -1,4 +1,6 @@
 export default async function handler(req, res) {
+
+  console.log("OBSERVE VERSION: AMP-V3");
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Solo POST consentito" });
   }
