@@ -1,99 +1,67 @@
-# Continuità progetto – FRINGE / LEAK (stato canonico)
+# CONTINUITÀ — DEMO FRINGE / LEAK + MOTORE (Paolino)
 
-Questo documento serve a impedire regressioni concettuali e procedurali.
-Le decisioni qui fissate NON vanno modificate senza una ragione esplicita.
-
----
-
-## 1. Natura dell’esperienza (NON negoziabile)
-
-FRINGE / LEAK **non è**:
-- un test psicologico
-- una ricostruzione dei fatti
-- un giudizio morale
-- un gioco a risposta giusta/sbagliata
-
-FRINGE / LEAK **è**:
-una simulazione narrativa di esposizione della responsabilità.
-
-Il sistema **non valuta cosa è successo**,  
-ma **come il giocatore rende accettabili le proprie decisioni**  
-sapendo che verranno lette, analizzate e interpretate.
-
-Questo frame deve essere chiaro **prima** di qualsiasi domanda.
+## Obiettivo immediato
+1) Rendere FRINGE / LEAK stabile e “memorabile” (UI + osservazioni + votazione).
+2) Rendere la demo configurabile (data-driven) per cambiare contesto senza rifare codice.
+3) Tornare al motore narrativo (World/Knowledge/State/Hypotheses/Judge/Narrator/OutcomeProfiler).
 
 ---
 
-## 2. Descrizione iniziale (LETTERALE, DA NON SEMPLIFICARE)
-
-La descrizione dello scenario:
-
-- deve rimanere **letterale**
-- deve permettere **immedesimazione**
-- non va riassunta, compressa o “resa più efficiente”
-
-Il giocatore deve sapere:
-- dove si trova
-- perché è lì
-- che non è un tribunale
-- che non è un procedimento disciplinare
-- che *qualcosa è successo e non verrà risolto*
-
-La frase chiave è:
-
-> “Quello che è successo è successo.  
-> Ora devi decidere come verrà letto.”
-
-Questa descrizione **è stata persa più volte**:  
-da ora in poi è considerata **parte strutturale dell’esperienza**, non copy accessorio.
+## Non negoziabile (canonico)
+- FRINGE / LEAK NON è ricostruzione dei fatti: valuta COME il giocatore rende accettabili decisioni sapendo che verranno lette/interpretate.
+- Microcopy “non verità → versione” va mostrato prima delle domande e non va accorciato.
+- Output osservazioni finali: SEMPRE 3 campi e SEMPRE oggetto:
+  { fringe, psicologico, amplificato } (non array).
+- AMPLIFICATO contiene due ipotesi parallele (sincero vs messa in scena) nella stessa lettura.
+- Non mischiare SDK: endpoint Groq compatibile OpenAI:
+  https://api.groq.com/openai/v1/chat/completions
+- Env richieste:
+  - GROQ_API_KEY
+  - GROQ_MODEL (es. llama-3.3-70b-versatile)
+- Paolino preferisce file completi da sostituire, non patch; non fare ipotesi sul codice: chiedere i file quando servono.
 
 ---
 
-## 3. Microcopy canonico (frame interpretativo)
-
-Il microcopy che sposta il frame da “verità” a “versione” è canonico:
-
-> Questa non è una ricostruzione dei fatti.  
-> È una valutazione di come rendi accettabili le tue decisioni.  
->  
-> Non ti viene chiesto di dire cosa è successo davvero,  
-> ma quale versione dei fatti scegli di sostenere  
-> quando sai che verrà letta, analizzata e interpretata.
-
-Questo testo:
-- va mostrato **prima delle domande**
-- NON va riscritto
-- NON va accorciato
-- NON va “spiegato meglio”
-
-Fa già il suo lavoro.
+## Struttura progetto (punti caldi)
+- UI canonica: docs/app.js (non cambiare struttura file senza motivo).
+- API osservazioni: api/observe.js (prompt + safety net).
+- API votazione: api/vote.js (invio a Google Apps Script, lock anti-multiplo).
 
 ---
 
-## 4. Struttura delle osservazioni (CANONICA)
+## Stato attuale (ultimo noto)
+- GROQ_MODEL spostato su Vercel (ENV) + fallback in codice.
+- Prompt con formato etichettato:
+  - FRINGE: 4 righe (PRIMO PIANO / FUORI CAMPO / AGENZIA / TENSIONE)
+  - RELAZIONALE: 5 righe (RITMO / REGISTRO / FUORI CAMPO / PAROLA-OMBRA / SOSPESO)
+  - AMPLIFICATO: 2 blocchi x 3 frasi
+- Problema ricorrente: il modello a volte ignora i divieti (markdown, elenchi, parole “tribunale”).
+- Soluzione consigliata: post-processing minimo (strip markdown + enforce formato).
 
-Le osservazioni finali sono **tre**, sempre:
+---
 
-1. **FRINGE / LEAK**  
-   Lettura istituzionale, prudente, esterna.
+## Metriche “ok / non ok” per i report
+OK se:
+- Nessun riassunto degli eventi (“cosa è successo”).
+- Niente citazioni testuali delle risposte.
+- Nessun linguaggio da verdetto/morale.
+- AMPLIFICATO: IPOTESI 1 e 2 non clonano le stesse frasi/idee.
 
-2. **PSICOLOGICO**  
-   Assumendo che le risposte siano sincere.  
-   Non diagnostico. Non clinico. Non conclusivo.
+NON OK se:
+- Elenchi markdown, grassetti, trattini, numerazioni.
+- “Nella risposta 1/2/3…”
+- “innocenza / accuse / negazione / speculazioni”
+- “potrebbe” ripetuto a raffica.
 
-3. **AMPLIFICATO**  
-   Assumendo che le risposte siano una messa in scena o casuali.  
-   Profilo del *modo di scrivere*, non della persona.
+---
 
-### Forma tecnica (importante)
+## Prossimi step operativi (ordine)
+1) Stabilizzare observe.js (prompt + enforce formato).
+2) Piccoli ritocchi UI: medaglie leggibili + vincolo anti-misuse (tutte diverse prima dell’invio).
+3) Estrarre config del gioco (scenario, ruoli, domande) in JSON/YAML per “vestire” altri contesti.
 
-Le osservazioni sono un **oggetto**, non un array:
+---
 
-```js
-{
-  osservazioni: {
-    fringe: "...",
-    psicologico: "...",
-    amplificato: "..."
-  }
-}
+## Note operative Vercel
+- Se /api/observe fa 500: controllare log su Vercel.
+- Se errore 400 “model decommissioned”: cambiare GROQ_MODEL su Vercel (ENV), non hardcodare.

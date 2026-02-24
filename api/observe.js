@@ -45,7 +45,10 @@ NON citare frasi, NON usare “nella risposta…”.
 NON attribuire intenzioni o stati interiori.
 Niente morale/verdettI (colpa, responsabilità, innocenza, verità, mentire, manipolazione).
 Niente markdown, niente elenchi.
+Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”
 
+Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
+Se produci più di 4 righe, o usi "-" o numeri, o markdown, RISCRIVI da capo rispettando il formato.
 OUTPUT OBBLIGATORIO: 4 righe, ciascuna inizia con l’etichetta esatta:
 
 PRIMO PIANO: (1 frase, cosa la forma mette davanti)
@@ -67,6 +70,10 @@ DIVIETI:
 - niente markdown o elenchi
 - non introdurre nomi diversi da: Walter, Alex, (partner)
 
+Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”
+
+Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
+Se produci più di 5 righe, o usi "-" o numeri, o markdown, RISCRIVI da capo rispettando il formato.
 OUTPUT OBBLIGATORIO: 5 righe, ciascuna inizia con l’etichetta esatta:
 
 RITMO: (1 frase)
@@ -82,6 +89,7 @@ amplificato: `
 Sei un OSSERVATORE ESTERNO. Terza persona.
 QUI NON descrivere l’effetto sul pubblico.
 QUI proponi due schemi possibili dietro la forma: decisione vs regia narrativa.
+Se non rispetti esattamente le 2 intestazioni e 3 frasi per blocco, RISCRIVI da capo.
 
 FORMATO OBBLIGATORIO (testo semplice):
 IPOTESI 1 — SINCERO:
@@ -98,11 +106,18 @@ DIVIETI:
 - niente “non è chiaro/manca/non spiega”: usa “resta fuori campo / rimane implicito”
 - niente citazioni, niente “nella risposta…”
 - non introdurre nomi diversi da: Walter, Alex, (partner)
+Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”
+
+Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
 
 VINCOLO ANTI-CLONE:
 - IPOTESI 1 deve parlare solo di criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
 - IPOTESI 2 deve parlare solo di regia (frame di ammissibilità, compressione/dilatazione, ruolo di Walter/Alex/partner come cornice, controllo del sospetto).
 Non ripetere la stessa frase o la stessa idea identica in entrambe.
+IPOTESI 1 deve usare parole di decisione: “soglia”, “trade-off”, “delega”, “priorità”, “copertura”, “criterio”
+
+IPOTESI 2 deve usare parole di regia: “cornice”, “fuori campo”, “sequenza”, “taglio”, “messa a fuoco”, “ritmo”, “frame”
+
 
 Se molte risposte sono vuote/brevissime:
 IPOTESI 1: non emerge uno schema decisionale.
@@ -140,6 +155,9 @@ Non valutare la verità dei fatti.
 Osserva esclusivamente la forma dell’esposizione.
 `.trim();
 
+
+
+
     async function callLLM(systemPrompt) {
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
@@ -175,15 +193,31 @@ Osserva esclusivamente la forma dell’esposizione.
       return data.choices?.[0]?.message?.content?.trim() || "";
     }
 
+
+ 
+
+
+
+
+
     const [fringe, psicologico, amplificato] = await Promise.all([
       callLLM(prompts.fringe),
       callLLM(prompts.psicologico),
       callLLM(prompts.amplificato)
     ]);
 
-    return res.status(200).json({
-      osservazioni: { fringe, psicologico, amplificato }
-    });
+let fringeOut = stripMarkdownAndBullets(fringe);
+let psicOut = stripMarkdownAndBullets(psicologico);
+let ampOut = stripMarkdownAndBullets(amplificato);
+
+fringeOut = enforceLabeledLines(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
+psicOut = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
+ampOut = enforceAmplificatoShape(ampOut);
+
+return res.status(200).json({
+  osservazioni: { fringe: fringeOut, psicologico: psicOut, amplificato: ampOut }
+});
+
 
   } catch (err) {
     console.error("Observe fallback:", err);
@@ -194,6 +228,53 @@ Osserva esclusivamente la forma dell’esposizione.
     });
   }
 }
+
+   function stripMarkdownAndBullets(s) {
+  return (s || "")
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/^\s*[-*]\s+/gm, "")
+    .replace(/^\s*\d+\.\s+/gm, "")
+    .replace(/^\s*\d+\)\s+/gm, "")          // ✅ 1) 2) 3)
+    .replace(/^\s*[•·]\s+/gm, "")           // ✅ • bullet
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/_(.*?)_/g, "$1")
+    .trim();
+}
+
+
+function enforceLabeledLines(s, labels) {
+  // prende solo le righe che iniziano con una label valida, nell’ordine giusto.
+  const lines = (s || "").split("\n").map(l => l.trim()).filter(Boolean);
+  const out = [];
+  for (const lab of labels) {
+    const found = lines.find(l => l.startsWith(lab));
+    if (found) out.push(found);
+  }
+  // Se mancano label, torna l’originale (meglio non distruggere output buoni)
+  return out.length === labels.length ? out.join("\n") : s.trim();
+}
+
+
+function enforceAmplificatoShape(s) {
+  const t = (s || "").trim();
+  if (!t.includes("IPOTESI 1 — SINCERO:") || !t.includes("IPOTESI 2 — MESSA IN SCENA:")) return t;
+
+  const parts = t.split("IPOTESI 2 — MESSA IN SCENA:");
+  const a = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
+  const b = (parts[1] || "").trim();
+
+  const aSent = a.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
+  const bSent = b.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
+
+  return [
+    "IPOTESI 1 — SINCERO:",
+    aSent.join(" ").trim(),
+    "IPOTESI 2 — MESSA IN SCENA:",
+    bSent.join(" ").trim()
+  ].join("\n").trim();
+}
+
+
 
 /* ===========================
    FALLBACK V2 — NON PIÙ IDENTICO
