@@ -79,7 +79,9 @@ OUTPUT OBBLIGATORIO: 5 righe, ciascuna inizia con l’etichetta esatta:
 RITMO: (1 frase)
 REGISTRO: (1 frase)
 FUORI CAMPO: (1 frase, usa “resta fuori campo / rimane implicito”)
-PAROLA-OMBRA: (1 sola parola, senza spiegarla)
+
+PAROLA-OMBRA: deve essere UNA sola parola scelta da questo elenco (solo queste):
+opacità, attrito, urgenza, distanza, frizione, rigidità, scarto, sobrietà, pressione
 SOSPESO: (1 frase aperta, non conclusiva)
 
 Se molte risposte sono vuote/brevissime: fai emergere soprattutto FUORI CAMPO + PAROLA-OMBRA.
@@ -109,6 +111,11 @@ DIVIETI:
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”
 
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
+
+Stile obbligatorio:
+- frasi corte (max 18–22 parole)
+- vietato iniziare le frasi con: "La regia narrativa", "La struttura delle risposte", "La decisione di"
+- preferisci formulazioni compatte: "Nel testo si vede...", "La cornice fa...", "Il taglio lascia..."
 
 VINCOLO ANTI-CLONE:
 - IPOTESI 1 deve parlare solo di criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
@@ -240,6 +247,20 @@ return res.status(200).json({
     .replace(/_(.*?)_/g, "$1")
     .trim();
 }
+
+function softenBannedWords(s) {
+  return (s || "")
+    .replace(/\bpotrebbe\b/gi, "tende a");
+}
+
+// ...
+let fringeOut = stripMarkdownAndBullets(fringe);
+let psicOut = stripMarkdownAndBullets(psicologico);
+let ampOut = stripMarkdownAndBullets(amplificato);
+
+fringeOut = softenBannedWords(fringeOut);
+psicOut = softenBannedWords(psicOut);
+ampOut = softenBannedWords(ampOut);
 
 
 function enforceLabeledLines(s, labels) {
