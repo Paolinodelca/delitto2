@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  console.log("OBSERVE VERSION: AMP-V6");
+  console.log("OBSERVE VERSION: AMP-V7");
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Solo POST consentito" });
@@ -87,17 +87,17 @@ SOSPESO: (1 frase aperta, non conclusiva)
 Se molte risposte sono vuote/brevissime: fai emergere soprattutto FUORI CAMPO + PAROLA-OMBRA.
 `.trim(),
 
+      // ✅ AMPLIFICATO: torna più “ampio” e soprattutto ANTI-CRONACA
       amplificato: `
 Sei un OSSERVATORE ESTERNO. Terza persona.
 QUI NON descrivere l’effetto sul pubblico.
 QUI proponi due schemi possibili dietro la forma: decisione vs regia narrativa.
-Se non rispetti esattamente le 2 intestazioni e 3 frasi per blocco, RISCRIVI da capo.
 
 FORMATO OBBLIGATORIO (testo semplice):
 IPOTESI 1 — SINCERO:
-(3 frasi)
+(4 frasi)
 IPOTESI 2 — MESSA IN SCENA:
-(3 frasi)
+(4 frasi)
 
 DIVIETI:
 - non dire quale è vera
@@ -109,21 +109,19 @@ DIVIETI:
 - niente citazioni, niente “nella risposta…”
 - non introdurre nomi diversi da: Walter, Alex, (partner)
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”
+- vietato fare cronaca: NON elencare eventi in ordine, NON dire “poi/poi/poi”, NON riassumere la storia.
 
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
 
 Stile obbligatorio:
-- frasi corte (max 18–22 parole)
+- frasi medio-corte (12–22 parole)
 - vietato iniziare le frasi con: "La regia narrativa", "La struttura delle risposte", "La decisione di"
-- preferisci formulazioni compatte: "Nel testo si vede...", "La cornice fa...", "Il taglio lascia..."
+- preferisci formulazioni compatte: "Nel testo emerge...", "La cornice fa...", "Il taglio lascia..."
 
 VINCOLO ANTI-CLONE:
-- IPOTESI 1 deve parlare solo di criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
-- IPOTESI 2 deve parlare solo di regia (frame di ammissibilità, compressione/dilatazione, ruolo di Walter/Alex/partner come cornice, controllo del sospetto).
+- IPOTESI 1 parla solo di criteri e trade-off (priorità, rischio, delega, soglia di accettabilità, copertura, criterio).
+- IPOTESI 2 parla solo di regia (cornice, frame, compressione/dilatazione, taglio, messa a fuoco, fuori campo, gestione del sospetto).
 Non ripetere la stessa frase o la stessa idea identica in entrambe.
-IPOTESI 1 deve usare parole di decisione: “soglia”, “trade-off”, “delega”, “priorità”, “copertura”, “criterio”
-
-IPOTESI 2 deve usare parole di regia: “cornice”, “fuori campo”, “sequenza”, “taglio”, “messa a fuoco”, “ritmo”, “frame”
 
 Se molte risposte sono vuote/brevissime:
 IPOTESI 1: non emerge uno schema decisionale.
@@ -196,27 +194,12 @@ Osserva esclusivamente la forma dell’esposizione.
       return data.choices?.[0]?.message?.content?.trim() || "";
     }
 
-    // === CHIAMATA AI 3 PROMPT ===
-    let [fringe, psicologico, amplificato] = await Promise.all([
+    const [fringe, psicologico, amplificato] = await Promise.all([
       callLLM(prompts.fringe),
       callLLM(prompts.psicologico),
       callLLM(prompts.amplificato)
     ]);
 
-    // ✅ Miglioria 1: se AMPLIFICATO è troppo “scarno”, retry UNA volta chiedendo più densità (stesso formato)
-    if (amplificatoTooShort(amplificato)) {
-      const expandPrompt = prompts.amplificato + `
-
-RISCRITTURA OBBLIGATORIA (ESPANSIONE):
-Mantieni identico il formato (2 intestazioni + 3 frasi per blocco).
-Ogni frase deve avere almeno 14 parole.
-Non aggiungere righe extra.
-Non usare markdown, elenchi, citazioni, né “nella risposta”.
-`;
-      amplificato = await callLLM(expandPrompt);
-    }
-
-    // === POST-PROCESSING ===
     let fringeOut = stripMarkdownAndBullets(fringe);
     let psicOut = stripMarkdownAndBullets(psicologico);
     let ampOut = stripMarkdownAndBullets(amplificato);
@@ -227,10 +210,10 @@ Non usare markdown, elenchi, citazioni, né “nella risposta”.
 
     fringeOut = enforceLabeledLines(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
     psicOut = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
-    ampOut = enforceAmplificatoShape(ampOut);
+    ampOut = enforceAmplificatoShape(ampOut, 4); // ✅ ora 4 frasi per blocco
 
-    // ✅ Miglioria 2: PAROLA-OMBRA più stabile e meno “incollata” (derivata dalle risposte)
-    psicOut = enforceShadowWord(psicOut, trimmedAnswers);
+    // ✅ PAROLA-OMBRA: meno “sempre urgenza”
+    psicOut = enforceShadowWord(psicOut, trimmedAnswers, scenario);
 
     return res.status(200).json({
       osservazioni: { fringe: fringeOut, psicologico: psicOut, amplificato: ampOut }
@@ -251,8 +234,8 @@ function stripMarkdownAndBullets(s) {
     .replace(/```[\s\S]*?```/g, "")
     .replace(/^\s*[-*]\s+/gm, "")
     .replace(/^\s*\d+\.\s+/gm, "")
-    .replace(/^\s*\d+\)\s+/gm, "")          // ✅ 1) 2) 3)
-    .replace(/^\s*[•·]\s+/gm, "")           // ✅ • bullet
+    .replace(/^\s*\d+\)\s+/gm, "")
+    .replace(/^\s*[•·]\s+/gm, "")
     .replace(/\*\*(.*?)\*\*/g, "$1")
     .replace(/_(.*?)_/g, "$1")
     .trim();
@@ -264,18 +247,16 @@ function softenBannedWords(s) {
 }
 
 function enforceLabeledLines(s, labels) {
-  // prende solo le righe che iniziano con una label valida, nell’ordine giusto.
   const lines = (s || "").split("\n").map(l => l.trim()).filter(Boolean);
   const out = [];
   for (const lab of labels) {
     const found = lines.find(l => l.startsWith(lab));
     if (found) out.push(found);
   }
-  // Se mancano label, torna l’originale (meglio non distruggere output buoni)
   return out.length === labels.length ? out.join("\n") : s.trim();
 }
 
-function enforceAmplificatoShape(s) {
+function enforceAmplificatoShape(s, perBlock = 4) {
   const t = (s || "").trim();
   if (!t.includes("IPOTESI 1 — SINCERO:") || !t.includes("IPOTESI 2 — MESSA IN SCENA:")) return t;
 
@@ -283,8 +264,8 @@ function enforceAmplificatoShape(s) {
   const a = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
   const b = (parts[1] || "").trim();
 
-  const aSent = a.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
-  const bSent = b.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
+  const aSent = a.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, perBlock);
+  const bSent = b.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, perBlock);
 
   return [
     "IPOTESI 1 — SINCERO:",
@@ -294,57 +275,57 @@ function enforceAmplificatoShape(s) {
   ].join("\n").trim();
 }
 
-// ===========================
-// MIGLIORIA 1 — controllo “scarno” AMPLIFICATO + retry
-// ===========================
-function countWords(s) {
-  return (s || "").trim().split(/\s+/).filter(Boolean).length;
+// ---------- PAROLA-OMBRA: più “varia” senza inventare ----------
+function hashString(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
 }
 
-function amplificatoTooShort(ampText) {
-  const t = (ampText || "").trim();
-  if (!t.includes("IPOTESI 1 — SINCERO:") || !t.includes("IPOTESI 2 — MESSA IN SCENA:")) return true;
-
-  const parts = t.split("IPOTESI 2 — MESSA IN SCENA:");
-  const a = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
-  const b = (parts[1] || "").trim();
-
-  // soglie pratiche: sotto queste, viene “telegrammatico”
-  return countWords(a) < 45 || countWords(b) < 45;
-}
-
-// ===========================
-// MIGLIORIA 2 — PAROLA-OMBRA più stabile e meno ripetitiva
-// ===========================
-function pickShadowWordFromAnswers(trimmedAnswers) {
+function pickShadowWordFromText(text, scenarioText) {
   const list = ["opacità", "attrito", "urgenza", "distanza", "frizione", "rigidità", "scarto", "sobrietà", "pressione"];
-  const text = (trimmedAnswers || []).join(" ").toLowerCase();
+  const t = (text || "").toLowerCase();
+  const sc = (scenarioText || "").toLowerCase();
 
-  // euristiche leggere (non “interpretano”, fanno solo matching di parole)
-  if (text.includes("urgenz")) return "urgenza";
-  if (text.includes("penalit") || text.includes("pression") || text.includes("risch") || text.includes("stress")) return "pressione";
-  if (text.includes("ispezion") || text.includes("estern")) return "opacità";
-  if (text.includes("squad") || text.includes("aiut")) return "attrito";
-  if (text.includes("partner") || text.includes("eva")) return "distanza";
+  const hits = new Set();
 
-  // fallback deterministico, per evitare ripetizioni casuali
-  const len = text.length;
-  return list[len % list.length];
+  if (t.includes("urgenz") || t.includes("subito") || t.includes("penalit")) hits.add("urgenza");
+  if (t.includes("risch") || t.includes("pression") || t.includes("stress") || t.includes("penalit")) hits.add("pressione");
+  if (t.includes("partner") || t.includes("eva")) hits.add("distanza");
+  if (t.includes("squad") || t.includes("aiut") || t.includes("sostituz") || t.includes("turno")) hits.add("attrito");
+  if (t.includes("procedur") || t.includes("regol") || t.includes("firma") || t.includes("document")) hits.add("rigidità");
+  if (t.includes("ispezion") || t.includes("estern") || sc.includes("tecnologie sensibili")) hits.add("opacità");
+
+  // Se c’è “urgenza” MA ci sono anche altri segnali forti, non fissarti su urgenza sempre.
+  // Priorità: scegli il più “caratterizzante” fra quelli presenti, con tie-break deterministico.
+  const preferredOrder = ["opacità", "distanza", "attrito", "pressione", "rigidità", "scarto", "frizione", "sobrietà", "urgenza"];
+  const candidates = preferredOrder.filter(x => hits.has(x));
+
+  if (candidates.length === 1) return candidates[0];
+  if (candidates.length > 1) {
+    const seed = hashString(t + "||" + sc);
+    return candidates[seed % candidates.length];
+  }
+
+  const seed = hashString(t + "||" + sc);
+  return list[seed % list.length];
 }
 
-function enforceShadowWord(psicOut, trimmedAnswers) {
+function enforceShadowWord(psicOut, trimmedAnswers, scenarioText) {
   const lines = (psicOut || "").split("\n");
   const idx = lines.findIndex(l => l.trim().startsWith("PAROLA-OMBRA:"));
   if (idx === -1) return (psicOut || "").trim();
 
-  const chosen = pickShadowWordFromAnswers(trimmedAnswers);
+  const chosen = pickShadowWordFromText((trimmedAnswers || []).join(" "), scenarioText);
   lines[idx] = `PAROLA-OMBRA: ${chosen}`;
   return lines.join("\n").trim();
 }
 
 /* ===========================
    FALLBACK V2 — NON PIÙ IDENTICO
-   (e senza dump delle ancore)
 =========================== */
 function proceduralFallbackV2(body) {
   const pressureLevel = body?.pressureLevel || 0;
@@ -378,13 +359,15 @@ function proceduralFallbackV2(body) {
       ].join("\n")
     : [
         "IPOTESI 1 — SINCERO:",
-        "Nella forma emerge un criterio di priorità: alcune ragioni vengono messe davanti e altre restano implicite.",
-        "Lo schema decisionale usa soglie di accettabilità e trade-off, più che un racconto lineare.",
-        "L’azione tende a distribuirsi tra il giocatore e il contesto, con delega o spostamento del rischio.",
+        "Nel testo emerge un criterio di priorità: alcune ragioni vengono messe davanti e altre restano implicite.",
+        "Lo schema decisionale usa soglie di accettabilità e trade-off, più che una sequenza di eventi.",
+        "L’azione tende a distribuirsi tra il giocatore e il contesto, con delega o copertura del rischio.",
+        "Rimane una tensione tra criterio dichiarato e fuori campo operativo, senza chiudere l’ambiguità.",
         "IPOTESI 2 — MESSA IN SCENA:",
-        "La regia costruisce un frame di ammissibilità: i passaggi vengono compressi o dilatati per guidare la lettura.",
-        "Il personaggio viene definito per contrasto con altri ruoli, con teatralità sobria e gestione del sospetto.",
-        "Rimane un controllo della cornice più che una spiegazione: ciò che conta è come appare."
+        "La regia costruisce un frame di ammissibilità: alcuni passaggi vengono compressi e altri dilatati per guidare la cornice.",
+        "Il taglio tiene fuori campo ciò che complicherebbe la scena e mette a fuoco ciò che la rende leggibile.",
+        "I ruoli di Walter/Alex/partner funzionano da cornice, più che da motore: aiutano a stabilizzare il personaggio.",
+        "Rimane un controllo della messa a fuoco più che una spiegazione: ciò che conta è come appare."
       ].join("\n");
 
   return {
