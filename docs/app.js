@@ -560,7 +560,7 @@ function renderObservations(observations) {
   header.innerHTML = `
   <h1>${GAME_CONFIG.scenario}</h1>
   <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
-  <h2>TRACCE RILEVATE</h2>
+  <h2>QUELLO CHE EMERGE DAL RACCONTO</h2>
 `;
 
 

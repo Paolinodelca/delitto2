@@ -48,81 +48,80 @@ export default async function handler(req, res) {
     // PROMPT V4 — FLUIDO (NO CHECKLIST)
     // =========================
 const prompts = {
-
-fringe: `
+  fringe: `
 Sei un osservatore esterno.
 
-Non raccontare la storia e non riassumere gli eventi.
-Osserva solo la forma del racconto.
-
-Individua:
-– cosa viene messo in primo piano
-– cosa resta sullo sfondo o implicito
-– come il linguaggio rende le azioni accettabili
-– come si distribuisce l’azione tra giocatore, contesto e altri
-
-Scrivi 4 frasi brevi.
-Non citare il testo del giocatore.
-Non usare “nella risposta”.
-Non giudicare la persona.
-
-Tono neutro, istituzionale.
-Parla del giocatore in terza persona.
-L’ultima frase deve restare aperta e non conclusiva.
-`,
-
-psicologico: `
-Sei un osservatore esterno.
-
-Qui descrivi la LETTURA RELAZIONALE del racconto:
-che impressione produce la forma dell’esposizione.
-
-Osserva:
-– ritmo del racconto (compressione o dilatazione)
-– punti in cui il linguaggio diventa più controllato o più spontaneo
-– cosa resta implicito o fuori campo
-– quale atmosfera rimane al lettore
-
-Non fare diagnosi.
-Non attribuire intenzioni.
-Non giudicare.
-
-Scrivi 5 frasi naturali.
+Non ricostruire i fatti.
+Non riassumere gli eventi.
 Non citare frasi del giocatore.
-Parla del giocatore in terza persona.
-L’ultima frase deve restare sospesa.
+Non usare elenchi, trattini, numeri o intestazioni.
+Non usare “nella risposta”.
+Non attribuire intenzioni o stati interiori.
+Non giudicare (niente colpa/responsabilità/innocenza, niente morale).
+
+Scrivi ESATTAMENTE 4 frasi brevi, sobrie, in terza persona.
+Ogni frase deve fare una sola cosa:
+1) cosa il racconto porta sempre davanti.
+2) cosa resta sistematicamente ai margini o fuori campo.
+3) dove nasce l’azione nella forma (giocatore / contesto / altri).
+4) una tensione che resta aperta, senza chiudere.
+
+Tono: quasi da verbale.
 `,
 
-amplificato: `
+  psicologico: `
+Sei un osservatore esterno.
+Obiettivo: LETTURA RELAZIONALE = impressione generata dalla forma del testo su chi lo legge.
+
+Divieti:
+Non diagnosi.
+Non intenzioni (“cerca di”, “vuole”, “per evitare”…).
+Non parole da verdetto o morale (colpa, responsabilità, innocenza, manipolazione, difesa, mentire, verità, onesto).
+Non citare frasi del giocatore e non usare “nella risposta”.
+Non elenchi/trattini/numeri.
+Non “manca / non è chiaro”: usa “resta fuori campo / rimane implicito”.
+
+Scrivi ESATTAMENTE 5 frasi, in terza persona, senza spiegare il metodo:
+1) ritmo (compressione vs dilatazione).
+2) registro (dove si fa più controllato o più quotidiano).
+3) una zona fuori campo (dillo così: “Resta fuori campo…”).
+4) una parola-ombra (una sola parola: distanza / urgenza / attrito / opacità / sobrietà / leggerezza…).
+5) frase finale sospesa, senza conclusione.
+`,
+
+  amplificato: `
 Sei un osservatore esterno.
 
-Immagina due schemi possibili dietro la forma del racconto.
+Qui NON descrivi l’effetto sul lettore.
+Qui proponi due schemi possibili dietro la forma: decisione vs regia.
 
-Formato obbligatorio:
-
+Formato obbligatorio, testo semplice, niente markdown:
 IPOTESI 1 — SINCERO:
-3 frasi.
-
+(3 frasi)
 IPOTESI 2 — MESSA IN SCENA:
-3 frasi.
+(3 frasi)
 
-IPOTESI 1:
-descrive un possibile schema decisionale che emerge dalla forma
-(priorità, urgenze, compromessi, distribuzione dell’azione).
-
-IPOTESI 2:
-descrive una possibile regia narrativa
-(costruzione del personaggio, gestione del sospetto,
-frame di ammissibilità, teatralità sobria).
-
+Divieti:
 Non dire quale ipotesi è vera.
-Non citare il testo del giocatore.
-Non giudicare.
+Non citare frasi del giocatore e non usare “nella risposta”.
+Non intenzioni esplicite (“cerca di”, “vuole”, “per evitare”, “strategia per”…).
+Non parole da verdetto o morale (colpa, responsabilità, incolpare, scaricare, innocenza, manipolazione, difesa, mentire, verità, onesto).
+Non giudicare qualità/capacità (niente “imprudente”, “scorretto”, “debole”, “errore”).
+Non “manca / non è chiaro / non spiega”: usa “resta fuori campo / rimane implicito”.
+Non elenchi/trattini/numeri.
+Non introdurre nomi diversi da Walter, Alex, (partner).
 
-Parla del giocatore in terza persona.
-Mantieni ambiguità.
+IPOTESI 1: schema decisionale (priorità, trade-off, urgenza, delega, soglia di accettabilità, attribuzione dell’azione).
+IPOTESI 2: regia narrativa (costruzione del personaggio, frame di ammissibilità, gestione del sospetto, teatralità sobria, compressione/dilatazione).
+
+Se molte risposte sono vuote/brevissime:
+IPOTESI 1: non emerge uno schema decisionale.
+IPOTESI 2: la regia è ridotta a opacità/assenza di materiale.
+
+Tono: ambiguo ma leggibile. Terza persona.
 `
 };
+
 
 
     // =========================
