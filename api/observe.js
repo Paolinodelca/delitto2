@@ -46,6 +46,7 @@ NON attribuire intenzioni o stati interiori.
 Niente morale/verdettI (colpa, responsabilità, innocenza, verità, mentire, manipolazione).
 Niente markdown, niente elenchi.
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”.
+NON nominare azioni specifiche del racconto (sostituzioni, aiuti, chiamate, spostamenti). Parla solo della forma con cui vengono presentate.
 
 VINCOLO ANTI-RIASSUNTO:
 Non nominare luoghi o eventi specifici (es. sala controllo, logistica, ispezione) salvo per dire che restano fuori campo.
@@ -85,8 +86,10 @@ RITMO: (1 frase)
 REGISTRO: (1 frase)
 FUORI CAMPO: (1 frase, usa “resta fuori campo / rimane implicito”)
 
-PAROLA-OMBRA: deve essere UNA sola parola scelta da questo elenco (solo queste):
+PAROLA-OMBRA: scegli UNA parola dall’elenco ma evita di ripetere quella che emerge più ovvia dal contesto.
 opacità, attrito, urgenza, distanza, frizione, rigidità, scarto, sobrietà, pressione
+Preferisci parole meno letterali rispetto ai contenuti espliciti delle risposte.
+
 SOSPESO: (1 frase aperta; formula un rapporto tra due elementi della forma: es. “tra controllo e spontaneità”, “tra dettaglio e taglio”, “tra cornice e fuori campo”)
 
 Se molte risposte sono vuote/brevissime: fai emergere soprattutto FUORI CAMPO + PAROLA-OMBRA.
@@ -106,7 +109,7 @@ IPOTESI 2 — MESSA IN SCENA:
 
 DIVIETI:
 - non dire quale è vera
-- non inventare conseguenze o dettagli
+- non citare eventi specifici del racconto (chiamate, turni, spostamenti, aiuti)
 - niente intenzioni esplicite (“cerca di”, “vuole”, “per evitare”, “strategia per”)
 - niente verdetti/morale (colpa, responsabilità, innocenza, verità, mentire, manipolazione)
 - niente giudizi di qualità/capacità (imprudente, scorretto, errore, debole)
