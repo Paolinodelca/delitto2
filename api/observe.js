@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
     const prompts = {
-     fringe: `
+      fringe: `
 Sei un OSSERVATORE ESTERNO. Parli in terza persona del GIOCATORE.
 NON ricostruire i fatti, NON riassumere eventi, NON dire “cosa è successo”.
 NON citare frasi, NON usare “nella risposta…”.
@@ -59,7 +59,7 @@ TENSIONE: (1 frase aperta, senza chiudere)
 Se molte risposte sono vuote/brevissime: rendilo il punto centrale in PRIMO PIANO.
 `.trim(),
 
- psicologico: `
+      psicologico: `
 Sei un OSSERVATORE ESTERNO. Parli in terza persona del GIOCATORE.
 OBIETTIVO: LETTURA RELAZIONALE = impressione che la forma produce, senza diagnosi.
 
@@ -87,7 +87,7 @@ SOSPESO: (1 frase aperta, non conclusiva)
 Se molte risposte sono vuote/brevissime: fai emergere soprattutto FUORI CAMPO + PAROLA-OMBRA.
 `.trim(),
 
-amplificato: `
+      amplificato: `
 Sei un OSSERVATORE ESTERNO. Terza persona.
 QUI NON descrivere l’effetto sul pubblico.
 QUI proponi due schemi possibili dietro la forma: decisione vs regia narrativa.
@@ -125,7 +125,6 @@ IPOTESI 1 deve usare parole di decisione: “soglia”, “trade-off”, “dele
 
 IPOTESI 2 deve usare parole di regia: “cornice”, “fuori campo”, “sequenza”, “taglio”, “messa a fuoco”, “ritmo”, “frame”
 
-
 Se molte risposte sono vuote/brevissime:
 IPOTESI 1: non emerge uno schema decisionale.
 IPOTESI 2: la regia è ridotta a opacità/assenza di materiale.
@@ -162,9 +161,6 @@ Non valutare la verità dei fatti.
 Osserva esclusivamente la forma dell’esposizione.
 `.trim();
 
-
-
-
     async function callLLM(systemPrompt) {
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
@@ -200,35 +196,45 @@ Osserva esclusivamente la forma dell’esposizione.
       return data.choices?.[0]?.message?.content?.trim() || "";
     }
 
-
- 
-
-
-
-
-
-    const [fringe, psicologico, amplificato] = await Promise.all([
+    // === CHIAMATA AI 3 PROMPT ===
+    let [fringe, psicologico, amplificato] = await Promise.all([
       callLLM(prompts.fringe),
       callLLM(prompts.psicologico),
       callLLM(prompts.amplificato)
     ]);
 
-let fringeOut = stripMarkdownAndBullets(fringe);
-let psicOut = stripMarkdownAndBullets(psicologico);
-let ampOut = stripMarkdownAndBullets(amplificato);
+    // ✅ Miglioria 1: se AMPLIFICATO è troppo “scarno”, retry UNA volta chiedendo più densità (stesso formato)
+    if (amplificatoTooShort(amplificato)) {
+      const expandPrompt = prompts.amplificato + `
 
-fringeOut = softenBannedWords(fringeOut);
-psicOut = softenBannedWords(psicOut);
-ampOut = softenBannedWords(ampOut);
+RISCRITTURA OBBLIGATORIA (ESPANSIONE):
+Mantieni identico il formato (2 intestazioni + 3 frasi per blocco).
+Ogni frase deve avere almeno 14 parole.
+Non aggiungere righe extra.
+Non usare markdown, elenchi, citazioni, né “nella risposta”.
+`;
+      amplificato = await callLLM(expandPrompt);
+    }
 
-fringeOut = enforceLabeledLines(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
-psicOut = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
-ampOut = enforceAmplificatoShape(ampOut);
+    // === POST-PROCESSING ===
+    let fringeOut = stripMarkdownAndBullets(fringe);
+    let psicOut = stripMarkdownAndBullets(psicologico);
+    let ampOut = stripMarkdownAndBullets(amplificato);
 
-return res.status(200).json({
-  osservazioni: { fringe: fringeOut, psicologico: psicOut, amplificato: ampOut }
-});
+    fringeOut = softenBannedWords(fringeOut);
+    psicOut = softenBannedWords(psicOut);
+    ampOut = softenBannedWords(ampOut);
 
+    fringeOut = enforceLabeledLines(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
+    psicOut = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
+    ampOut = enforceAmplificatoShape(ampOut);
+
+    // ✅ Miglioria 2: PAROLA-OMBRA più stabile e meno “incollata” (derivata dalle risposte)
+    psicOut = enforceShadowWord(psicOut, trimmedAnswers);
+
+    return res.status(200).json({
+      osservazioni: { fringe: fringeOut, psicologico: psicOut, amplificato: ampOut }
+    });
 
   } catch (err) {
     console.error("Observe fallback:", err);
@@ -240,7 +246,7 @@ return res.status(200).json({
   }
 }
 
-   function stripMarkdownAndBullets(s) {
+function stripMarkdownAndBullets(s) {
   return (s || "")
     .replace(/```[\s\S]*?```/g, "")
     .replace(/^\s*[-*]\s+/gm, "")
@@ -257,8 +263,6 @@ function softenBannedWords(s) {
     .replace(/\bpotrebbe\b/gi, "tende a");
 }
 
-
-
 function enforceLabeledLines(s, labels) {
   // prende solo le righe che iniziano con una label valida, nell’ordine giusto.
   const lines = (s || "").split("\n").map(l => l.trim()).filter(Boolean);
@@ -270,7 +274,6 @@ function enforceLabeledLines(s, labels) {
   // Se mancano label, torna l’originale (meglio non distruggere output buoni)
   return out.length === labels.length ? out.join("\n") : s.trim();
 }
-
 
 function enforceAmplificatoShape(s) {
   const t = (s || "").trim();
@@ -291,7 +294,53 @@ function enforceAmplificatoShape(s) {
   ].join("\n").trim();
 }
 
+// ===========================
+// MIGLIORIA 1 — controllo “scarno” AMPLIFICATO + retry
+// ===========================
+function countWords(s) {
+  return (s || "").trim().split(/\s+/).filter(Boolean).length;
+}
 
+function amplificatoTooShort(ampText) {
+  const t = (ampText || "").trim();
+  if (!t.includes("IPOTESI 1 — SINCERO:") || !t.includes("IPOTESI 2 — MESSA IN SCENA:")) return true;
+
+  const parts = t.split("IPOTESI 2 — MESSA IN SCENA:");
+  const a = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
+  const b = (parts[1] || "").trim();
+
+  // soglie pratiche: sotto queste, viene “telegrammatico”
+  return countWords(a) < 45 || countWords(b) < 45;
+}
+
+// ===========================
+// MIGLIORIA 2 — PAROLA-OMBRA più stabile e meno ripetitiva
+// ===========================
+function pickShadowWordFromAnswers(trimmedAnswers) {
+  const list = ["opacità", "attrito", "urgenza", "distanza", "frizione", "rigidità", "scarto", "sobrietà", "pressione"];
+  const text = (trimmedAnswers || []).join(" ").toLowerCase();
+
+  // euristiche leggere (non “interpretano”, fanno solo matching di parole)
+  if (text.includes("urgenz")) return "urgenza";
+  if (text.includes("penalit") || text.includes("pression") || text.includes("risch") || text.includes("stress")) return "pressione";
+  if (text.includes("ispezion") || text.includes("estern")) return "opacità";
+  if (text.includes("squad") || text.includes("aiut")) return "attrito";
+  if (text.includes("partner") || text.includes("eva")) return "distanza";
+
+  // fallback deterministico, per evitare ripetizioni casuali
+  const len = text.length;
+  return list[len % list.length];
+}
+
+function enforceShadowWord(psicOut, trimmedAnswers) {
+  const lines = (psicOut || "").split("\n");
+  const idx = lines.findIndex(l => l.trim().startsWith("PAROLA-OMBRA:"));
+  if (idx === -1) return (psicOut || "").trim();
+
+  const chosen = pickShadowWordFromAnswers(trimmedAnswers);
+  lines[idx] = `PAROLA-OMBRA: ${chosen}`;
+  return lines.join("\n").trim();
+}
 
 /* ===========================
    FALLBACK V2 — NON PIÙ IDENTICO
