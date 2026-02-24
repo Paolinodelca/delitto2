@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  console.log("OBSERVE VERSION: AMP-V7");
+  console.log("OBSERVE VERSION: AMP-V6");
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Solo POST consentito" });
@@ -45,9 +45,13 @@ NON citare frasi, NON usare “nella risposta…”.
 NON attribuire intenzioni o stati interiori.
 Niente morale/verdettI (colpa, responsabilità, innocenza, verità, mentire, manipolazione).
 Niente markdown, niente elenchi.
-Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”
+Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”.
 
-Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
+VINCOLO ANTI-RIASSUNTO:
+Non nominare luoghi o eventi specifici (es. sala controllo, logistica, ispezione) salvo per dire che restano fuori campo.
+Non usare cronologia (“prima/poi/dopo”) né catene causali.
+
+Vietato “potrebbe” (o almeno: massimo 1 volta per sezione).
 Se produci più di 4 righe, o usi "-" o numeri, o markdown, RISCRIVI da capo rispettando il formato.
 OUTPUT OBBLIGATORIO: 4 righe, ciascuna inizia con l’etichetta esatta:
 
@@ -69,10 +73,11 @@ DIVIETI:
 - niente citazioni, niente “nella risposta…”
 - niente markdown o elenchi
 - non introdurre nomi diversi da: Walter, Alex, (partner)
+- niente giudizi di capacità/competenza/adeguatezza: vietate “capacità”, “incompetenza”, “adeguatezza”, “gestire bene/male”, “efficace”, “inefficace”
 
-Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”
+Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”.
 
-Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
+Vietato “potrebbe” (o almeno: massimo 1 volta per sezione).
 Se produci più di 5 righe, o usi "-" o numeri, o markdown, RISCRIVI da capo rispettando il formato.
 OUTPUT OBBLIGATORIO: 5 righe, ciascuna inizia con l’etichetta esatta:
 
@@ -82,22 +87,22 @@ FUORI CAMPO: (1 frase, usa “resta fuori campo / rimane implicito”)
 
 PAROLA-OMBRA: deve essere UNA sola parola scelta da questo elenco (solo queste):
 opacità, attrito, urgenza, distanza, frizione, rigidità, scarto, sobrietà, pressione
-SOSPESO: (1 frase aperta, non conclusiva)
+SOSPESO: (1 frase aperta; formula un rapporto tra due elementi della forma: es. “tra controllo e spontaneità”, “tra dettaglio e taglio”, “tra cornice e fuori campo”)
 
 Se molte risposte sono vuote/brevissime: fai emergere soprattutto FUORI CAMPO + PAROLA-OMBRA.
 `.trim(),
 
-      // ✅ AMPLIFICATO: torna più “ampio” e soprattutto ANTI-CRONACA
       amplificato: `
 Sei un OSSERVATORE ESTERNO. Terza persona.
 QUI NON descrivere l’effetto sul pubblico.
 QUI proponi due schemi possibili dietro la forma: decisione vs regia narrativa.
+Se non rispetti esattamente le 2 intestazioni e 3 frasi per blocco, RISCRIVI da capo.
 
 FORMATO OBBLIGATORIO (testo semplice):
 IPOTESI 1 — SINCERO:
-(4 frasi)
+(3 frasi)
 IPOTESI 2 — MESSA IN SCENA:
-(4 frasi)
+(3 frasi)
 
 DIVIETI:
 - non dire quale è vera
@@ -109,19 +114,25 @@ DIVIETI:
 - niente citazioni, niente “nella risposta…”
 - non introdurre nomi diversi da: Walter, Alex, (partner)
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”
-- vietato fare cronaca: NON elencare eventi in ordine, NON dire “poi/poi/poi”, NON riassumere la storia.
 
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
 
 Stile obbligatorio:
-- frasi medio-corte (12–22 parole)
+- frasi corte (max 18–22 parole)
 - vietato iniziare le frasi con: "La regia narrativa", "La struttura delle risposte", "La decisione di"
-- preferisci formulazioni compatte: "Nel testo emerge...", "La cornice fa...", "Il taglio lascia..."
+- preferisci formulazioni compatte: "Nel testo si vede...", "La cornice fa...", "Il taglio lascia..."
+
+VINCOLO “TRA A E B” (per rendere la lettura più netta e meno checklist):
+- In IPOTESI 1 almeno 1 frase deve contenere “tra … e …” (es. “tra copertura e urgenza”, “tra rischio e beneficio”, “tra delega e presenza”).
+- In IPOTESI 2 almeno 1 frase deve contenere “tra … e …” (es. “tra cornice e fuori campo”, “tra taglio e dettaglio”, “tra ritmo e sospetto”).
 
 VINCOLO ANTI-CLONE:
-- IPOTESI 1 parla solo di criteri e trade-off (priorità, rischio, delega, soglia di accettabilità, copertura, criterio).
-- IPOTESI 2 parla solo di regia (cornice, frame, compressione/dilatazione, taglio, messa a fuoco, fuori campo, gestione del sospetto).
+- IPOTESI 1 deve parlare solo di criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
+- IPOTESI 2 deve parlare solo di regia (frame di ammissibilità, compressione/dilatazione, ruolo di Walter/Alex/partner come cornice, controllo del sospetto).
 Non ripetere la stessa frase o la stessa idea identica in entrambe.
+IPOTESI 1 deve usare parole di decisione: “soglia”, “trade-off”, “delega”, “priorità”, “copertura”, “criterio”
+
+IPOTESI 2 deve usare parole di regia: “cornice”, “fuori campo”, “sequenza”, “taglio”, “messa a fuoco”, “ritmo”, “frame”
 
 Se molte risposte sono vuote/brevissime:
 IPOTESI 1: non emerge uno schema decisionale.
@@ -210,10 +221,7 @@ Osserva esclusivamente la forma dell’esposizione.
 
     fringeOut = enforceLabeledLines(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
     psicOut = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
-    ampOut = enforceAmplificatoShape(ampOut, 4); // ✅ ora 4 frasi per blocco
-
-    // ✅ PAROLA-OMBRA: meno “sempre urgenza”
-    psicOut = enforceShadowWord(psicOut, trimmedAnswers, scenario);
+    ampOut = enforceAmplificatoShape(ampOut);
 
     return res.status(200).json({
       osservazioni: { fringe: fringeOut, psicologico: psicOut, amplificato: ampOut }
@@ -234,8 +242,8 @@ function stripMarkdownAndBullets(s) {
     .replace(/```[\s\S]*?```/g, "")
     .replace(/^\s*[-*]\s+/gm, "")
     .replace(/^\s*\d+\.\s+/gm, "")
-    .replace(/^\s*\d+\)\s+/gm, "")
-    .replace(/^\s*[•·]\s+/gm, "")
+    .replace(/^\s*\d+\)\s+/gm, "")          // ✅ 1) 2) 3)
+    .replace(/^\s*[•·]\s+/gm, "")           // ✅ • bullet
     .replace(/\*\*(.*?)\*\*/g, "$1")
     .replace(/_(.*?)_/g, "$1")
     .trim();
@@ -247,16 +255,18 @@ function softenBannedWords(s) {
 }
 
 function enforceLabeledLines(s, labels) {
+  // prende solo le righe che iniziano con una label valida, nell’ordine giusto.
   const lines = (s || "").split("\n").map(l => l.trim()).filter(Boolean);
   const out = [];
   for (const lab of labels) {
     const found = lines.find(l => l.startsWith(lab));
     if (found) out.push(found);
   }
+  // Se mancano label, torna l’originale (meglio non distruggere output buoni)
   return out.length === labels.length ? out.join("\n") : s.trim();
 }
 
-function enforceAmplificatoShape(s, perBlock = 4) {
+function enforceAmplificatoShape(s) {
   const t = (s || "").trim();
   if (!t.includes("IPOTESI 1 — SINCERO:") || !t.includes("IPOTESI 2 — MESSA IN SCENA:")) return t;
 
@@ -264,8 +274,8 @@ function enforceAmplificatoShape(s, perBlock = 4) {
   const a = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
   const b = (parts[1] || "").trim();
 
-  const aSent = a.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, perBlock);
-  const bSent = b.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, perBlock);
+  const aSent = a.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
+  const bSent = b.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
 
   return [
     "IPOTESI 1 — SINCERO:",
@@ -275,57 +285,9 @@ function enforceAmplificatoShape(s, perBlock = 4) {
   ].join("\n").trim();
 }
 
-// ---------- PAROLA-OMBRA: più “varia” senza inventare ----------
-function hashString(str) {
-  let h = 2166136261;
-  for (let i = 0; i < str.length; i++) {
-    h ^= str.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-function pickShadowWordFromText(text, scenarioText) {
-  const list = ["opacità", "attrito", "urgenza", "distanza", "frizione", "rigidità", "scarto", "sobrietà", "pressione"];
-  const t = (text || "").toLowerCase();
-  const sc = (scenarioText || "").toLowerCase();
-
-  const hits = new Set();
-
-  if (t.includes("urgenz") || t.includes("subito") || t.includes("penalit")) hits.add("urgenza");
-  if (t.includes("risch") || t.includes("pression") || t.includes("stress") || t.includes("penalit")) hits.add("pressione");
-  if (t.includes("partner") || t.includes("eva")) hits.add("distanza");
-  if (t.includes("squad") || t.includes("aiut") || t.includes("sostituz") || t.includes("turno")) hits.add("attrito");
-  if (t.includes("procedur") || t.includes("regol") || t.includes("firma") || t.includes("document")) hits.add("rigidità");
-  if (t.includes("ispezion") || t.includes("estern") || sc.includes("tecnologie sensibili")) hits.add("opacità");
-
-  // Se c’è “urgenza” MA ci sono anche altri segnali forti, non fissarti su urgenza sempre.
-  // Priorità: scegli il più “caratterizzante” fra quelli presenti, con tie-break deterministico.
-  const preferredOrder = ["opacità", "distanza", "attrito", "pressione", "rigidità", "scarto", "frizione", "sobrietà", "urgenza"];
-  const candidates = preferredOrder.filter(x => hits.has(x));
-
-  if (candidates.length === 1) return candidates[0];
-  if (candidates.length > 1) {
-    const seed = hashString(t + "||" + sc);
-    return candidates[seed % candidates.length];
-  }
-
-  const seed = hashString(t + "||" + sc);
-  return list[seed % list.length];
-}
-
-function enforceShadowWord(psicOut, trimmedAnswers, scenarioText) {
-  const lines = (psicOut || "").split("\n");
-  const idx = lines.findIndex(l => l.trim().startsWith("PAROLA-OMBRA:"));
-  if (idx === -1) return (psicOut || "").trim();
-
-  const chosen = pickShadowWordFromText((trimmedAnswers || []).join(" "), scenarioText);
-  lines[idx] = `PAROLA-OMBRA: ${chosen}`;
-  return lines.join("\n").trim();
-}
-
 /* ===========================
    FALLBACK V2 — NON PIÙ IDENTICO
+   (e senza dump delle ancore)
 =========================== */
 function proceduralFallbackV2(body) {
   const pressureLevel = body?.pressureLevel || 0;
@@ -359,15 +321,13 @@ function proceduralFallbackV2(body) {
       ].join("\n")
     : [
         "IPOTESI 1 — SINCERO:",
-        "Nel testo emerge un criterio di priorità: alcune ragioni vengono messe davanti e altre restano implicite.",
-        "Lo schema decisionale usa soglie di accettabilità e trade-off, più che una sequenza di eventi.",
-        "L’azione tende a distribuirsi tra il giocatore e il contesto, con delega o copertura del rischio.",
-        "Rimane una tensione tra criterio dichiarato e fuori campo operativo, senza chiudere l’ambiguità.",
+        "Nella forma emerge un criterio di priorità: alcune ragioni vengono messe davanti e altre restano implicite.",
+        "Lo schema decisionale usa soglie di accettabilità e trade-off, più che un racconto lineare.",
+        "L’azione tende a distribuirsi tra il giocatore e il contesto, con delega o spostamento del rischio.",
         "IPOTESI 2 — MESSA IN SCENA:",
-        "La regia costruisce un frame di ammissibilità: alcuni passaggi vengono compressi e altri dilatati per guidare la cornice.",
-        "Il taglio tiene fuori campo ciò che complicherebbe la scena e mette a fuoco ciò che la rende leggibile.",
-        "I ruoli di Walter/Alex/partner funzionano da cornice, più che da motore: aiutano a stabilizzare il personaggio.",
-        "Rimane un controllo della messa a fuoco più che una spiegazione: ciò che conta è come appare."
+        "La regia costruisce un frame di ammissibilità: i passaggi vengono compressi o dilatati per guidare la lettura.",
+        "Il personaggio viene definito per contrasto con altri ruoli, con teatralità sobria e gestione del sospetto.",
+        "Rimane un controllo della cornice più che una spiegazione: ciò che conta è come appare."
       ].join("\n");
 
   return {
