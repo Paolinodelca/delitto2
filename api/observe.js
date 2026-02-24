@@ -217,6 +217,10 @@ let fringeOut = stripMarkdownAndBullets(fringe);
 let psicOut = stripMarkdownAndBullets(psicologico);
 let ampOut = stripMarkdownAndBullets(amplificato);
 
+fringeOut = softenBannedWords(fringeOut);
+psicOut = softenBannedWords(psicOut);
+ampOut = softenBannedWords(ampOut);
+
 fringeOut = enforceLabeledLines(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
 psicOut = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
 ampOut = enforceAmplificatoShape(ampOut);
@@ -253,14 +257,6 @@ function softenBannedWords(s) {
     .replace(/\bpotrebbe\b/gi, "tende a");
 }
 
-// ...
-let fringeOut = stripMarkdownAndBullets(fringe);
-let psicOut = stripMarkdownAndBullets(psicologico);
-let ampOut = stripMarkdownAndBullets(amplificato);
-
-fringeOut = softenBannedWords(fringeOut);
-psicOut = softenBannedWords(psicOut);
-ampOut = softenBannedWords(ampOut);
 
 
 function enforceLabeledLines(s, labels) {
