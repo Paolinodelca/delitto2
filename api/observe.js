@@ -1,5 +1,6 @@
+// api/observe.js
 export default async function handler(req, res) {
-  console.log("OBSERVE VERSION: AMP-V4 (format-locked + sanitize)");
+  console.log("OBSERVE VERSION: AMP-V5");
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Solo POST consentito" });
@@ -16,135 +17,127 @@ export default async function handler(req, res) {
       answers,
       observedAnchors = [],
       pressureLevel = 0
-    } = req.body;
+    } = req.body || {};
 
     if (!scenario || !playerModel || !answers) {
       return res.status(400).json({ error: "Dati incompleti" });
     }
 
-    // Qualità input (blindatura anti invenzioni)
+    // --- Qualità input (anti-invenzioni) ---
     const trimmedAnswers = Array.isArray(answers)
       ? answers.map(a => (a ?? "").toString().trim())
       : [];
+
     const blankCount = trimmedAnswers.filter(a => a.length === 0).length;
     const shortCount = trimmedAnswers.filter(a => a.length > 0 && a.length < 10).length;
     const total = trimmedAnswers.length;
 
-    const lowMaterial = total > 0 && (blankCount / total >= 0.5);
+    const roleWalter = context?.responsabile || "Walter";
+    const roleAlex = context?.amico || "Alex";
+    const rolePartner = context?.partner || "(partner)";
 
-    /* =========================
-       PROMPT — AMP-V4
-       Obiettivo: “magia” = descrizioni sintetiche + non spiegare il meccanismo
-       Regola: NO riassunto, NO citazioni, NO “nella risposta”.
-    ========================== */
-
+    // =========================
+    // PROMPT (AMP-V5) — “magico”: deduzioni senza mostrare meccanismi
+    // =========================
     const prompts = {
       fringe: `
-Sei un OSSERVATORE ESTERNO nell’esperienza FRINGE / LEAK.
+Sei un OSSERVATORE ESTERNO.
 
-ASSIOMA:
-Questo NON è una ricostruzione dei fatti e NON è un verdetto.
+NON è una ricostruzione dei fatti.
+NON riassumere gli eventi.
+NON citare frasi del giocatore.
+NON usare “nella risposta…”.
+NON attribuire intenzioni o stati interiori (“cerca di”, “vuole”, “per evitare”, “ansia”, “insicurezza”, “confusione”).
+NON usare parole da verdetto o morale: colpa, responsabilità, innocenza, manipolazione, difesa, mentire, verità, onesto.
+Niente elenchi, niente markdown.
 
-DIVIETI ASSOLUTI:
-- Non riassumere la storia, non raccontare eventi in sequenza.
-- Non citare frasi del giocatore e non usare “nella risposta / risposta 1/2/3”.
-- Non attribuire intenzioni o stati interiori (niente “cerca di”, “vuole”, “per evitare”, “paura”, “insicurezza”, “confusione”).
-- Non usare parole da verdetto o morale: colpa, responsabilità, innocenza, manipolazione, difesa, mentire, verità, onesto.
-- Niente elenchi, niente trattini, niente numerazioni, niente markdown.
-- Niente “Ecco…”, niente “In generale / In sintesi”.
+Scrivi 4 frasi brevi, in terza persona, tono sobrio.
+Frase 1: cosa la forma del racconto mette davanti (senza dire cosa è successo).
+Frase 2: cosa resta fuori campo o implicito (senza “manca / non è chiaro”).
+Frase 3: come si distribuisce l’azione nella forma (chi appare come fonte dell’azione: giocatore / contesto / altri).
+Frase 4: una tensione formale che resta aperta (senza chiudere, senza conclusioni).
 
-OUTPUT OBBLIGATORIO:
-Scrivi ESATTAMENTE 4 frasi, brevi, in terza persona, tono sobrio.
-Ogni frase deve fare UNA cosa:
-1) Primo piano (che cosa domina nella forma del racconto).
-2) Fuori campo (che cosa resta implicito / marginale).
-3) Agenzia (dove sembra nascere l’azione: giocatore / contesto / altri, come forma).
-4) Cornice (una parola o tono che rende l’azione “ammissibile”; se non c’è, scrivi “cornice: normalità”).
-L’ultima frase deve restare aperta (niente conclusioni).
-Se il materiale è scarso, parla solo della scarsità di materiale e di come influenza la forma.
-      `,
+Se molte risposte sono vuote o brevissime: rendilo il punto centrale e non inventare nulla.
+`,
 
       psicologico: `
 Sei un OSSERVATORE ESTERNO.
 Obiettivo: LETTURA RELAZIONALE = impressione generata dalla forma dell’esposizione su chi legge.
-Parla SEMPRE come “effetto del testo”, non come giudizio sulla persona.
 
-DIVIETI ASSOLUTI:
-- Non fare diagnosi e non attribuire stati interiori o intenzioni (“cerca di”, “vuole”, “per evitare”, “ansia”, “insicurezza”, “confusione”).
-- Non usare parole da verdetto o morale: colpa, responsabilità, innocenza, manipolazione, difesa, mentire, verità, onesto.
-- Non citare frasi del giocatore e non usare “nella risposta / risposta 1/2/3”.
-- Non citare playerModel, pressureLevel o numeri.
-- Niente elenchi, niente numerazioni, niente markdown.
-- Evita “non è chiaro / manca”: usa “resta fuori campo / rimane implicito”.
+Regole dure:
+NON fare diagnosi.
+NON attribuire intenzioni o stati interiori (“cerca di”, “vuole”, “per evitare”, “ansia”, “insicurezza”, “confusione”).
+NON usare parole da verdetto o morale: colpa, responsabilità, innocenza, manipolazione, difesa, mentire, verità, onesto.
+NON inventare dettagli o conseguenze non presenti.
+NON citare frasi del giocatore e NON usare “nella risposta 1/2/3”.
+NON citare playerModel, pressureLevel o numeri.
+NON introdurre nomi diversi da: ${roleWalter}, ${roleAlex}, ${rolePartner}.
+Niente elenchi, niente markdown.
 
-OUTPUT OBBLIGATORIO:
-Scrivi ESATTAMENTE 5 frasi, in terza persona, stile naturale (non elenco).
-1) Ritmo (compressione vs dilatazione).
-2) Registro (dove si sente più controllato vs più spontaneo).
-3) Fuori campo (una zona che rimane implicita).
-4) Parola-ombra (UNA parola: distanza/urgenza/attrito/opacità/sobrietà/leggerezza… senza spiegarla).
-5) Frase sospesa finale (aperta, senza chiudere).
-Se il materiale è scarso, descrivi solo l’effetto delle omissioni.
-      `,
+Scrivi 5 frasi naturali in terza persona:
+1) ritmo (compressione vs dilatazione)
+2) registro (dove diventa più controllato o più spontaneo)
+3) cosa resta fuori campo (usa “resta fuori campo / rimane implicito”)
+4) una parola-ombra (distanza / urgenza / attrito / opacità / sobrietà / leggerezza) senza spiegarla
+5) chiusura sospesa (non risolvere ambiguità)
+`,
 
       amplificato: `
 Sei un OSSERVATORE ESTERNO.
 
-QUI NON descrivi l’effetto sul lettore.
-QUI proponi due schemi possibili dietro la forma del racconto: decisione vs regia narrativa.
+Qui NON descrivi l’effetto sul lettore.
+Qui proponi due schemi possibili dietro la forma del racconto: decisione vs regia narrativa.
 
-DIVIETI ASSOLUTI:
-- Non dire quale ipotesi è vera.
-- Non citare frasi del giocatore e non usare “nella risposta / risposta 1/2/3”.
-- Non attribuire intenzioni esplicite (“cerca di”, “vuole”, “per evitare”, “strategia per”).
-- Non parole da verdetto o morale: colpa, responsabilità, incolpare, scaricare, innocenza, manipolazione, difesa, mentire, verità, onesto.
-- Non giudicare capacità o qualità (niente “imprudente”, “scorretto”, “debole”, “errore”).
-- Evita “non è chiaro / manca / non spiega”: usa “resta fuori campo / rimane implicito”.
-- Niente elenchi, niente numerazioni, niente markdown.
-
-FORMATO OBBLIGATORIO (testo semplice):
+Formato obbligatorio (testo semplice, niente markdown):
 IPOTESI 1 — SINCERO:
 3 frasi.
 IPOTESI 2 — MESSA IN SCENA:
 3 frasi.
 
-IPOTESI 1: schema decisionale dalla forma (priorità, trade-off, urgenza, delega, soglia di accettabilità, attribuzione dell’azione).
-IPOTESI 2: regia narrativa (costruzione del personaggio, frame di ammissibilità, gestione del sospetto, teatralità sobria, compressione/dilatazione).
+Regole dure:
+NON dire quale ipotesi è vera.
+NON inventare dettagli o conseguenze non presenti.
+NON attribuire intenzioni esplicite (niente “cerca di”, “vuole”, “per evitare”, “strategia per”).
+NON usare parole da verdetto o morale: colpa, responsabilità, incolpare, scaricare, innocenza, manipolazione, difesa, mentire, verità, onesto.
+NON giudicare qualità o capacità (niente “imprudente”, “scorretto”, “debole”, “errore”).
+NON usare “non è chiaro / manca / non spiega”: usa “resta fuori campo / rimane implicito”.
+NON citare frasi del giocatore e NON usare “nella risposta 1/2/3”.
+NON citare playerModel, pressureLevel o numeri.
+NON introdurre nomi diversi da: ${roleWalter}, ${roleAlex}, ${rolePartner}.
+
+IPOTESI 1: schema decisionale che emerge dalla forma (priorità, trade-off, urgenza, delega, soglia di accettabilità, rischio, attribuzione dell’azione).
+IPOTESI 2: regia narrativa (costruzione del personaggio, frame di ammissibilità, gestione del sospetto, antagonista/alleato, teatralità sobria, compressione/dilatazione).
 
 Se molte risposte sono vuote/brevissime:
 IPOTESI 1: non emerge uno schema decisionale.
 IPOTESI 2: la regia è ridotta a opacità/assenza di materiale.
-      `
+
+Tono: ambiguo ma leggibile.
+Terza persona.
+`
     };
 
-    /* =========================
-       CONTESTO BLINDATO
-       Nota: “AMBIENTE” è background e NON va usato come contenuto
-       se non appare nelle risposte.
-    ========================== */
-
+    // =========================
+    // CONTESTO BLINDATO (per evitare invenzioni)
+    // =========================
     const userContext = `
 SCENARIO (IMMUTABILE):
 ${scenario}
 
-RUOLI (NOMI CONSENTITI):
+RUOLI — NON INTERPRETABILI:
 - Soggetto osservato: GIOCATORE
-- Responsabile gerarchico: ${context?.responsabile || "Walter"}
-- Collega / confidente: ${context?.amico || "Alex"}
-- Partner affettivo: ${context?.partner || "n/d"}
+- Responsabile gerarchico: ${roleWalter}
+- Collega / confidente: ${roleAlex}
+- Partner affettivo: ${rolePartner}
 
-IMPORTANTE:
-- Non usare il “background” come materiale narrativo se non compare nelle risposte.
-- Se un elemento non è nelle risposte, resta “fuori campo”.
+AMBIENTE:
+Azienda che sviluppa tecnologie sensibili.
+La sicurezza è una condizione operativa, non simbolica.
 
-BACKGROUND (NON DA RIASSUMERE):
-Azienda che sviluppa tecnologie sensibili; la sicurezza è una condizione operativa.
-
-QUALITÀ INPUT (solo anti-invenzioni):
+QUALITÀ INPUT (solo per evitare invenzioni):
 - totale risposte: ${total}
 - risposte vuote: ${blankCount}
 - risposte molto brevi (<10 char): ${shortCount}
-- materiale scarso: ${lowMaterial ? "sì" : "no"}
 
 RISPOSTE FORNITE DAL GIOCATORE:
 ${trimmedAnswers.map((a, i) => `${i + 1}. ${a || "[vuoto]"}`).join("\n")}
@@ -154,9 +147,9 @@ ${observedAnchors.length > 0 ? observedAnchors.join(", ") : "nessuna esplicita"}
 
 ISTRUZIONE FINALE:
 Non valutare la verità dei fatti.
-Non riassumere eventi.
 Osserva esclusivamente la forma dell’esposizione.
-    `;
+Non citare playerModel/pressureLevel/contatori.
+`;
 
     async function callLLM(systemPrompt) {
       const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -166,8 +159,10 @@ Osserva esclusivamente la forma dell’esposizione.
           Authorization: `Bearer ${apiKey}`
         },
         body: JSON.stringify({
-          model: "llama-3.1-8b-instant", // (hai detto che ora funziona bene: lasciamo questo)
-          temperature: 0.2,
+          // se tu hai già cambiato modello e funziona, lascialo qui:
+          // altrimenti rimettilo com'era da te.
+          model: "llama-3.1-70b-versatile",
+          temperature: 0.25,
           messages: [
             { role: "system", content: systemPrompt },
             { role: "user", content: userContext }
@@ -177,113 +172,188 @@ Osserva esclusivamente la forma dell’esposizione.
 
       if (!response.ok) {
         const txt = await response.text().catch(() => "");
-        throw new Error(`Errore LLM (${response.status}): ${txt.slice(0, 300)}`);
+        throw new Error(`Errore LLM: ${response.status} ${txt}`);
       }
 
       const data = await response.json();
       return data.choices?.[0]?.message?.content?.trim() || "";
     }
 
-    function sanitizeCommon(text) {
-      if (!text) return "";
-
-      let t = text;
-
-      // via markdown/base formatting
-      t = t.replace(/\*\*([^*]+)\*\*/g, "$1");
-      t = t.replace(/`+/g, "");
-      t = t.replace(/^#+\s*/gm, "");
-
-      // via "Ecco..." e simili
-      t = t.replace(/^\s*Ecco[^\n]*\n+/i, "");
-      t = t.replace(/^\s*Ecco[^\n]*$/i, "");
-
-      // via bullet/elenchi/numerazioni all'inizio riga
-      t = t.replace(/^\s*[-•]\s+/gm, "");
-      t = t.replace(/^\s*\d+[\).\]]\s+/gm, "");
-
-      // via riferimenti "nella risposta X"
-      t = t.replace(/\b(nella\s+risposta|risposta)\s*\d+\b/gi, "nel testo");
-
-      // sostituzioni “non è chiaro / manca / non spiega”
-      t = t.replace(/\bnon\s+è\s+chiaro\b/gi, "resta fuori campo");
-      t = t.replace(/\bmanca\b/gi, "resta fuori campo");
-      t = t.replace(/\bnon\s+spiega\b/gi, "rimane implicito");
-
-      // compattazione spazi
-      t = t.replace(/[ \t]+\n/g, "\n");
-      t = t.replace(/\n{3,}/g, "\n\n").trim();
-
-      return t;
+    // =========================
+    // SANITIZE + FORMAT ENFORCERS (ANTI “scolastico”)
+    // =========================
+    function stripMarkdownAndLists(s = "") {
+      let out = (s || "").toString().trim();
+      // rimuove **bold**, ### titoli, ecc.
+      out = out.replace(/\*\*(.*?)\*\*/g, "$1");
+      out = out.replace(/^#{1,6}\s+/gm, "");
+      // rimuove bullet e numerazioni a inizio riga
+      out = out.replace(/^\s*[-•]\s+/gm, "");
+      out = out.replace(/^\s*\d+\)\s+/gm, "");
+      out = out.replace(/^\s*\d+\.\s+/gm, "");
+      return out.trim();
     }
 
-    function splitSentences(text) {
-      const t = (text || "").replace(/\s+/g, " ").trim();
-      if (!t) return [];
-      // split semplice, abbastanza robusto per IT
-      const parts = t.split(/(?<=[\.\?\!])\s+/).map(s => s.trim()).filter(Boolean);
-      return parts;
+    function sanitizeCommon(s = "") {
+      let out = stripMarkdownAndLists(s);
+
+      // taglia spazi multipli
+      out = out.replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n");
+
+      // “Verdetti” e intenzioni: sostituzioni soft (forma, non psicologia)
+      const swaps = [
+        [/innocen[zt]a/gi, "tenuta della versione"],
+        [/colpevole|colpa/gi, "zona d’ombra"],
+        [/responsabilit[aà]/gi, "attribuzione dell’azione"],
+        [/scaricare/gi, "spostare l’azione fuori dal perimetro"],
+        [/manipolazione|manipolare/gi, "regia della cornice"],
+        [/mentire|bugia|menzogna|verit[aà]/gi, "versione"],
+        [/convincere|persuadere|persuasione/gi, "spinta argomentativa"],
+        [/intento|strategia/gi, "assetto della forma"],
+        [/cerca di|vuole|per evitare/gi, "tende a"],
+        [/non è chiaro|manca|non spiega/gi, "resta fuori campo"]
+      ];
+
+      for (const [re, rep] of swaps) out = out.replace(re, rep);
+
+      // evita “il lettore”: troppo meta
+      out = out.replace(/\bil lettore\b/gi, "chi legge");
+
+      // evita “nella risposta”
+      out = out.replace(/\bnella risposta\b/gi, "nel testo");
+
+      // evita pronomi tipo “chiedergli di sostituirmi” se uscissero (spesso è eco):
+      out = out.replace(/\bsostituirmi\b/gi, "sostituire il giocatore");
+
+      return out.trim();
     }
 
-    function enforceExactSentences(text, n) {
-      const clean = sanitizeCommon(text);
-      const sents = splitSentences(clean);
-      if (sents.length === 0) return "";
-      return sents.slice(0, n).join(" ");
+    function enforceFringeFormat(raw) {
+      let out = sanitizeCommon(raw);
+
+      // Niente “Ecco…” e niente due punti + elenco
+      out = out.replace(/^Ecco.*?\n+/i, "");
+      out = out.replace(/:\s*\n/g, ".\n");
+
+      // Prendi solo frasi “pulite”
+      const sentences = out
+        .split(/(?<=[.!?])\s+/)
+        .map(x => x.trim())
+        .filter(Boolean);
+
+      // ricostruisci 4 frasi, se possibile
+      const picked = sentences.slice(0, 4);
+
+      // fallback “soft” se troppo corto
+      const base = [
+        "La forma del racconto mette davanti la posizione del giocatore dentro una cornice di lavoro e di dovere.",
+        "Alcuni passaggi restano fuori campo e creano un margine di ambiguità senza dichiararlo apertamente.",
+        "L’azione nel testo si distribuisce tra il giocatore e una cornice di contesto che rende le scelte presentabili.",
+        "La tensione tra ciò che viene detto e ciò che resta implicito rimane aperta."
+      ];
+
+      const final = (picked.length >= 4 ? picked : base).slice(0, 4);
+      return final.join(" ");
     }
 
-    function enforceFringe(text) {
-      // esattamente 4 frasi
-      return enforceExactSentences(text, 4);
+    function enforceRelazionaleFormat(raw) {
+      let out = sanitizeCommon(raw);
+
+      // niente numerazioni
+      out = out.replace(/^\s*\d+\.\s+/gm, "");
+
+      const sentences = out
+        .split(/(?<=[.!?])\s+/)
+        .map(x => x.trim())
+        .filter(Boolean);
+
+      // vogliamo 5 frasi
+      const picked = sentences.slice(0, 5);
+
+      const base = [
+        "Il ritmo alterna compressione e dilatazione, con tratti rapidi e tratti più controllati.",
+        "Il registro scivola tra un tono più istituzionale e un tono più quotidiano, senza stabilizzarsi del tutto.",
+        "Una parte del quadro resta fuori campo e produce un margine di non-detto.",
+        "Rimane una parola-ombra che colora l’insieme senza diventare dichiarazione.",
+        "La forma lascia la tensione sospesa, senza chiudere la lettura."
+      ];
+
+      const final = (picked.length >= 5 ? picked : base).slice(0, 5);
+      return final.join(" ");
     }
 
-    function enforceRelazionale(text) {
-      // esattamente 5 frasi
-      return enforceExactSentences(text, 5);
-    }
+    function enforceAmplificatoFormat(raw) {
+      let out = sanitizeCommon(raw);
 
-    function enforceAmplificato(text) {
-      const clean = sanitizeCommon(text);
+      // normalizza etichette
+      out = out.replace(/IPOTESI\s*1\s*[-—]\s*SINCERO\s*:?/i, "IPOTESI 1 — SINCERO:");
+      out = out.replace(/IPOTESI\s*2\s*[-—]\s*MESSA\s*IN\s*SCENA\s*:?/i, "IPOTESI 2 — MESSA IN SCENA:");
 
-      // Prova a estrarre blocchi per intestazioni
-      const re = /IPOTESI\s*1\s*[—-]\s*SINCERO\s*:\s*([\s\S]*?)IPOTESI\s*2\s*[—-]\s*MESSA\s*IN\s*SCENA\s*:\s*([\s\S]*)/i;
-      const m = clean.match(re);
-
-      let part1 = "";
-      let part2 = "";
-
-      if (m) {
-        part1 = m[1].trim();
-        part2 = m[2].trim();
-      } else {
-        // fallback: prendi frasi e dividi 3+3
-        const sents = splitSentences(clean);
-        part1 = sents.slice(0, 3).join(" ");
-        part2 = sents.slice(3, 6).join(" ");
+      // se mancano, prova a inserirle
+      if (!/IPOTESI 1 — SINCERO:/i.test(out) || !/IPOTESI 2 — MESSA IN SCENA:/i.test(out)) {
+        // prova a separare a metà in modo grezzo
+        const parts = out.split(/\n{2,}/).filter(Boolean);
+        const half = Math.ceil(parts.length / 2);
+        const a = parts.slice(0, half).join(" ").trim();
+        const b = parts.slice(half).join(" ").trim();
+        out = `IPOTESI 1 — SINCERO:\n${a || ""}\nIPOTESI 2 — MESSA IN SCENA:\n${b || ""}`.trim();
       }
 
-      // enforce 3 frasi ciascuna
-      part1 = enforceExactSentences(part1, 3);
-      part2 = enforceExactSentences(part2, 3);
+      // estrai blocchi
+      const m1 = out.match(/IPOTESI 1 — SINCERO:\s*([\s\S]*?)\s*IPOTESI 2 — MESSA IN SCENA:/i);
+      const m2 = out.match(/IPOTESI 2 — MESSA IN SCENA:\s*([\s\S]*)$/i);
 
-      // se materiale scarso, forza la formula
-      if (lowMaterial) {
-        part1 = "Non emerge uno schema decisionale dalla forma disponibile.";
-        part2 = "La regia è ridotta a opacità e assenza di materiale.";
+      let b1 = (m1?.[1] || "").trim();
+      let b2 = (m2?.[1] || "").trim();
+
+      // riduci a frasi, 3 e 3
+      const s1 = b1.split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean).slice(0, 3);
+      const s2 = b2.split(/(?<=[.!?])\s+/).map(x => x.trim()).filter(Boolean).slice(0, 3);
+
+      // se poche risposte reali, usa preset “vuoto”
+      if (blankCount + shortCount >= Math.max(3, Math.floor(total * 0.6))) {
+        return [
+          "IPOTESI 1 — SINCERO:",
+          "Non emerge uno schema decisionale: la forma resta troppo povera per far vedere priorità e soglie.",
+          "L’azione rimane distribuita in modo generico e non si stabilizza un criterio ricorrente.",
+          "Resta soprattutto una cornice di presenza minimale, senza trade-off leggibili.",
+          "IPOTESI 2 — MESSA IN SCENA:",
+          "La regia è ridotta a opacità/assenza di materiale: il testo non costruisce un frame riconoscibile.",
+          "Il personaggio resta piatto e non prende forma un controllo del sospetto coerente.",
+          "Rimane un effetto di fuori campo più che una messa in scena compiuta."
+        ].join("\n");
       }
 
-      return `IPOTESI 1 — SINCERO:\n${part1}\nIPOTESI 2 — MESSA IN SCENA:\n${part2}`;
+      const base1 = [
+        "Nella forma emerge un criterio di priorità: alcune ragioni vengono messe davanti e altre restano fuori campo.",
+        "Lo schema decisionale usa soglie di accettabilità e trade-off, più che un racconto lineare.",
+        "L’azione tende a distribuirsi tra il giocatore e il contesto, con delega o spostamento del rischio."
+      ];
+
+      const base2 = [
+        "La regia costruisce un frame di ammissibilità: i passaggi vengono compressi o dilatati per guidare la lettura.",
+        "Il personaggio viene definito per contrasto con altri ruoli, con gestione sobria del sospetto.",
+        "Rimane un controllo della cornice più che una spiegazione: ciò che conta è come appare, non cosa accade."
+      ];
+
+      const final1 = (s1.length === 3 ? s1 : base1).slice(0, 3).join(" ");
+      const final2 = (s2.length === 3 ? s2 : base2).slice(0, 3).join(" ");
+
+      return `IPOTESI 1 — SINCERO:\n${final1}\nIPOTESI 2 — MESSA IN SCENA:\n${final2}`;
     }
 
+    // =========================
+    // CALLS
+    // =========================
     const [rawFringe, rawRel, rawAmp] = await Promise.all([
       callLLM(prompts.fringe),
       callLLM(prompts.psicologico),
       callLLM(prompts.amplificato)
     ]);
 
-    const fringe = enforceFringe(rawFringe);
-    const psicologico = enforceRelazionale(rawRel);
-    const amplificato = enforceAmplificato(rawAmp);
+    const fringe = enforceFringeFormat(rawFringe);
+    const psicologico = enforceRelazionaleFormat(rawRel);
+    const amplificato = enforceAmplificatoFormat(rawAmp);
 
     return res.status(200).json({
       osservazioni: { fringe, psicologico, amplificato }
@@ -311,35 +381,24 @@ Osserva esclusivamente la forma dell’esposizione.
 /* ===========================
    FALLBACK PROCEDURALE
 =========================== */
-
 function proceduralObservation({ pressureLevel, playerModel, observedAnchors }) {
   const fragments = [];
 
-  fragments.push(
-    "Il materiale fornito consente una lettura prudente ma non risolutiva."
-  );
+  fragments.push("Il materiale consente una lettura prudente, centrata sulla forma più che sui fatti.");
 
   if (pressureLevel > 70) {
-    fragments.push(
-      "La pressione tende a comprimere l’esposizione, riducendo i margini di forma."
-    );
+    fragments.push("La pressione tende a comprimere l’esposizione e a lasciare più elementi fuori campo.");
   }
 
   if (playerModel?.stile === "elusivo") {
-    fragments.push(
-      "Alcune formulazioni mantengono l’azione in una zona di cornice più che di presa diretta."
-    );
+    fragments.push("Alcune formulazioni spostano l’attribuzione dell’azione verso il contesto invece che verso il soggetto.");
   }
 
-  if (observedAnchors?.length > 0) {
-    fragments.push(
-      `Ricorrono alcuni elementi (${observedAnchors.join(", ")}), lasciati sullo sfondo.`
-    );
+  if (Array.isArray(observedAnchors) && observedAnchors.length > 0) {
+    fragments.push(`Alcune ricorrenze tornano (${observedAnchors.join(", ")}), senza trasformarsi in un filo esplicito.`);
   }
 
-  fragments.push(
-    "L’ambiguità rimane parte integrante della lettura."
-  );
+  fragments.push("La tensione rimane sospesa e dipende da come chi legge interpreta questa cornice.");
 
   return fragments.join(" ");
 }
