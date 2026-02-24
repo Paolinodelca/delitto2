@@ -38,73 +38,71 @@ export default async function handler(req, res) {
     const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
     const prompts = {
-      fringe: `
-Sei un OSSERVATORE ESTERNO.
+     fringe: `
+Sei un OSSERVATORE ESTERNO. Parli in terza persona del GIOCATORE.
+NON ricostruire i fatti, NON riassumere eventi, NON dire “cosa è successo”.
+NON citare frasi, NON usare “nella risposta…”.
+NON attribuire intenzioni o stati interiori.
+Niente morale/verdettI (colpa, responsabilità, innocenza, verità, mentire, manipolazione).
+Niente markdown, niente elenchi.
 
-NON è una ricostruzione dei fatti.
-NON riassumere gli eventi.
-NON citare frasi del giocatore.
-NON usare “nella risposta…”.
-NON attribuire intenzioni o stati interiori (“cerca di”, “vuole”, “per evitare”, “ansia”, “insicurezza”, “confusione”).
-NON usare parole da verdetto o morale: colpa, responsabilità, innocenza, manipolazione, difesa, mentire, verità, onesto.
-Niente elenchi, niente markdown.
+OUTPUT OBBLIGATORIO: 4 righe, ciascuna inizia con l’etichetta esatta:
 
-Scrivi 4 frasi brevi, in terza persona, tono sobrio.
-Frase 1: cosa la forma del racconto mette davanti (senza dire cosa è successo).
-Frase 2: cosa resta fuori campo o implicito (senza “manca / non è chiaro”).
-Frase 3: come si distribuisce l’azione nella forma (giocatore / contesto / altri).
-Frase 4: una tensione formale che resta aperta (senza chiudere).
+PRIMO PIANO: (1 frase, cosa la forma mette davanti)
+FUORI CAMPO: (1 frase, cosa rimane implicito o marginale)
+AGENZIA: (1 frase, dove viene messa l’azione: giocatore / contesto / altri)
+TENSIONE: (1 frase aperta, senza chiudere)
 
-Se molte risposte sono vuote o brevissime: rendilo il punto centrale e non inventare nulla.
+Se molte risposte sono vuote/brevissime: rendilo il punto centrale in PRIMO PIANO.
 `.trim(),
 
-      psicologico: `
-Sei un OSSERVATORE ESTERNO.
-Obiettivo: LETTURA RELAZIONALE = impressione generata dalla forma dell’esposizione su chi legge.
+ psicologico: `
+Sei un OSSERVATORE ESTERNO. Parli in terza persona del GIOCATORE.
+OBIETTIVO: LETTURA RELAZIONALE = impressione che la forma produce, senza diagnosi.
 
-Regole dure:
-NON fare diagnosi.
-NON attribuire intenzioni o stati interiori (“cerca di”, “vuole”, “per evitare”, “ansia”, “insicurezza”, “confusione”).
-NON usare parole da verdetto o morale: colpa, responsabilità, innocenza, manipolazione, difesa, mentire, verità, onesto.
-NON inventare dettagli o conseguenze non presenti.
-NON citare frasi del giocatore e NON usare “nella risposta 1/2/3”.
-NON citare playerModel, pressureLevel o numeri.
-NON introdurre nomi diversi da: ${roleWalter}, ${roleAlex}, ${rolePartner}.
-Niente elenchi, niente markdown.
+DIVIETI:
+- niente intenzioni/stati interiori (“cerca di”, “vuole”, “per evitare”, ansia, insicurezza, confusione)
+- niente morale/verdettI (colpa, responsabilità, innocenza, verità, mentire, manipolazione)
+- niente citazioni, niente “nella risposta…”
+- niente markdown o elenchi
+- non introdurre nomi diversi da: Walter, Alex, (partner)
 
-Scrivi 5 frasi naturali in terza persona:
-1) ritmo (compressione vs dilatazione)
-2) registro (più controllato o più spontaneo)
-3) cosa resta fuori campo (usa “resta fuori campo / rimane implicito”)
-4) una parola-ombra (distanza / urgenza / attrito / opacità / sobrietà / leggerezza) senza spiegarla
-5) chiusura sospesa (non risolvere ambiguità)
+OUTPUT OBBLIGATORIO: 5 righe, ciascuna inizia con l’etichetta esatta:
+
+RITMO: (1 frase)
+REGISTRO: (1 frase)
+FUORI CAMPO: (1 frase, usa “resta fuori campo / rimane implicito”)
+PAROLA-OMBRA: (1 sola parola, senza spiegarla)
+SOSPESO: (1 frase aperta, non conclusiva)
+
+Se molte risposte sono vuote/brevissime: fai emergere soprattutto FUORI CAMPO + PAROLA-OMBRA.
 `.trim(),
 
-      amplificato: `
-Sei un OSSERVATORE ESTERNO.
+amplificato: `
+Sei un OSSERVATORE ESTERNO. Terza persona.
+QUI NON descrivere l’effetto sul pubblico.
+QUI proponi due schemi possibili dietro la forma: decisione vs regia narrativa.
 
-Qui NON descrivi l’effetto su chi legge.
-Qui proponi due schemi possibili dietro la forma del racconto: decisione vs regia narrativa.
-
-Formato obbligatorio (testo semplice, niente markdown):
+FORMATO OBBLIGATORIO (testo semplice):
 IPOTESI 1 — SINCERO:
-3 frasi.
+(3 frasi)
 IPOTESI 2 — MESSA IN SCENA:
-3 frasi.
+(3 frasi)
 
-Regole dure:
-NON dire quale ipotesi è vera.
-NON inventare dettagli o conseguenze non presenti.
-NON attribuire intenzioni esplicite (niente “cerca di”, “vuole”, “per evitare”, “strategia per”).
-NON usare parole da verdetto o morale: colpa, responsabilità, incolpare, scaricare, innocenza, manipolazione, difesa, mentire, verità, onesto.
-NON giudicare qualità o capacità (niente “imprudente”, “scorretto”, “debole”, “errore”).
-NON usare “non è chiaro / manca / non spiega”: usa “resta fuori campo / rimane implicito”.
-NON citare frasi del giocatore e NON usare “nella risposta 1/2/3”.
-NON citare playerModel, pressureLevel o numeri.
-NON introdurre nomi diversi da: ${roleWalter}, ${roleAlex}, ${rolePartner}.
+DIVIETI:
+- non dire quale è vera
+- non inventare conseguenze o dettagli
+- niente intenzioni esplicite (“cerca di”, “vuole”, “per evitare”, “strategia per”)
+- niente verdetti/morale (colpa, responsabilità, innocenza, verità, mentire, manipolazione)
+- niente giudizi di qualità/capacità (imprudente, scorretto, errore, debole)
+- niente “non è chiaro/manca/non spiega”: usa “resta fuori campo / rimane implicito”
+- niente citazioni, niente “nella risposta…”
+- non introdurre nomi diversi da: Walter, Alex, (partner)
 
-IPOTESI 1: schema decisionale (priorità, trade-off, urgenza, delega, soglia di accettabilità, rischio, attribuzione dell’azione).
-IPOTESI 2: regia narrativa (personaggio, frame di ammissibilità, sospetto, antagonista/alleato, teatralità sobria, compressione/dilatazione).
+VINCOLO ANTI-CLONE:
+- IPOTESI 1 deve parlare solo di criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
+- IPOTESI 2 deve parlare solo di regia (frame di ammissibilità, compressione/dilatazione, ruolo di Walter/Alex/partner come cornice, controllo del sospetto).
+Non ripetere la stessa frase o la stessa idea identica in entrambe.
 
 Se molte risposte sono vuote/brevissime:
 IPOTESI 1: non emerge uno schema decisionale.
