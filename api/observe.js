@@ -226,6 +226,11 @@ Osserva esclusivamente la forma dell’esposizione.
     psicOut = softenBannedWords(psicOut);
     ampOut = softenBannedWords(ampOut);
 
+    fringeOut = normalizeItalianAndTypos(fringeOut);
+    psicOut = normalizeItalianAndTypos(psicOut);
+    ampOut = normalizeItalianAndTypos(ampOut);
+
+
     // 2) detox "tribunale"
     fringeOut = detoxVerdetti(fringeOut);
     psicOut = detoxVerdetti(psicOut);
@@ -292,6 +297,19 @@ function stripMarkdownAndBullets(s) {
     .replace(/\*\*(.*?)\*\*/g, "$1")
     .replace(/_(.*?)_/g, "$1")
     .trim();
+}
+
+
+function stripOutOfScenarioEntities(text) {
+  let t = (text || "");
+  // lista corta: basta coprire i casi “deliranti” comuni
+  const banned = [
+    "marzian", "alien", "ufo", "vampir", "zombi", "drag", "robot",
+    "streg", "demone", "fantasm", "superero", "teletrasport"
+  ];
+  const re = new RegExp(`\\b(${banned.join("|")})\\w*\\b`, "gi");
+  t = t.replace(re, "(omesso)");
+  return t;
 }
 
 function softenBannedWords(s) {
@@ -391,30 +409,53 @@ function enforceShadowVariety(psicText, lastShadowWord) {
  * Amplificato: forza blocchi e tiene 4–6 frasi per blocco.
  * (Qui c’era il bug: prima tagliava a 3.)
  */
+
+
 function enforceAmplificatoShape(s) {
   const t = (s || "").trim();
-  if (!t.includes("IPOTESI 1 — SINCERO:") || !t.includes("IPOTESI 2 — MESSA IN SCENA:")) return t;
+  if (!t) return t;
 
+  const has1 = t.includes("IPOTESI 1 — SINCERO:");
+  const has2 = t.includes("IPOTESI 2 — MESSA IN SCENA:");
+
+  // Se manca del tutto la struttura, non distruggere: restituisci com'è
+  if (!has1 && !has2) return t;
+
+  // Se manca IPOTESI 2, prova a ricavare un blocco 2 “minimo” senza inventare eventi
+  if (has1 && !has2) {
+    const body1 = t.split("IPOTESI 1 — SINCERO:")[1]?.trim() || "";
+    const cleaned1 = body1.replace(/\s+/g, " ").trim();
+
+    const minimal2 =
+      "La cornice usa un frame di ammissibilità e tiene molto fuori campo. " +
+      "La sequenza viene compressa o dilatata per dare coerenza. " +
+      "La messa a fuoco seleziona ciò che conviene far restare visibile.";
+
+    return [
+      "IPOTESI 1 — SINCERO:",
+      cleaned1,
+      "IPOTESI 2 — MESSA IN SCENA:",
+      minimal2
+    ].join("\n").trim();
+  }
+
+  // Caso normale: entrambe presenti → NON tagliare a 3 frasi, conserva 4-6 frasi se ci sono
   const parts = t.split("IPOTESI 2 — MESSA IN SCENA:");
-  const aRaw = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
-  const bRaw = (parts[1] || "").trim();
+  const a = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
+  const b = (parts[1] || "").trim();
 
-  const aSent = splitSentences(aRaw);
-  const bSent = splitSentences(bRaw);
-
-  const aKeep = aSent.slice(0, clampToRange(aSent.length, 4, 6));
-  const bKeep = bSent.slice(0, clampToRange(bSent.length, 4, 6));
-
-  // se mancano frasi, non distruggere: restituisci testo originale
-  if (aKeep.length < 3 || bKeep.length < 3) return t;
+  const cleanA = a.replace(/\s+/g, " ").trim();
+  const cleanB = b.replace(/\s+/g, " ").trim();
 
   return [
     "IPOTESI 1 — SINCERO:",
-    aKeep.join(" ").trim(),
+    cleanA,
     "IPOTESI 2 — MESSA IN SCENA:",
-    bKeep.join(" ").trim()
+    cleanB
   ].join("\n").trim();
 }
+
+
 
 function splitSentences(text) {
   const cleaned = (text || "")
@@ -513,6 +554,11 @@ function normalizeItalianAndTypos(text) {
 
   return t;
 }
+
+
+fringeOut = stripOutOfScenarioEntities(fringeOut);
+psicOut = stripOutOfScenarioEntities(psicOut);
+ampOut = stripOutOfScenarioEntities(ampOut);
 
 function blurSpecificEventsInAmplificato(text) {
   let t = (text || "");
