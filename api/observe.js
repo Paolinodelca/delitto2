@@ -241,9 +241,15 @@ Osserva esclusivamente la forma dell’esposizione.
     psicOut = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
     psicOut = enforceShadowVariety(psicOut, lastShadowWord);
 
-    ampOut = enforceAmplificatoShape(ampOut);
-    ampOut = enforceAmplificatoMinStyle(ampOut); // micro: evita certe frasi "manuale"
+   ampOut = enforceAmplificatoShape(ampOut);
 
+// ✅ anti-cronaca + anti-“effetto sul lettore” SOLO in amplificato
+ampOut = purgeSpecificStoryMentions(ampOut);
+ampOut = purgeAudienceEffects(ampOut);
+
+// ri-assesta stile e forma (dopo i tagli)
+ampOut = enforceAmplificatoMinStyle(ampOut);
+ampOut = enforceAmplificatoShape(ampOut);
     return res.status(200).json({
       osservazioni: { fringe: fringeOut, psicologico: psicOut, amplificato: ampOut }
     });
@@ -419,6 +425,28 @@ function enforceAmplificatoMinStyle(s) {
     .replace(/\bLa regia narrativa\b/gi, "La cornice")
     .replace(/\bLa struttura delle risposte\b/gi, "La sequenza")
     .replace(/\bLa decisione di\b/gi, "La scelta di")
+    .trim();
+}
+
+function purgeAudienceEffects(text) {
+  // Taglia frasi che parlano dell’effetto su lettore/pubblico (vietato dal prompt)
+  const banned = /(lettore|pubblico|chi legge|impressione|identificazione|immersione|percezione)/i;
+  const sents = splitSentences(text || "");
+  const kept = sents.filter(s => !banned.test(s));
+  return kept.join(" ").trim();
+}
+
+function purgeSpecificStoryMentions(text) {
+  // Neutralizza nomi/azioni specifiche che fanno "cronaca" in amplificato
+  return (text || "")
+    .replace(/\bEva\b/gi, "(partner)")
+    .replace(/\bAlex\b/gi, "un collega")
+    .replace(/\bWalter\b/gi, "un responsabile")
+    .replace(/\bchiamat[oa]\b/gi, "contatto")
+    .replace(/\bturn[oi]\b/gi, "presidio")
+    .replace(/\bsala(?:\s|-)?controllo\b/gi, "contesto operativo")
+    .replace(/\blogistica\b/gi, "altro reparto")
+    .replace(/\bispezione(?:\s+esterna)?\b/gi, "verifica")
     .trim();
 }
 
