@@ -127,6 +127,9 @@ Stile obbligatorio:
 
 Facoltativo: può comparire una costruzione “tra … e …” per rendere visibile una tensione nella scelta o nella regia.
 
+Evita formulazioni astratte come “la gestione di”, “l’aspetto”, “la questione”.
+Preferisci osservazioni concrete sulla logica del racconto.
+
 VINCOLO ANTI-CLONE:
 - IPOTESI 1 deve parlare solo di criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
 - IPOTESI 2 deve parlare solo di regia (frame di ammissibilità, compressione/dilatazione, ruolo di Walter/Alex/partner come cornice, controllo del sospetto).
@@ -141,6 +144,7 @@ IPOTESI 1: non emerge uno schema decisionale.
 IPOTESI 2: la regia è ridotta a opacità/assenza di materiale.
 Obiettivo: far emergere una lettura plausibile ma leggermente sorprendente della forma del racconto.
 Evita frasi schematiche o manualistiche.
+Almeno una frase deve rivelare una tensione implicita nella versione dei fatti.
 `.trim()
     };
 
