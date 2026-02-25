@@ -250,8 +250,15 @@ ampOut = purgeSpecificStoryMentions(ampOut);
 ampOut = purgeAudienceEffects(ampOut);
 
 // ✅ micro-fix: artefatti IT + frasi vietate + “manualese”
+
+
 ampOut = fixItalianArtifacts(ampOut);
 ampOut = softenForbiddenMetaPhrases(ampOut);
+
+// ✅ nuovo: pulizia IT + sfocatura eventi vietati (solo AMPLIFICATO)
+ampOut = normalizeItalianAndTypos(ampOut);
+ampOut = blurSpecificEventsInAmplificato(ampOut);
+
 
 // ri-assesta stile e forma (dopo i tagli)
 ampOut = enforceAmplificatoMinStyle(ampOut);
@@ -480,6 +487,49 @@ function softenForbiddenMetaPhrases(text) {
     .trim();
 }
 
+function normalizeItalianAndTypos(text) {
+  let t = (text || "");
+
+  // articoli / apostrofi comuni
+  t = t
+    .replace(/\bl'verifica\b/gi, "la verifica")
+    .replace(/\bl'(\s*)atmosfera\b/gi, "l’atmosfera")
+    .replace(/\bun atmosfera\b/gi, "un’atmosfera")
+    .replace(/\bun immagine\b/gi, "un’immagine")
+    .replace(/\bun urgenza\b/gi, "un’urgenza")
+    .replace(/\bla contatto\b/gi, "il contatto")
+    .replace(/\bla luogo\b/gi, "il luogo")
+    .replace(/\buna luogo\b/gi, "un luogo")
+    .replace(/\bdel presidio di verifica\b/gi, "del presidio di vigilanza") // più neutro
+
+    // refusi ricorrenti
+    .replace(/\bGiocator\b/gi, "Giocatore")
+    .replace(/\bil giocator\b/gi, "il giocatore")
+    .replace(/\bgiocator\b/gi, "giocatore")
+
+    // spaziature
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return t;
+}
+
+function blurSpecificEventsInAmplificato(text) {
+  let t = (text || "");
+
+  // neutralizza eventi concreti vietati (non distrugge la frase, la rende astratta)
+  t = t
+    .replace(/\b(contatto|chiamata|telefonata)\b/gi, "sollecitazione")
+    .replace(/\b(turno|sostituzione|scambio)\b/gi, "assetto operativo")
+    .replace(/\b(spostamento|uscita|abbandonare)\b/gi, "variazione di presidio")
+    .replace(/\b(aiutare|supportare)\b/gi, "intervenire")
+    .replace(/\b(logistica|sala controllo|capannone)\b/gi, "area operativa")
+    .replace(/\b(Eva|Adamo)\b/gi, "(partner)")
+    .replace(/\bWalter\b/gi, "Walter") // lascia i nomi consentiti
+    .replace(/\bAlex\b/gi, "Alex");
+
+  return t.trim();
+}
 
 /* ===========================
    FALLBACK V2 (come prima)
