@@ -101,7 +101,6 @@ Se molte risposte sono vuote/brevissime: fai emergere soprattutto FUORI CAMPO + 
 Sei un OSSERVATORE ESTERNO. Terza persona.
 QUI NON descrivere l’effetto sul pubblico.
 QUI proponi due schemi possibili dietro la forma: decisione vs regia narrativa.
-Se non rispetti esattamente le 2 intestazioni e 3 frasi per blocco, RISCRIVI da capo.
 
 FORMATO OBBLIGATORIO (testo semplice):
 IPOTESI 1 — SINCERO:
@@ -125,21 +124,15 @@ Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
 Stile obbligatorio:
 - vietato iniziare le frasi con: "La regia narrativa", "La struttura delle risposte", "La decisione di"
 Non riprendere o citare frammenti testuali presenti nelle ricorrenze osservate.
-
-Facoltativo: può comparire una costruzione “tra … e …” per rendere visibile una tensione nella scelta o nella regia.
-
+Facoltativo: può comparire “tra … e …”.
 Evita formulazioni astratte come “la gestione di”, “l’aspetto”, “la questione”.
 Preferisci osservazioni concrete sulla logica del racconto.
 
 VINCOLO ANTI-CLONE:
-- IPOTESI 1 deve parlare solo di criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
-- IPOTESI 2 deve parlare solo di regia (frame di ammissibilità, compressione/dilatazione, ruolo di Walter/Alex/partner come cornice, controllo del sospetto).
-Non ripetere la stessa frase o la stessa idea identica in entrambe.
+- IPOTESI 1: criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
+- IPOTESI 2: regia (frame, cornice, compressione/dilatazione, ruolo Walter/Alex/partner come cornice, controllo del sospetto).
+Non ripetere la stessa idea in entrambe.
 Non riassumere la storia.
-Non ripetere eventi o azioni specifiche.
-Lavora solo sulla logica delle scelte e sulla costruzione della cornice.
-
-IPOTESI 1 tende a usare il lessico delle decisioni e dei trade-off (priorità, rischio, delega, copertura, soglia), senza trasformarlo in elenco.
 
 IPOTESI 2 deve usare parole di regia: “cornice”, “fuori campo”, “sequenza”, “taglio”, “messa a fuoco”, “ritmo”, “frame”
 
@@ -147,10 +140,9 @@ Se molte risposte sono vuote/brevissime:
 IPOTESI 1: non emerge uno schema decisionale.
 IPOTESI 2: la regia è ridotta a opacità/assenza di materiale.
 
-Obiettivo: far emergere una lettura plausibile ma leggermente sorprendente della forma del racconto.
+Obiettivo: lettura plausibile ma leggermente sorprendente della forma del racconto.
 Evita frasi schematiche o manualistiche.
-
-Almeno una frase deve rivelare una tensione implicita nella versione dei fatti.
+Almeno una frase deve rivelare una tensione implicita.
 `.trim()
     };
 
@@ -233,22 +225,17 @@ Osserva esclusivamente la forma dell’esposizione.
     psicOut = softenBannedWords(psicOut);
     ampOut = softenBannedWords(ampOut);
 
-    fringeOut = cleanPlaceholders(fringeOut);
-    psicOut = cleanPlaceholders(psicOut);
-    ampOut = cleanPlaceholders(ampOut);
-    ampOut = softenManualese(ampOut);
-
-    fringeOut = normalizeItalianAndTypos(fringeOut);
-    psicOut = normalizeItalianAndTypos(psicOut);
-    ampOut = normalizeItalianAndTypos(ampOut);
-
-    fringeOut = stripOutOfScenarioEntities(fringeOut);
-    psicOut = stripOutOfScenarioEntities(psicOut);
-    ampOut = stripOutOfScenarioEntities(ampOut);
-
+    // ✅ prima metti in riga le label (se attaccate), poi estrai
     fringeOut = enforceLabeledLines(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
     psicOut = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
     ampOut = enforceAmplificatoShape(ampOut);
+
+    // ✅ pulizie finali (così NON possono essere annullate da fallback di formato)
+    fringeOut = cleanPlaceholders(fringeOut);
+    psicOut = cleanPlaceholders(psicOut);
+    ampOut = cleanPlaceholders(ampOut);
+
+    ampOut = softenManualese(ampOut);
 
     return res.status(200).json({
       osservazioni: { fringe: fringeOut, psicologico: psicOut, amplificato: ampOut }
@@ -277,28 +264,67 @@ function stripMarkdownAndBullets(s) {
 }
 
 function softenBannedWords(s) {
-  return (s || "").replace(/\bpotrebbe\b/gi, "tende a");
+  return (s || "")
+    .replace(/\bpotrebbe\b/gi, "tende a");
 }
 
-function breakInlineLabels(s, labels) {
-  let t = (s || "").trim();
-  if (!t) return t;
-
-  // Per ogni label: se appare NON a inizio riga, metti un \n prima.
-  // Esempio: "... PRIMO PIANO: ..." -> "...\nPRIMO PIANO: ..."
+/**
+ * Se il modello mette più label nella stessa riga,
+ * inseriamo newline prima di ogni label trovata “in mezzo al testo”.
+ */
+function forceLabelNewlines(s, labels) {
+  let t = (s || "");
   for (const lab of labels) {
-    // cerca "qualcosa + spazio + LABEL" non già a inizio riga
-    const re = new RegExp(`([^\\n])\\s*${escapeRegex(lab)}`, "g");
-    t = t.replace(re, `$1\n${lab}`);
+    const esc = lab.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // se la label non è già a inizio riga, la spostiamo su una nuova riga
+    const re = new RegExp(`([^\\n])\\s*(${esc})`, "g");
+    t = t.replace(re, `$1\n$2`);
   }
-
-  // pulizia: evita righe vuote multiple
-  t = t.replace(/\n{3,}/g, "\n\n").trim();
   return t;
 }
 
-function escapeRegex(str) {
-  return (str || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function enforceLabeledLines(s, labels) {
+  const pre = forceLabelNewlines(s, labels);
+
+  const lines = (pre || "").split("\n").map(l => l.trim()).filter(Boolean);
+  const out = [];
+
+  for (const lab of labels) {
+    const found = lines.find(l => l.startsWith(lab));
+    if (found) out.push(found);
+  }
+
+  // ✅ NON torniamo mai all’originale grezzo: almeno torna “pre” (già normalizzato)
+  return out.length === labels.length ? out.join("\n") : pre.trim();
+}
+
+function enforceAmplificatoShape(s) {
+  const t = (s || "").trim();
+  if (!t.includes("IPOTESI 1 — SINCERO:") || !t.includes("IPOTESI 2 — MESSA IN SCENA:")) return t;
+
+  const parts = t.split("IPOTESI 2 — MESSA IN SCENA:");
+  const a = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
+  const b = (parts[1] || "").trim();
+
+  // non forziamo 3 frasi: il prompt chiede 4–6, quindi tagliamo solo se esplode
+  const aSent = a.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 6);
+  const bSent = b.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 6);
+
+  return [
+    "IPOTESI 1 — SINCERO:",
+    aSent.join(" ").trim(),
+    "IPOTESI 2 — MESSA IN SCENA:",
+    bSent.join(" ").trim()
+  ].join("\n").trim();
+}
+
+function cleanPlaceholders(s) {
+  let t = (s || "");
+  t = t
+    .replace(/\(\s*omesso\s*\)/gi, "un elemento esterno")
+    .replace(/\bi\s+un elemento esterno\b/gi, "un elemento esterno")
+    .replace(/\bun elemento esterno\b/gi, "un elemento esterno");
+  return t.trim();
 }
 
 function softenManualese(s) {
@@ -309,106 +335,6 @@ function softenManualese(s) {
     .replace(/\bsembra essere quella di\b/gi, "si dispone su")
     .replace(/\bsembra essere\b/gi, "appare");
   return t.trim();
-}
-
-function normalizeItalianAndTypos(text) {
-  let t = (text || "");
-
-  t = t
-    .replace(/\bl'verifica\b/gi, "la verifica")
-    .replace(/\bl'(\s*)atmosfera\b/gi, "l’atmosfera")
-    .replace(/\bun atmosfera\b/gi, "un’atmosfera")
-    .replace(/\bun immagine\b/gi, "un’immagine")
-    .replace(/\bun urgenza\b/gi, "un’urgenza")
-    .replace(/\bla contatto\b/gi, "il contatto")
-    .replace(/\bla luogo\b/gi, "il luogo")
-    .replace(/\buna luogo\b/gi, "un luogo")
-    .replace(/\bdel presidio di verifica\b/gi, "del presidio di vigilanza")
-    .replace(/\bGiocator\b/gi, "Giocatore")
-    .replace(/\bil giocator\b/gi, "il giocatore")
-    .replace(/\bgiocator\b/gi, "giocatore")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  return t;
-}
-
-function stripOutOfScenarioEntities(text) {
-  let t = (text || "");
-  const banned = [
-    "marzian", "alien", "ufo", "vampir", "zombi", "drag", "robot",
-    "streg", "demone", "fantasm", "superero", "teletrasport"
-  ];
-  const re = new RegExp(`\\b(${banned.join("|")})\\w*\\b`, "gi");
-  t = t.replace(re, "(omesso)");
-  return t;
-}
-
-function cleanPlaceholders(s) {
-  let t = (s || "");
-  // rimuove placeholder brutti e li sostituisce con formule neutre
-  t = t
-    .replace(/\(\s*omesso\s*\)/gi, "un elemento esterno")
-    .replace(/\bomesso\b/gi, "non nominato");
-  return t.trim();
-}
-
-function enforceLabeledLines(s, labels) {
-  // prima: spezza label inline (se il modello le mette tutte sulla stessa riga)
-  const fixed = breakInlineLabels(s, labels);
-
-  // poi: prende solo le righe che iniziano con una label valida, nell’ordine giusto.
-  const lines = (fixed || "").split("\n").map(l => l.trim()).filter(Boolean);
-
-  const out = [];
-  for (const lab of labels) {
-    const found = lines.find(l => l.startsWith(lab));
-    if (found) out.push(found);
-  }
-
-  // Se mancano label, torna il "fixed" (meglio che lasciare la roba collassata)
-  return out.length === labels.length ? out.join("\n") : (fixed || "").trim();
-}
-
-function enforceAmplificatoShape(s) {
-  const t = (s || "").trim();
-  if (!t) return t;
-
-  const has1 = t.includes("IPOTESI 1 — SINCERO:");
-  const has2 = t.includes("IPOTESI 2 — MESSA IN SCENA:");
-
-  if (!has1 && !has2) return t;
-
-  if (has1 && !has2) {
-    const body1 = t.split("IPOTESI 1 — SINCERO:")[1]?.trim() || "";
-    const cleaned1 = body1.replace(/\s+/g, " ").trim();
-
-    const minimal2 =
-      "La cornice usa un frame di ammissibilità e tiene molto fuori campo. " +
-      "La sequenza viene compressa o dilatata per dare coerenza. " +
-      "La messa a fuoco seleziona ciò che conviene far restare visibile.";
-
-    return [
-      "IPOTESI 1 — SINCERO:",
-      cleaned1,
-      "IPOTESI 2 — MESSA IN SCENA:",
-      minimal2
-    ].join("\n").trim();
-  }
-
-  const parts = t.split("IPOTESI 2 — MESSA IN SCENA:");
-  const a = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
-  const b = (parts[1] || "").trim();
-
-  const cleanA = a.replace(/\s+/g, " ").trim();
-  const cleanB = b.replace(/\s+/g, " ").trim();
-
-  return [
-    "IPOTESI 1 — SINCERO:",
-    cleanA,
-    "IPOTESI 2 — MESSA IN SCENA:",
-    cleanB
-  ].join("\n").trim();
 }
 
 /* ===========================
@@ -453,5 +379,9 @@ function proceduralFallbackV2(body) {
         "Rimane un controllo della cornice più che una spiegazione: ciò che conta è come appare."
       ].join("\n");
 
-  return { fringe, psicologico, amplificato };
+  return {
+    fringe,
+    psicologico,
+    amplificato
+  };
 }
