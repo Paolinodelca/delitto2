@@ -86,13 +86,14 @@ const GAME_CONFIG = {
       Non ti viene chiesto di dire cosa è successo davvero,<br>
       ma quale versione dei fatti scegli di sostenere<br>
       quando sai che verrà letta, analizzata e interpretata.
+      Rispondi a 5 domande e verifica la lettura della tua esposizione!
     </p>
   `,
 
   questions: [
     "Descrivi con precisione perché ti trovavi in sala di controllo e cosa stavi facendo all’inizio del turno.",
     "Quando hai lasciato la sala, cosa ti ha fatto ritenere accettabile farlo in quel momento?",
-    "C’è un elemento di questa vicenda che, se raccontato all’esterno, cambierebbe il modo in cui verrebbe letta?",
+    "C’è un elemento di questa vicenda che, se raccontato all’esterno di questa sala, cambierebbe il modo in cui verrebbe letta?",
     "Riguardando la sequenza degli eventi: in quale punto il sistema ha smesso di funzionare come previsto?",
     "Se emergesse solo una versione parziale dei fatti, chi pensi che ne pagherebbe il prezzo più alto?"
   ]
