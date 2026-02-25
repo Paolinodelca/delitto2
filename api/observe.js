@@ -86,7 +86,8 @@ RITMO: (1 frase)
 REGISTRO: (1 frase)
 FUORI CAMPO: (1 frase, usa “resta fuori campo / rimane implicito”)
 
-PAROLA-OMBRA: scegli UNA parola dall’elenco ma evita di ripetere quella che emerge più ovvia dal contesto.
+PAROLA-OMBRA:
+scrivi solo la parola. niente spiegazione.
 opacità, attrito, urgenza, distanza, frizione, rigidità, scarto, sobrietà, pressione
 Preferisci parole meno letterali rispetto ai contenuti espliciti delle risposte.
 
@@ -103,9 +104,9 @@ Se non rispetti esattamente le 2 intestazioni e 3 frasi per blocco, RISCRIVI da 
 
 FORMATO OBBLIGATORIO (testo semplice):
 IPOTESI 1 — SINCERO:
-(3 frasi)
+(4-6 frasi)
 IPOTESI 2 — MESSA IN SCENA:
-(3 frasi)
+(4-6 frasi)
 
 DIVIETI:
 - non dire quale è vera
@@ -121,9 +122,8 @@ Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni�
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
 
 Stile obbligatorio:
-- frasi corte (max 18–22 parole)
+
 - vietato iniziare le frasi con: "La regia narrativa", "La struttura delle risposte", "La decisione di"
-- preferisci formulazioni compatte: "Nel testo si vede...", "La cornice fa...", "Il taglio lascia..."
 
 VINCOLO “TRA A E B” (per rendere la lettura più netta e meno checklist):
 - In IPOTESI 1 almeno 1 frase deve contenere “tra … e …” (es. “tra copertura e urgenza”, “tra rischio e beneficio”, “tra delega e presenza”).
