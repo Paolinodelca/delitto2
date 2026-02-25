@@ -125,21 +125,22 @@ Stile obbligatorio:
 
 - vietato iniziare le frasi con: "La regia narrativa", "La struttura delle risposte", "La decisione di"
 
-VINCOLO “TRA A E B” (per rendere la lettura più netta e meno checklist):
-- In IPOTESI 1 almeno 1 frase deve contenere “tra … e …” (es. “tra copertura e urgenza”, “tra rischio e beneficio”, “tra delega e presenza”).
-- In IPOTESI 2 almeno 1 frase deve contenere “tra … e …” (es. “tra cornice e fuori campo”, “tra taglio e dettaglio”, “tra ritmo e sospetto”).
+Facoltativo: può comparire una costruzione “tra … e …” per rendere visibile una tensione nella scelta o nella regia.
 
 VINCOLO ANTI-CLONE:
 - IPOTESI 1 deve parlare solo di criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
 - IPOTESI 2 deve parlare solo di regia (frame di ammissibilità, compressione/dilatazione, ruolo di Walter/Alex/partner come cornice, controllo del sospetto).
 Non ripetere la stessa frase o la stessa idea identica in entrambe.
-IPOTESI 1 deve usare parole di decisione: “soglia”, “trade-off”, “delega”, “priorità”, “copertura”, “criterio”
+
+IPOTESI 1 tende a usare il lessico delle decisioni e dei trade-off (priorità, rischio, delega, copertura, soglia), senza trasformarlo in elenco.
 
 IPOTESI 2 deve usare parole di regia: “cornice”, “fuori campo”, “sequenza”, “taglio”, “messa a fuoco”, “ritmo”, “frame”
 
 Se molte risposte sono vuote/brevissime:
 IPOTESI 1: non emerge uno schema decisionale.
 IPOTESI 2: la regia è ridotta a opacità/assenza di materiale.
+Obiettivo: far emergere una lettura plausibile ma leggermente sorprendente della forma del racconto.
+Evita frasi schematiche o manualistiche.
 `.trim()
     };
 
