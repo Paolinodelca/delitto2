@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  console.log("OBSERVE VERSION: AMP-V7-MAGIC");
+  console.log("OBSERVE VERSION: AMP-V6");
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Solo POST consentito" });
@@ -15,8 +15,7 @@ export default async function handler(req, res) {
       playerModel,
       answers,
       observedAnchors = [],
-      pressureLevel = 0,
-      lastShadowWord = ""
+      pressureLevel = 0
     } = req.body || {};
 
     if (!scenario || !playerModel || !answers) {
@@ -35,7 +34,7 @@ export default async function handler(req, res) {
     const roleAlex = context?.amico || "Alex";
     const rolePartner = context?.partner || "(partner)";
 
-    // ✅ modello configurabile da env
+    // ✅ modello configurabile da env (così non si rompe quando cambi modello)
     const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
     const prompts = {
@@ -79,10 +78,6 @@ DIVIETI:
 
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”.
 
-VINCOLO VARIETÀ:
-Ultima PAROLA-OMBRA usata: ${String(lastShadowWord || "nessuna").trim() || "nessuna"}.
-Non usare la stessa parola-ombra.
-
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione).
 Se produci più di 5 righe, o usi "-" o numeri, o markdown, RISCRIVI da capo rispettando il formato.
 OUTPUT OBBLIGATORIO: 5 righe, ciascuna inizia con l’etichetta esatta:
@@ -106,6 +101,7 @@ Se molte risposte sono vuote/brevissime: fai emergere soprattutto FUORI CAMPO + 
 Sei un OSSERVATORE ESTERNO. Terza persona.
 QUI NON descrivere l’effetto sul pubblico.
 QUI proponi due schemi possibili dietro la forma: decisione vs regia narrativa.
+Se non rispetti esattamente le 2 intestazioni e 3 frasi per blocco, RISCRIVI da capo.
 
 FORMATO OBBLIGATORIO (testo semplice):
 IPOTESI 1 — SINCERO:
@@ -130,18 +126,30 @@ Stile obbligatorio:
 - vietato iniziare le frasi con: "La regia narrativa", "La struttura delle risposte", "La decisione di"
 Non riprendere o citare frammenti testuali presenti nelle ricorrenze osservate.
 
-Facoltativo: può comparire una costruzione “tra … e …” per rendere visibile una tensione.
+Facoltativo: può comparire una costruzione “tra … e …” per rendere visibile una tensione nella scelta o nella regia.
 
 Evita formulazioni astratte come “la gestione di”, “l’aspetto”, “la questione”.
 Preferisci osservazioni concrete sulla logica del racconto.
 
 VINCOLO ANTI-CLONE:
-- IPOTESI 1: solo criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
-- IPOTESI 2: solo regia (frame, cornice, fuori campo, sequenza, taglio, messa a fuoco, ritmo).
-Non riassumere la storia. Non ripetere eventi o azioni specifiche.
+- IPOTESI 1 deve parlare solo di criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
+- IPOTESI 2 deve parlare solo di regia (frame di ammissibilità, compressione/dilatazione, ruolo di Walter/Alex/partner come cornice, controllo del sospetto).
+Non ripetere la stessa frase o la stessa idea identica in entrambe.
+Non riassumere la storia.
+Non ripetere eventi o azioni specifiche.
+Lavora solo sulla logica delle scelte e sulla costruzione della cornice.
+
+IPOTESI 1 tende a usare il lessico delle decisioni e dei trade-off (priorità, rischio, delega, copertura, soglia), senza trasformarlo in elenco.
+
+IPOTESI 2 deve usare parole di regia: “cornice”, “fuori campo”, “sequenza”, “taglio”, “messa a fuoco”, “ritmo”, “frame”
+
+Se molte risposte sono vuote/brevissime:
+IPOTESI 1: non emerge uno schema decisionale.
+IPOTESI 2: la regia è ridotta a opacità/assenza di materiale.
 
 Obiettivo: far emergere una lettura plausibile ma leggermente sorprendente della forma del racconto.
 Evita frasi schematiche o manualistiche.
+
 Almeno una frase deve rivelare una tensione implicita nella versione dei fatti.
 `.trim()
     };
@@ -221,7 +229,6 @@ Osserva esclusivamente la forma dell’esposizione.
     let psicOut = stripMarkdownAndBullets(psicologico);
     let ampOut = stripMarkdownAndBullets(amplificato);
 
-    // 1) band words
     fringeOut = softenBannedWords(fringeOut);
     psicOut = softenBannedWords(psicOut);
     ampOut = softenBannedWords(ampOut);
@@ -230,44 +237,13 @@ Osserva esclusivamente la forma dell’esposizione.
     psicOut = normalizeItalianAndTypos(psicOut);
     ampOut = normalizeItalianAndTypos(ampOut);
 
+    fringeOut = stripOutOfScenarioEntities(fringeOut);
+    psicOut = stripOutOfScenarioEntities(psicOut);
+    ampOut = stripOutOfScenarioEntities(ampOut);
 
-    // 2) detox "tribunale"
-    fringeOut = detoxVerdetti(fringeOut);
-    psicOut = detoxVerdetti(psicOut);
-    ampOut = detoxVerdetti(ampOut);
-
-    // 3) anti-cronaca soft (solo neutralizzazione termini)
-    fringeOut = softenSpecifics(fringeOut);
-    psicOut = softenSpecifics(psicOut);
-    ampOut = softenSpecifics(ampOut);
-
-    // enforce shape / labels
     fringeOut = enforceLabeledLines(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
     psicOut = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
-    psicOut = enforceShadowVariety(psicOut, lastShadowWord);
-
-   ampOut = enforceAmplificatoShape(ampOut);
-
-// ✅ anti-cronaca + anti-“effetto sul lettore” SOLO in amplificato
-
-
-ampOut = purgeSpecificStoryMentions(ampOut);
-ampOut = purgeAudienceEffects(ampOut);
-
-// ✅ micro-fix: artefatti IT + frasi vietate + “manualese”
-
-
-ampOut = fixItalianArtifacts(ampOut);
-ampOut = softenForbiddenMetaPhrases(ampOut);
-
-// ✅ nuovo: pulizia IT + sfocatura eventi vietati (solo AMPLIFICATO)
-ampOut = normalizeItalianAndTypos(ampOut);
-ampOut = blurSpecificEventsInAmplificato(ampOut);
-
-
-// ri-assesta stile e forma (dopo i tagli)
-ampOut = enforceAmplificatoMinStyle(ampOut);
-ampOut = enforceAmplificatoShape(ampOut);
+    ampOut = enforceAmplificatoShape(ampOut);
 
     return res.status(200).json({
       osservazioni: { fringe: fringeOut, psicologico: psicOut, amplificato: ampOut }
@@ -283,10 +259,6 @@ ampOut = enforceAmplificatoShape(ampOut);
   }
 }
 
-/* ===========================
-   POST-PROCESSING (safe)
-=========================== */
-
 function stripMarkdownAndBullets(s) {
   return (s || "")
     .replace(/```[\s\S]*?```/g, "")
@@ -299,10 +271,34 @@ function stripMarkdownAndBullets(s) {
     .trim();
 }
 
+function softenBannedWords(s) {
+  return (s || "").replace(/\bpotrebbe\b/gi, "tende a");
+}
+
+function normalizeItalianAndTypos(text) {
+  let t = (text || "");
+
+  t = t
+    .replace(/\bl'verifica\b/gi, "la verifica")
+    .replace(/\bl'(\s*)atmosfera\b/gi, "l’atmosfera")
+    .replace(/\bun atmosfera\b/gi, "un’atmosfera")
+    .replace(/\bun immagine\b/gi, "un’immagine")
+    .replace(/\bun urgenza\b/gi, "un’urgenza")
+    .replace(/\bla contatto\b/gi, "il contatto")
+    .replace(/\bla luogo\b/gi, "il luogo")
+    .replace(/\buna luogo\b/gi, "un luogo")
+    .replace(/\bdel presidio di verifica\b/gi, "del presidio di vigilanza")
+    .replace(/\bGiocator\b/gi, "Giocatore")
+    .replace(/\bil giocator\b/gi, "il giocatore")
+    .replace(/\bgiocator\b/gi, "giocatore")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return t;
+}
 
 function stripOutOfScenarioEntities(text) {
   let t = (text || "");
-  // lista corta: basta coprire i casi “deliranti” comuni
   const banned = [
     "marzian", "alien", "ufo", "vampir", "zombi", "drag", "robot",
     "streg", "demone", "fantasm", "superero", "teletrasport"
@@ -310,38 +306,6 @@ function stripOutOfScenarioEntities(text) {
   const re = new RegExp(`\\b(${banned.join("|")})\\w*\\b`, "gi");
   t = t.replace(re, "(omesso)");
   return t;
-}
-
-function softenBannedWords(s) {
-  return (s || "").replace(/\bpotrebbe\b/gi, "tende a");
-}
-
-/**
- * MOSSA 1 — detox “tribunale”
- * Non cambia il senso, abbassa solo il tono giudicante.
- */
-function detoxVerdetti(s) {
-  return (s || "")
-    .replace(/\bmanipolazione\b/gi, "regia")
-    .replace(/\bmanipolare\b/gi, "regolare")
-    .replace(/\bverità dei fatti\b/gi, "versione dei fatti")
-    .replace(/\b(verità)\b/gi, "versione")
-    .replace(/\b(colpa|colpevole|innocente|responsabilità)\b/gi, "lettura")
-    .replace(/\berrore\b/gi, "scarto")
-    .trim();
-}
-
-/**
- * MOSSA 2 — anti-cronaca soft: neutralizza specifici “vietati”
- * (senza cancellare frasi intere → rischio regressione minimo)
- */
-function softenSpecifics(s) {
-  return (s || "")
-    .replace(/\bsala(?:\s|-)?controllo\b/gi, "luogo operativo")
-    .replace(/\blogistica\b/gi, "altro ambiente")
-    .replace(/\bispezione(?:\s+esterna)?\b/gi, "verifica")
-    .replace(/\bcommissione\b/gi, "contesto di valutazione")
-    .trim();
 }
 
 function enforceLabeledLines(s, labels) {
@@ -354,63 +318,6 @@ function enforceLabeledLines(s, labels) {
   return out.length === labels.length ? out.join("\n") : s.trim();
 }
 
-/**
- * MOSSA 3 — PAROLA-OMBRA:
- * - deve essere una sola parola dell’elenco
- * - non deve ripetere lastShadowWord (se possibile)
- */
-function enforceShadowVariety(psicText, lastShadowWord) {
-  const allowed = ["opacità", "attrito", "urgenza", "distanza", "frizione", "rigidità", "scarto", "sobrietà", "pressione"];
-  const t = (psicText || "").trim();
-  if (!t) return t;
-
-  const lines = t.split("\n").map(x => x.trim()).filter(Boolean);
-  const idx = lines.findIndex(l => l.startsWith("PAROLA-OMBRA:"));
-  if (idx === -1) return t;
-
-  const raw = lines[idx].slice("PAROLA-OMBRA:".length).trim();
-  let word = (raw || "").toLowerCase();
-
-  // se il modello ha scritto una frase, prendiamo la prima “parola” sensata
-  word = word.replace(/["'.:,;!?()]/g, " ").trim().split(/\s+/)[0] || "";
-
-  // normalizzazione accenti/spazi (minima)
-  word = word.replace(/\s+/g, "");
-
-  let finalWord = allowed.includes(word) ? word : "";
-
-  const last = String(lastShadowWord || "").toLowerCase().trim();
-  if (!finalWord) {
-    // fallback: scegli una parola “non letterale” come default
-    finalWord = last && last !== "scarto" ? "scarto" : "attrito";
-  }
-
-  if (last && finalWord === last) {
-    // sostituzione soft “vicina”
-    const swap = {
-      "rigidità": "attrito",
-      "attrito": "scarto",
-      "distanza": "opacità",
-      "urgenza": "pressione",
-      "pressione": "frizione",
-      "sobrietà": "scarto",
-      "opacità": "distanza",
-      "frizione": "attrito",
-      "scarto": "sobrietà"
-    };
-    finalWord = swap[finalWord] || allowed.find(w => w !== last) || finalWord;
-  }
-
-  lines[idx] = `PAROLA-OMBRA: ${finalWord}`;
-  return lines.join("\n").trim();
-}
-
-/**
- * Amplificato: forza blocchi e tiene 4–6 frasi per blocco.
- * (Qui c’era il bug: prima tagliava a 3.)
- */
-
-
 function enforceAmplificatoShape(s) {
   const t = (s || "").trim();
   if (!t) return t;
@@ -418,10 +325,8 @@ function enforceAmplificatoShape(s) {
   const has1 = t.includes("IPOTESI 1 — SINCERO:");
   const has2 = t.includes("IPOTESI 2 — MESSA IN SCENA:");
 
-  // Se manca del tutto la struttura, non distruggere: restituisci com'è
   if (!has1 && !has2) return t;
 
-  // Se manca IPOTESI 2, prova a ricavare un blocco 2 “minimo” senza inventare eventi
   if (has1 && !has2) {
     const body1 = t.split("IPOTESI 1 — SINCERO:")[1]?.trim() || "";
     const cleaned1 = body1.replace(/\s+/g, " ").trim();
@@ -439,7 +344,6 @@ function enforceAmplificatoShape(s) {
     ].join("\n").trim();
   }
 
-  // Caso normale: entrambe presenti → NON tagliare a 3 frasi, conserva 4-6 frasi se ci sono
   const parts = t.split("IPOTESI 2 — MESSA IN SCENA:");
   const a = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
   const b = (parts[1] || "").trim();
@@ -455,130 +359,8 @@ function enforceAmplificatoShape(s) {
   ].join("\n").trim();
 }
 
-
-
-function splitSentences(text) {
-  const cleaned = (text || "")
-    .replace(/\s+/g, " ")
-    .trim();
-  if (!cleaned) return [];
-  return cleaned.split(/(?<=[.!?])\s+/).filter(Boolean);
-}
-
-function clampToRange(n, min, max) {
-  if (n < min) return min;
-  if (n > max) return max;
-  return n;
-}
-
-/**
- * Piccolo anti-“manuale”: abbassa frasi troppo schematiche.
- * (Non è censorship: solo micro-smussata.)
- */
-function enforceAmplificatoMinStyle(s) {
-  return (s || "")
-    .replace(/\bLa regia narrativa\b/gi, "La cornice")
-    .replace(/\bLa struttura delle risposte\b/gi, "La sequenza")
-    .replace(/\bLa decisione di\b/gi, "La scelta di")
-    .trim();
-}
-
-function purgeAudienceEffects(text) {
-  // Taglia frasi che parlano dell’effetto su lettore/pubblico (vietato dal prompt)
-  const banned = /(lettore|pubblico|chi legge|impressione|identificazione|immersione|percezione)/i;
-  const sents = splitSentences(text || "");
-  const kept = sents.filter(s => !banned.test(s));
-  return kept.join(" ").trim();
-}
-
-function purgeSpecificStoryMentions(text) {
-  // Neutralizza nomi/azioni specifiche che fanno "cronaca" in amplificato
-  return (text || "")
-    .replace(/\bEva\b/gi, "(partner)")
-    .replace(/\bAlex\b/gi, "un collega")
-    .replace(/\bWalter\b/gi, "un responsabile")
-    .replace(/\bchiamat[oa]\b/gi, "contatto")
-    .replace(/\bturn[oi]\b/gi, "presidio")
-    .replace(/\bsala(?:\s|-)?controllo\b/gi, "contesto operativo")
-    .replace(/\blogistica\b/gi, "altro reparto")
-    .replace(/\bispezione(?:\s+esterna)?\b/gi, "verifica")
-    .trim();
-}
-
-function fixItalianArtifacts(text) {
-  return (text || "")
-    .replace(/\bl'verifica\b/gi, "la verifica")
-    .replace(/\bdall'verifica\b/gi, "dalla verifica")
-    .replace(/\bnell'verifica\b/gi, "nella verifica")
-    .replace(/\bsull'verifica\b/gi, "sulla verifica")
-    .replace(/\bun'(\w+)/g, "un $1") // evita "un'xxx" casuali
-    .trim();
-}
-
-function softenForbiddenMetaPhrases(text) {
-  // allinea ai divieti: niente "non è chiaro/manca/non spiega"
-  return (text || "")
-    .replace(/\bnon è chiaro\b/gi, "resta implicito")
-    .replace(/\bmanca\b/gi, "resta fuori campo")
-    .replace(/\bnon spiega\b/gi, "lascia implicito")
-    .replace(/\beffetto\b/gi, "esito") // evita “effetto di …” che sa di “pubblico”
-    .replace(/\bsembra essere studiata\b/gi, "è costruita")
-    .replace(/\bsembra essere focalizzata\b/gi, "si concentra")
-    .replace(/\bsembra essere\b/gi, "tende a essere")
-    .trim();
-}
-
-function normalizeItalianAndTypos(text) {
-  let t = (text || "");
-
-  // articoli / apostrofi comuni
-  t = t
-    .replace(/\bl'verifica\b/gi, "la verifica")
-    .replace(/\bl'(\s*)atmosfera\b/gi, "l’atmosfera")
-    .replace(/\bun atmosfera\b/gi, "un’atmosfera")
-    .replace(/\bun immagine\b/gi, "un’immagine")
-    .replace(/\bun urgenza\b/gi, "un’urgenza")
-    .replace(/\bla contatto\b/gi, "il contatto")
-    .replace(/\bla luogo\b/gi, "il luogo")
-    .replace(/\buna luogo\b/gi, "un luogo")
-    .replace(/\bdel presidio di verifica\b/gi, "del presidio di vigilanza") // più neutro
-
-    // refusi ricorrenti
-    .replace(/\bGiocator\b/gi, "Giocatore")
-    .replace(/\bil giocator\b/gi, "il giocatore")
-    .replace(/\bgiocator\b/gi, "giocatore")
-
-    // spaziature
-    .replace(/\s+/g, " ")
-    .trim();
-
-  return t;
-}
-
-
-fringeOut = stripOutOfScenarioEntities(fringeOut);
-psicOut = stripOutOfScenarioEntities(psicOut);
-ampOut = stripOutOfScenarioEntities(ampOut);
-
-function blurSpecificEventsInAmplificato(text) {
-  let t = (text || "");
-
-  // neutralizza eventi concreti vietati (non distrugge la frase, la rende astratta)
-  t = t
-    .replace(/\b(contatto|chiamata|telefonata)\b/gi, "sollecitazione")
-    .replace(/\b(turno|sostituzione|scambio)\b/gi, "assetto operativo")
-    .replace(/\b(spostamento|uscita|abbandonare)\b/gi, "variazione di presidio")
-    .replace(/\b(aiutare|supportare)\b/gi, "intervenire")
-    .replace(/\b(logistica|sala controllo|capannone)\b/gi, "area operativa")
-    .replace(/\b(Eva|Adamo)\b/gi, "(partner)")
-    .replace(/\bWalter\b/gi, "Walter") // lascia i nomi consentiti
-    .replace(/\bAlex\b/gi, "Alex");
-
-  return t.trim();
-}
-
 /* ===========================
-   FALLBACK V2 (come prima)
+   FALLBACK V2 — NON PIÙ IDENTICO
 =========================== */
 function proceduralFallbackV2(body) {
   const answers = Array.isArray(body?.answers) ? body.answers : [];
