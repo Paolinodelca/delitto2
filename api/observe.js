@@ -244,12 +244,19 @@ Osserva esclusivamente la forma dell’esposizione.
    ampOut = enforceAmplificatoShape(ampOut);
 
 // ✅ anti-cronaca + anti-“effetto sul lettore” SOLO in amplificato
+
+
 ampOut = purgeSpecificStoryMentions(ampOut);
 ampOut = purgeAudienceEffects(ampOut);
+
+// ✅ micro-fix: artefatti IT + frasi vietate + “manualese”
+ampOut = fixItalianArtifacts(ampOut);
+ampOut = softenForbiddenMetaPhrases(ampOut);
 
 // ri-assesta stile e forma (dopo i tagli)
 ampOut = enforceAmplificatoMinStyle(ampOut);
 ampOut = enforceAmplificatoShape(ampOut);
+
     return res.status(200).json({
       osservazioni: { fringe: fringeOut, psicologico: psicOut, amplificato: ampOut }
     });
@@ -449,6 +456,30 @@ function purgeSpecificStoryMentions(text) {
     .replace(/\bispezione(?:\s+esterna)?\b/gi, "verifica")
     .trim();
 }
+
+function fixItalianArtifacts(text) {
+  return (text || "")
+    .replace(/\bl'verifica\b/gi, "la verifica")
+    .replace(/\bdall'verifica\b/gi, "dalla verifica")
+    .replace(/\bnell'verifica\b/gi, "nella verifica")
+    .replace(/\bsull'verifica\b/gi, "sulla verifica")
+    .replace(/\bun'(\w+)/g, "un $1") // evita "un'xxx" casuali
+    .trim();
+}
+
+function softenForbiddenMetaPhrases(text) {
+  // allinea ai divieti: niente "non è chiaro/manca/non spiega"
+  return (text || "")
+    .replace(/\bnon è chiaro\b/gi, "resta implicito")
+    .replace(/\bmanca\b/gi, "resta fuori campo")
+    .replace(/\bnon spiega\b/gi, "lascia implicito")
+    .replace(/\beffetto\b/gi, "esito") // evita “effetto di …” che sa di “pubblico”
+    .replace(/\bsembra essere studiata\b/gi, "è costruita")
+    .replace(/\bsembra essere focalizzata\b/gi, "si concentra")
+    .replace(/\bsembra essere\b/gi, "tende a essere")
+    .trim();
+}
+
 
 /* ===========================
    FALLBACK V2 (come prima)
