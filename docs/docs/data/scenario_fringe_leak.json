@@ -1,0 +1,16 @@
+{
+  "scenario": "FRINGE / LEAK",
+  "exposureLabel": "Livello di esposizione",
+  "companyName": "Saturn Way",
+  "introTitle": "FRINGE / LEAK",
+  "introHtml": "<p><strong>Questo non è un test.</strong></p><p>FRINGE / LEAK è una simulazione narrativa.<br>Ti viene chiesto di assumere un ruolo e rispondere come se le conseguenze delle tue risposte fossero reali.</p><p>Non valuta se hai detto la verità.<br>Osserva <em>come</em> rendi accettabili le tue decisioni sapendo che verranno lette, analizzate e interpretate.</p>",
+  "microcopyHtml": "<p>Questa non è una ricostruzione dei fatti.</p><p>È una valutazione di come rendi accettabili le tue decisioni.</p><p>Non ti viene chiesto di dire cosa è successo davvero,<br>ma quale versione dei fatti scegli di sostenere<br>quando sai che verrà letta, analizzata e interpretata.</p>",
+  "scenarioHtmlTemplate": "<p>Tu lavori per <strong>{{companyName}}</strong>, una azienda di ricerca avanzata i cui standard di sicurezza sono molto alti.</p><p>Ti trovi davanti a una commissione interna della {{companyName}} perché durante un tuo turno di guardia si è verificato un disservizio.</p><p>L’audizione avviene a porte chiuse.<br>Le persone coinvolte nel disservizio vengono ascoltate separatamente.</p><p>Non è un procedimento disciplinare.<br>Non è un tribunale.<br>È una valutazione.</p><p>Durante il tuo turno di guardia al laboratorio hai sostituito il tuo responsabile, <strong>Walter</strong>, su sua richiesta.</p><p>In sala di controllo era presente anche <strong>Alex</strong>, un tuo caro amico di lunga data.</p><p>Durante il turno sei stato contattato da <strong>{{partnerName}}</strong> (tuo/a partner), che si trovava al capannone logistico.</p><p>Hai lasciato temporaneamente la sala, chiedendo ad Alex di avvisarti in caso di necessità.</p><p>Un’ispezione successiva ha trovato la sala di controllo sguarnita.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come le azioni di questa vicenda verranno lette.</em></p>",
+  "questions": [
+    "Descrivi con precisione perché ti trovavi in sala di controllo e cosa stavi facendo all’inizio del turno.",
+    "Quando hai lasciato la sala, cosa ti ha fatto ritenere accettabile farlo in quel momento?",
+    "C’è un elemento di questa vicenda che, se raccontato all’esterno, cambierebbe il modo in cui verrebbe letta?",
+    "Riguardando la sequenza degli eventi: in quale punto il sistema ha smesso di funzionare come previsto?",
+    "Se emergesse solo una versione parziale dei fatti, chi pensi che ne pagherebbe il prezzo più alto?"
+  ]
+}
