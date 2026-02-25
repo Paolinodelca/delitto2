@@ -85,7 +85,8 @@ const GAME_CONFIG = {
     <p>
       Non ti viene chiesto di dire cosa è successo davvero,<br>
       ma quale versione dei fatti scegli di sostenere<br>
-      quando sai che verrà letta, analizzata e interpretata.
+      quando sai che verrà letta, analizzata e interpretata.<br>
+      <p>
       Rispondi a 5 domande e verifica la lettura della tua esposizione!
     </p>
   `,
