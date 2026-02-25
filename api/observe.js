@@ -275,6 +275,28 @@ function softenBannedWords(s) {
   return (s || "").replace(/\bpotrebbe\b/gi, "tende a");
 }
 
+function breakInlineLabels(s, labels) {
+  let t = (s || "").trim();
+  if (!t) return t;
+
+  // Per ogni label: se appare NON a inizio riga, metti un \n prima.
+  // Esempio: "... PRIMO PIANO: ..." -> "...\nPRIMO PIANO: ..."
+  for (const lab of labels) {
+    // cerca "qualcosa + spazio + LABEL" non già a inizio riga
+    const re = new RegExp(`([^\\n])\\s*${escapeRegex(lab)}`, "g");
+    t = t.replace(re, `$1\n${lab}`);
+  }
+
+  // pulizia: evita righe vuote multiple
+  t = t.replace(/\n{3,}/g, "\n\n").trim();
+  return t;
+}
+
+function escapeRegex(str) {
+  return (str || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+
 function normalizeItalianAndTypos(text) {
   let t = (text || "");
 
@@ -309,13 +331,20 @@ function stripOutOfScenarioEntities(text) {
 }
 
 function enforceLabeledLines(s, labels) {
-  const lines = (s || "").split("\n").map(l => l.trim()).filter(Boolean);
+  // prima: spezza label inline (se il modello le mette tutte sulla stessa riga)
+  const fixed = breakInlineLabels(s, labels);
+
+  // poi: prende solo le righe che iniziano con una label valida, nell’ordine giusto.
+  const lines = (fixed || "").split("\n").map(l => l.trim()).filter(Boolean);
+
   const out = [];
   for (const lab of labels) {
     const found = lines.find(l => l.startsWith(lab));
     if (found) out.push(found);
   }
-  return out.length === labels.length ? out.join("\n") : s.trim();
+
+  // Se mancano label, torna il "fixed" (meglio che lasciare la roba collassata)
+  return out.length === labels.length ? out.join("\n") : (fixed || "").trim();
 }
 
 function enforceAmplificatoShape(s) {
