@@ -123,6 +123,7 @@ Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni�
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
 
 Stile obbligatorio:
+
 - vietato iniziare le frasi con: "La regia narrativa", "La struttura delle risposte", "La decisione di"
 Non riprendere o citare frammenti testuali presenti nelle ricorrenze osservate.
 
@@ -140,6 +141,7 @@ Non ripetere eventi o azioni specifiche.
 Lavora solo sulla logica delle scelte e sulla costruzione della cornice.
 
 IPOTESI 1 tende a usare il lessico delle decisioni e dei trade-off (priorità, rischio, delega, copertura, soglia), senza trasformarlo in elenco.
+
 IPOTESI 2 deve usare parole di regia: “cornice”, “fuori campo”, “sequenza”, “taglio”, “messa a fuoco”, “ritmo”, “frame”
 
 Se molte risposte sono vuote/brevissime:
@@ -148,6 +150,7 @@ IPOTESI 2: la regia è ridotta a opacità/assenza di materiale.
 
 Obiettivo: far emergere una lettura plausibile ma leggermente sorprendente della forma del racconto.
 Evita frasi schematiche o manualistiche.
+
 Almeno una frase deve rivelare una tensione implicita nella versione dei fatti.
 `.trim()
     };
@@ -267,12 +270,14 @@ function softenBannedWords(s) {
 }
 
 function enforceLabeledLines(s, labels) {
+  // prende solo le righe che iniziano con una label valida, nell’ordine giusto.
   const lines = (s || "").split("\n").map(l => l.trim()).filter(Boolean);
   const out = [];
   for (const lab of labels) {
     const found = lines.find(l => l.startsWith(lab));
     if (found) out.push(found);
   }
+  // Se mancano label, torna l’originale (meglio non distruggere output buoni)
   return out.length === labels.length ? out.join("\n") : s.trim();
 }
 
@@ -284,13 +289,8 @@ function enforceAmplificatoShape(s) {
   const a = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
   const b = (parts[1] || "").trim();
 
-  // ✅ IMPORTANTISSIMO: non tagliare più a 3 frasi.
-  // Ora il prompt chiede 4–6 frasi, quindi preserviamo fino a 6.
-  const aSentAll = a.split(/(?<=[.!?])\s+/).filter(Boolean);
-  const bSentAll = b.split(/(?<=[.!?])\s+/).filter(Boolean);
-
-  const aSent = aSentAll.length >= 4 ? aSentAll.slice(0, 6) : aSentAll;
-  const bSent = bSentAll.length >= 4 ? bSentAll.slice(0, 6) : bSentAll;
+  const aSent = a.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
+  const bSent = b.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 3);
 
   return [
     "IPOTESI 1 — SINCERO:",
