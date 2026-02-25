@@ -100,6 +100,48 @@ const GAME_CONFIG = {
   ]
 };
 
+/* ======================================================
+   CONFIG LOADER (vestiti esterni senza cambiare la UI)
+   - Se il file JSON esiste: fa override su GAME_CONFIG
+   - Se non esiste: usa GAME_CONFIG com’è
+   ====================================================== */
+
+function deepMerge(base, override) {
+  if (!override || typeof override !== "object") return base;
+  const out = Array.isArray(base) ? [...base] : { ...(base || {}) };
+  for (const [k, v] of Object.entries(override)) {
+    if (v && typeof v === "object" && !Array.isArray(v) && typeof out[k] === "object" && out[k] !== null && !Array.isArray(out[k])) {
+      out[k] = deepMerge(out[k], v);
+    } else {
+      out[k] = v;
+    }
+  }
+  return out;
+}
+
+async function tryFetchJSON(url) {
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) return null;
+  return await res.json();
+}
+
+// Prova più percorsi per evitare casino "docs/" vs no "docs/"
+async function loadExternalScenarioConfig() {
+  const candidates = [
+    "./data/scenario_fringe_leak.json",
+    "./docs/data/scenario_fringe_leak.json"
+  ];
+
+  for (const url of candidates) {
+    try {
+      const json = await tryFetchJSON(url);
+      if (json) return json;
+    } catch (e) {
+      // ignora e prova il prossimo
+    }
+  }
+  return null;
+}
 
 /* ======================================================
    STATO
@@ -599,6 +641,22 @@ function renderObservations(observations) {
    AVVIO
    ====================================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+
+ document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const external = await loadExternalScenarioConfig();
+    if (external) {
+      // override morbido: non perdi pezzi se il JSON è parziale
+      const merged = deepMerge(GAME_CONFIG, external);
+
+      // Copia i campi nel GAME_CONFIG esistente (così tutto il codice sotto continua a funzionare)
+      Object.keys(merged).forEach(k => {
+        GAME_CONFIG[k] = merged[k];
+      });
+    }
+  } catch (e) {
+    console.warn("Scenario JSON non caricato, uso config embedded.", e);
+  }
+
   render();
 });
