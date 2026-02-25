@@ -233,6 +233,11 @@ Osserva esclusivamente la forma dell’esposizione.
     psicOut = softenBannedWords(psicOut);
     ampOut = softenBannedWords(ampOut);
 
+    fringeOut = cleanPlaceholders(fringeOut);
+    psicOut = cleanPlaceholders(psicOut);
+    ampOut = cleanPlaceholders(ampOut);
+    ampOut = softenManualese(ampOut);
+
     fringeOut = normalizeItalianAndTypos(fringeOut);
     psicOut = normalizeItalianAndTypos(psicOut);
     ampOut = normalizeItalianAndTypos(ampOut);
@@ -296,6 +301,15 @@ function escapeRegex(str) {
   return (str || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+function softenManualese(s) {
+  let t = (s || "");
+  t = t
+    .replace(/\bun obiettivo primario\b/gi, "un punto di tenuta")
+    .replace(/\bsuggerisce una strategia\b/gi, "fa leggere una linea")
+    .replace(/\bsembra essere quella di\b/gi, "si dispone su")
+    .replace(/\bsembra essere\b/gi, "appare");
+  return t.trim();
+}
 
 function normalizeItalianAndTypos(text) {
   let t = (text || "");
@@ -328,6 +342,15 @@ function stripOutOfScenarioEntities(text) {
   const re = new RegExp(`\\b(${banned.join("|")})\\w*\\b`, "gi");
   t = t.replace(re, "(omesso)");
   return t;
+}
+
+function cleanPlaceholders(s) {
+  let t = (s || "");
+  // rimuove placeholder brutti e li sostituisce con formule neutre
+  t = t
+    .replace(/\(\s*omesso\s*\)/gi, "un elemento esterno")
+    .replace(/\bomesso\b/gi, "non nominato");
+  return t.trim();
 }
 
 function enforceLabeledLines(s, labels) {
