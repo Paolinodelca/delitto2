@@ -2,182 +2,102 @@
  * FRINGE / LEAK – docs/app.js (CANONICO STABILE)
  * --------------------------------------------------------
  * Flow completo:
- * 0) Intro + scelta scenario + scelta partner
+ * 0) Intro + scelta partner
  * 1) Scenario (letterale)
  * 2) Microcopy canonico
  * 3..N) Domande + didascalia ripetuta
  * -> /api/observe
  * -> Osservazioni (3)
- * -> Chiusura narrativa (Soluzione C) + replay
+ * -> Soluzione C: chiusura + replay
  **********************************************************/
 
 /* ======================================================
    CONFIG (solo dati: facile “vestire” altri giochi)
    ====================================================== */
 
-const GAME_CONFIGS = {
-  leak: {
-    key: "leak",
-    scenario: "FRINGE / LEAK",
-    exposureLabel: "Livello di esposizione",
-    companyName: "Saturn Way",
+const GAME_CONFIG = {
+  scenario: "FRINGE / LEAK",
+  exposureLabel: "Livello di esposizione",
+  companyName: "Saturn Way",
 
-    introTitle: "FRINGE / LEAK",
-    introText: `
-      <p><strong>Questo non è un test.</strong></p>
-      <p>
-        FRINGE / LEAK è una simulazione narrativa.<br>
-        Ti viene chiesto di assumere un ruolo e rispondere
-        come se le conseguenze delle tue risposte fossero reali.
-      </p>
-      <p>
-        Non valuta se hai detto la verità.<br>
-        Osserva <em>come</em> rendi accettabili le tue decisioni
-        sapendo che verranno lette, analizzate e interpretate.
-      </p>
-    `,
+  introTitle: "FRINGE / LEAK",
+  introText: `
+    <p><strong>Questo non è un test.</strong></p>
+    <p>
+      FRINGE / LEAK è una simulazione narrativa.<br>
+      Ti viene chiesto di assumere un ruolo e rispondere
+      come se le conseguenze delle tue risposte fossero reali.
+    </p>
+    <p>
+      Non valuta se hai detto la verità.<br>
+      Osserva <em>come</em> rendi accettabili le tue decisioni
+      sapendo che verranno lette, analizzate e interpretate.
+    </p>
+  `,
 
-    scenarioText: (partnerName) => `
-      <p>
-        Tu lavori per <strong>${GAME_CONFIGS.leak.companyName}</strong>,
-        una azienda di ricerca avanzata i cui standard di sicurezza sono molto alti.
-      </p>
-      <p>
-        Ti trovi davanti a una commissione interna della ${GAME_CONFIGS.leak.companyName}
-        perché durante un tuo turno di guardia si è verificato un disservizio.
-      </p>
-      <p>
-        L’audizione avviene a porte chiuse.<br>
-        Le persone coinvolte nel disservizio vengono ascoltate separatamente.
-      </p>
-      <p>
-        Non è un procedimento disciplinare.<br>
-        Non è un tribunale.<br>
-        È una valutazione.
-      </p>
-      <p>
-        Durante il tuo turno di guardia al laboratorio hai sostituito il tuo responsabile,
-        <strong>Walter</strong>, su sua richiesta.
-      </p>
-      <p>
-        In sala di controllo era presente anche <strong>Alex</strong>,
-        un tuo caro amico di lunga data.
-      </p>
-      <p>
-        Durante il turno sei stato contattato da <strong>${partnerName}</strong> (tuo/a partner),
-        che si trovava al capannone logistico.
-      </p>
-      <p>
-        Hai lasciato temporaneamente la sala,
-        chiedendo ad Alex di avvisarti in caso di necessità.
-      </p>
-      <p>
-        Un’ispezione successiva ha trovato la sala di controllo sguarnita.
-      </p>
-      <p><em>
-        Quello che è successo è successo.<br>
-        Ora devi decidere come le azioni di questa vicenda verranno lette.
-      </em></p>
-    `,
+  // Descrizione “LETTERALE” (non semplificare)
+  scenarioText: (partnerName) => `
+    <p>
+      Tu lavori per <strong>${GAME_CONFIG.companyName}</strong>,
+      una azienda di ricerca avanzata i cui standard di sicurezza sono molto alti.
+    </p>
+    <p>
+      Ti trovi davanti a una commissione interna della ${GAME_CONFIG.companyName}
+      perché durante un tuo turno di guardia si è verificato un disservizio.
+    </p>
+    <p>
+      L’audizione avviene a porte chiuse.<br>
+      Le persone coinvolte nel disservizio vengono ascoltate separatamente.
+    </p>
+    <p>
+      Non è un procedimento disciplinare.<br>
+      Non è un tribunale.<br>
+      È una valutazione.
+    </p>
+    <p>
+      Durante il tuo turno di guardia al laboratorio hai sostituito il tuo responsabile,
+      <strong>Walter</strong>, su sua richiesta.
+    </p>
+    <p>
+      In sala di controllo era presente anche <strong>Alex</strong>,
+      un tuo caro amico di lunga data.
+    </p>
+    <p>
+      Durante il turno sei stato contattato da <strong>${partnerName}</strong> (tuo/a partner),
+      che si trovava al capannone logistico.
+    </p>
+    <p>
+      Hai lasciato temporaneamente la sala,
+      chiedendo ad Alex di avvisarti in caso di necessità.
+    </p>
+    <p>
+      Un’ispezione successiva ha trovato la sala di controllo sguarnita.
+    </p>
+    <p><em>
+      Quello che è successo è successo.<br>
+      Ora devi decidere come le azioni di questa vicenda verranno lette.
+    </em></p>
+  `,
 
-    microcopyText: `
-      <p>Questa non è una ricostruzione dei fatti.</p>
-      <p>È una valutazione di come rendi accettabili le tue decisioni.</p>
-      <p>
-        Non ti viene chiesto di dire cosa è successo davvero,<br>
-        ma quale versione dei fatti scegli di sostenere<br>
-        quando sai che verrà letta, analizzata e interpretata.
-      </p>
-    `,
+  microcopyText: `
+    <p>Questa non è una ricostruzione dei fatti.</p>
+    <p>È una valutazione di come rendi accettabili le tue decisioni.</p>
+    <p>
+      Non ti viene chiesto di dire cosa è successo davvero,<br>
+      ma quale versione dei fatti scegli di sostenere<br>
+      quando sai che verrà letta, analizzata e interpretata.
+    </p>
+  `,
 
-    questions: [
-      "Descrivi con precisione perché ti trovavi in sala di controllo e cosa stavi facendo all’inizio del turno.",
-      "Quando hai lasciato la sala, cosa ti ha fatto ritenere accettabile farlo in quel momento?",
-      "C’è un elemento di questa vicenda che, se raccontato all’esterno, cambierebbe il modo in cui verrebbe letta?",
-      "Riguardando la sequenza degli eventi: in quale punto il sistema ha smesso di funzionare come previsto?",
-      "Se emergesse solo una versione parziale dei fatti, chi pensi che ne pagherebbe il prezzo più alto?"
-    ]
-  },
-
-  ward: {
-    key: "ward",
-    scenario: "TRIAGE / TRACE",
-    exposureLabel: "Livello di esposizione",
-    companyName: "Northbridge Clinic",
-
-    introTitle: "TRIAGE / TRACE",
-    introText: `
-      <p><strong>Questo non è un test.</strong></p>
-      <p>
-        TRIAGE / TRACE è una simulazione narrativa.<br>
-        Ti viene chiesto di assumere un ruolo e rispondere
-        come se le conseguenze delle tue risposte fossero reali.
-      </p>
-      <p>
-        Non valuta se hai detto la verità.<br>
-        Osserva <em>come</em> rendi accettabili le tue decisioni
-        sapendo che verranno lette, analizzate e interpretate.
-      </p>
-    `,
-
-    scenarioText: (partnerName) => `
-      <p>
-        Tu lavori per <strong>${GAME_CONFIGS.ward.companyName}</strong>,
-        una clinica privata con procedure rigide e tracciabilità alta.
-      </p>
-      <p>
-        Ti trovi davanti a una commissione interna perché durante un turno
-        c’è stato un disallineamento nei registri di tracciamento.
-      </p>
-      <p>
-        L’audizione avviene a porte chiuse.<br>
-        Le persone coinvolte vengono ascoltate separatamente.
-      </p>
-      <p>
-        Non è un tribunale.<br>
-        È una valutazione.
-      </p>
-      <p>
-        Durante il turno hai coperto una mansione fuori dalla tua routine,
-        su richiesta del tuo responsabile <strong>Walter</strong>.
-      </p>
-      <p>
-        In reparto era presente anche <strong>Alex</strong>, collega e confidente.
-      </p>
-      <p>
-        Durante il turno sei stato contattato da <strong>${partnerName}</strong> (tuo/a partner),
-        in un momento in cui eri già sotto pressione.
-      </p>
-      <p><em>
-        Quello che è successo è successo.<br>
-        Ora devi decidere come le tue scelte verranno lette.
-      </em></p>
-    `,
-
-    microcopyText: `
-      <p>Questa non è una ricostruzione dei fatti.</p>
-      <p>È una valutazione di come rendi accettabili le tue decisioni.</p>
-      <p>
-        Non ti viene chiesto di dire cosa è successo davvero,<br>
-        ma quale versione scegli di sostenere<br>
-        quando sai che verrà letta, analizzata e interpretata.
-      </p>
-    `,
-
-    questions: [
-      "Descrivi con precisione perché eri in quella posizione e cosa stavi facendo all’inizio del turno.",
-      "In quale punto hai ritenuto accettabile cambiare priorità, e perché proprio lì?",
-      "C’è un dettaglio che, se letto da qualcuno esterno, cambierebbe il senso complessivo della tua versione?",
-      "Riguardando la sequenza: quando il sistema ha iniziato a divergere dalla procedura prevista?",
-      "Se emergesse solo una versione parziale, chi ne pagherebbe il prezzo più alto?"
-    ]
-  }
+  questions: [
+    "Descrivi con precisione perché ti trovavi in sala di controllo e cosa stavi facendo all’inizio del turno.",
+    "Quando hai lasciato la sala, cosa ti ha fatto ritenere accettabile farlo in quel momento?",
+    "C’è un elemento di questa vicenda che, se raccontato all’esterno, cambierebbe il modo in cui verrebbe letta?",
+    "Riguardando la sequenza degli eventi: in quale punto il sistema ha smesso di funzionare come previsto?",
+    "Se emergesse solo una versione parziale dei fatti, chi pensi che ne pagherebbe il prezzo più alto?"
+  ]
 };
 
-let currentGameKey = "leak";
-function getGame() {
-  return GAME_CONFIGS[currentGameKey] || GAME_CONFIGS.leak;
-}
 
 /* ======================================================
    STATO
@@ -201,19 +121,16 @@ let playerModel = {
 let observedAnchors = [];
 let currentObservations = null;
 
+// ✅ MOSSA 3: memorizziamo l’ultima parola-ombra per evitare ripetizioni
+let lastShadowWord = "";
+
+
 /* ======================================================
-   STILI (in-file, per non dipendere da CSS esterno)
+   STILI (in-file)
    ====================================================== */
 
 const style = document.createElement("style");
 style.innerHTML = `
-  .voteLegend {
-  font-size: 1.2rem;
-  line-height: 1.4;
-  margin-top: 8px;
-  }
-  .voteLegend strong { font-weight: 800; }
-
   .header h1 { margin: 0 0 6px 0; }
   .exposure { opacity: 0.8; margin-bottom: 10px; }
 
@@ -238,14 +155,14 @@ style.innerHTML = `
   .contextBox ul { margin: 6px 0 0 18px; }
 
   .questionBox {
-  background: linear-gradient(135deg, #1e3a8a, #1e40af);
-  color: #ffffff;
-  padding: 16px;
-  border-radius: 14px;
-  margin: 14px 0;
-  font-size: 1.1rem;
-  line-height: 1.5;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    background: linear-gradient(135deg, #1e3a8a, #1e40af);
+    color: #ffffff;
+    padding: 16px;
+    border-radius: 14px;
+    margin: 14px 0;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
   }
 
   textarea {
@@ -297,8 +214,23 @@ style.innerHTML = `
 
   .hint { opacity: 0.9; margin-top: 6px; }
 
+  .closing {
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #bbb;
+    background: #fff;
+    color: #111;
+    line-height: 1.5;
+  }
+  .closing .big {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+  }
 `;
 document.head.appendChild(style);
+
 
 /* ======================================================
    UTILS
@@ -349,38 +281,48 @@ function evaluateAnswer(text) {
 }
 
 function renderContextBox() {
-  const GAME = getGame();
   return `
     <div class="contextBox">
       <h3>Contesto operativo</h3>
       <div>
-        ${GAME.companyName} è un contesto con standard di sicurezza elevati.
-        La scena è osservata in un perimetro operativo, non simbolico.
+        ${GAME_CONFIG.companyName} è un’azienda di ricerca avanzata con standard di sicurezza molto elevati.
+        Durante il turno hai sostituito il tuo responsabile diretto <strong>in sala di controllo</strong>.
+        Per un breve periodo si è creata una potenziale falla <strong>nei processi di sicurezza</strong>.
       </div>
       <h4 style="margin-top:10px;">Persone coinvolte</h4>
       <ul>
-        <li><strong>Walter</strong> – responsabile diretto</li>
-        <li><strong>Alex</strong> – collega e confidente</li>
-        <li><strong>${partnerName || "Eva / Adamo"}</strong> – partner</li>
+        <li><strong>Walter</strong> – tuo responsabile diretto</li>
+        <li><strong>Alex</strong> – collega e amico personale, presente in sala di controllo</li>
+        <li><strong>${partnerName || "Eva / Adamo"}</strong> – tuo partner da un paio di anni</li>
       </ul>
     </div>
   `;
 }
 
+// ✅ estrai parola-ombra dall’output psicologico (se presente)
+function extractShadowWord(psicText) {
+  const m = String(psicText || "").match(/PAROLA-OMBRA:\s*([^\n]+)/i);
+  if (!m) return "";
+  const raw = (m[1] || "").trim().toLowerCase();
+  const first = raw.replace(/["'.:,;!?()]/g, " ").trim().split(/\s+/)[0] || "";
+  return first;
+}
+
 async function fetchObservationsFromAPI() {
-  const GAME = getGame();
   const payload = {
-    scenario: GAME.scenario,
+    scenario: GAME_CONFIG.scenario,
     context: {
       responsabile: "Walter",
       amico: "Alex",
       partner: partnerName || "Eva/Adamo",
-      azienda: `${GAME.companyName}`
+      azienda: `${GAME_CONFIG.companyName} (ricerca avanzata, alta sicurezza)`
     },
     playerModel,
     answers,
     observedAnchors,
-    pressureLevel
+    pressureLevel,
+    // ✅ MOSSA 3
+    lastShadowWord
   };
 
   const res = await fetch("/api/observe", {
@@ -398,29 +340,6 @@ async function fetchObservationsFromAPI() {
   return json.osservazioni; // { fringe, psicologico, amplificato }
 }
 
-function resetRun(keepScenarioAndPartner = true) {
-  step = keepScenarioAndPartner ? 3 : 0;
-
-  answers = [];
-  pressureLevel = 0;
-
-  playerModel = {
-    stile: "indeterminato",
-    strategia: "indeterminata",
-    fragilita: 0,
-    rischioNarrativo: 0,
-    esposizione: 0
-  };
-
-  observedAnchors = [];
-  currentObservations = null;
-
-  if (!keepScenarioAndPartner) {
-    partnerName = null;
-  }
-
-  render();
-}
 
 /* ======================================================
    RENDER
@@ -430,40 +349,28 @@ function render() {
   const root = el("app");
   clear(root);
 
-  const GAME = getGame();
-
   // HEADER comune
   const header = document.createElement("div");
   header.className = "header";
   header.innerHTML = `
-    <h1>${GAME.scenario}</h1>
-    <div class="exposure">${GAME.exposureLabel}</div>
+    <h1>${GAME_CONFIG.scenario}</h1>
+    <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
   `;
   root.appendChild(header);
 
-  // STEP 0: Intro + scelta scenario + scelta partner
+  // STEP 0: Intro + scelta partner
   if (step === 0) {
     const panel = document.createElement("div");
     panel.className = "panel";
     panel.innerHTML = `
-      ${GAME.introText}
-
-      <p><strong>Scegli lo scenario</strong>:</p>
-      <div class="btnRow">
-        <button class="btnGhost" id="scA">Scenario A (Saturn Way)</button>
-        <button class="btnGhost" id="scB">Scenario B (Northbridge Clinic)</button>
-      </div>
-
-      <p style="margin-top:10px;"><strong>Prima di iniziare</strong>: indica il nome del tuo partner.</p>
+      ${GAME_CONFIG.introText}
+      <p><strong>Prima di iniziare</strong>: indica il nome del tuo partner.</p>
       <div class="btnRow">
         <button class="btnGhost" id="evaBtn">Eva</button>
         <button class="btnGhost" id="adamoBtn">Adamo</button>
       </div>
     `;
     root.appendChild(panel);
-
-    el("scA").onclick = () => { currentGameKey = "leak"; render(); };
-    el("scB").onclick = () => { currentGameKey = "ward"; render(); };
 
     el("evaBtn").onclick = () => { partnerName = "Eva"; step = 1; render(); };
     el("adamoBtn").onclick = () => { partnerName = "Adamo"; step = 1; render(); };
@@ -476,7 +383,7 @@ function render() {
   if (step === 1) {
     const panel = document.createElement("div");
     panel.className = "panel";
-    panel.innerHTML = GAME.scenarioText(partnerName);
+    panel.innerHTML = GAME_CONFIG.scenarioText(partnerName);
 
     const btn = document.createElement("button");
     btn.className = "primary";
@@ -493,7 +400,7 @@ function render() {
   if (step === 2) {
     const panel = document.createElement("div");
     panel.className = "panel";
-    panel.innerHTML = GAME.microcopyText;
+    panel.innerHTML = GAME_CONFIG.microcopyText;
 
     const btn = document.createElement("button");
     btn.className = "primary";
@@ -506,9 +413,9 @@ function render() {
     return;
   }
 
-  // STEP 3..: Domande
+  // STEP 3..(3+questions-1): Domande
   const qIndex = step - 3;
-  if (qIndex >= 0 && qIndex < GAME.questions.length) {
+  if (qIndex >= 0 && qIndex < GAME_CONFIG.questions.length) {
     const contextHTML = document.createElement("div");
     contextHTML.innerHTML = renderContextBox();
 
@@ -522,7 +429,7 @@ function render() {
     }, 50);
 
     question.className = "questionBox";
-    question.textContent = GAME.questions[qIndex];
+    question.textContent = GAME_CONFIG.questions[qIndex];
 
     const textarea = document.createElement("textarea");
     textarea.rows = 4;
@@ -530,7 +437,7 @@ function render() {
 
     const btn = document.createElement("button");
     btn.className = "primary";
-    btn.textContent = (qIndex === GAME.questions.length - 1) ? "Invia e valuta" : "Invia";
+    btn.textContent = (qIndex === GAME_CONFIG.questions.length - 1) ? "Invia e valuta" : "Invia";
     btn.onclick = () => {
       const value = textarea.value.trim();
       answers.push(value);
@@ -548,7 +455,7 @@ function render() {
     return;
   }
 
-  // Dopo le domande: /api/observe -> osservazioni
+  // Dopo le domande: Valutazione in corso -> /api/observe -> render osservazioni
   if (!currentObservations) {
     const waiting = document.createElement("div");
     waiting.className = "panel";
@@ -564,8 +471,8 @@ function render() {
         console.error("Errore /api/observe:", err);
         currentObservations = {
           fringe: "Il materiale fornito consente una lettura prudente ma incompleta.",
-          psicologico: "Emerge una forma controllata, con zone lasciate fuori campo.",
-          amplificato: "Due schemi restano disponibili: scelta operativa vs cornice di ammissibilità."
+          psicologico: "Assumendo sincerità, emerge esposizione controllata e prudenza nel fissare responsabilità.",
+          amplificato: "Assumendo messa in scena/casualità, il profilo suggerisce distacco e gestione difensiva del racconto."
         };
         renderObservations(currentObservations);
       });
@@ -577,8 +484,9 @@ function render() {
   renderObservations(currentObservations);
 }
 
+
 /* ======================================================
-   OSSERVAZIONI + CHIUSURA (Soluzione C)
+   OSSERVAZIONI (Soluzione C)
    ====================================================== */
 
 function renderObservationBlock(title, subtitle, text) {
@@ -592,27 +500,38 @@ function renderObservationBlock(title, subtitle, text) {
   return box;
 }
 
+function resetRun(keepPartner = true) {
+  step = keepPartner ? 1 : 0;
+  answers = [];
+  pressureLevel = 0;
+  observedAnchors = [];
+  currentObservations = null;
+
+  playerModel = {
+    stile: "indeterminato",
+    strategia: "indeterminata",
+    fragilita: 0,
+    rischioNarrativo: 0,
+    esposizione: 0
+  };
+
+  render();
+}
+
 function renderObservations(observations) {
   const root = el("app");
   clear(root);
 
-  const GAME = getGame();
-
   const header = document.createElement("div");
   header.className = "header";
   header.innerHTML = `
-    <h1>${GAME.scenario}</h1>
-    <div class="exposure">${GAME.exposureLabel}</div>
+    <h1>${GAME_CONFIG.scenario}</h1>
+    <div class="exposure">${GAME_CONFIG.exposureLabel}</div>
     <h2>QUELLO CHE EMERGE DAL RACCONTO</h2>
+    <p class="hint">La stessa storia può essere letta in modi diversi.</p>
   `;
 
-  // frase di preparazione (mossa #2)
-  const prep = document.createElement("div");
-  prep.className = "panel";
-  prep.innerHTML = `
-    <p><strong>La stessa storia può essere letta in modi diversi.</strong></p>
-  `;
-
+  // normalizza: vogliamo stringhe
   const normalized = {
     fringe: typeof observations?.fringe === "string" ? observations.fringe : JSON.stringify(observations?.fringe ?? ""),
     psicologico: typeof observations?.psicologico === "string" ? observations.psicologico : JSON.stringify(observations?.psicologico ?? ""),
@@ -620,6 +539,10 @@ function renderObservations(observations) {
   };
 
   currentObservations = normalized;
+
+  // ✅ aggiorna lastShadowWord per la prossima run
+  const sw = extractShadowWord(normalized.psicologico);
+  if (sw) lastShadowWord = sw;
 
   const container = document.createElement("div");
   container.className = "observations";
@@ -647,38 +570,28 @@ function renderObservations(observations) {
     normalized.amplificato
   ));
 
-  // Soluzione C (mossa #1): chiusura narrativa al posto del voto
-  const close = document.createElement("div");
-  close.className = "panel";
-  close.innerHTML = `
-    <p>Tre letture. Nessuna conclusione definitiva.</p>
-    <p>La storia non cambia. Cambia il modo in cui viene letta.</p>
+  // ✅ SOLUZIONE C: chiusura memorabile + replay
+  const closing = document.createElement("div");
+  closing.className = "closing";
+  closing.innerHTML = `
+    <p class="big">Tre letture. Nessuna conclusione definitiva.</p>
+    <p class="hint">La storia non cambia. Cambia il modo in cui viene letta.</p>
+    <div class="btnRow">
+      <button class="primary" id="retryBtn">Riprova con un'altra versione</button>
+      <button class="btnGhost" id="changeBtn">Cambia scenario</button>
+    </div>
   `;
 
-  const btnRow = document.createElement("div");
-  btnRow.className = "btnRow";
-
-  const replay = document.createElement("button");
-  replay.className = "primary";
-  replay.textContent = "Riprova con un'altra versione";
-  replay.onclick = () => resetRun(true);
-
-  const change = document.createElement("button");
-  change.className = "btnGhost";
-  change.textContent = "Cambia scenario";
-  change.onclick = () => resetRun(false);
-
-  btnRow.appendChild(replay);
-  btnRow.appendChild(change);
-
   root.appendChild(header);
-  root.appendChild(prep);
   root.appendChild(container);
-  root.appendChild(close);
-  root.appendChild(btnRow);
+  root.appendChild(closing);
+
+  el("retryBtn").onclick = () => resetRun(true);
+  el("changeBtn").onclick = () => resetRun(false);
 
   fadeIn(container);
 }
+
 
 /* ======================================================
    AVVIO
