@@ -19,7 +19,7 @@ export async function observeProcedural(payload) {
   }
 
   try {
-    const res = await fetch("/api/observe", {
+    const res = await fetch(`${API_ORIGIN}/api/observe`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

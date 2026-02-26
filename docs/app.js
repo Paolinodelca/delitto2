@@ -100,6 +100,13 @@ const GAME_CONFIG = {
   ]
 };
 
+
+// === API ORIGIN (GitHub Pages -> Vercel) ===
+// Quando sei su GitHub Pages, /api/* non esiste: punta al dominio Vercel.
+const API_ORIGIN = window.location.hostname.endsWith("github.io")
+  ? "delitto2.vercel.app"
+  : "";
+
 function buildQuestions(config) {
   if (Array.isArray(config.questions) && config.questions.length) return config.questions;
 
@@ -402,7 +409,7 @@ async function fetchObservationsFromAPI() {
     lastShadowWord
   };
 
-  const res = await fetch("/api/observe", {
+  const res = await fetch(`${API_ORIGIN}/api/observe`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
