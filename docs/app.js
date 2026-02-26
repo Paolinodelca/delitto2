@@ -100,6 +100,20 @@ const GAME_CONFIG = {
   ]
 };
 
+function buildQuestions(config) {
+  if (Array.isArray(config.questions) && config.questions.length) return config.questions;
+
+  if (Array.isArray(config.questionPool) && config.questionPool.length) {
+    const shuffled = [...config.questionPool].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 5);
+  }
+
+  return [];
+}
+
+const QUESTIONS = buildQuestions(GAME_CONFIG);
+
+
 /* ======================================================
    CONFIG LOADER (vestiti esterni senza cambiare la UI)
    - Se il file JSON esiste: fa override su GAME_CONFIG
@@ -127,10 +141,12 @@ async function tryFetchJSON(url) {
 
 // Prova più percorsi per evitare casino "docs/" vs no "docs/"
 async function loadExternalScenarioConfig() {
+  
   const candidates = [
-    "./data/scenario_fringe_leak.json",
-    "./docs/data/scenario_fringe_leak.json"
-  ];
+  "./data/scenario_fringe_leak.json",
+  "./docs/data/scenario_fringe_leak.json",
+  "./docs/docs/data/scenario_fringe_leak.json"
+];
 
   for (const url of candidates) {
     try {
@@ -324,6 +340,12 @@ function evaluateAnswer(text) {
   pressureLevel = Math.max(0, Math.min(MAX_PRESSURE, pressureLevel));
 }
 
+function pickRandom(arr) {
+  if (!Array.isArray(arr) || arr.length === 0) return null;
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+
 function renderContextBox() {
   return `
     <div class="contextBox">
@@ -457,47 +479,50 @@ function render() {
     return;
   }
 
-  // STEP 3..(3+questions-1): Domande
-  const qIndex = step - 3;
-  if (qIndex >= 0 && qIndex < GAME_CONFIG.questions.length) {
-    const contextHTML = document.createElement("div");
-    contextHTML.innerHTML = renderContextBox();
+  
+// STEP 3..(3+questions-1): Domande
+const qIndex = step - 3;
+if (qIndex >= 0 && qIndex < QUESTIONS.length) {
+  const contextHTML = document.createElement("div");
+  contextHTML.innerHTML = renderContextBox();
 
-    const question = document.createElement("div");
-    question.style.opacity = 0;
-    question.style.transform = "translateY(10px)";
-    setTimeout(() => {
-      question.style.transition = "all 0.4s ease";
-      question.style.opacity = 1;
-      question.style.transform = "translateY(0)";
-    }, 50);
+  const question = document.createElement("div");
+  question.style.opacity = 0;
+  question.style.transform = "translateY(10px)";
+  setTimeout(() => {
+    question.style.transition = "all 0.4s ease";
+    question.style.opacity = 1;
+    question.style.transform = "translateY(0)";
+  }, 50);
 
-    question.className = "questionBox";
-    question.textContent = GAME_CONFIG.questions[qIndex];
+  question.className = "questionBox";
+  question.textContent = QUESTIONS[qIndex];
 
-    const textarea = document.createElement("textarea");
-    textarea.rows = 4;
-    textarea.id = "answer";
+  const textarea = document.createElement("textarea");
+  textarea.rows = 4;
+  textarea.id = "answer";
 
-    const btn = document.createElement("button");
-    btn.className = "primary";
-    btn.textContent = (qIndex === GAME_CONFIG.questions.length - 1) ? "Invia e valuta" : "Invia";
-    btn.onclick = () => {
-      const value = textarea.value.trim();
-      answers.push(value);
-      evaluateAnswer(value);
-      step++;
-      render();
-    };
+  const btn = document.createElement("button");
+  btn.className = "primary";
+  btn.textContent = (qIndex === QUESTIONS.length - 1) ? "Invia e valuta" : "Invia";
+  btn.onclick = () => {
+    const value = textarea.value.trim();
+    answers.push(value);
+    evaluateAnswer(value);
+    step++;
+    render();
+  };
 
-    root.appendChild(contextHTML.firstElementChild);
-    root.appendChild(question);
-    root.appendChild(textarea);
-    root.appendChild(btn);
+  root.appendChild(contextHTML.firstElementChild);
+  root.appendChild(question);
+  root.appendChild(textarea);
+  root.appendChild(btn);
 
-    fadeIn(question);
-    return;
-  }
+  fadeIn(question);
+  return;
+}
+
+
 
   // Dopo le domande: Valutazione in corso -> /api/observe -> render osservazioni
   if (!currentObservations) {
@@ -653,6 +678,14 @@ function renderObservations(observations) {
       Object.keys(merged).forEach(k => {
         GAME_CONFIG[k] = merged[k];
       });
+
+      // ✅ MAGIA: se esistono questionSets, scegli un set casuale e usalo come questions
+      if (Array.isArray(GAME_CONFIG.questionSets) && GAME_CONFIG.questionSets.length > 0) {
+        const chosen = pickRandom(GAME_CONFIG.questionSets);
+        if (Array.isArray(chosen) && chosen.length > 0) {
+          GAME_CONFIG.questions = chosen;
+        }
+      }
     }
   } catch (e) {
     console.warn("Scenario JSON non caricato, uso config embedded.", e);
