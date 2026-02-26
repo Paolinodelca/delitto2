@@ -217,3 +217,25 @@ C:.
 └───web-demo
         app.js
         index.html
+
+        ## Freeze RC (2026-02-25)
+
+GitHub Pages URL: https://paolinodelca.github.io/delitto2/
+
+Cosa è “freeze”: tag release + branch deployato + scenario JSON
+
+- docs/app.js: aggiunto loader JSON per “vestiti” scenario (override morbido su GAME_CONFIG).
+  - Percorsi provati: ./data/scenario_fringe_leak.json (Pages da /docs) e fallback ./docs/data/...
+  - Se JSON assente o non leggibile: usa GAME_CONFIG embedded (nessun break).
+- Scenario “FRINGE/LEAK” duplicato in JSON: docs/data/scenario_fringe_leak.json
+- Obiettivo: rendere la demo data-driven senza cambiare UI.
+
+Freeze: rc-fringe-leak-v0.1
+
+Branch deployato: demo-fringe-leak-v0.1 
+
+GitHub Pages: usa /docs
+
+Config scenario: docs/data/scenario_fringe_leak.json
+
+Obiettivo prossimo: “vestiti” (altri scenari) + dirottamento votazione a “soluzione C”

@@ -226,9 +226,15 @@ Osserva esclusivamente la forma dell’esposizione.
     ampOut = softenBannedWords(ampOut);
 
     // ✅ prima metti in riga le label (se attaccate), poi estrai
+    
+    fringeOut = ensureNewlinesBeforeLabels(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
+    psicOut   = ensureNewlinesBeforeLabels(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
+
     fringeOut = enforceLabeledLines(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
-    psicOut = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
-    ampOut = enforceAmplificatoShape(ampOut);
+    psicOut   = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
+
+    const scarceInput = (blankCount + shortCount) >= Math.max(3, Math.floor(total * 0.6));
+    ampOut = enforceAmplificatoShape(ampOut, scarceInput);
 
     // ✅ pulizie finali (così NON possono essere annullate da fallback di formato)
     fringeOut = cleanPlaceholders(fringeOut);
@@ -268,6 +274,20 @@ function softenBannedWords(s) {
     .replace(/\bpotrebbe\b/gi, "tende a");
 }
 
+function ensureNewlinesBeforeLabels(s, labels) {
+  let t = (s || "");
+  for (const lab of labels) {
+    // se una label appare in mezzo a una riga, la porta a capo
+    t = t.replace(new RegExp(`\\s+(${escapeRegex(lab)})`, "g"), `\n$1`);
+  }
+  return t.trim();
+}
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+
 /**
  * Se il modello mette più label nella stessa riga,
  * inseriamo newline prima di ogni label trovata “in mezzo al testo”.
@@ -298,17 +318,37 @@ function enforceLabeledLines(s, labels) {
   return out.length === labels.length ? out.join("\n") : pre.trim();
 }
 
-function enforceAmplificatoShape(s) {
+function enforceAmplificatoShape(s, scarce = false) {
   const t = (s || "").trim();
-  if (!t.includes("IPOTESI 1 — SINCERO:") || !t.includes("IPOTESI 2 — MESSA IN SCENA:")) return t;
 
+  const has1 = t.includes("IPOTESI 1 — SINCERO:");
+  const has2 = t.includes("IPOTESI 2 — MESSA IN SCENA:");
+
+  // Se manca uno dei due blocchi: forza entrambi con fallback minimo (coerente e non “fantasioso”)
+  if (!has1 || !has2) {
+    const a = scarce
+      ? "Il materiale è troppo scarso per far emergere un criterio stabile di priorità e soglie. Resta soprattutto una gestione per frammenti, senza trade-off leggibili. La delega e la copertura rimangono implicite."
+      : "Nella forma si intravede un criterio di priorità: alcune ragioni vengono messe davanti e altre restano implicite. Tra copertura e urgenza si legge un trade-off, con soglie di accettabilità non dichiarate. La delega funziona come spostamento del rischio dentro il perimetro del racconto.";
+
+    const b = scarce
+      ? "La regia è ridotta a opacità/assenza di materiale: non si costruisce un frame riconoscibile. Il fuori campo domina e non si stabilizza una sequenza. Resta un controllo minimo del sospetto per mancanza di dettagli."
+      : "La regia costruisce una cornice di ammissibilità: compressioni e dilatazioni guidano il ritmo. Walter, Alex e (partner) funzionano come elementi di frame più che come fatti. Il taglio delle informazioni mantiene fuori campo ciò che altrimenti cambierebbe la lettura.";
+
+    return [
+      "IPOTESI 1 — SINCERO:",
+      a,
+      "IPOTESI 2 — MESSA IN SCENA:",
+      b
+    ].join("\n").trim();
+  }
+
+  // Caso normale: entrambi presenti → pulizia + “taglio” morbido (NON a 3 frasi fisse)
   const parts = t.split("IPOTESI 2 — MESSA IN SCENA:");
-  const a = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
-  const b = (parts[1] || "").trim();
+  const aRaw = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
+  const bRaw = (parts[1] || "").trim();
 
-  // non forziamo 3 frasi: il prompt chiede 4–6, quindi tagliamo solo se esplode
-  const aSent = a.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 6);
-  const bSent = b.split(/(?<=[.!?])\s+/).filter(Boolean).slice(0, 6);
+  const aSent = splitSentences(aRaw).slice(0, 5); // fino a 5 frasi
+  const bSent = splitSentences(bRaw).slice(0, 5);
 
   return [
     "IPOTESI 1 — SINCERO:",
@@ -317,6 +357,16 @@ function enforceAmplificatoShape(s) {
     bSent.join(" ").trim()
   ].join("\n").trim();
 }
+
+function splitSentences(text) {
+  return (text || "")
+    .replace(/\s+/g, " ")
+    .split(/(?<=[.!?])\s+/)
+    .map(x => x.trim())
+    .filter(Boolean);
+}
+
+
 
 function cleanPlaceholders(s) {
   let t = (s || "");
