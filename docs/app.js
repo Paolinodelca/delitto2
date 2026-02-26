@@ -139,25 +139,36 @@ async function tryFetchJSON(url) {
   return await res.json();
 }
 
+
 // Prova più percorsi per evitare casino "docs/" vs no "docs/"
+
+
 async function loadExternalScenarioConfig() {
-  
+
+  const params = new URLSearchParams(window.location.search);
+  const scenarioParam = params.get("s");
+
+  let file = "scenario_fringe_leak.json";
+
+  if (scenarioParam === "batman") file = "scenario_batman.json";
+  if (scenarioParam === "partner") file = "scenario_partner_geloso.json";
+  if (scenarioParam === "alieni") file = "scenario_alieni.json";
+
   const candidates = [
-  "./data/scenario_fringe_leak.json",
-  "./docs/data/scenario_fringe_leak.json",
-  "./docs/docs/data/scenario_fringe_leak.json"
-];
+    "./data/" + file,
+    "./docs/data/" + file
+  ];
 
   for (const url of candidates) {
     try {
       const json = await tryFetchJSON(url);
       if (json) return json;
-    } catch (e) {
-      // ignora e prova il prossimo
-    }
+    } catch (e) {}
   }
+
   return null;
 }
+
 
 /* ======================================================
    STATO
