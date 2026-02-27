@@ -108,9 +108,7 @@ const API_ORIGIN = (location.hostname.endsWith("github.io"))
 
 // Quando sei su GitHub Pages, /api/* non esiste: punta al dominio Vercel.
 
-//const API_ORIGIN = window.location.hostname.endsWith("github.io")
-//  ? "delitto2.vercel.app"
-//  : "";
+
 
 function buildQuestions(config) {
   if (Array.isArray(config.questions) && config.questions.length) return config.questions;
@@ -168,7 +166,7 @@ async function loadExternalScenarioConfig() {
 
   const candidates = [
     "./data/" + file,
-    "./docs/data/" + file
+   "/delitto2/data/"+ file
   ];
 
   for (const url of candidates) {
