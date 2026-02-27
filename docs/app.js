@@ -143,6 +143,50 @@ function deepMerge(base, override) {
   return out;
 }
 
+function hydrateScenarioFunctionsFromConfig(cfg) {
+  // intro / microcopy: accetta sia introText (embedded) sia introHtml (json)
+  if (typeof cfg.introHtml === "string" && !cfg.introText) cfg.introText = cfg.introHtml;
+  if (typeof cfg.microcopyHtml === "string" && !cfg.microcopyText) cfg.microcopyText = cfg.microcopyHtml;
+
+  // scenarioText: se dal JSON arriva un template string, creiamo la funzione scenarioText(partnerName)
+  if (typeof cfg.scenarioText !== "function") {
+    const tpl =
+      (typeof cfg.scenarioHtmlTemplate === "string" && cfg.scenarioHtmlTemplate) ||
+      (typeof cfg.scenarioText === "string" && cfg.scenarioText) ||
+      "";
+
+    if (tpl) {
+      cfg.scenarioText = (partnerName) => {
+        const company = cfg.companyName || "—";
+        const partner = partnerName || "(partner)";
+        return tpl
+          .replaceAll("{{companyName}}", company)
+          .replaceAll("{{partnerName}}", partner);
+      };
+    } else {
+      // paracadute: non esplode mai
+      cfg.scenarioText = (partnerName) =>
+        `<p>Scenario non disponibile.</p><p>Partner: <strong>${partnerName || "(partner)"}</strong></p>`;
+    }
+  }
+}
+
+function pickNextQuestionSet(questionSets, scenarioKey) {
+  // Alterna i set tra partite: 0,1,2,0,1,2...
+  // È più "magico" del random puro e non cambia in modo caotico.
+  const storageKey = `fringe_qset_${scenarioKey}`;
+  let idx = parseInt(localStorage.getItem(storageKey) || "0", 10);
+  if (!Number.isInteger(idx) || idx < 0) idx = 0;
+
+  const chosen = questionSets[idx % questionSets.length];
+
+  // prepara il prossimo indice per la prossima partita
+  localStorage.setItem(storageKey, String((idx + 1) % questionSets.length));
+
+  return chosen;
+}
+
+
 async function tryFetchJSON(url) {
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) return null;
@@ -687,8 +731,7 @@ function renderObservations(observations) {
    AVVIO
    ====================================================== */
 
-
- document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", async () => {
   try {
     const external = await loadExternalScenarioConfig();
     if (external) {
@@ -700,9 +743,12 @@ function renderObservations(observations) {
         GAME_CONFIG[k] = merged[k];
       });
 
-      // ✅ MAGIA: se esistono questionSets, scegli un set casuale e usalo come questions
+      // ✅ FIX CRITICO: scenarioText deve essere SEMPRE una funzione
+      hydrateScenarioFunctionsFromConfig(GAME_CONFIG);
+
+      // ✅ MAGIA: se esistono questionSets, scegli un set "a rotazione" e usalo come questions
       if (Array.isArray(GAME_CONFIG.questionSets) && GAME_CONFIG.questionSets.length > 0) {
-        const chosen = pickRandom(GAME_CONFIG.questionSets);
+        const chosen = pickNextQuestionSet(GAME_CONFIG.questionSets, GAME_CONFIG.scenario || "scenario");
         if (Array.isArray(chosen) && chosen.length > 0) {
           GAME_CONFIG.questions = chosen;
         }
