@@ -100,12 +100,17 @@ const GAME_CONFIG = {
   ]
 };
 
+const API_ORIGIN = (location.hostname.endsWith("github.io"))
+  ? "https://delitto2.vercel.app"
+  : "";
 
 // === API ORIGIN (GitHub Pages -> Vercel) ===
+
 // Quando sei su GitHub Pages, /api/* non esiste: punta al dominio Vercel.
-const API_ORIGIN = window.location.hostname.endsWith("github.io")
-  ? "delitto2.vercel.app"
-  : "";
+
+//const API_ORIGIN = window.location.hostname.endsWith("github.io")
+//  ? "delitto2.vercel.app"
+//  : "";
 
 function buildQuestions(config) {
   if (Array.isArray(config.questions) && config.questions.length) return config.questions;
