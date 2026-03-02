@@ -1,20 +1,24 @@
 {
-  "scenario": "FRINGE / LEAK — CONTATTO",
+  "scenario": "FRINGE / LEAK — ALIENI",
   "exposureLabel": "Livello di esposizione",
-  "companyName": "Saturn Way",
-
-  "introTitle": "FRINGE / LEAK — CONTATTO",
-  "introText": "<p><strong>Questo non è un test.</strong></p><p>È una simulazione narrativa.</p><p>Non valuta se dici la verità.<br>Osserva <em>come</em> rendi accettabile una versione che suona impossibile.</p>",
-
-  "scenarioText": "<p>Tu lavori per <strong>Saturn Way</strong>, ricerca avanzata, sicurezza alta.</p><p>Sei in audizione interna perché durante un turno si è aperta una falla procedurale.</p><p>In mezzo alle tue risposte compare un elemento che “non dovrebbe esistere”: un contatto non autorizzato, non catalogabile, fuori protocollo.</p><p>La commissione non ti chiede prove: ti chiede <strong>una versione</strong> che possa stare in piedi mentre tutti la guardano.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come verrà letta la tua esposizione.</em></p>",
-
-  "microcopyText": "<p>Questa non è una ricostruzione dei fatti.</p><p>È una valutazione di come rendi accettabili le tue decisioni.</p><p>Non ti viene chiesto cosa è successo davvero,<br>ma quale versione scegli di sostenere<br>quando sai che verrà letta, analizzata e interpretata.</p>",
-
-  "questions": [
-    "Introduci tu il punto impossibile: che cosa metti in primo piano per non far crollare tutto subito?",
-    "Qual è il dettaglio che tieni fuori campo perché, se entrasse, cambierebbe il livello della storia?",
-    "Chi “copre” la tua versione: tu, una procedura, un ruolo, o un vuoto di sistema? Scegli la cornice.",
-    "C’è un passaggio in cui il racconto accelera o salta: perché proprio lì e non altrove?",
-    "Se una parte della tua versione uscisse all’esterno, chi pagherebbe il prezzo più alto e perché?"
+  "companyName": "Commissione per il Non-Spiegabile",
+  "introTitle": "ALTRI",
+  "introText": "<p><strong>Questo non è un test.</strong></p><p>Sei qui perché hai raccontato una cosa che, detta male, ti rende inaffidabile.<br>Detta bene, ti rende un problema… di un altro tipo.</p><p>Non valutiamo se esistono o no.<br>Valutiamo <em>come</em> rendi sostenibile la tua versione sotto lettura ostile.</p>",
+  "microcopyText": "<p>Non è una ricostruzione dei fatti.</p><p>È una lettura di come costruisci una versione quando sai che verrà interpretata.</p><p>Rispondi a 5 domande. Ogni domanda stringe il cerchio.</p>",
+  "questionSets": [
+    [
+      "Quando dici “li ho incontrati”, qual è il minimo dettaglio che vuoi rendere stabile senza rovinarti da solo?",
+      "Se ti chiedessi perché dovremmo crederti, quale tipo di ragione useresti: tecnica, personale o morale?",
+      "C’è un punto del racconto che stai tenendo fuori perché temeresti di diventare ridicolo?",
+      "Se qualcuno dicesse “stai coprendo altro con una storia assurda”, come reagisci senza indignarti?",
+      "Qual è la cosa più pericolosa di questa storia: quello che implica, o il modo in cui suona?"
+    ],
+    [
+      "Hai usato parole che suonano come “messaggi”, “segnali”, “contatti”. Quale cornice vuoi imporre a quelle parole?",
+      "Se ti faccio una domanda secca: cosa ci guadagni tu a dirlo? Rispondi senza difenderti troppo.",
+      "Qual è il dettaglio che, se venisse letto da un tecnico, ti smentirebbe subito?",
+      "Se ti accusassero di inventare per spostare l’attenzione, quale punto useresti per non crollare?",
+      "Ultima: dimmi cosa resta fuori campo anche nella tua versione, e perché."
+    ]
   ]
 }

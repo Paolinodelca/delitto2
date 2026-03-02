@@ -56,6 +56,39 @@
 2) PAROLA-OMBRA: a volte il modello ignora il vincolo e scrive frasi (“La parola X sembra…”).
 3) Amplificato: con 3 frasi e frasi “corte”, perde profondità e diventa cronaca/placeholder.
 
+## Aggiornamento operativo (oggi)
+### Scenario JSON + override
+- UI resta canonica in `docs/app.js`, ma può caricare “vestiti” da JSON.
+- Loader attivo: legge parametro URL `?s=` e sceglie file:
+  - `?s=batman` -> `scenario_batman.json`
+  - `?s=partner` -> `scenario_partner_geloso.json`
+  - `?s=alieni` -> `scenario_alieni.json`
+  - default -> `scenario_fringe_leak.json`
+- Percorsi funzionanti (per come è ora il repo):
+  - Vercel: `/data/<file>.json` (root = `docs/`)
+  - GitHub Pages: `/delitto2/data/<file>.json`
+- Nota: l’URL `/delitto2/docs/data/...` su Pages può dare 404: non è il path pubblico corretto in questo setup.
+
+### Rotazione domande (“magia”)
+- Se nel JSON esiste `questionSets` (array di set), all’avvio viene scelto un set casuale:
+  `GAME_CONFIG.questions = pickRandom(GAME_CONFIG.questionSets)`
+- Obiettivo: se ripeti il gioco, trovi domande diverse → esperienza più viva.
+
+### CORS e API (Pages -> Vercel)
+- GitHub Pages non può chiamare `/api/observe` interno (non esiste): deve chiamare Vercel.
+- L’API Vercel deve rispondere a preflight OPTIONS e includere header CORS:
+  - Access-Control-Allow-Origin: *
+  - Access-Control-Allow-Methods: POST, OPTIONS
+  - Access-Control-Allow-Headers: Content-Type, Authorization
+- Nel client: usare `API_ORIGIN` vuoto su Vercel e `https://delitto2.vercel.app` su `github.io`.
+- Sintomi noti:
+  - 405: metodo errato o preflight non gestito
+  - CORS error: mancano header su risposta OPTIONS/POST
+
+### Note di deploy / branch
+- GitHub può avere `main` come default, ma Vercel va puntato al branch di lavoro (`demo-fringe-leak-v0.1`).
+- Git pull può rinominare cartelle tipo `docs/docs/data` -> `docs/data` (successo con rename automatico).
+
 ---
 
 ## Metriche “ok / non ok” per i report

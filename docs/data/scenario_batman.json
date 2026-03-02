@@ -1,20 +1,24 @@
 {
   "scenario": "FRINGE / LEAK — BATMAN",
   "exposureLabel": "Livello di esposizione",
-  "companyName": "Camera dei Deputati",
-
-  "introTitle": "FRINGE / LEAK — BATMAN",
-  "introText": "<p><strong>Questo non è un test.</strong></p><p>È una simulazione narrativa: rispondi come se le conseguenze fossero reali.</p><p>Non valuta se dici la verità.<br>Osserva <em>come</em> rendi accettabili le tue decisioni quando sai che verranno lette, analizzate e interpretate.</p>",
-
-  "scenarioText": "<p>Tu sei un/a parlamentare della maggioranza.</p><p>Ti trovi davanti a una commissione interna del tuo partito: <strong>non è un tribunale</strong> e non è un procedimento disciplinare.<br>È una valutazione politica.</p><p>Durante una serata pubblica sei stato/a fotografato/a a un evento dell’opposizione con una maschera riconoscibile.</p><p>Circolano ricostruzioni contraddittorie, audio, e un paio di dettagli abbastanza… teatrali.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come verrà letta la tua esposizione.</em></p>",
-
-  "microcopyText": "<p>Questa non è una ricostruzione dei fatti.</p><p>È una valutazione di come rendi accettabili le tue decisioni.</p><p>Non ti viene chiesto cosa è successo davvero,<br>ma quale versione scegli di sostenere<br>sapendo che verrà letta, analizzata e interpretata.</p>",
-
-  "questions": [
-    "Hai scelto di partecipare a un evento dell’opposizione. In che cornice lo rendi compatibile con il tuo ruolo di maggioranza?",
-    "Una foto ti ritrae con una maschera (sì, quella). Cosa rende “accettabile” quella scelta in quel contesto?",
-    "Alcuni raccontano un momento euforico e poco sobrio. Qual è la tua versione che resta coerente senza negare l’imbarazzo?",
-    "C’è un dettaglio che, se finisse sui giornali, cambierebbe radicalmente il modo in cui verresti letto/a?",
-    "Se uscisse solo una versione parziale della serata, chi pagherebbe il prezzo più alto: tu, il partito, o qualcun altro?"
+  "companyName": "Palazzo dei Palazzi",
+  "introTitle": "BATMAN",
+  "introText": "<p><strong>Questo non è un test.</strong></p><p>Sei un/una parlamentare della maggioranza.<br>Sei qui perché la tua immagine pubblica ha iniziato a vivere una vita propria.</p><p>Non valutiamo se hai detto la verità.<br>Valutiamo <em>come</em> rendi accettabili le tue scelte quando sai che verranno lette e interpretate.</p>",
+  "microcopyText": "<p>Non è una ricostruzione dei fatti.</p><p>È una valutazione di come sostieni una versione quando sai che verrà analizzata.</p><p>Rispondi a 5 domande. Ogni domanda aggiunge un dettaglio.</p>",
+  "questionSets": [
+    [
+      "Sei stato fotografato a una festa del partito d’opposizione, mascherato da Batman. In quale cornice vuoi collocare questa scena?",
+      "Sostengono che tu abbia usato l’auto blu per arrivare “in incognito”. È un equivoco logistico o una scelta che rivendichi?",
+      "Spunta un video: sei in piedi su un tavolo e fai uno spogliarello. Se lo riduci a “era caldo”, perché dovrebbero crederti?",
+      "Un giornalista dice che quella sera hai scambiato un deputato per Alfred e gli hai dato ordini. Che cosa stavi cercando di far sembrare normale?",
+      "Domani c’è un voto delicato. Se qualcuno ti chiedesse: “ci sei con la testa?”, qual è la tua risposta più credibile?"
+    ],
+    [
+      "Ti contestano un’incongruenza: hai detto “era una festa privata”, ma in sala c’erano due troupe. Che versione regge meglio?",
+      "Una chat trapelata mostra che qualcuno ti scrive: “porta la maschera, così nessuno capisce”. Chi stai proteggendo con quella scena?",
+      "Dicono che tu abbia cantato l’inno del partito d’opposizione “per scherzo”. Che cos’è, per te, uno scherzo accettabile in politica?",
+      "Il servizio d’ordine sostiene che hai rifiutato di mostrare il volto. Era timidezza, gioco, o controllo dell’immagine?",
+      "Se questa storia venisse letta come un segnale (non come una goliardata), quale lettura ti danneggia di più e perché?"
+    ]
   ]
 }
