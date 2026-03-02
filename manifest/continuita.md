@@ -89,6 +89,9 @@
 - GitHub può avere `main` come default, ma Vercel va puntato al branch di lavoro (`demo-fringe-leak-v0.1`).
 - Git pull può rinominare cartelle tipo `docs/docs/data` -> `docs/data` (successo con rename automatico).
 
+
+- Nota: il JSON non può override-are funzioni. Per cambiare la descrizione scenario (scenarioText) via JSON,
+  usare `scenarioHtmlTemplate` e un adattatore in `docs/app.js` che genera `scenarioText(partnerName)` dal template.
 ---
 
 ## Metriche “ok / non ok” per i report

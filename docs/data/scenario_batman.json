@@ -2,9 +2,14 @@
   "scenario": "FRINGE / LEAK — BATMAN",
   "exposureLabel": "Livello di esposizione",
   "companyName": "Palazzo dei Palazzi",
+
   "introTitle": "BATMAN",
   "introText": "<p><strong>Questo non è un test.</strong></p><p>Sei un/una parlamentare della maggioranza.<br>Sei qui perché la tua immagine pubblica ha iniziato a vivere una vita propria.</p><p>Non valutiamo se hai detto la verità.<br>Valutiamo <em>come</em> rendi accettabili le tue scelte quando sai che verranno lette e interpretate.</p>",
+
+  "scenarioHtmlTemplate": "<p>Tu sei un/una parlamentare in carica, e oggi vieni ascoltato/a a porte chiuse da una commissione interna di <strong>{{companyName}}</strong>.</p><p>Non è un tribunale.<br>Non è un procedimento disciplinare.<br>È una valutazione.</p><p>Durante una serata “riservata” sei stato/a fotografato/a a un evento del partito d’opposizione con una maschera da <strong>Batman</strong>.</p><p>Da quel momento la storia ha iniziato ad aggiungere dettagli, clip e versioni incompatibili tra loro.</p><p>Nel frattempo, <strong>{{partnerName}}</strong> (tuo/a partner) ti incalza: non per i titoli dei giornali, ma per ciò che questa scena dice di te.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come renderai accettabile la tua versione.</em></p>",
+
   "microcopyText": "<p>Non è una ricostruzione dei fatti.</p><p>È una valutazione di come sostieni una versione quando sai che verrà analizzata.</p><p>Rispondi a 5 domande. Ogni domanda aggiunge un dettaglio.</p>",
+
   "questionSets": [
     [
       "Sei stato fotografato a una festa del partito d’opposizione, mascherato da Batman. In quale cornice vuoi collocare questa scena?",

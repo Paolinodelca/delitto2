@@ -743,6 +743,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         GAME_CONFIG[k] = merged[k];
       });
 
+// ✅ ADATTATORE: se arriva un template dal JSON, genera la funzione scenarioText
+if (typeof GAME_CONFIG.scenarioText !== "function" && typeof GAME_CONFIG.scenarioHtmlTemplate === "string") {
+  GAME_CONFIG.scenarioText = (partnerName) => {
+    return GAME_CONFIG.scenarioHtmlTemplate
+      .replaceAll("{{companyName}}", GAME_CONFIG.companyName || "")
+      .replaceAll("{{partnerName}}", partnerName || "(partner)");
+  };
+}
+
       // ✅ FIX CRITICO: scenarioText deve essere SEMPRE una funzione
       hydrateScenarioFunctionsFromConfig(GAME_CONFIG);
 
