@@ -200,9 +200,12 @@ async function loadExternalScenarioConfig() {
   if (scenarioParam === "alieni") file = "scenario_alieni.json";
 
   const candidates = [
-    "./data/" + file,        // funziona su Pages: /delitto2/data/...
-    "/delitto2/data/" + file // paracadute esplicito per Pages
-  ];
+  "./data/" + file,        // GitHub Pages (root = docs)
+  "/data/" + file,         // fallback
+  "/delitto2/data/" + file // fallback extra (se Pages non usa docs come root)
+];
+
+console.log("[SCENARIO PARAM]", scenarioParam, "file:", file, "candidates:", candidates);
 
   for (const url of candidates) {
     try {
