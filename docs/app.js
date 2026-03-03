@@ -430,29 +430,35 @@ function getPartnerOptions() {
   return ["Eva", "Adamo"];
 }
 
+
+
 function renderContextBox() {
-  // ✅ se lo scenario JSON porta un template per il contesto, usalo
+  const roles = GAME_CONFIG.roles || {};
+  const company = GAME_CONFIG.companyName || "—";
+  const partner = partnerName || "(partner)";
+
+  // Se il JSON porta un template HTML, usalo.
   if (typeof GAME_CONFIG.contextHtmlTemplate === "string" && GAME_CONFIG.contextHtmlTemplate.trim()) {
-    const company = GAME_CONFIG.companyName || "—";
-    const partner = partnerName || "(partner)";
     return GAME_CONFIG.contextHtmlTemplate
       .replaceAll("{{companyName}}", company)
-      .replaceAll("{{partnerName}}", partner);
+      .replaceAll("{{partnerName}}", partner)
+      .replaceAll("{{roleResponsabile}}", roles.responsabile || "Walter")
+      .replaceAll("{{roleAmico}}", roles.amico || "Alex");
   }
 
-  // fallback generico (mai Saturn-centrico)
+  // fallback generico
   return `
     <div class="contextBox">
       <h3>Contesto</h3>
       <div>
-        Stai rispondendo in un ambiente chiamato <strong>${GAME_CONFIG.companyName || "—"}</strong>.
-        Il testo verrà letto e interpretato.
+        <strong>${company}</strong> è l’ambiente di riferimento di questa versione.
+        Stai rispondendo sapendo che il testo verrà letto e interpretato.
       </div>
       <h4 style="margin-top:10px;">Figure in gioco</h4>
       <ul>
-        <li><strong>Walter</strong> – figura di autorità (o equivalente)</li>
-        <li><strong>Alex</strong> – contatto interno / alleato</li>
-        <li><strong>${partnerName || "Eva / Adamo"}</strong> – partner (pressione privata)</li>
+        <li><strong>${roles.responsabile || "Walter"}</strong> – figura di autorità (o equivalente)</li>
+        <li><strong>${roles.amico || "Alex"}</strong> – contatto interno / alleato</li>
+        <li><strong>${partner}</strong> – partner (pressione privata)</li>
       </ul>
     </div>
   `;
@@ -460,22 +466,23 @@ function renderContextBox() {
 
 
 
-async function fetchObservationsFromAPI() {
-  const roles = GAME_CONFIG.roles || {};
 
-  const payload = {
-    scenario: GAME_CONFIG.scenario,
-    context: {
-      responsabile: roles.responsabile || "Walter",
-      amico: roles.amico || "Alex",
-      partner: partnerName || "Eva/Adamo",
-      azienda: GAME_CONFIG.setting || `${GAME_CONFIG.companyName} (contesto definito dallo scenario)`
-    },
-    playerModel,
-    answers,
-    observedAnchors,
-    pressureLevel,
-    lastShadowWord
+
+const roles = GAME_CONFIG.roles || {};
+
+const payload = {
+  scenario: GAME_CONFIG.scenario,
+  context: {
+    responsabile: roles.responsabile || "Walter",
+    amico: roles.amico || "Alex",
+    partner: partnerName || "Eva/Adamo",
+    ambiente: GAME_CONFIG.setting || ""
+  },
+  playerModel,
+  answers,
+  observedAnchors,
+  pressureLevel,
+  lastShadowWord
   };
 
   const res = await fetch(`${API_ORIGIN}/api/observe`, {

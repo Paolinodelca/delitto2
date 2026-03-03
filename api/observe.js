@@ -167,7 +167,7 @@ RUOLI — NON INTERPRETABILI:
 - Partner affettivo: ${rolePartner}
 
 AMBIENTE:
-il contesto è quello dichiarato nello scenario; non aggiungere dettagli.
+${context?.ambiente ? context.ambiente : "Azienda che sviluppa tecnologie sensibili. La sicurezza è una condizione operativa, non simbolica."}
 
 QUALITÀ INPUT:
 - totale risposte: ${total}
