@@ -433,14 +433,15 @@ function renderContextBox() {
 }
 
 async function fetchObservationsFromAPI() {
+  const roles = GAME_CONFIG.roles || {};
+
   const payload = {
     scenario: GAME_CONFIG.scenario,
     context: {
       responsabile: roles.responsabile || "Walter",
       amico: roles.amico || "Alex",
       partner: partnerName || "Eva/Adamo",
-      azienda: GAME_CONFIG.setting || `${GAME_CONFIG.companyName}`
-
+      azienda: GAME_CONFIG.setting || `${GAME_CONFIG.companyName} (ricerca avanzata, alta sicurezza)`
     },
     playerModel,
     answers,
