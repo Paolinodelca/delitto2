@@ -85,7 +85,7 @@ const GAME_CONFIG = {
     <p>
       Non ti viene chiesto di dire cosa è successo davvero,<br>
       ma quale versione dei fatti scegli di sostenere<br>
-      quando sai che verrà letta, analizzata e interpretata.<br>
+      quando sai che verrà letta, analizzata e interpretata.
     </p>
     <p>
       Rispondi a 5 domande e verifica la lettura della tua esposizione!
@@ -101,9 +101,13 @@ const GAME_CONFIG = {
     "Se emergesse solo una versione parziale dei fatti, chi pensi che ne pagherebbe il prezzo più alto?"
   ],
 
-  // opzionale per “vestiti”: sovrascrivi da JSON
+  // opzionale per “vestiti”:
   // partnerOptions: ["Eva", "Adamo"],
-  // contextHtmlTemplate: "<div class='contextBox'>...</div>"
+  // roles: { responsabile:"...", amico:"..." },
+  // setting: "...",
+  // scenarioHtmlTemplate: "...",
+  // contextHtmlTemplate: "...",
+  // questionSets: [[...],[...]]
 };
 
 const API_ORIGIN = (location.hostname.endsWith("github.io"))
@@ -139,12 +143,21 @@ async function tryFetchJSON(url) {
   return await res.json();
 }
 
+// ricava "/delitto2" su GitHub Pages (repo pages), "" su Vercel/local
+function getRepoBasePath() {
+  if (!location.hostname.endsWith("github.io")) return "";
+  // pathname tipico: "/delitto2/" oppure "/delitto2/index.html"
+  const parts = location.pathname.split("/").filter(Boolean);
+  const repo = parts[0] || "";
+  return repo ? `/${repo}` : "";
+}
+
 function hydrateScenarioFunctionsFromConfig(cfg) {
   // intro / microcopy: accetta sia introText sia introHtml (json)
   if (typeof cfg.introHtml === "string" && !cfg.introText) cfg.introText = cfg.introHtml;
   if (typeof cfg.microcopyHtml === "string" && !cfg.microcopyText) cfg.microcopyText = cfg.microcopyHtml;
 
-  // scenarioText: se dal JSON arriva un template string, creiamo la funzione scenarioText(partnerName)
+  // scenarioText: se dal JSON arriva un template, creiamo scenarioText(partnerName)
   if (typeof cfg.scenarioText !== "function") {
     const tpl =
       (typeof cfg.scenarioHtmlTemplate === "string" && cfg.scenarioHtmlTemplate) ||
@@ -177,10 +190,8 @@ function pickNextQuestionSet(questionSets, scenarioKey) {
 }
 
 function buildQuestionsFromConfig(cfg) {
-  // 1) se abbiamo questions già pronte, usiamo quelle
   if (Array.isArray(cfg.questions) && cfg.questions.length) return cfg.questions;
 
-  // 2) se abbiamo questionPool, scegliamo 5 casuali
   if (Array.isArray(cfg.questionPool) && cfg.questionPool.length) {
     const shuffled = [...cfg.questionPool].sort(() => Math.random() - 0.5);
     return shuffled.slice(0, 5);
@@ -199,20 +210,30 @@ async function loadExternalScenarioConfig() {
   if (scenarioParam === "partner") file = "scenario_partner_geloso.json";
   if (scenarioParam === "alieni") file = "scenario_alieni.json";
 
-  const candidates = [
-  "./data/" + file,        // GitHub Pages (root = docs)
-  "/data/" + file,         // fallback
-  "/delitto2/data/" + file // fallback extra (se Pages non usa docs come root)
-];
+  const base = getRepoBasePath();
 
-console.log("[SCENARIO PARAM]", scenarioParam, "file:", file, "candidates:", candidates);
+  const candidates = [
+    "./data/" + file,          // relativo (funziona su Pages e su Vercel se root=docs)
+    base + "/data/" + file     // assoluto su Pages: /delitto2/data/...
+  ];
+
+  console.log("[SCENARIO PARAM]", scenarioParam, "file:", file, "base:", base, "candidates:", candidates);
 
   for (const url of candidates) {
     try {
-      const json = await tryFetchJSON(url);
-      if (json) return json;
-    } catch (e) {}
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) {
+        console.warn("[SCENARIO FETCH FAIL]", url, res.status);
+        continue;
+      }
+      const json = await res.json();
+      console.log("[SCENARIO FETCH OK]", url);
+      return json;
+    } catch (e) {
+      console.warn("[SCENARIO FETCH ERR]", url, e);
+    }
   }
+
   return null;
 }
 
@@ -220,7 +241,7 @@ console.log("[SCENARIO PARAM]", scenarioParam, "file:", file, "candidates:", can
    STATO
    ====================================================== */
 
-let step = 0; // 0 intro, 1 scenario, 2 microcopy, 3.. domande, poi osservazioni
+let step = 0;
 let partnerName = null;
 
 let answers = [];
@@ -349,12 +370,8 @@ document.head.appendChild(style);
    UTILS
    ====================================================== */
 
-function el(id) {
-  return document.getElementById(id);
-}
-function clear(node) {
-  node.innerHTML = "";
-}
+function el(id) { return document.getElementById(id); }
+function clear(node) { node.innerHTML = ""; }
 function fadeIn(node) {
   node.style.opacity = 0;
   node.style.transition = "opacity 0.6s ease";
@@ -408,7 +425,6 @@ function getPartnerOptions() {
 }
 
 function renderContextBox() {
-  // Se il JSON porta un template HTML, usalo.
   if (typeof GAME_CONFIG.contextHtmlTemplate === "string" && GAME_CONFIG.contextHtmlTemplate.trim()) {
     const company = GAME_CONFIG.companyName || "—";
     const partner = partnerName || "(partner)";
@@ -417,7 +433,6 @@ function renderContextBox() {
       .replaceAll("{{partnerName}}", partner);
   }
 
-  // Fallback generico (NON Saturn-centrico)
   return `
     <div class="contextBox">
       <h3>Contesto</h3>
@@ -444,7 +459,7 @@ async function fetchObservationsFromAPI() {
       responsabile: roles.responsabile || "Walter",
       amico: roles.amico || "Alex",
       partner: partnerName || "Eva/Adamo",
-      azienda: GAME_CONFIG.setting || `${GAME_CONFIG.companyName} (ricerca avanzata, alta sicurezza)`
+      azienda: GAME_CONFIG.setting || `${GAME_CONFIG.companyName} (contesto definito dallo scenario)`
     },
     playerModel,
     answers,
@@ -465,7 +480,7 @@ async function fetchObservationsFromAPI() {
   }
 
   const json = await res.json();
-  return json.osservazioni; // { fringe, psicologico, amplificato }
+  return json.osservazioni;
 }
 
 /* ======================================================
@@ -484,7 +499,6 @@ function render() {
   `;
   root.appendChild(header);
 
-  // STEP 0: Intro + scelta partner
   if (step === 0) {
     const [p1, p2] = getPartnerOptions();
 
@@ -507,7 +521,6 @@ function render() {
     return;
   }
 
-  // STEP 1: Scenario letterale
   if (step === 1) {
     const panel = document.createElement("div");
     panel.className = "panel";
@@ -524,7 +537,6 @@ function render() {
     return;
   }
 
-  // STEP 2: Microcopy canonico
   if (step === 2) {
     const panel = document.createElement("div");
     panel.className = "panel";
@@ -541,8 +553,10 @@ function render() {
     return;
   }
 
-  // STEP 3.. domande (sempre derivate dal GAME_CONFIG DOPO override)
-  const questionsNow = buildQuestionsFromConfig(GAME_CONFIG);
+  const questionsNow = Array.isArray(GAME_CONFIG.questions)
+    ? GAME_CONFIG.questions
+    : buildQuestionsFromConfig(GAME_CONFIG);
+
   const qIndex = step - 3;
 
   if (qIndex >= 0 && qIndex < questionsNow.length) {
@@ -585,7 +599,6 @@ function render() {
     return;
   }
 
-  // Dopo le domande: valutazione in corso -> /api/observe -> osservazioni
   if (!currentObservations) {
     const waiting = document.createElement("div");
     waiting.className = "panel";
@@ -713,10 +726,7 @@ function renderObservations(observations) {
   root.appendChild(closing);
 
   el("retryBtn").onclick = () => resetRun(true);
-  
-  el("changeBtn").onclick = () => {
-  window.location.href = window.location.pathname; // resetta anche ?s=
-  };
+  el("changeBtn").onclick = () => { window.location.href = window.location.pathname; };
 
   fadeIn(container);
 }
@@ -728,15 +738,12 @@ function renderObservations(observations) {
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     const external = await loadExternalScenarioConfig();
+
     if (external) {
       const merged = deepMerge(GAME_CONFIG, external);
       Object.keys(merged).forEach(k => { GAME_CONFIG[k] = merged[k]; });
 
       hydrateScenarioFunctionsFromConfig(GAME_CONFIG);
-      console.log("SCENARIO:", GAME_CONFIG.scenario);
-      console.log("HAS TEMPLATE:", typeof GAME_CONFIG.scenarioHtmlTemplate, (GAME_CONFIG.scenarioHtmlTemplate || "").length);
-      console.log("SCENARIO TEXT FN:", typeof GAME_CONFIG.scenarioText);
-      console.log("MICROCOPY LEN:", (GAME_CONFIG.microcopyText || "").length);
 
       // Rotazione questionSets (strategica)
       if (Array.isArray(GAME_CONFIG.questionSets) && GAME_CONFIG.questionSets.length > 0) {
@@ -745,14 +752,19 @@ document.addEventListener("DOMContentLoaded", async () => {
           GAME_CONFIG.questions = chosen;
         }
       }
+
+      // Se per qualche motivo questions non è un array, ricostruiscilo
+      GAME_CONFIG.questions = buildQuestionsFromConfig(GAME_CONFIG);
     }
-  console.log("[SCENARIO LOADED]", {
-  scenario: GAME_CONFIG.scenario,
-  companyName: GAME_CONFIG.companyName,
-  hasTemplate: typeof GAME_CONFIG.scenarioHtmlTemplate === "string" && GAME_CONFIG.scenarioHtmlTemplate.length > 0,
-  microcopyLen: (GAME_CONFIG.microcopyText || "").length,
-  questionsLen: (GAME_CONFIG.questions || []).length
-});
+
+    console.log("[SCENARIO LOADED]", {
+      scenario: GAME_CONFIG.scenario,
+      companyName: GAME_CONFIG.companyName,
+      hasTemplate: typeof GAME_CONFIG.scenarioHtmlTemplate === "string" && GAME_CONFIG.scenarioHtmlTemplate.length > 0,
+      microcopyLen: (GAME_CONFIG.microcopyText || "").length,
+      questionsLen: (GAME_CONFIG.questions || []).length
+    });
+
   } catch (e) {
     console.warn("Scenario JSON non caricato, uso config embedded.", e);
   }
