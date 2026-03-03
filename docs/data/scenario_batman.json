@@ -2,14 +2,15 @@
   "scenario": "FRINGE / LEAK — BATMAN",
   "exposureLabel": "Livello di esposizione",
   "companyName": "Palazzo dei Palazzi",
+"setting": "Ambiente politico-mediatico: reputazione, immagini, versioni pubbliche e private.",
 
-  "setting": "Ambiente politico-mediatico: reputazione, immagini, versioni pubbliche e private.",
+"roles": {
+  "responsabile": "Commissione",
+  "amico": "Collega / portavoce",
+  "partner": "Partner"
+},
 
-  "roles": {
-    "responsabile": "Commissione",
-    "amico": "Collega / portavoce",
-    "partner": "Partner"
-  },
+"contextHtmlTemplate": "<div class=\"contextBox\"><h3>Contesto politico</h3><div>Sei in una stanza chiusa del <strong>{{companyName}}</strong>. Non stai difendendo i fatti: stai rendendo accettabile una versione.</div><h4 style=\"margin-top:10px;\">Pressioni in gioco</h4><ul><li><strong>{{roleResponsabile}}</strong> – lettura istituzionale / controllo</li><li><strong>{{roleAmico}}</strong> – contatto interno (ti conosce davvero)</li><li><strong>{{partnerName}}</strong> – pressione privata (non compra la versione “ufficiale”)</li></ul></div>",
 
   "introTitle": "BATMAN",
   "introText": "<p><strong>Questo non è un test.</strong></p><p>Sei un/una parlamentare della maggioranza.<br>Sei qui perché la tua immagine pubblica ha iniziato a vivere una vita propria.</p><p>Non valutiamo se hai detto la verità.<br>Valutiamo <em>come</em> rendi accettabili le tue scelte quando sai che verranno lette e interpretate.</p>",
