@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   console.log("OBSERVE VERSION: AMP-V6");
 
 
-  
+
 res.setHeader("Access-Control-Allow-Origin", "*");
 res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
 res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -167,8 +167,7 @@ RUOLI — NON INTERPRETABILI:
 - Partner affettivo: ${rolePartner}
 
 AMBIENTE:
-Azienda che sviluppa tecnologie sensibili.
-La sicurezza è una condizione operativa, non simbolica.
+il contesto è quello dichiarato nello scenario; non aggiungere dettagli.
 
 QUALITÀ INPUT:
 - totale risposte: ${total}

@@ -2,6 +2,13 @@
   "scenario": "FRINGE / LEAK — BATMAN",
   "exposureLabel": "Livello di esposizione",
   "companyName": "Palazzo dei Palazzi",
+  "roles": {
+    "responsabile": "Capogruppo",
+    "amico": "Consulente",
+    "partnerLabel": "partner"
+    },
+"setting": "Politica e immagine pubblica"
+
 
   "introTitle": "BATMAN",
   "introText": "<p><strong>Questo non è un test.</strong></p><p>Sei un/una parlamentare della maggioranza.<br>Sei qui perché la tua immagine pubblica ha iniziato a vivere una vita propria.</p><p>Non valutiamo se hai detto la verità.<br>Valutiamo <em>come</em> rendi accettabili le tue scelte quando sai che verranno lette e interpretate.</p>",

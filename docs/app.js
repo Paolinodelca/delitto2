@@ -436,10 +436,11 @@ async function fetchObservationsFromAPI() {
   const payload = {
     scenario: GAME_CONFIG.scenario,
     context: {
-      responsabile: "Walter",
-      amico: "Alex",
+      responsabile: roles.responsabile || "Walter",
+      amico: roles.amico || "Alex",
       partner: partnerName || "Eva/Adamo",
-      azienda: `${GAME_CONFIG.companyName}`
+      azienda: GAME_CONFIG.setting || `${GAME_CONFIG.companyName}`
+
     },
     playerModel,
     answers,
@@ -708,7 +709,10 @@ function renderObservations(observations) {
   root.appendChild(closing);
 
   el("retryBtn").onclick = () => resetRun(true);
-  el("changeBtn").onclick = () => resetRun(false);
+  
+  el("changeBtn").onclick = () => {
+  window.location.href = window.location.pathname; // resetta anche ?s=
+  };
 
   fadeIn(container);
 }
@@ -725,6 +729,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       Object.keys(merged).forEach(k => { GAME_CONFIG[k] = merged[k]; });
 
       hydrateScenarioFunctionsFromConfig(GAME_CONFIG);
+      console.log("SCENARIO:", GAME_CONFIG.scenario);
+      console.log("HAS TEMPLATE:", typeof GAME_CONFIG.scenarioHtmlTemplate, (GAME_CONFIG.scenarioHtmlTemplate || "").length);
+      console.log("SCENARIO TEXT FN:", typeof GAME_CONFIG.scenarioText);
+      console.log("MICROCOPY LEN:", (GAME_CONFIG.microcopyText || "").length);
 
       // Rotazione questionSets (strategica)
       if (Array.isArray(GAME_CONFIG.questionSets) && GAME_CONFIG.questionSets.length > 0) {
