@@ -157,27 +157,33 @@ function hydrateScenarioFunctionsFromConfig(cfg) {
   if (typeof cfg.introHtml === "string" && !cfg.introText) cfg.introText = cfg.introHtml;
   if (typeof cfg.microcopyHtml === "string" && !cfg.microcopyText) cfg.microcopyText = cfg.microcopyHtml;
 
-  // scenarioText: se dal JSON arriva un template, creiamo scenarioText(partnerName)
-  if (typeof cfg.scenarioText !== "function") {
-    const tpl =
-      (typeof cfg.scenarioHtmlTemplate === "string" && cfg.scenarioHtmlTemplate) ||
-      (typeof cfg.scenarioText === "string" && cfg.scenarioText) ||
-      "";
+  // ✅ REGOLA MODULARE:
+  // se dal JSON arriva scenarioHtmlTemplate, DEVE vincere sempre, anche se esiste già scenarioText (Saturn).
+  const tpl =
+    (typeof cfg.scenarioHtmlTemplate === "string" && cfg.scenarioHtmlTemplate.trim())
+      ? cfg.scenarioHtmlTemplate
+      : (typeof cfg.scenarioText === "string" && cfg.scenarioText.trim())
+        ? cfg.scenarioText
+        : "";
 
-    if (tpl) {
-      cfg.scenarioText = (partnerName) => {
-        const company = cfg.companyName || "—";
-        const partner = partnerName || "(partner)";
-        return tpl
-          .replaceAll("{{companyName}}", company)
-          .replaceAll("{{partnerName}}", partner);
-      };
-    } else {
-      cfg.scenarioText = (partnerName) =>
-        `<p>Scenario non disponibile.</p><p>Partner: <strong>${partnerName || "(partner)"}</strong></p>`;
-    }
+  if (tpl) {
+    cfg.scenarioText = (partnerName) => {
+      const company = cfg.companyName || "—";
+      const partner = partnerName || "(partner)";
+      return tpl
+        .replaceAll("{{companyName}}", company)
+        .replaceAll("{{partnerName}}", partner);
+    };
+  } else if (typeof cfg.scenarioText !== "function") {
+    // paracadute: non esplode mai
+    cfg.scenarioText = (partnerName) =>
+      `<p>Scenario non disponibile.</p><p>Partner: <strong>${partnerName || "(partner)"}</strong></p>`;
   }
 }
+
+
+
+
 
 function pickNextQuestionSet(questionSets, scenarioKey) {
   const storageKey = `fringe_qset_${scenarioKey}`;
@@ -425,6 +431,7 @@ function getPartnerOptions() {
 }
 
 function renderContextBox() {
+  // ✅ se lo scenario JSON porta un template per il contesto, usalo
   if (typeof GAME_CONFIG.contextHtmlTemplate === "string" && GAME_CONFIG.contextHtmlTemplate.trim()) {
     const company = GAME_CONFIG.companyName || "—";
     const partner = partnerName || "(partner)";
@@ -433,12 +440,13 @@ function renderContextBox() {
       .replaceAll("{{partnerName}}", partner);
   }
 
+  // fallback generico (mai Saturn-centrico)
   return `
     <div class="contextBox">
       <h3>Contesto</h3>
       <div>
-        <strong>${GAME_CONFIG.companyName}</strong> è l’ambiente di riferimento di questa versione.
-        Stai rispondendo sapendo che il testo verrà letto e interpretato.
+        Stai rispondendo in un ambiente chiamato <strong>${GAME_CONFIG.companyName || "—"}</strong>.
+        Il testo verrà letto e interpretato.
       </div>
       <h4 style="margin-top:10px;">Figure in gioco</h4>
       <ul>
@@ -449,6 +457,8 @@ function renderContextBox() {
     </div>
   `;
 }
+
+
 
 async function fetchObservationsFromAPI() {
   const roles = GAME_CONFIG.roles || {};

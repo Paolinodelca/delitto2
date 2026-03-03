@@ -10,6 +10,8 @@
 
   "microcopyText": "<p>Non è una ricostruzione dei fatti.</p><p>È una valutazione di come sostieni una versione quando sai che verrà analizzata.</p><p>Rispondi a 5 domande. Ogni domanda aggiunge un dettaglio.</p>",
 
+  "contextHtmlTemplate": "<div class=\"contextBox\"><h3>Contesto politico</h3><div>Sei in una stanza chiusa del <strong>{{companyName}}</strong>. Non stai difendendo i fatti: stai rendendo accettabile una versione.</div><h4 style=\"margin-top:10px;\">Pressioni in gioco</h4><ul><li><strong>Walter</strong> – controllo istituzionale / commissione</li><li><strong>Alex</strong> – contatto interno (ti conosce davvero)</li><li><strong>{{partnerName}}</strong> – pressione privata (non compra la versione “ufficiale”)</li></ul></div>"
+
   "questionSets": [
     [
       "Sei stato fotografato a una festa del partito d’opposizione, mascherato da Batman. In quale cornice vuoi collocare questa scena?",
