@@ -743,6 +743,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }
     }
+  console.log("[SCENARIO LOADED]", {
+  scenario: GAME_CONFIG.scenario,
+  companyName: GAME_CONFIG.companyName,
+  hasTemplate: typeof GAME_CONFIG.scenarioHtmlTemplate === "string" && GAME_CONFIG.scenarioHtmlTemplate.length > 0,
+  microcopyLen: (GAME_CONFIG.microcopyText || "").length,
+  questionsLen: (GAME_CONFIG.questions || []).length
+});
   } catch (e) {
     console.warn("Scenario JSON non caricato, uso config embedded.", e);
   }
