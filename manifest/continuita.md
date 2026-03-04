@@ -218,6 +218,7 @@ domande da questionSets
 
 contextHtmlTemplate + (opzionale) roles
 
+
 Completare vestiti:
 
 scenario_partner_geloso.json e scenario_alieni.json con:
@@ -261,3 +262,40 @@ docs/data/scenario_alieni.json
 api/observe.js
 
 ecc. (tree completo già in chat)
+
+ULTIMO AGGIORNAMENTO: 
+## UPDATE (2026-03-04) — Rotazione domande su replay + fix override domande
+
+### Stato
+- Batman scenario carica correttamente da Pages via `?s=batman` e JSON in `docs/data/`.
+- UI mostra: intro/scenario/microcopy/domande/observe/report (3 blocchi) coerenti.
+- Resta un lavoro di “scrittura” (ambientazione più realistica: casa la mattina dopo, chi ti contatta, ecc.), ma la pipeline tecnica è OK.
+
+### Problema risolto: rotazione questionSets “non visibile”
+- Prima: la rotazione dei `questionSets` avveniva solo al refresh pagina (DOMContentLoaded).
+- Effetto: clic su “Riprova con un’altra versione” non cambiava domande → sembrava “nessuna rotazione”.
+
+### Fix implementato in docs/app.js
+- Introdotta funzione unica `selectQuestionsForRun()`:
+  - se esiste `questionSets` → seleziona il prossimo set a rotazione (localStorage) e lo assegna a `GAME_CONFIG.questions`
+  - altrimenti → fallback su `buildQuestionsFromConfig()` (questions / questionPool)
+- `selectQuestionsForRun()` viene chiamata:
+  - all’avvio (dopo merge + hydrate, o anche in fallback)
+  - dentro `resetRun()` → così ogni replay ruota il set senza refresh.
+
+### Fix collaterale importante
+- Rimossa la sovrascrittura involontaria: prima si sceglieva un set, ma poi `GAME_CONFIG.questions = buildQuestionsFromConfig(GAME_CONFIG)` poteva rimettere il fallback.
+- Ora: `buildQuestionsFromConfig()` è solo fallback, non cancella un set già scelto.
+
+### Prossimi step (quando Paolino torna)
+1) Scrittura / “realismo” Batman:
+   - spostare ambientazione: “casa tua la mattina dopo” invece di “stanza chiusa del palazzo”
+   - rinominare ruoli: stampa / giornalista / portavoce / partner con nomi propri (es. “Massimiliano”)
+   - rendere esplicito “chi fa la domanda” nei testi delle domande (già concettualmente ok, da ripulire)
+2) Verificare rotazione:
+   - avvia run → domande set 1
+   - “Riprova” → domande set 2
+   - “Riprova” → torna set 1 (o continua su set 3 se aggiunto)
+3) Vestire altri scenari (partner geloso, alieni) con gli stessi campi del JSON Batman:
+   - scenario, companyName, setting, roles, introText, microcopyText, scenarioHtmlTemplate, contextHtmlTemplate, questionSets
+4) Freeze RC nuovo quando 3 scenari sono stabili su Pages + observe su Vercel.

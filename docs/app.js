@@ -194,6 +194,21 @@ function buildQuestionsFromConfig(cfg) {
   return [];
 }
 
+// ✅ PUNTO UNICO: selezione domande per QUESTA run
+// - se c'è questionSets -> rotazione set (coerente narrativamente)
+// - altrimenti fallback su questions/questionPool
+function selectQuestionsForRun() {
+  if (Array.isArray(GAME_CONFIG.questionSets) && GAME_CONFIG.questionSets.length > 0) {
+    const chosen = pickNextQuestionSet(GAME_CONFIG.questionSets, GAME_CONFIG.scenario || "scenario");
+    if (Array.isArray(chosen) && chosen.length > 0) {
+      GAME_CONFIG.questions = chosen;
+      return;
+    }
+  }
+
+  GAME_CONFIG.questions = buildQuestionsFromConfig(GAME_CONFIG);
+}
+
 // Scenario param -> file
 async function loadExternalScenarioConfig() {
   const params = new URLSearchParams(window.location.search);
@@ -663,6 +678,10 @@ function resetRun(keepPartner = true) {
     esposizione: 0
   };
 
+  // ✅ ROTAZIONE ANCHE SU REPLAY (senza refresh)
+  // Se vuoi: con keepPartner=false torniamo alla scelta partner, ma il set domande è comunque pronto.
+  selectQuestionsForRun();
+
   render();
 }
 
@@ -750,18 +769,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       Object.keys(merged).forEach(k => { GAME_CONFIG[k] = merged[k]; });
 
       hydrateScenarioFunctionsFromConfig(GAME_CONFIG);
-
-      // Rotazione questionSets (strategica)
-      if (Array.isArray(GAME_CONFIG.questionSets) && GAME_CONFIG.questionSets.length > 0) {
-        const chosen = pickNextQuestionSet(GAME_CONFIG.questionSets, GAME_CONFIG.scenario || "scenario");
-        if (Array.isArray(chosen) && chosen.length > 0) {
-          GAME_CONFIG.questions = chosen;
-        }
-      }
-
-      // Se per qualche motivo questions non è un array, ricostruiscilo
-      GAME_CONFIG.questions = buildQuestionsFromConfig(GAME_CONFIG);
     }
+
+    // ✅ scegli domande per la prima run (anche se non c'è external)
+    selectQuestionsForRun();
 
     console.log("[SCENARIO LOADED]", {
       scenario: GAME_CONFIG.scenario,
@@ -773,6 +784,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   } catch (e) {
     console.warn("Scenario JSON non caricato, uso config embedded.", e);
+    // anche in fallback: domande pronte
+    selectQuestionsForRun();
   }
 
   render();
