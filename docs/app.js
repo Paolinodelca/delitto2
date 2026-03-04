@@ -137,16 +137,9 @@ function deepMerge(base, override) {
   return out;
 }
 
-async function tryFetchJSON(url) {
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) return null;
-  return await res.json();
-}
-
 // ricava "/delitto2" su GitHub Pages (repo pages), "" su Vercel/local
 function getRepoBasePath() {
   if (!location.hostname.endsWith("github.io")) return "";
-  // pathname tipico: "/delitto2/" oppure "/delitto2/index.html"
   const parts = location.pathname.split("/").filter(Boolean);
   const repo = parts[0] || "";
   return repo ? `/${repo}` : "";
@@ -158,7 +151,7 @@ function hydrateScenarioFunctionsFromConfig(cfg) {
   if (typeof cfg.microcopyHtml === "string" && !cfg.microcopyText) cfg.microcopyText = cfg.microcopyHtml;
 
   // ✅ REGOLA MODULARE:
-  // se dal JSON arriva scenarioHtmlTemplate, DEVE vincere sempre, anche se esiste già scenarioText (Saturn).
+  // se arriva scenarioHtmlTemplate dal JSON, DEVE vincere sempre
   const tpl =
     (typeof cfg.scenarioHtmlTemplate === "string" && cfg.scenarioHtmlTemplate.trim())
       ? cfg.scenarioHtmlTemplate
@@ -175,15 +168,10 @@ function hydrateScenarioFunctionsFromConfig(cfg) {
         .replaceAll("{{partnerName}}", partner);
     };
   } else if (typeof cfg.scenarioText !== "function") {
-    // paracadute: non esplode mai
     cfg.scenarioText = (partnerName) =>
       `<p>Scenario non disponibile.</p><p>Partner: <strong>${partnerName || "(partner)"}</strong></p>`;
   }
 }
-
-
-
-
 
 function pickNextQuestionSet(questionSets, scenarioKey) {
   const storageKey = `fringe_qset_${scenarioKey}`;
@@ -217,10 +205,9 @@ async function loadExternalScenarioConfig() {
   if (scenarioParam === "alieni") file = "scenario_alieni.json";
 
   const base = getRepoBasePath();
-
   const candidates = [
-    "./data/" + file,          // relativo (funziona su Pages e su Vercel se root=docs)
-    base + "/data/" + file     // assoluto su Pages: /delitto2/data/...
+    "./data/" + file,
+    base + "/data/" + file
   ];
 
   console.log("[SCENARIO PARAM]", scenarioParam, "file:", file, "base:", base, "candidates:", candidates);
@@ -430,14 +417,11 @@ function getPartnerOptions() {
   return ["Eva", "Adamo"];
 }
 
-
-
 function renderContextBox() {
   const roles = GAME_CONFIG.roles || {};
   const company = GAME_CONFIG.companyName || "—";
   const partner = partnerName || "(partner)";
 
-  // Se il JSON porta un template HTML, usalo.
   if (typeof GAME_CONFIG.contextHtmlTemplate === "string" && GAME_CONFIG.contextHtmlTemplate.trim()) {
     return GAME_CONFIG.contextHtmlTemplate
       .replaceAll("{{companyName}}", company)
@@ -446,7 +430,6 @@ function renderContextBox() {
       .replaceAll("{{roleAmico}}", roles.amico || "Alex");
   }
 
-  // fallback generico
   return `
     <div class="contextBox">
       <h3>Contesto</h3>
@@ -464,25 +447,26 @@ function renderContextBox() {
   `;
 }
 
+/* ======================================================
+   API
+   ====================================================== */
 
+async function fetchObservationsFromAPI() {
+  const roles = GAME_CONFIG.roles || {};
 
-
-
-const roles = GAME_CONFIG.roles || {};
-
-const payload = {
-  scenario: GAME_CONFIG.scenario,
-  context: {
-    responsabile: roles.responsabile || "Walter",
-    amico: roles.amico || "Alex",
-    partner: partnerName || "Eva/Adamo",
-    ambiente: GAME_CONFIG.setting || ""
-  },
-  playerModel,
-  answers,
-  observedAnchors,
-  pressureLevel,
-  lastShadowWord
+  const payload = {
+    scenario: GAME_CONFIG.scenario,
+    context: {
+      responsabile: roles.responsabile || "Walter",
+      amico: roles.amico || "Alex",
+      partner: partnerName || "Eva/Adamo",
+      ambiente: GAME_CONFIG.setting || ""
+    },
+    playerModel,
+    answers,
+    observedAnchors,
+    pressureLevel,
+    lastShadowWord
   };
 
   const res = await fetch(`${API_ORIGIN}/api/observe`, {
@@ -497,7 +481,7 @@ const payload = {
   }
 
   const json = await res.json();
-  return json.osservazioni;
+  return json.osservazioni; // { fringe, psicologico, amplificato }
 }
 
 /* ======================================================
@@ -516,6 +500,7 @@ function render() {
   `;
   root.appendChild(header);
 
+  // STEP 0
   if (step === 0) {
     const [p1, p2] = getPartnerOptions();
 
@@ -538,6 +523,7 @@ function render() {
     return;
   }
 
+  // STEP 1
   if (step === 1) {
     const panel = document.createElement("div");
     panel.className = "panel";
@@ -554,6 +540,7 @@ function render() {
     return;
   }
 
+  // STEP 2
   if (step === 2) {
     const panel = document.createElement("div");
     panel.className = "panel";
@@ -570,6 +557,7 @@ function render() {
     return;
   }
 
+  // STEP 3.. domande
   const questionsNow = Array.isArray(GAME_CONFIG.questions)
     ? GAME_CONFIG.questions
     : buildQuestionsFromConfig(GAME_CONFIG);
@@ -616,6 +604,7 @@ function render() {
     return;
   }
 
+  // Dopo domande: /api/observe
   if (!currentObservations) {
     const waiting = document.createElement("div");
     waiting.className = "panel";
