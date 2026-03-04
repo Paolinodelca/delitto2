@@ -2,39 +2,36 @@
   "scenario": "FRINGE / LEAK — BATMAN",
   "exposureLabel": "Livello di esposizione",
   "companyName": "Palazzo dei Palazzi",
-"setting": "Ambiente politico-mediatico: reputazione, immagini, versioni pubbliche e private.",
+  "setting": "Ambiente politico-mediatico: reputazione, immagini, versioni pubbliche e private.",
 
-"roles": {
-  "responsabile": "Commissione",
-  "amico": "Collega / portavoce",
-  "partner": "Partner"
-},
+  "roles": {
+    "responsabile": "Commissione / ufficio comunicazione",
+    "amico": "Collega / portavoce"
+  },
 
-"contextHtmlTemplate": "<div class=\"contextBox\"><h3>Contesto politico</h3><div>Sei in una stanza chiusa del <strong>{{companyName}}</strong>. Non stai difendendo i fatti: stai rendendo accettabile una versione.</div><h4 style=\"margin-top:10px;\">Pressioni in gioco</h4><ul><li><strong>{{roleResponsabile}}</strong> – lettura istituzionale / controllo</li><li><strong>{{roleAmico}}</strong> – contatto interno (ti conosce davvero)</li><li><strong>{{partnerName}}</strong> – pressione privata (non compra la versione “ufficiale”)</li></ul></div>",
+  "contextHtmlTemplate": "<div class=\"contextBox\"><h3>Contesto politico-mediatico</h3><div>Sei in una stanza chiusa del <strong>{{companyName}}</strong>. Non stai difendendo i fatti: stai rendendo accettabile una versione.</div><h4 style=\"margin-top:10px;\">Pressioni in gioco</h4><ul><li><strong>{{roleResponsabile}}</strong> – lettura istituzionale / controllo del danno</li><li><strong>{{roleAmico}}</strong> – tenuta del gruppo / fiducia interna</li><li><strong>{{partnerName}}</strong> – pressione privata (non compra la versione “ufficiale”)</li></ul></div>",
 
   "introTitle": "BATMAN",
   "introText": "<p><strong>Questo non è un test.</strong></p><p>Sei un/una parlamentare della maggioranza.<br>Sei qui perché la tua immagine pubblica ha iniziato a vivere una vita propria.</p><p>Non valutiamo se hai detto la verità.<br>Valutiamo <em>come</em> rendi accettabili le tue scelte quando sai che verranno lette e interpretate.</p>",
 
-  "scenarioHtmlTemplate": "<p>Tu sei un/una parlamentare in carica, e oggi vieni ascoltato/a a porte chiuse da una commissione interna di <strong>{{companyName}}</strong>.</p><p>Non è un tribunale.<br>Non è un procedimento disciplinare.<br>È una valutazione.</p><p>Durante una serata “riservata” sei stato/a fotografato/a a un evento del partito d’opposizione con una maschera da <strong>Batman</strong>.</p><p>Da quel momento la storia ha iniziato ad aggiungere dettagli, clip e versioni incompatibili tra loro.</p><p>Nel frattempo, <strong>{{partnerName}}</strong> (tuo/a partner) ti incalza: non per i titoli dei giornali, ma per ciò che questa scena dice di te.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come renderai accettabile la tua versione.</em></p>",
+  "scenarioHtmlTemplate": "<p>Tu sei un/una parlamentare in carica, e oggi vieni ascoltato/a a porte chiuse da una struttura interna di <strong>{{companyName}}</strong>.</p><p>Non è un tribunale.<br>Non è un procedimento disciplinare.<br>È una valutazione di tenuta.</p><p>Durante una serata “riservata” sei stato/a fotografato/a a un evento del partito d’opposizione con una maschera da <strong>Batman</strong>.</p><p>Da quel momento la storia ha iniziato ad aggiungere dettagli, clip e versioni incompatibili tra loro.</p><p>Nel frattempo, <strong>{{partnerName}}</strong> (tuo/a partner) ti incalza: non per i titoli dei giornali, ma per ciò che questa scena dice di te.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come renderai accettabile la tua versione.</em></p>",
 
   "microcopyText": "<p>Non è una ricostruzione dei fatti.</p><p>È una valutazione di come sostieni una versione quando sai che verrà analizzata.</p><p>Rispondi a 5 domande. Ogni domanda aggiunge un dettaglio.</p>",
 
-  "contextHtmlTemplate": "<div class=\"contextBox\"><h3>Contesto</h3><div>Sei in una stanza chiusa del <strong>{{companyName}}</strong>. Non stai difendendo i fatti: stai rendendo accettabile una versione.</div><h4 style=\"margin-top:10px;\">Pressioni in gioco</h4><ul><li><strong>{{roleResponsabile}}</strong> – lettura istituzionale / controllo</li><li><strong>{{roleAmico}}</strong> – contatto interno (ti conosce davvero)</li><li><strong>{{partnerName}}</strong> – pressione privata (non compra la versione “ufficiale”)</li></ul></div>",
-
   "questionSets": [
     [
-      "Sei stato fotografato a una festa del partito d’opposizione, mascherato da Batman. In quale cornice vuoi collocare questa scena?",
-      "Sostengono che tu abbia usato l’auto blu per arrivare “in incognito”. È un equivoco logistico o una scelta che rivendichi?",
-      "Spunta un video: sei in piedi su un tavolo e fai uno spogliarello. Se lo riduci a “era caldo”, perché dovrebbero crederti?",
-      "Un giornalista dice che quella sera hai scambiato un deputato per Alfred e gli hai dato ordini. Che cosa stavi cercando di far sembrare normale?",
-      "Domani c’è un voto delicato. Se qualcuno ti chiedesse: “ci sei con la testa?”, qual è la tua risposta più credibile?"
+      "[STAMPA] Sei stato fotografato a una festa del partito d’opposizione, mascherato da Batman. In quale cornice vuoi collocare questa scena?",
+      "[COLLEGA] Sostengono che tu abbia usato l’auto blu per arrivare “in incognito”. È un equivoco logistico o una scelta che rivendichi?",
+      "[STAMPA] Spunta un video: sei in piedi su un tavolo e fai uno spogliarello. Se lo riduci a “era caldo”, perché dovrebbero crederti?",
+      "[COLLEGA] Dicono che tu abbia scambiato un deputato per Alfred e gli abbia dato ordini. Che cosa stavi cercando di far sembrare normale?",
+      "[PARTNER] Domani c’è un voto delicato. Se ti chiedessi: “ci sei con la testa?”, qual è la tua risposta più credibile?"
     ],
     [
-      "Ti contestano un’incongruenza: hai detto “era una festa privata”, ma in sala c’erano due troupe. Che versione regge meglio?",
-      "Una chat trapelata mostra che qualcuno ti scrive: “porta la maschera, così nessuno capisce”. Chi stai proteggendo con quella scena?",
-      "Dicono che tu abbia cantato l’inno del partito d’opposizione “per scherzo”. Che cos’è, per te, uno scherzo accettabile in politica?",
-      "Il servizio d’ordine sostiene che hai rifiutato di mostrare il volto. Era timidezza, gioco, o controllo dell’immagine?",
-      "Se questa storia venisse letta come un segnale (non come una goliardata), quale lettura ti danneggia di più e perché?"
+      "[STAMPA] Ti contestano un’incongruenza: hai detto “era una festa privata”, ma in sala c’erano due troupe. Che versione regge meglio?",
+      "[PARTNER] Una chat trapelata mostra che qualcuno ti scrive: “porta la maschera, così nessuno capisce”. Chi stai proteggendo con quella scena?",
+      "[COLLEGA] Dicono che tu abbia cantato l’inno dell’opposizione “per scherzo”. Che cos’è, per te, uno scherzo accettabile in politica?",
+      "[STAMPA] Il servizio d’ordine sostiene che hai rifiutato di mostrare il volto. Era timidezza, gioco, o controllo dell’immagine?",
+      "[PARTNER] Se questa storia venisse letta come un segnale (non come una goliardata), quale lettura ti danneggia di più e perché?"
     ]
   ]
 }
