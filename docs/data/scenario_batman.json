@@ -4,17 +4,18 @@
   "companyName": "Palazzo dei Palazzi",
   "setting": "Ambiente politico-mediatico: reputazione, immagini, versioni pubbliche e private.",
 
-  "roles": {
-    "responsabile": "Commissione / ufficio comunicazione",
-    "amico": "Collega / portavoce"
-  },
+"roles": {
+  "responsabile": "Stampa",
+  "amico": "Massimiliano (collega e portavoce)",
+  "partnerRoleLabel": "Partner"
+},
 
-  "contextHtmlTemplate": "<div class=\"contextBox\"><h3>Contesto politico-mediatico</h3><div>Sei in una stanza chiusa del <strong>{{companyName}}</strong>. Non stai difendendo i fatti: stai rendendo accettabile una versione.</div><h4 style=\"margin-top:10px;\">Pressioni in gioco</h4><ul><li><strong>{{roleResponsabile}}</strong> – lettura istituzionale / controllo del danno</li><li><strong>{{roleAmico}}</strong> – tenuta del gruppo / fiducia interna</li><li><strong>{{partnerName}}</strong> – pressione privata (non compra la versione “ufficiale”)</li></ul></div>",
+"contextHtmlTemplate": "<div class=\"contextBox\"><h3>Mattina dopo</h3><div>Sei a casa. Il telefono vibra senza tregua. La storia non la controlli più: circola a pezzi (clip, audio, chat, allusioni). Non stai difendendo i fatti: stai rendendo accettabile una versione.</div><h4 style=\"margin-top:10px;\">Chi ti sta contattando</h4><ul><li><strong>{{roleResponsabile}}</strong> – titoli, domande secche, richiesta di una frase “pulita”</li><li><strong>{{roleAmico}}</strong> – ti chiede coerenza e disciplina: “dimmi cosa devo dire”</li><li><strong>{{partnerName}}</strong> – non vuole uno slogan: vuole capire cosa significa per voi</li></ul></div>"
 
   "introTitle": "BATMAN",
   "introText": "<p><strong>Questo non è un test.</strong></p><p>Sei un/una parlamentare della maggioranza.<br>Sei qui perché la tua immagine pubblica ha iniziato a vivere una vita propria.</p><p>Non valutiamo se hai detto la verità.<br>Valutiamo <em>come</em> rendi accettabili le tue scelte quando sai che verranno lette e interpretate.</p>",
 
-  "scenarioHtmlTemplate": "<p>Tu sei un/una parlamentare in carica, e oggi vieni ascoltato/a a porte chiuse da una struttura interna di <strong>{{companyName}}</strong>.</p><p>Non è un tribunale.<br>Non è un procedimento disciplinare.<br>È una valutazione di tenuta.</p><p>Durante una serata “riservata” sei stato/a fotografato/a a un evento del partito d’opposizione con una maschera da <strong>Batman</strong>.</p><p>Da quel momento la storia ha iniziato ad aggiungere dettagli, clip e versioni incompatibili tra loro.</p><p>Nel frattempo, <strong>{{partnerName}}</strong> (tuo/a partner) ti incalza: non per i titoli dei giornali, ma per ciò che questa scena dice di te.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come renderai accettabile la tua versione.</em></p>",
+"scenarioHtmlTemplate": "<p>Ieri sera ti sei presentato/a travestito/a da <strong>Batman</strong> a una festa patrocinata dal partito d’opposizione.</p><p>La tua apparizione ha fatto scalpore: foto, clip e versioni contraddittorie hanno iniziato a rimbalzare ovunque.</p><p>Tra le voci che circolano, una è tossica: a un certo punto sarebbe stato necessario chiamare le forze dell’ordine per allontanarti dalla situazione in cui ti eri infilato/a.</p><p>Stamattina sei a casa. Ti chiamano in tre lingue diverse: <strong>stampa</strong>, <strong>partito</strong>, <strong>vita privata</strong>.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come renderai accettabile la tua versione.</em></p>"
 
   "microcopyText": "<p>Non è una ricostruzione dei fatti.</p><p>È una valutazione di come sostieni una versione quando sai che verrà analizzata.</p><p>Rispondi a 5 domande. Ogni domanda aggiunge un dettaglio.</p>",
 
@@ -25,13 +26,20 @@
       "[STAMPA] Spunta un video: sei in piedi su un tavolo e fai uno spogliarello. Se lo riduci a “era caldo”, perché dovrebbero crederti?",
       "[COLLEGA] Dicono che tu abbia scambiato un deputato per Alfred e gli abbia dato ordini. Che cosa stavi cercando di far sembrare normale?",
       "[PARTNER] Domani c’è un voto delicato. Se ti chiedessi: “ci sei con la testa?”, qual è la tua risposta più credibile?"
-    ],
+    ],  
     [
       "[STAMPA] Ti contestano un’incongruenza: hai detto “era una festa privata”, ma in sala c’erano due troupe. Che versione regge meglio?",
       "[PARTNER] Una chat trapelata mostra che qualcuno ti scrive: “porta la maschera, così nessuno capisce”. Chi stai proteggendo con quella scena?",
       "[COLLEGA] Dicono che tu abbia cantato l’inno dell’opposizione “per scherzo”. Che cos’è, per te, uno scherzo accettabile in politica?",
       "[STAMPA] Il servizio d’ordine sostiene che hai rifiutato di mostrare il volto. Era timidezza, gioco, o controllo dell’immagine?",
       "[PARTNER] Se questa storia venisse letta come un segnale (non come una goliardata), quale lettura ti danneggia di più e perché?"
-    ]
+   ],  
+    [
+  "[STAMPA] Una clip ti mostra mentre fai il gesto del “cavaliere oscuro” davanti ai flash. È goliardia o messaggio? In quale cornice vuoi metterla?",
+  "[MASSIMILIANO] Mi serve una versione ripetibile in 12 parole. Qual è la tua frase, senza inciampare nei dettagli?",
+  "[STAMPA] Dicono che sia intervenuta la polizia. Se non vuoi negare frontalmente, come lo racconti senza peggiorare la cosa?",
+  "[PARTNER] Ieri eri “Batman”. Oggi chi sei? Che cosa devo credere, io, quando chiudi la porta di casa?",
+  "[MASSIMILIANO] Domani voti un provvedimento delicato. Se ti chiedono “sei affidabile?”, cosa rispondi senza suonare offeso?"
+   ]
   ]
 }
