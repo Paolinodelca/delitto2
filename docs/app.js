@@ -146,12 +146,11 @@ function getRepoBasePath() {
 }
 
 function hydrateScenarioFunctionsFromConfig(cfg) {
-  // intro / microcopy: accetta sia introText sia introHtml (json)
+  // intro / microcopy: accetta alias JSON
   if (typeof cfg.introHtml === "string" && !cfg.introText) cfg.introText = cfg.introHtml;
   if (typeof cfg.microcopyHtml === "string" && !cfg.microcopyText) cfg.microcopyText = cfg.microcopyHtml;
 
-  // ✅ REGOLA MODULARE:
-  // se arriva scenarioHtmlTemplate dal JSON, DEVE vincere sempre
+  // scenarioText: se arriva scenarioHtmlTemplate dal JSON, DEVE vincere sempre
   const tpl =
     (typeof cfg.scenarioHtmlTemplate === "string" && cfg.scenarioHtmlTemplate.trim())
       ? cfg.scenarioHtmlTemplate
@@ -171,6 +170,14 @@ function hydrateScenarioFunctionsFromConfig(cfg) {
     cfg.scenarioText = (partnerName) =>
       `<p>Scenario non disponibile.</p><p>Partner: <strong>${partnerName || "(partner)"}</strong></p>`;
   }
+}
+
+function getScenarioKeyForRotation(cfg) {
+  // chiave stabile per localStorage: usa scenarioParam se presente, altrimenti scenario string
+  const params = new URLSearchParams(window.location.search);
+  const s = params.get("s");
+  if (s) return `param_${s}`;
+  return String(cfg.scenario || "scenario").toLowerCase();
 }
 
 function pickNextQuestionSet(questionSets, scenarioKey) {
@@ -194,19 +201,19 @@ function buildQuestionsFromConfig(cfg) {
   return [];
 }
 
-// ✅ PUNTO UNICO: selezione domande per QUESTA run
-// - se c'è questionSets -> rotazione set (coerente narrativamente)
-// - altrimenti fallback su questions/questionPool
-function selectQuestionsForRun() {
-  if (Array.isArray(GAME_CONFIG.questionSets) && GAME_CONFIG.questionSets.length > 0) {
-    const chosen = pickNextQuestionSet(GAME_CONFIG.questionSets, GAME_CONFIG.scenario || "scenario");
+function applyQuestionRotation(cfg) {
+  // 1) se esistono questionSets, scegli “a rotazione” un set e lo mette in cfg.questions
+  if (Array.isArray(cfg.questionSets) && cfg.questionSets.length > 0) {
+    const key = getScenarioKeyForRotation(cfg);
+    const chosen = pickNextQuestionSet(cfg.questionSets, key);
     if (Array.isArray(chosen) && chosen.length > 0) {
-      GAME_CONFIG.questions = chosen;
-      return;
+      cfg.questions = chosen;
+      console.log("[QSET ROTATION]", { key, chosenLen: chosen.length, first: chosen[0] });
     }
   }
 
-  GAME_CONFIG.questions = buildQuestionsFromConfig(GAME_CONFIG);
+  // 2) in ogni caso, assicura che cfg.questions sia un array sensato
+  cfg.questions = buildQuestionsFromConfig(cfg);
 }
 
 // Scenario param -> file
@@ -678,9 +685,8 @@ function resetRun(keepPartner = true) {
     esposizione: 0
   };
 
-  // ✅ ROTAZIONE ANCHE SU REPLAY (senza refresh)
-  // Se vuoi: con keepPartner=false torniamo alla scelta partner, ma il set domande è comunque pronto.
-  selectQuestionsForRun();
+  // ✅ ROTAZIONE DOMANDE ANCHE SU REPLAY
+  applyQuestionRotation(GAME_CONFIG);
 
   render();
 }
@@ -769,10 +775,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       Object.keys(merged).forEach(k => { GAME_CONFIG[k] = merged[k]; });
 
       hydrateScenarioFunctionsFromConfig(GAME_CONFIG);
-    }
 
-    // ✅ scegli domande per la prima run (anche se non c'è external)
-    selectQuestionsForRun();
+      // ✅ domande: applica rotazione + normalizzazione
+      applyQuestionRotation(GAME_CONFIG);
+    } else {
+      // anche in fallback embedded: garantisci questions coerente
+      GAME_CONFIG.questions = buildQuestionsFromConfig(GAME_CONFIG);
+    }
 
     console.log("[SCENARIO LOADED]", {
       scenario: GAME_CONFIG.scenario,
@@ -784,8 +793,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   } catch (e) {
     console.warn("Scenario JSON non caricato, uso config embedded.", e);
-    // anche in fallback: domande pronte
-    selectQuestionsForRun();
+    GAME_CONFIG.questions = buildQuestionsFromConfig(GAME_CONFIG);
   }
 
   render();
