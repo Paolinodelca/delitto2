@@ -782,10 +782,19 @@ function renderObservations(observations) {
   root.appendChild(closing);
 
   el("retryBtn").onclick = () => resetRun(true);
-  el("changeBtn").onclick = () => { window.location.href = window.location.pathname; };
+
+  // ✅ invece di "window.location.pathname" (che ti riportava al default),
+  // portiamo SEMPRE alla pagina scenari, rispettando base repo su Pages.
+  el("changeBtn").onclick = () => {
+    const base = (typeof getRepoBasePath === "function") ? getRepoBasePath() : "";
+    window.location.href = `${base}/scenario.html?v=${Date.now()}`;
+  };
 
   fadeIn(container);
 }
+
+
+
 
 /* ======================================================
    AVVIO

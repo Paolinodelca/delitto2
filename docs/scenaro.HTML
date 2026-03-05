@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Delitto2 — Scenari</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 22px; background:#0b0f19; color:#e8eefc; }
+    .wrap { max-width: 860px; margin: 0 auto; }
+    h1 { margin: 0 0 10px 0; font-size: 1.6rem; }
+    p { margin: 0 0 16px 0; opacity: 0.9; line-height: 1.5; }
+    .grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 14px; }
+    .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 14px; }
+    .card h2 { margin: 0 0 6px 0; font-size: 1.1rem; }
+    .meta { opacity: 0.85; font-size: 0.95rem; line-height: 1.4; min-height: 3.8em; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px; }
+    button {
+      padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.08); color:#e8eefc; cursor:pointer; font-size: 0.95rem;
+    }
+    button.primary { background: #ffffff; color:#0b0f19; border: 1px solid #ffffff; font-weight: 700; }
+    button:hover { filter: brightness(1.08); }
+    .small { margin-top: 16px; font-size: 0.9rem; opacity: 0.8; }
+    code { background: rgba(255,255,255,0.08); padding: 2px 6px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Scenari — FRINGE / LEAK</h1>
+    <p>Scegli un “vestito”. La UI resta la stessa: cambiano contesto e domande via JSON.</p>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Batman</h2>
+        <div class="meta">Politico-mediatico: reputazione, versione pubblica vs privata, danno d’immagine.</div>
+        <div class="row">
+          <button class="primary" onclick="go('batman')">Gioca Batman</button>
+          <button onclick="openJson('scenario_batman.json')">Apri JSON</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Partner geloso</h2>
+        <div class="meta">Relazione: fiducia, sospetto, segnali, coerenza emotiva.</div>
+        <div class="row">
+          <button class="primary" onclick="go('partner')">Gioca Partner</button>
+          <button onclick="openJson('scenario_partner_geloso.json')">Apri JSON</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Alieni</h2>
+        <div class="meta">Da completare: credibilità vs paranoia (vestito perfetto per domande “strane”).</div>
+        <div class="row">
+          <button class="primary" onclick="go('alieni')">Gioca Alieni</button>
+          <button onclick="openJson('scenario_alieni.json')">Apri JSON</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Fringe / Leak (canonico)</h2>
+        <div class="meta">Saturn Way: versione istituzionale originale (fallback embedded + JSON).</div>
+        <div class="row">
+          <button class="primary" onclick="go(null)">Gioca Canonico</button>
+          <button onclick="openJson('scenario_fringe_leak.json')">Apri JSON</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="small">
+      Nota: se un JSON ha un errore di sintassi, il loader ripiega sul fallback (Saturn).  
+      Per forzare bypass cache, aggiungiamo <code>&v=timestamp</code> automaticamente.
+    </div>
+  </div>
+
+  <script>
+    // Base repo: "/delitto2" su GitHub Pages, "" su Vercel/local
+    function repoBase() {
+      if (!location.hostname.endsWith("github.io")) return "";
+      const parts = location.pathname.split("/").filter(Boolean);
+      const repo = parts[0] || "";
+      return repo ? `/${repo}` : "";
+    }
+
+    function go(s) {
+      const base = repoBase();
+      const v = Date.now();
+      const url = s ? `${base}/?s=${encodeURIComponent(s)}&v=${v}` : `${base}/?v=${v}`;
+      location.href = url;
+    }
+
+    function openJson(file) {
+      const base = repoBase();
+      // JSON pubblici stanno in /data/ (pubblicato da docs/data/)
+      location.href = `${base}/data/${file}?v=${Date.now()}`;
+    }
+  </script>
+</body>
+</html>
