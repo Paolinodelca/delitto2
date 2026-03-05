@@ -299,3 +299,52 @@ ULTIMO AGGIORNAMENTO:
 3) Vestire altri scenari (partner geloso, alieni) con gli stessi campi del JSON Batman:
    - scenario, companyName, setting, roles, introText, microcopyText, scenarioHtmlTemplate, contextHtmlTemplate, questionSets
 4) Freeze RC nuovo quando 3 scenari sono stabili su Pages + observe su Vercel.
+
+---
+
+## UPDATE (2026-03-04) — Batman, JSON fragili, rotazione domande
+
+### Stato (oggi)
+- Demo su GitHub Pages: https://paolinodelca.github.io/delitto2/
+- Parametro scenario: `?s=batman`
+- Loader scenario: prova `./data/<file>` e `/<repo>/data/<file>` (repo base ricavata da pathname).
+- Quando il JSON ha anche un solo errore di sintassi (virgola, virgolette, newline non escapato dentro stringhe HTML), il parse fallisce e l’app torna al fallback embedded (Saturn).
+
+### Sintomi osservati
+- Console tipo:
+  - `[SCENARIO FETCH ERR] ... SyntaxError: Expected ',' or '}' ...`
+  - poi `[SCENARIO LOADED] { scenario: 'FRINGE / LEAK', companyName: 'Saturn Way', ... }`
+- Effetto: anche chiamando `?s=batman`, si vede Saturn perché il JSON Batman non è stato caricato.
+
+### Nota importante su HTML nel JSON
+- `contextHtmlTemplate` e `scenarioHtmlTemplate` devono essere stringhe JSON valide:
+  - niente newline “veri” dentro la stringa (se servono, usare `\\n` o tenere tutto su una riga)
+  - virgolette interne sempre escapate (`\"`)
+  - evitare di incollare testo con virgolette “smart” se l’editor le rompe (non è vietato, ma alcuni editor fanno disastri)
+
+### Rotazione domande (fix)
+- Prima: la rotazione avveniva solo al refresh pagina.
+- Fix implementato in `docs/app.js`:
+  - funzione `applyQuestionRotation(GAME_CONFIG)` chiamata sia all’avvio sia su `resetRun()` (tasto “Riprova”)
+  - così i `questionSets` alternano set anche senza ricaricare la pagina.
+
+### Batman (direzione narrativa confermata)
+- Scenario più “reale”: mattina dopo, a casa, telefoni/messaggi da stampa/collega/partner.
+- Domande etichettate per “voce” (STAMPA / COLLEGA / PARTNER) — concettualmente funziona.
+- Box contesto da allineare a questa cornice (niente “commissione” se non voluta): usare `contextHtmlTemplate` nel JSON.
+
+### Prossimi step (ordine)
+1) Stabilizzare definitivamente `scenario_batman.json`:
+   - aprire direttamente l’URL pubblico del JSON e verificare che il browser lo mostri senza errori
+   - se in console appare ancora `SyntaxError ... position ...`, correggere il JSON e ricommittare.
+2) Verificare rotazione:
+   - avvia `?s=batman`, gioca fino in fondo, premi “Riprova con un’altra versione”:
+     deve cambiare set (log `[QSET ROTATION]` in console).
+3) Fare lo stesso schema per `scenario_partner_geloso.json` e `scenario_alieni.json`:
+   - `scenario`, `companyName`, `setting`
+   - `roles` + `contextHtmlTemplate`
+   - `scenarioHtmlTemplate`
+   - `questionSets` (almeno 2–3 set)
+
+Freeze prossimo:
+- Quando 3 scenari funzionano stabilmente su Pages + observe su Vercel, taggare una nuova RC.

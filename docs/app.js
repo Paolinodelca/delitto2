@@ -182,11 +182,27 @@ function getScenarioKeyForRotation(cfg) {
 
 function pickNextQuestionSet(questionSets, scenarioKey) {
   const storageKey = `fringe_qset_${scenarioKey}`;
+  const initKey = `${storageKey}_init`;
+
+  // Safety: se non è un array valido, non esplodere mai
+  if (!Array.isArray(questionSets) || questionSets.length === 0) return null;
+
+  // Se è la primissima volta per questo scenario, scegli un punto di partenza random
+  const wasInitialized = localStorage.getItem(initKey) === "1";
+  if (!wasInitialized) {
+    const startIdx = Math.floor(Math.random() * questionSets.length);
+    localStorage.setItem(storageKey, String(startIdx));
+    localStorage.setItem(initKey, "1");
+  }
+
   let idx = parseInt(localStorage.getItem(storageKey) || "0", 10);
   if (!Number.isInteger(idx) || idx < 0) idx = 0;
 
   const chosen = questionSets[idx % questionSets.length];
+
+  // Avanza in modo deterministico (0→1→2…)
   localStorage.setItem(storageKey, String((idx + 1) % questionSets.length));
+
   return chosen;
 }
 
@@ -472,16 +488,19 @@ function renderContextBox() {
 /* ======================================================
    API
    ====================================================== */
-
 async function fetchObservationsFromAPI() {
-  const roles = GAME_CONFIG.roles || {};
+  const roles = (GAME_CONFIG && GAME_CONFIG.roles) ? GAME_CONFIG.roles : {};
+
+  // Fallback neutrali anti-leak Saturn
+  const responsabile = (roles.responsabile && String(roles.responsabile).trim()) ? roles.responsabile : "Interlocutore";
+  const amico = (roles.amico && String(roles.amico).trim()) ? roles.amico : "Contatto interno";
 
   const payload = {
     scenario: GAME_CONFIG.scenario,
     context: {
-      responsabile: roles.responsabile || "Walter",
-      amico: roles.amico || "Alex",
-      partner: partnerName || "Eva/Adamo",
+      responsabile,
+      amico,
+      partner: partnerName || "Partner",
       ambiente: GAME_CONFIG.setting || ""
     },
     playerModel,
@@ -505,6 +524,12 @@ async function fetchObservationsFromAPI() {
   const json = await res.json();
   return json.osservazioni; // { fringe, psicologico, amplificato }
 }
+
+
+
+
+
+
 
 /* ======================================================
    RENDER

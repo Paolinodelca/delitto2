@@ -6,8 +6,8 @@
 
 "roles": {
   "responsabile": "Stampa",
-  "amico": "Massimiliano (collega e portavoce)",
-  "partnerRoleLabel": "Partner"
+  "amico": "Massimiliano",
+  "partner": "Partner"
 },
 
 "contextHtmlTemplate": "<div class=\"contextBox\"><h3>Mattina dopo</h3><div>Sei a casa. Il telefono vibra senza tregua. La storia non la controlli più: circola a pezzi (clip, audio, chat, allusioni). Non stai difendendo i fatti: stai rendendo accettabile una versione.</div><h4 style=\"margin-top:10px;\">Chi ti sta contattando</h4><ul><li><strong>{{roleResponsabile}}</strong> – titoli, domande secche, richiesta di una frase “pulita”</li><li><strong>{{roleAmico}}</strong> – ti chiede coerenza e disciplina: “dimmi cosa devo dire”</li><li><strong>{{partnerName}}</strong> – non vuole uno slogan: vuole capire cosa significa per voi</li></ul></div>",
