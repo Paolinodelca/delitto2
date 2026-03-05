@@ -2,23 +2,72 @@
   "scenario": "FRINGE / LEAK — PARTNER GELOSO",
   "exposureLabel": "Livello di esposizione",
   "companyName": "Casa",
+  "setting": "Relazione personale: fiducia, sospetto, interpretazione dei segnali.",
+
+  "roles": {
+    "responsabile": "Io",
+    "amico": "Un amico in comune",
+    "partner": "Partner"
+  },
+
+  "contextHtmlTemplate": "<div class=\"contextBox\"><h3>Questa mattina</h3><div>Siamo in cucina. Il telefono è sul tavolo. Ho visto abbastanza per farmi delle domande.</div><h4 style=\"margin-top:10px;\">Chi pesa in questa storia</h4><ul><li><strong>{{roleResponsabile}}</strong> – io, che sto cercando di capire se fidarmi</li><li><strong>{{roleAmico}}</strong> – qualcuno che potrebbe avere visto qualcosa</li><li><strong>{{partnerName}}</strong> – tu, che stai cercando di rendere accettabile la tua versione</li></ul></div>",
+
   "introTitle": "PARTNER GELOSO",
-  "introText": "<p><strong>Questo non è un test.</strong></p><p>Non sei davanti a una commissione: sei davanti a me.<br>E io ho già visto abbastanza per farmi venire delle domande.</p><p>Non valuto la verità assoluta.<br>Valuto <em>come</em> provi a rendere accettabile quello che mi stai dicendo.</p>",
-  "microcopyText": "<p>Non stiamo ricostruendo i fatti minuto per minuto.</p><p>Stiamo guardando come difendi una versione quando sei sotto pressione.</p><p>Rispondi a 5 domande. Io incalzo.</p>",
+  "introText": "<p><strong>Questo non è un interrogatorio ufficiale.</strong></p><p>È una conversazione tra due persone che si conoscono troppo bene.</p><p>Non sto cercando la verità assoluta.<br>Sto osservando <em>come</em> rendi credibile quello che mi stai dicendo.</p>",
+
+  "scenarioHtmlTemplate": "<p>Ieri sera sei rientrato/a tardi.</p><p>Non è solo l’orario: sono i dettagli. Una risposta arrivata troppo veloce. Una notifica sparita. Un tono di voce leggermente diverso.</p><p>Non ho prove definitive. Ma ho abbastanza frammenti da voler capire.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come raccontarlo.</em></p>",
+
+  "microcopyText": "<p>Non stiamo ricostruendo ogni minuto della serata.</p><p>Stiamo osservando come difendi una versione quando qualcuno vicino a te non è convinto.</p><p>Rispondi a 5 domande. Io incalzo.</p>",
+
   "questionSets": [
+
     [
-      "Partiamo semplice: dov’eri davvero? Non “più o meno”. Dove.",
-      "Perché non mi hai risposto subito? Dimmi la ragione che ti sembra più difendibile.",
-      "Chi era con te? E non dirmi “gente”. Chi.",
-      "C’è un dettaglio che stai evitando perché pensi che mi farebbe cambiare lettura?",
-      "Se ti chiedessi: “se fossi al mio posto, cosa penseresti?”, che risposta daresti senza scappare?"
+      "[PARTNER] Partiamo semplice: dov’eri davvero? Non “più o meno”. Dove.",
+      "[PARTNER] Perché non mi hai risposto subito? Dimmi la ragione che ti sembra più difendibile.",
+      "[PARTNER] Chi era con te? Non dirmi “gente”. Chi.",
+      "[PARTNER] C’è un dettaglio che stai evitando perché pensi che mi farebbe cambiare idea?",
+      "[PARTNER] Se fossi al mio posto, quale parte di questa storia ti farebbe dubitare?"
     ],
+
     [
-      "Ho visto una notifica comparire sul tuo telefono e sparire. Che cosa devo capire da quella velocità?",
-      "Mi hai detto che era una cosa breve. Allora perché rientri con addosso un’aria da “fine del mondo”?",
-      "Hai usato la parola “tranquillo/a”. Quando la dici, che cosa stai cercando di farmi fare: calmarmi o smettere di chiedere?",
-      "Se io avessi una sola versione parziale di questa storia, quale sarebbe quella che ti condanna di più?",
-      "Ti do l’ultima: dimmi una cosa concreta che posso verificare. Una."
+      "[PARTNER] Ho visto una notifica comparire e sparire. Che cosa dovrei capire da quella velocità?",
+      "[PARTNER] Mi hai detto che era una cosa breve. Allora perché torni con quell’aria da fine del mondo?",
+      "[PARTNER] Quando dici “tranquillo/a”, stai cercando di calmarmi o di chiudere la conversazione?",
+      "[PARTNER] Se io avessi solo una versione incompleta di questa storia, quale pezzo ti metterebbe più in difficoltà?",
+      "[PARTNER] Dimmi una cosa concreta che potrei verificare. Una sola."
+    ],
+
+    [
+      "[PARTNER] Quando ti ho chiesto dove eri, hai risposto troppo velocemente. Era preparata?",
+      "[PARTNER] C’è qualcuno che preferiresti non nominare in questa storia?",
+      "[PARTNER] Se la serata fosse raccontata da un’altra persona presente, che cosa direbbe di diverso?",
+      "[PARTNER] Qual è il punto della storia dove pensi che io abbia iniziato a dubitare?",
+      "[PARTNER] Se ti dicessi che non mi convinci, quale parte proveresti a spiegare meglio?"
+    ],
+
+    [
+      "[PARTNER] Che differenza c’è tra quello che mi stai raccontando e quello che diresti a un amico?",
+      "[PARTNER] C’è un momento della serata in cui hai pensato: “questa cosa è meglio non raccontarla”?",
+      "[PARTNER] Se togliamo tutte le giustificazioni, qual è il fatto nudo di questa storia?",
+      "[PARTNER] C’è qualcuno che potrebbe raccontare la serata in modo più preciso di te?",
+      "[PARTNER] Che cosa ti preoccupa di più: che io non ti creda o che io capisca troppo bene?"
+    ],
+
+    [
+      "[PARTNER] Quando ti guardo mentre racconti, vedo che scegli molto bene le parole. Che cosa stai cercando di evitare?",
+      "[PARTNER] Qual è la versione più semplice della storia, quella senza protezioni?",
+      "[PARTNER] Se questa conversazione avvenisse tra una settimana, cosa cambierebbe nel tuo racconto?",
+      "[PARTNER] C’è un dettaglio piccolo ma vero che renderebbe tutto più credibile?",
+      "[PARTNER] Se io decidessi di fidarmi comunque, quale responsabilità ti staresti prendendo?"
+    ],
+
+    [
+      "[PARTNER] C’è qualcosa che non mi stai dicendo perché pensi che reagirei male?",
+      "[PARTNER] In questa storia, che ruolo vuoi avere: quello che spiega o quello che minimizza?",
+      "[PARTNER] Se io sentissi questa storia da qualcun altro, quale parte cambierebbe?",
+      "[PARTNER] Cosa ti farebbe dire: “ok, capisco perché dubiti”?",
+      "[PARTNER] Alla fine di questa conversazione, quale versione vorresti che io credessi?"
     ]
+
   ]
 }

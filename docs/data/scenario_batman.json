@@ -19,27 +19,50 @@
 
   "microcopyText": "<p>Non è una ricostruzione dei fatti.</p><p>È una valutazione di come sostieni una versione quando sai che verrà analizzata.</p><p>Rispondi a 5 domande. Ogni domanda aggiunge un dettaglio.</p>",
 
-  "questionSets": [
-    [
-      "[STAMPA] Sei stato fotografato a una festa del partito d’opposizione, mascherato da Batman. In quale cornice vuoi collocare questa scena?",
-      "[COLLEGA] Sostengono che tu abbia usato l’auto blu per arrivare “in incognito”. È un equivoco logistico o una scelta che rivendichi?",
-      "[STAMPA] Spunta un video: sei in piedi su un tavolo e fai uno spogliarello. Se lo riduci a “era caldo”, perché dovrebbero crederti?",
-      "[COLLEGA] Dicono che tu abbia scambiato un deputato per Alfred e gli abbia dato ordini. Che cosa stavi cercando di far sembrare normale?",
-      "[PARTNER] Domani c’è un voto delicato. Se ti chiedessi: “ci sei con la testa?”, qual è la tua risposta più credibile?"
-    ],  
-    [
-      "[STAMPA] Ti contestano un’incongruenza: hai detto “era una festa privata”, ma in sala c’erano due troupe. Che versione regge meglio?",
-      "[PARTNER] Una chat trapelata mostra che qualcuno ti scrive: “porta la maschera, così nessuno capisce”. Chi stai proteggendo con quella scena?",
-      "[COLLEGA] Dicono che tu abbia cantato l’inno dell’opposizione “per scherzo”. Che cos’è, per te, uno scherzo accettabile in politica?",
-      "[STAMPA] Il servizio d’ordine sostiene che hai rifiutato di mostrare il volto. Era timidezza, gioco, o controllo dell’immagine?",
-      "[PARTNER] Se questa storia venisse letta come un segnale (non come una goliardata), quale lettura ti danneggia di più e perché?"
-   ],  
-    [
-  "[STAMPA] Una clip ti mostra mentre fai il gesto del “cavaliere oscuro” davanti ai flash. È goliardia o messaggio? In quale cornice vuoi metterla?",
-  "[MASSIMILIANO] Mi serve una versione ripetibile in 12 parole. Qual è la tua frase, senza inciampare nei dettagli?",
-  "[STAMPA] Dicono che sia intervenuta la polizia. Se non vuoi negare frontalmente, come lo racconti senza peggiorare la cosa?",
-  "[PARTNER] Ieri eri “Batman”. Oggi chi sei? Che cosa devo credere, io, quando chiudi la porta di casa?",
-  "[MASSIMILIANO] Domani voti un provvedimento delicato. Se ti chiedono “sei affidabile?”, cosa rispondi senza suonare offeso?"
-   ]
+ "questionSets": [
+  [
+    "[STAMPA] Foto: tu, maschera da Batman, festa dell’opposizione. In una frase: che storia vuoi che questa immagine racconti?",
+    "[MASSIMILIANO] Ho bisogno di una versione *ripetibile* senza sembrare robot. Quali 3 punti non devono cambiare mai?",
+    "[STAMPA] Dicono: “auto blu per entrare in incognito”. Lo neghi, lo relativizzi, o lo rivendichi come scelta di sicurezza?",
+    "[STAMPA] Esce un audio dove urli: “Gotham mi deve rispetto!”. È goliardia o sfogo? Come lo rendi accettabile senza fare ridere (troppo)?",
+    "[PARTNER] A me non interessa Batman. Mi interessa perché non mi hai chiamato prima. Qual è la tua spiegazione che non sia uno slogan?"
+  ],
+  [
+    "[STAMPA] In sala c’erano due troupe. Tu avevi detto “privata”. Quale definizione salvi senza smentirti da solo?",
+    "[MASSIMILIANO] Se ti chiedono: “sei ricattabile?”, tu cosa rispondi senza suonare offeso o arrogante?",
+    "[STAMPA] Clip: sei in piedi su un tavolo, balli e fai il gesto del “cavaliere oscuro”. Che cornice dai: festa, provocazione, messaggio?",
+    "[STAMPA] Voce tossica: “è intervenuta la polizia”. Se non vuoi negare frontalmente, come lo racconti senza peggiorarlo?",
+    "[PARTNER] Stamattina io ti guardo e non capisco: eri in controllo o no? Dimmi dove finisce lo show e dove inizi tu."
+  ],
+  [
+    "[STAMPA] Titolo: “Batman dell’opposizione”. Se ti chiedo: “da che parte stavi?”, qual è la risposta più credibile e più corta possibile?",
+    "[MASSIMILIANO] Dammi una frase da 12 parole: deve reggere stampa, partito e casa. Qual è?",
+    "[STAMPA] Chat trapelata: “porta la maschera, così nessuno capisce”. Chi stavi proteggendo: te, qualcun altro, o la storia stessa?",
+    "[STAMPA] Dicono che hai rifiutato di toglierti la maschera anche quando te lo hanno chiesto. Timidezza, gioco, o controllo dell’immagine?",
+    "[PARTNER] La tua versione pubblica mi include o mi usa come scudo? Che posto ho io, davvero, in questa storia?"
+  ],
+  [
+    "[STAMPA] Se ti dico: “questa non è goliardia, è un segnale”, qual è la lettura che ti fa più male e perché?",
+    "[MASSIMILIANO] Il gruppo vuole sapere una cosa sola: “domani sei affidabile?”. Come rispondi senza promettere l’impossibile?",
+    "[STAMPA] Qualcuno dice che hai cantato l’inno dell’opposizione “per scherzo”. Cos’è, per te, uno scherzo accettabile in politica?",
+    "[STAMPA] Un deputato racconta che tu lo chiamavi “Alfred” e gli davi ordini. Che cosa stavi cercando di rendere normale?",
+    "[PARTNER] Se io ripeto la tua versione a un amico, suona vera o suona costruita? Qual è il pezzo che mi autorizzi a dire?"
+  ],
+  [
+    "[STAMPA] Ti do due cornici: (A) “era una festa e basta” (B) “era un gesto politico”. Quale scegli e quale rischia di più?",
+    "[MASSIMILIANO] Scegli: scarichi sulle circostanze o ti prendi una quota di responsabilità? Qual è la scelta che ti costa meno nel medio periodo?",
+    "[STAMPA] Dicono che tu abbia fatto battute su dossier e “segreti”. Se è ironia, perché farla proprio lì?",
+    "[STAMPA] Se mi chiedi di “contestualizzare”, qual è il contesto minimo che non apre altri buchi?",
+    "[PARTNER] Se la prossima volta succede una cosa simile, che regola tra noi cambia? Voglio una regola, non una scusa."
+  ],
+  [
+    "[STAMPA] In questo momento ti stanno leggendo tutti: chi ti ama, chi ti odia, chi ti aspetta al varco. A chi stai parlando davvero?",
+    "[MASSIMILIANO] Ti propongo una tattica: umiltà + una riga di ironia. La reggi senza sembrare finto? Come la scrivi?",
+    "[STAMPA] Domanda secca: “hai bevuto?”. Se dici sì, sei irresponsabile; se dici no, sembri evasivo. Come esci dal vicolo?",
+    "[STAMPA] Se la storia uscisse “a pezzi” (solo clip, solo audio, solo chat), qual è il pezzo che ti rovina di più e perché?",
+    "[PARTNER] Io devo decidere se fidarmi. Dimmi cosa devo credere quando chiudi la porta di casa, oggi."
   ]
+]
+
+
 }
