@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  console.log("OBSERVE VERSION: AMP-V8");
+  console.log("OBSERVE VERSION: AMP-V7");
 
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -20,7 +20,6 @@ export default async function handler(req, res) {
     const {
       scenario,
       context,
-      questions = [],
       playerModel,
       answers,
       observedAnchors = [],
@@ -32,10 +31,6 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Dati incompleti" });
     }
 
-    const trimmedQuestions = Array.isArray(questions)
-      ? questions.map(q => (q ?? "").toString().trim())
-      : [];
-
     const trimmedAnswers = Array.isArray(answers)
       ? answers.map(a => (a ?? "").toString().trim())
       : [];
@@ -44,6 +39,7 @@ export default async function handler(req, res) {
     const shortCount = trimmedAnswers.filter(a => a.length > 0 && a.length < 10).length;
     const total = trimmedAnswers.length;
 
+    // ✅ Ruoli neutrali: nessun leak Saturn
     const roleA = (context?.responsabile || "Interlocutore").toString().trim();
     const roleB = (context?.amico || "Contatto interno").toString().trim();
     const rolePartner = (context?.partner || "Partner").toString().trim();
@@ -61,11 +57,6 @@ Niente morale/verdetti (colpa, responsabilità, innocenza, verità, mentire, man
 Niente markdown, niente elenchi.
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”.
 NON nominare azioni specifiche del racconto. Parla solo della forma con cui vengono presentate.
-
-ORA HAI ACCESSO ANCHE ALLE DOMANDE.
-Usale solo per capire il frame, la pressione e il tipo di incalzare.
-NON valutare se il contenuto della risposta è “giusto” rispetto alla domanda.
-Osserva come il giocatore si dispone davanti alla domanda.
 
 VINCOLO ANTI-RIASSUNTO:
 Non nominare luoghi o eventi specifici salvo per dire che restano fuori campo.
@@ -95,11 +86,6 @@ DIVIETI:
 - niente markdown o elenchi
 - non introdurre nomi o ruoli diversi da quelli forniti nel contesto
 - niente giudizi di capacità/competenza/adeguatezza: vietate “capacità”, “incompetenza”, “adeguatezza”, “gestire bene/male”, “efficace”, “inefficace”
-
-ORA HAI ACCESSO ANCHE ALLE DOMANDE.
-Usale solo per capire pressione, tono e tipo di richiesta.
-NON valutare la correttezza fattuale della risposta rispetto alla domanda.
-Osserva il modo in cui il giocatore entra, devia, regge o schiva la domanda.
 
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”.
 
@@ -147,11 +133,6 @@ DIVIETI:
 - non introdurre nomi o ruoli diversi da quelli forniti nel contesto
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”
 
-ORA HAI ACCESSO ANCHE ALLE DOMANDE.
-Usale per capire il tipo di pressione, il frame e la qualità dell’incalzare.
-NON giudicare se il contenuto “risponde bene” in senso scolastico.
-Osserva come la risposta si dispone rispetto alla domanda: la affronta, la piega, la elude, la restringe, la allarga.
-
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
 
 Stile obbligatorio:
@@ -179,17 +160,6 @@ Almeno una frase deve rivelare una tensione implicita.
 `.trim()
     };
 
-    const exchanges = [];
-    const pairCount = Math.max(trimmedQuestions.length, trimmedAnswers.length);
-
-    for (let i = 0; i < pairCount; i++) {
-      const q = trimmedQuestions[i] || "[domanda non disponibile]";
-      const a = trimmedAnswers[i] || "[vuoto]";
-      exchanges.push(
-        `DOMANDA ${i + 1}:\n${q}\nRISPOSTA ${i + 1}:\n${a}`
-      );
-    }
-
     const userContext = `
 SCENARIO (IMMUTABILE):
 ${scenario}
@@ -209,8 +179,8 @@ QUALITÀ INPUT:
 - risposte molto brevi (<10 char): ${shortCount}
 - pressione dichiarata: ${pressureLevel}
 
-SCAMBIO DOMANDA / RISPOSTA:
-${exchanges.join("\n\n")}
+RISPOSTE:
+${trimmedAnswers.map((a, i) => `${i + 1}. ${a || "[vuoto]"}`).join("\n")}
 
 RICORRENZE OSSERVATE:
 ${Array.isArray(observedAnchors) && observedAnchors.length > 0 ? observedAnchors.slice(0, 8).join(", ") : "nessuna esplicita"}
@@ -218,7 +188,6 @@ ${Array.isArray(observedAnchors) && observedAnchors.length > 0 ? observedAnchors
 ISTRUZIONE FINALE:
 Non valutare la verità dei fatti.
 Osserva esclusivamente la forma dell’esposizione.
-Le domande servono solo come cornice interpretativa.
 Non importare nomi o ruoli da altri scenari.
 `.trim();
 

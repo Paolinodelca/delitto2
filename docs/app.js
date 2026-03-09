@@ -495,20 +495,17 @@ function renderContextBox() {
    API
    ====================================================== */
 async function fetchObservationsFromAPI() {
-  const roles = (GAME_CONFIG && GAME_CONFIG.roles) ? GAME_CONFIG.roles : {};
-
-  // Fallback neutrali anti-leak Saturn
-  const responsabile = (roles.responsabile && String(roles.responsabile).trim()) ? roles.responsabile : "Interlocutore";
-  const amico = (roles.amico && String(roles.amico).trim()) ? roles.amico : "Contatto interno";
+  const roles = GAME_CONFIG.roles || {};
 
   const payload = {
     scenario: GAME_CONFIG.scenario,
     context: {
-      responsabile,
-      amico,
+      responsabile: roles.responsabile || "Interlocutore",
+      amico: roles.amico || "Contatto interno",
       partner: partnerName || "Partner",
       ambiente: GAME_CONFIG.setting || ""
     },
+    questions: Array.isArray(GAME_CONFIG.questions) ? GAME_CONFIG.questions : [],
     playerModel,
     answers,
     observedAnchors,
@@ -530,7 +527,6 @@ async function fetchObservationsFromAPI() {
   const json = await res.json();
   return json.osservazioni; // { fringe, psicologico, amplificato }
 }
-
 
 
 
