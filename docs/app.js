@@ -145,6 +145,12 @@ function getRepoBasePath() {
   return repo ? `/${repo}` : "";
 }
 
+function goToScenarioSelector() {
+  const base = (typeof getRepoBasePath === "function") ? getRepoBasePath() : "";
+  window.location.href = `${base}/scenario.html?v=${Date.now()}`;
+}
+
+
 function hydrateScenarioFunctionsFromConfig(cfg) {
   // intro / microcopy: accetta alias JSON
   if (typeof cfg.introHtml === "string" && !cfg.introText) cfg.introText = cfg.introHtml;
@@ -730,9 +736,15 @@ function renderObservations(observations) {
   `;
 
   const normalized = {
-    fringe: typeof observations?.fringe === "string" ? observations.fringe : JSON.stringify(observations?.fringe ?? ""),
-    psicologico: typeof observations?.psicologico === "string" ? observations.psicologico : JSON.stringify(observations?.psicologico ?? ""),
-    amplificato: typeof observations?.amplificato === "string" ? observations.amplificato : JSON.stringify(observations?.amplificato ?? "")
+    fringe: typeof observations?.fringe === "string"
+      ? observations.fringe
+      : JSON.stringify(observations?.fringe ?? ""),
+    psicologico: typeof observations?.psicologico === "string"
+      ? observations.psicologico
+      : JSON.stringify(observations?.psicologico ?? ""),
+    amplificato: typeof observations?.amplificato === "string"
+      ? observations.amplificato
+      : JSON.stringify(observations?.amplificato ?? "")
   };
 
   currentObservations = normalized;
@@ -782,17 +794,10 @@ function renderObservations(observations) {
   root.appendChild(closing);
 
   el("retryBtn").onclick = () => resetRun(true);
-
-  // ✅ invece di "window.location.pathname" (che ti riportava al default),
-  // portiamo SEMPRE alla pagina scenari, rispettando base repo su Pages.
-  el("changeBtn").onclick = () => {
-    const base = (typeof getRepoBasePath === "function") ? getRepoBasePath() : "";
-    window.location.href = `${base}/scenario.html?v=${Date.now()}`;
-  };
+  el("changeBtn").onclick = () => goToScenarioSelector();
 
   fadeIn(container);
 }
-
 
 
 

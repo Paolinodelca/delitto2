@@ -31,17 +31,8 @@
 
     <div class="grid">
       <div class="card">
-        <h2>Fringe / Leak (canonico)</h2>
-        <div class="meta">Saturn Way · audit interno · baseline per confronti</div>
-        <div class="row">
-          <button class="primary" onclick="go('fringe')">Gioca canonico</button>
-          <button onclick="openJson('scenario_fringe_leak.json')">Apri JSON</button>
-        </div>
-      </div>
-
-      <div class="card">
         <h2>Batman</h2>
-        <div class="meta">Politico-mediatico: reputazione, versione pubblica vs privata, danno d’immagine</div>
+        <div class="meta">Politico-mediatico: reputazione, versione pubblica vs privata, danno d’immagine.</div>
         <div class="row">
           <button class="primary" onclick="go('batman')">Gioca Batman</button>
           <button onclick="openJson('scenario_batman.json')">Apri JSON</button>
@@ -50,7 +41,7 @@
 
       <div class="card">
         <h2>Partner geloso</h2>
-        <div class="meta">Relazione: fiducia, sospetto, segnali, coerenza emotiva</div>
+        <div class="meta">Relazione: fiducia, sospetto, segnali, coerenza emotiva.</div>
         <div class="row">
           <button class="primary" onclick="go('partner')">Gioca Partner</button>
           <button onclick="openJson('scenario_partner_geloso.json')">Apri JSON</button>
@@ -59,25 +50,31 @@
 
       <div class="card">
         <h2>Alieni</h2>
-        <div class="meta">Credibilità della percezione: testimonianza, dubbio, lettura ostile</div>
+        <div class="meta">Da completare: credibilità vs paranoia (vestito perfetto per domande “strane”).</div>
         <div class="row">
           <button class="primary" onclick="go('alieni')">Gioca Alieni</button>
           <button onclick="openJson('scenario_alieni.json')">Apri JSON</button>
         </div>
       </div>
-    </div>
 
-    <div class="row">
-      <button onclick="goHome()">Torna alla home demo</button>
+      <div class="card">
+        <h2>Fringe / Leak (canonico)</h2>
+        <div class="meta">Saturn Way: versione istituzionale originale (fallback embedded + JSON).</div>
+        <div class="row">
+          <button class="primary" onclick="go(null)">Gioca Canonico</button>
+          <button onclick="openJson('scenario_fringe_leak.json')">Apri JSON</button>
+        </div>
+      </div>
     </div>
 
     <div class="small">
-      Nota: se un JSON ha un errore di sintassi, il loader ripiega sul fallback.  
+      Nota: se un JSON ha un errore di sintassi, il loader ripiega sul fallback (Saturn).  
       Per forzare bypass cache, aggiungiamo <code>&v=timestamp</code> automaticamente.
     </div>
   </div>
 
   <script>
+    // Base repo: "/delitto2" su GitHub Pages, "" su Vercel/local
     function repoBase() {
       if (!location.hostname.endsWith("github.io")) return "";
       const parts = location.pathname.split("/").filter(Boolean);
@@ -88,19 +85,13 @@
     function go(s) {
       const base = repoBase();
       const v = Date.now();
-      const url = s
-        ? `${base}/play.html?s=${encodeURIComponent(s)}&v=${v}`
-        : `${base}/play.html?v=${v}`;
+      const url = s ? `${base}/?s=${encodeURIComponent(s)}&v=${v}` : `${base}/?v=${v}`;
       location.href = url;
-    }
-
-    function goHome() {
-      const base = repoBase();
-      location.href = `${base}/index.html?v=${Date.now()}`;
     }
 
     function openJson(file) {
       const base = repoBase();
+      // JSON pubblici stanno in /data/ (pubblicato da docs/data/)
       location.href = `${base}/data/${file}?v=${Date.now()}`;
     }
   </script>

@@ -379,3 +379,50 @@ Freeze prossimo:
 ### Risultato atteso
 - Batman e Partner geloso dovrebbero smettere di mostrare riferimenti Saturn nei report.
 - La PAROLA-OMBRA dovrebbe variare di più tra run diverse.
+
+## UPDATE (2026-03-09) — Landing page demo + play.html + selector scenari
+
+### Stato
+- La demo è stata riorganizzata in 3 pagine distinte:
+  - `docs/index.html` = landing page / ingresso semplice
+  - `docs/scenario.html` = selezione scenari
+  - `docs/play.html` = gioco vero e proprio (carica `app.js`)
+- Obiettivo: rendere la demo più presentabile e separare bene:
+  - home
+  - scelta scenario
+  - esecuzione del gioco
+
+### Struttura nuova link pubblici
+- Home demo:
+  `https://paolinodelca.github.io/delitto2/`
+- Selettore scenari:
+  `https://paolinodelca.github.io/delitto2/scenario.html`
+- Gioco diretto:
+  `https://paolinodelca.github.io/delitto2/play.html?s=<scenario>`
+
+### Scenari attuali
+- `?s=fringe`
+- `?s=batman`
+- `?s=partner`
+- `?s=alieni`
+
+### Modifica in docs/app.js
+- Aggiunta funzione:
+  `goToScenarioSelector()`
+- Il bottone “Cambia scenario” in `renderObservations()` ora rimanda sempre a:
+  `scenario.html`
+  invece di resettare il path corrente.
+
+### Vantaggio
+- La demo ora ha una home pulita da mostrare.
+- Il gioco non è più “attaccato” direttamente a `index.html`.
+- Più facile da presentare a terzi come concept demo.
+
+### Nota importante
+- Il file `docs/play.html` è ora il contenitore del gioco.
+- `docs/index.html` non deve più caricare direttamente `app.js`: è solo pagina di ingresso.
+
+### Prossimo obiettivo
+- Rifinire i testi delle domande scenario per scenario.
+- Verificare che `observe.js` aggiornato elimini davvero ogni leak Saturn nei report.
+- Fare freeze della demo stabile (tag Git dedicato).
