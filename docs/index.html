@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FRINGE / LEAK — Demo</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #121b2f;
+      --line: rgba(255,255,255,.12);
+      --text: #e8eefc;
+      --muted: rgba(232,238,252,.78);
+      --accent: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg, #0b1220 0%, #0f1729 100%);
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    .hero {
+      padding: 28px 22px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,.03);
+      backdrop-filter: blur(4px);
+    }
+
+    h1 {
+      margin: 0 0 10px 0;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1.05;
+      letter-spacing: .02em;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.55;
+      max-width: 760px;
+    }
+
+    .ctaRow {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      padding: 12px 15px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: rgba(255,255,255,.05);
+      font-weight: 600;
+    }
+
+    .btn.primary {
+      background: var(--accent);
+      color: #0b1220;
+      border-color: var(--accent);
+    }
+
+    .section {
+      margin-top: 26px;
+    }
+
+    .section h2 {
+      margin: 0 0 10px 0;
+      font-size: 1.12rem;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: var(--panel);
+    }
+
+    .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 1rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.45;
+      min-height: 4.4em;
+    }
+
+    .card .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .small {
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.5;
+    }
+
+    code {
+      background: rgba(255,255,255,.08);
+      padding: 2px 6px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>FRINGE / LEAK</h1>
+      <p class="subtitle">
+        Una demo narrativa che non valuta se una risposta è vera,
+        ma <strong>come</strong> quella risposta regge sotto lettura:
+        professionale, relazionale, sospettosa, laterale.
+      </p>
+
+      <div class="ctaRow">
+        <a class="btn primary" href="./scenario.html">Scegli uno scenario</a>
+        <a class="btn" href="./play.html?s=fringe">Apri scenario canonico</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Scenari disponibili</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>FRINGE / LEAK</h3>
+          <p>Scenario canonico: presidio, sicurezza, eccezione operativa, responsabilità distribuita.</p>
+          <div class="row">
+            <a class="btn" href="./play.html?s=fringe">Apri</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>BATMAN</h3>
+          <p>Reputazione pubblica, danno d’immagine, pressione mediatica, vita privata che rientra in scena.</p>
+          <div class="row">
+            <a class="btn" href="./play.html?s=batman">Apri</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>PARTNER GELOSO</h3>
+          <p>Fiducia, sospetto, segnali, omissioni e lettura affettiva delle risposte sotto pressione.</p>
+          <div class="row">
+            <a class="btn" href="./play.html?s=partner">Apri</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>ALIENI</h3>
+          <p>Credibilità della percezione, testimonianza fragile, rischio di apparire inaffidabile o costruito.</p>
+          <div class="row">
+            <a class="btn" href="./play.html?s=alieni">Apri</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="small">
+      Nota tecnica: il gioco vero gira in <code>play.html</code>, mentre questa è la pagina di ingresso.
+      In questo modo il link principale della demo resta pulito e presentabile.
+    </p>
+  </div>
+</body>
+</html>
