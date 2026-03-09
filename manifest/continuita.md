@@ -348,3 +348,34 @@ ULTIMO AGGIORNAMENTO:
 
 Freeze prossimo:
 - Quando 3 scenari funzionano stabilmente su Pages + observe su Vercel, taggare una nuova RC.
+
+## UPDATE (2026-03-06) — Observe.js neutralizzato / anti-leak Saturn
+
+### Stato
+- `api/observe.js` aggiornato a versione `AMP-V7`.
+- Rimossi i riferimenti hardcoded a `Walter / Alex / (partner)` dal prompt e dai fallback.
+- I ruoli ora vengono letti in modo neutro dal `context`:
+  - Interlocutore A
+  - Interlocutore B / contatto
+  - Partner / figura affettiva
+- Obiettivo: evitare leak Saturn nei report di Batman / Partner / futuri scenari.
+
+### Miglioramenti introdotti
+- `lastShadowWord` viene realmente usato nel prompt RELAZIONALE.
+- La whitelist di PAROLA-OMBRA è stata aggiornata:
+  - aggiunte: `crepa`, `esitazione`, `trattenimento`, `esposizione`
+  - tolta `rigidità` come default comodo
+- Il prompt ora chiede esplicitamente:
+  - di non importare nomi o ruoli da altri scenari
+  - di evitare parole-ombra generiche come “rigidità” o “difesa”
+
+### Fallback / Amplificato
+- In `enforceAmplificatoShape()` e nel fallback procedurale non compaiono più `Walter/Alex`.
+- I riferimenti agli altri ruoli sono ora formulati come:
+  - “gli altri interlocutori”
+  - “altri interlocutori”
+  - “contesto”
+
+### Risultato atteso
+- Batman e Partner geloso dovrebbero smettere di mostrare riferimenti Saturn nei report.
+- La PAROLA-OMBRA dovrebbe variare di più tra run diverse.

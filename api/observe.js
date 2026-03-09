@@ -1,15 +1,13 @@
 export default async function handler(req, res) {
-  console.log("OBSERVE VERSION: AMP-V6");
+  console.log("OBSERVE VERSION: AMP-V7");
 
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
 
-
-res.setHeader("Access-Control-Allow-Origin", "*");
-res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-if (req.method === "OPTIONS") {
-  return res.status(200).end();
-}
+  if (req.method === "OPTIONS") {
+    return res.status(200).end();
+  }
 
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Solo POST consentito" });
@@ -25,7 +23,8 @@ if (req.method === "OPTIONS") {
       playerModel,
       answers,
       observedAnchors = [],
-      pressureLevel = 0
+      pressureLevel = 0,
+      lastShadowWord = ""
     } = req.body || {};
 
     if (!scenario || !playerModel || !answers) {
@@ -40,11 +39,12 @@ if (req.method === "OPTIONS") {
     const shortCount = trimmedAnswers.filter(a => a.length > 0 && a.length < 10).length;
     const total = trimmedAnswers.length;
 
-    const roleWalter = context?.responsabile || "Walter";
-    const roleAlex = context?.amico || "Alex";
-    const rolePartner = context?.partner || "(partner)";
+    // ✅ Ruoli neutrali: nessun leak Saturn
+    const roleA = (context?.responsabile || "Interlocutore").toString().trim();
+    const roleB = (context?.amico || "Contatto interno").toString().trim();
+    const rolePartner = (context?.partner || "Partner").toString().trim();
+    const ambiente = (context?.ambiente || "Contesto non specificato.").toString().trim();
 
-    // ✅ modello configurabile da env (così non si rompe quando cambi modello)
     const model = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
     const prompts = {
@@ -53,17 +53,18 @@ Sei un OSSERVATORE ESTERNO. Parli in terza persona del GIOCATORE.
 NON ricostruire i fatti, NON riassumere eventi, NON dire “cosa è successo”.
 NON citare frasi, NON usare “nella risposta…”.
 NON attribuire intenzioni o stati interiori.
-Niente morale/verdettI (colpa, responsabilità, innocenza, verità, mentire, manipolazione).
+Niente morale/verdetti (colpa, responsabilità, innocenza, verità, mentire, manipolazione).
 Niente markdown, niente elenchi.
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”.
-NON nominare azioni specifiche del racconto (sostituzioni, aiuti, chiamate, spostamenti). Parla solo della forma con cui vengono presentate.
+NON nominare azioni specifiche del racconto. Parla solo della forma con cui vengono presentate.
 
 VINCOLO ANTI-RIASSUNTO:
-Non nominare luoghi o eventi specifici (es. sala controllo, logistica, ispezione) salvo per dire che restano fuori campo.
+Non nominare luoghi o eventi specifici salvo per dire che restano fuori campo.
 Non usare cronologia (“prima/poi/dopo”) né catene causali.
 
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione).
 Se produci più di 4 righe, o usi "-" o numeri, o markdown, RISCRIVI da capo rispettando il formato.
+
 OUTPUT OBBLIGATORIO: 4 righe, ciascuna inizia con l’etichetta esatta:
 
 PRIMO PIANO: (1 frase, cosa la forma mette davanti)
@@ -80,16 +81,17 @@ OBIETTIVO: LETTURA RELAZIONALE = impressione che la forma produce, senza diagnos
 
 DIVIETI:
 - niente intenzioni/stati interiori (“cerca di”, “vuole”, “per evitare”, ansia, insicurezza, confusione)
-- niente morale/verdettI (colpa, responsabilità, innocenza, verità, mentire, manipolazione)
+- niente morale/verdetti (colpa, responsabilità, innocenza, verità, mentire, manipolazione)
 - niente citazioni, niente “nella risposta…”
 - niente markdown o elenchi
-- non introdurre nomi diversi da: Walter, Alex, (partner)
+- non introdurre nomi o ruoli diversi da quelli forniti nel contesto
 - niente giudizi di capacità/competenza/adeguatezza: vietate “capacità”, “incompetenza”, “adeguatezza”, “gestire bene/male”, “efficace”, “inefficace”
 
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”.
 
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione).
 Se produci più di 5 righe, o usi "-" o numeri, o markdown, RISCRIVI da capo rispettando il formato.
+
 OUTPUT OBBLIGATORIO: 5 righe, ciascuna inizia con l’etichetta esatta:
 
 RITMO: (1 frase)
@@ -98,9 +100,11 @@ FUORI CAMPO: (1 frase, usa “resta fuori campo / rimane implicito”)
 
 PAROLA-OMBRA:
 scrivi solo la parola. niente spiegazione.
-opacità, attrito, urgenza, distanza, frizione, rigidità, scarto, sobrietà, pressione
+opacità, attrito, urgenza, distanza, frizione, scarto, sobrietà, pressione, crepa, esitazione, trattenimento, esposizione
 Preferisci parole meno letterali rispetto ai contenuti espliciti delle risposte.
-Evita di riutilizzare sempre la stessa parola-ombra; scegli quella che crea più attrito con il racconto.
+Evita parole generiche come “rigidità” o “difesa”.
+Evita di riutilizzare la stessa parola-ombra della run precedente.
+ULTIMA PAROLA-OMBRA DA EVITARE: ${lastShadowWord || "(nessuna)"}
 
 SOSPESO: (1 frase aperta; formula un rapporto tra due elementi della forma: es. “tra controllo e spontaneità”, “tra dettaglio e taglio”, “tra cornice e fuori campo”)
 
@@ -120,27 +124,27 @@ IPOTESI 2 — MESSA IN SCENA:
 
 DIVIETI:
 - non dire quale è vera
-- non citare eventi specifici del racconto (chiamate, turni, spostamenti, aiuti)
+- non citare eventi specifici del racconto
 - niente intenzioni esplicite (“cerca di”, “vuole”, “per evitare”, “strategia per”)
 - niente verdetti/morale (colpa, responsabilità, innocenza, verità, mentire, manipolazione)
 - niente giudizi di qualità/capacità (imprudente, scorretto, errore, debole)
 - niente “non è chiaro/manca/non spiega”: usa “resta fuori campo / rimane implicito”
 - niente citazioni, niente “nella risposta…”
-- non introdurre nomi diversi da: Walter, Alex, (partner)
+- non introdurre nomi o ruoli diversi da quelli forniti nel contesto
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”
 
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
 
 Stile obbligatorio:
 - vietato iniziare le frasi con: "La regia narrativa", "La struttura delle risposte", "La decisione di"
-Non riprendere o citare frammenti testuali presenti nelle ricorrenze osservate.
-Facoltativo: può comparire “tra … e …”.
-Evita formulazioni astratte come “la gestione di”, “l’aspetto”, “la questione”.
-Preferisci osservazioni concrete sulla logica del racconto.
+- non riprendere o citare frammenti testuali presenti nelle ricorrenze osservate
+- facoltativo: può comparire “tra … e …”
+- evita formulazioni astratte come “la gestione di”, “l’aspetto”, “la questione”
+- preferisci osservazioni concrete sulla logica del racconto
 
 VINCOLO ANTI-CLONE:
-- IPOTESI 1: criteri e trade-off (priorità, rischio, delega, soglia di accettabilità).
-- IPOTESI 2: regia (frame, cornice, compressione/dilatazione, ruolo Walter/Alex/partner come cornice, controllo del sospetto).
+- IPOTESI 1: criteri e trade-off (priorità, rischio, delega, soglia di accettabilità)
+- IPOTESI 2: regia (frame, cornice, compressione/dilatazione, ruolo degli altri come cornice, controllo del sospetto)
 Non ripetere la stessa idea in entrambe.
 Non riassumere la storia.
 
@@ -162,17 +166,18 @@ ${scenario}
 
 RUOLI — NON INTERPRETABILI:
 - Soggetto osservato: GIOCATORE
-- Responsabile gerarchico: ${roleWalter}
-- Collega / confidente: ${roleAlex}
-- Partner affettivo: ${rolePartner}
+- Interlocutore A: ${roleA}
+- Interlocutore B / contatto: ${roleB}
+- Partner / figura affettiva: ${rolePartner}
 
 AMBIENTE:
-${context?.ambiente ? context.ambiente : "Azienda che sviluppa tecnologie sensibili. La sicurezza è una condizione operativa, non simbolica."}
+${ambiente}
 
 QUALITÀ INPUT:
 - totale risposte: ${total}
 - risposte vuote: ${blankCount}
 - risposte molto brevi (<10 char): ${shortCount}
+- pressione dichiarata: ${pressureLevel}
 
 RISPOSTE:
 ${trimmedAnswers.map((a, i) => `${i + 1}. ${a || "[vuoto]"}`).join("\n")}
@@ -183,6 +188,7 @@ ${Array.isArray(observedAnchors) && observedAnchors.length > 0 ? observedAnchors
 ISTRUZIONE FINALE:
 Non valutare la verità dei fatti.
 Osserva esclusivamente la forma dell’esposizione.
+Non importare nomi o ruoli da altri scenari.
 `.trim();
 
     async function callLLM(systemPrompt) {
@@ -234,18 +240,15 @@ Osserva esclusivamente la forma dell’esposizione.
     psicOut = softenBannedWords(psicOut);
     ampOut = softenBannedWords(ampOut);
 
-    // ✅ prima metti in riga le label (se attaccate), poi estrai
-    
     fringeOut = ensureNewlinesBeforeLabels(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
-    psicOut   = ensureNewlinesBeforeLabels(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
+    psicOut = ensureNewlinesBeforeLabels(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
 
     fringeOut = enforceLabeledLines(fringeOut, ["PRIMO PIANO:", "FUORI CAMPO:", "AGENZIA:", "TENSIONE:"]);
-    psicOut   = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
+    psicOut = enforceLabeledLines(psicOut, ["RITMO:", "REGISTRO:", "FUORI CAMPO:", "PAROLA-OMBRA:", "SOSPESO:"]);
 
     const scarceInput = (blankCount + shortCount) >= Math.max(3, Math.floor(total * 0.6));
     ampOut = enforceAmplificatoShape(ampOut, scarceInput);
 
-    // ✅ pulizie finali (così NON possono essere annullate da fallback di formato)
     fringeOut = cleanPlaceholders(fringeOut);
     psicOut = cleanPlaceholders(psicOut);
     ampOut = cleanPlaceholders(ampOut);
@@ -286,7 +289,6 @@ function softenBannedWords(s) {
 function ensureNewlinesBeforeLabels(s, labels) {
   let t = (s || "");
   for (const lab of labels) {
-    // se una label appare in mezzo a una riga, la porta a capo
     t = t.replace(new RegExp(`\\s+(${escapeRegex(lab)})`, "g"), `\n$1`);
   }
   return t.trim();
@@ -296,16 +298,10 @@ function escapeRegex(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-
-/**
- * Se il modello mette più label nella stessa riga,
- * inseriamo newline prima di ogni label trovata “in mezzo al testo”.
- */
 function forceLabelNewlines(s, labels) {
   let t = (s || "");
   for (const lab of labels) {
     const esc = lab.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    // se la label non è già a inizio riga, la spostiamo su una nuova riga
     const re = new RegExp(`([^\\n])\\s*(${esc})`, "g");
     t = t.replace(re, `$1\n$2`);
   }
@@ -323,7 +319,6 @@ function enforceLabeledLines(s, labels) {
     if (found) out.push(found);
   }
 
-  // ✅ NON torniamo mai all’originale grezzo: almeno torna “pre” (già normalizzato)
   return out.length === labels.length ? out.join("\n") : pre.trim();
 }
 
@@ -333,7 +328,6 @@ function enforceAmplificatoShape(s, scarce = false) {
   const has1 = t.includes("IPOTESI 1 — SINCERO:");
   const has2 = t.includes("IPOTESI 2 — MESSA IN SCENA:");
 
-  // Se manca uno dei due blocchi: forza entrambi con fallback minimo (coerente e non “fantasioso”)
   if (!has1 || !has2) {
     const a = scarce
       ? "Il materiale è troppo scarso per far emergere un criterio stabile di priorità e soglie. Resta soprattutto una gestione per frammenti, senza trade-off leggibili. La delega e la copertura rimangono implicite."
@@ -341,7 +335,7 @@ function enforceAmplificatoShape(s, scarce = false) {
 
     const b = scarce
       ? "La regia è ridotta a opacità/assenza di materiale: non si costruisce un frame riconoscibile. Il fuori campo domina e non si stabilizza una sequenza. Resta un controllo minimo del sospetto per mancanza di dettagli."
-      : "La regia costruisce una cornice di ammissibilità: compressioni e dilatazioni guidano il ritmo. Walter, Alex e (partner) funzionano come elementi di frame più che come fatti. Il taglio delle informazioni mantiene fuori campo ciò che altrimenti cambierebbe la lettura.";
+      : "La regia costruisce una cornice di ammissibilità: compressioni e dilatazioni guidano il ritmo. Gli altri interlocutori funzionano come elementi di frame più che come fatti. Il taglio delle informazioni mantiene fuori campo ciò che altrimenti cambierebbe la lettura.";
 
     return [
       "IPOTESI 1 — SINCERO:",
@@ -351,12 +345,11 @@ function enforceAmplificatoShape(s, scarce = false) {
     ].join("\n").trim();
   }
 
-  // Caso normale: entrambi presenti → pulizia + “taglio” morbido (NON a 3 frasi fisse)
   const parts = t.split("IPOTESI 2 — MESSA IN SCENA:");
   const aRaw = parts[0].replace("IPOTESI 1 — SINCERO:", "").trim();
   const bRaw = (parts[1] || "").trim();
 
-  const aSent = splitSentences(aRaw).slice(0, 5); // fino a 5 frasi
+  const aSent = splitSentences(aRaw).slice(0, 5);
   const bSent = splitSentences(bRaw).slice(0, 5);
 
   return [
@@ -374,8 +367,6 @@ function splitSentences(text) {
     .map(x => x.trim())
     .filter(Boolean);
 }
-
-
 
 function cleanPlaceholders(s) {
   let t = (s || "");
@@ -414,7 +405,7 @@ function proceduralFallbackV2(body) {
 
   const psicologico = scarce
     ? "L’effetto principale è quello delle omissioni: chi legge riceve frammenti e deve colmare da sé i vuoti. Il registro resta minimale e non costruisce una traiettoria. Rimane una parola-ombra di opacità. La lettura resta sospesa. La forma non chiude."
-    : "Il ritmo alterna compressione e dilatazione: alcuni passaggi scorrono rapidi, altri si trattengono. Il registro oscilla tra sobrietà e maggiore controllo. Una parte del quadro resta fuori campo e produce un margine di non-detto. Rimane una parola-ombra di urgenza o attrito. La lettura resta sospesa.";
+    : "Il ritmo alterna compressione e dilatazione: alcuni passaggi scorrono rapidi, altri si trattengono. Il registro oscilla tra sobrietà e maggiore controllo. Una parte del quadro resta fuori campo e produce un margine di non-detto. Rimane una parola-ombra di attrito o esposizione. La lettura resta sospesa.";
 
   const amplificato = scarce
     ? [
@@ -434,7 +425,7 @@ function proceduralFallbackV2(body) {
         "L’azione tende a distribuirsi tra il giocatore e il contesto, con delega o spostamento del rischio.",
         "IPOTESI 2 — MESSA IN SCENA:",
         "La regia costruisce un frame di ammissibilità: i passaggi vengono compressi o dilatati per guidare la lettura.",
-        "Il personaggio viene definito per contrasto con altri ruoli, con teatralità sobria e gestione del sospetto.",
+        "Il personaggio viene definito per contrasto con altri interlocutori, con teatralità sobria e gestione del sospetto.",
         "Rimane un controllo della cornice più che una spiegazione: ciò che conta è come appare."
       ].join("\n");
 

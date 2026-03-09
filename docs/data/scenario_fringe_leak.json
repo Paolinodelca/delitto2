@@ -2,23 +2,51 @@
   "scenario": "FRINGE / LEAK",
   "exposureLabel": "Livello di esposizione",
   "companyName": "Saturn Way",
+  "setting": "Ambiente tecnico-istituzionale: sicurezza, presidio, responsabilità distribuita, eccezione operativa.",
+
+  "roles": {
+    "responsabile": "Walter",
+    "amico": "Alex",
+    "partner": "Partner"
+  },
+
+  "contextHtmlTemplate": "<div class=\"contextBox\"><h3>Contesto operativo</h3><div>Ti trovi sotto lettura interna. Non stai ricostruendo i fatti: stai rendendo leggibile una versione che regga il peso delle conseguenze.</div><h4 style=\"margin-top:10px;\">Figure in gioco</h4><ul><li><strong>{{roleResponsabile}}</strong> – responsabile diretto, cornice gerarchica</li><li><strong>{{roleAmico}}</strong> – collega presente, contatto di fiducia</li><li><strong>{{partnerName}}</strong> – presenza esterna che entra nella lettura della vicenda</li></ul></div>",
+
   "introTitle": "FRINGE / LEAK",
   "introText": "<p><strong>Questo non è un test.</strong></p><p>FRINGE / LEAK è una simulazione narrativa.<br>Ti viene chiesto di assumere un ruolo e rispondere come se le conseguenze delle tue risposte fossero reali.</p><p>Non valuta se hai detto la verità.<br>Osserva <em>come</em> rendi accettabili le tue decisioni sapendo che verranno lette, analizzate e interpretate.</p>",
+
+  "scenarioHtmlTemplate": "<p>Tu lavori per <strong>{{companyName}}</strong>, un’azienda di ricerca avanzata i cui standard di sicurezza sono molto alti.</p><p>Ti trovi davanti a una valutazione interna perché durante un tuo turno di guardia si è verificato un disservizio.</p><p>Hai sostituito <strong>Walter</strong> su sua richiesta. In sala di controllo era presente anche <strong>Alex</strong>, tuo collega e amico di lunga data.</p><p>Durante il turno sei stato contattato da <strong>{{partnerName}}</strong>, e per un breve periodo il presidio si è allentato.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come le azioni di questa vicenda verranno lette.</em></p>",
+
   "microcopyText": "<p>Questa non è una ricostruzione dei fatti.</p><p>È una valutazione di come rendi accettabili le tue decisioni.</p><p>Non ti viene chiesto di dire cosa è successo davvero,<br>ma quale versione dei fatti scegli di sostenere<br>quando sai che verrà letta, analizzata e interpretata.</p><p>Rispondi a 5 domande e verifica la lettura della tua esposizione.</p>",
+
   "questionSets": [
     [
-      "Descrivi con precisione perché ti trovavi in sala di controllo e cosa stavi facendo all’inizio del turno.",
-      "Quando hai lasciato la sala, cosa ti ha fatto ritenere accettabile farlo in quel momento?",
-      "C’è un elemento di questa vicenda che, se raccontato all’esterno, cambierebbe il modo in cui verrebbe letta?",
-      "Riguardando la sequenza degli eventi: in quale punto il sistema ha smesso di funzionare come previsto?",
-      "Se emergesse solo una versione parziale dei fatti, chi pensi che ne pagherebbe il prezzo più alto?"
+      "[COMMISSIONE] Descrivi con precisione perché ti trovavi in sala di controllo e cosa stavi facendo all’inizio del turno.",
+      "[COMMISSIONE] Quando hai lasciato la sala, cosa ti ha fatto ritenere accettabile farlo proprio in quel momento?",
+      "[COMMISSIONE] C’è un elemento di questa vicenda che, se raccontato all’esterno, cambierebbe il modo in cui verrebbe letta?",
+      "[COMMISSIONE] Riguardando la sequenza degli eventi: in quale punto il sistema ha smesso di funzionare come previsto?",
+      "[COMMISSIONE] Se emergesse solo una versione parziale dei fatti, chi pensi che ne pagherebbe il prezzo più alto?"
     ],
     [
-      "All’inizio del turno: quale era l’obiettivo operativo e che cosa ti ha fatto pensare che fosse “sotto controllo”?",
-      "Qual è stata la tua soglia mentale per dire: “posso assentarmi e non sto violando lo spirito del presidio”?",
-      "Se chi ti ascolta avesse solo tre informazioni in croce, quale sceglierebbe per incastrarti?",
-      "In quale punto il racconto smette di essere “procedura” e diventa “eccezione”?",
-      "Chi, in questa storia, rischia di pagare un prezzo sproporzionato rispetto a quello che ha fatto?"
+      "[COMMISSIONE] All’inizio del turno: qual era l’obiettivo operativo e che cosa ti ha fatto pensare che fosse tutto sotto controllo?",
+      "[COMMISSIONE] Qual è stata la tua soglia mentale per dirti: “posso assentarmi e non sto tradendo lo spirito del presidio”?",
+      "[COMMISSIONE] Se chi ti ascolta avesse solo tre informazioni in croce, quale sceglierebbe per incastrarti?",
+      "[COMMISSIONE] In quale punto il racconto smette di essere “procedura” e diventa “eccezione”?",
+      "[COMMISSIONE] Chi, in questa storia, rischia di pagare un prezzo sproporzionato rispetto a quello che ha fatto?"
+    ],
+    [
+      "[COMMISSIONE] Se dovessi raccontare il turno in modo da sembrare ancora affidabile, da quale dettaglio partiresti?",
+      "[COMMISSIONE] Quale passaggio della vicenda ti costringe a spiegare di più di quanto vorresti?",
+      "[COMMISSIONE] Che cosa rende questa storia meno leggibile come semplice “imprevisto”?",
+      "[COMMISSIONE] C’è un momento in cui la tua valutazione personale ha preso il posto della regola?",
+      "[COMMISSIONE] Se qualcuno dovesse difenderti, quale parte del racconto potrebbe usare senza peggiorarti?"
+    ],
+    [
+      "[COMMISSIONE] Quando ripensi a quel turno, qual è il punto in cui hai sentito che il controllo si stava assottigliando?",
+      "[COMMISSIONE] Quale pezzo della tua versione regge meglio, e quale invece richiede fiducia più che logica?",
+      "[COMMISSIONE] Se togliessimo i nomi propri e restasse solo la struttura, quale scelta apparirebbe più esposta?",
+      "[COMMISSIONE] C’è un dettaglio che sembra secondario ma che, letto bene, cambia il peso di tutto il resto?",
+      "[COMMISSIONE] Se dovessi indicare un’unica soglia superata, quale sarebbe?"
     ]
   ]
 }
