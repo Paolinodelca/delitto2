@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  console.log("OBSERVE VERSION: AMP-V9");
+  console.log("OBSERVE VERSION: AMP-V10");
 
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -71,6 +71,7 @@ SCRITTURA:
 - frasi concrete, pulite, non accademiche
 - evita formule come: “appare caratterizzato da”, “sembra utilizzare”, “tende a essere”, “la gestione di”, “l’aspetto”, “la questione”
 - preferisci verbi semplici: mette, lascia, sposta, stringe, allarga, devia, regge, schiva
+- evita costruzioni come “si mostra stato”, “tende a stare cercando”, “è caratterizzato da”
 
 VINCOLO ANTI-RIASSUNTO:
 Non nominare luoghi o eventi specifici salvo per dire che restano fuori campo.
@@ -110,6 +111,7 @@ SCRITTURA:
 - frasi concrete, non scolastiche
 - evita formule come: “appare caratterizzato da”, “sembra utilizzare”, “tende a essere”, “la gestione di”
 - non usare parole troppo cliniche o troppo astratte
+- evita costruzioni come “si mostra stato”, “tende a stare cercando”
 
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”.
 
@@ -128,6 +130,7 @@ opacità, attrito, urgenza, distanza, frizione, scarto, sobrietà, pressione, cr
 Preferisci parole meno letterali rispetto ai contenuti espliciti delle risposte.
 Evita parole generiche come “rigidità” o “difesa”.
 Evita di riutilizzare la stessa parola-ombra della run precedente.
+Evita di scegliere sempre “esitazione” se il testo non la giustifica davvero.
 ULTIMA PAROLA-OMBRA DA EVITARE: ${lastShadowWord || "(nessuna)"}
 
 SOSPESO: (1 frase aperta; formula un rapporto tra due elementi della forma: es. “tra controllo e spontaneità”, “tra dettaglio e taglio”, “tra cornice e fuori campo”)
@@ -169,6 +172,7 @@ STILE OBBLIGATORIO:
 - non riprendere o citare frammenti testuali presenti nelle ricorrenze osservate
 - evita formule come: “appare caratterizzato da”, “sembra utilizzare”, “tende a essere”, “la gestione di”, “l’aspetto”, “la questione”
 - preferisci osservazioni concrete sulla logica del racconto
+- evita costruzioni come “si mostra stato”, “tende a stare cercando”
 - facoltativo: può comparire “tra … e …”
 
 VINCOLO ANTI-CLONE:
@@ -299,6 +303,10 @@ Non importare nomi o ruoli da altri scenari.
     fringeOut = dewoodifyText(fringeOut);
     psicOut = dewoodifyText(psicOut);
     ampOut = dewoodifyText(ampOut);
+
+    fringeOut = polishGrammar(fringeOut);
+    psicOut = polishGrammar(psicOut);
+    ampOut = polishGrammar(ampOut);
 
     return res.status(200).json({
       osservazioni: { fringe: fringeOut, psicologico: psicOut, amplificato: ampOut }
@@ -435,7 +443,10 @@ function softenManualese(s) {
     .replace(/\bappare caratterizzato da\b/gi, "mostra")
     .replace(/\bsembra utilizzare\b/gi, "usa")
     .replace(/\btende a essere\b/gi, "risulta")
-    .replace(/\bappare guidata da\b/gi, "si dispone su");
+    .replace(/\bappare guidata da\b/gi, "si dispone su")
+    .replace(/\bsi mostra caratterizzato da\b/gi, "mostra")
+    .replace(/\bsi mostra focalizzato su\b/gi, "si concentra su")
+    .replace(/\bsi mostra impostato su\b/gi, "si dispone su");
   return t.trim();
 }
 
@@ -452,7 +463,37 @@ function dewoodifyText(s) {
     .replace(/\bpiuttosto alta\b/gi, "alta")
     .replace(/\bpiuttosto bassa\b/gi, "bassa")
     .replace(/\bmolto alta\b/gi, "alta")
-    .replace(/\bmolto bassa\b/gi, "bassa");
+    .replace(/\bmolto bassa\b/gi, "bassa")
+    .replace(/\bsi mostra stata\b/gi, "risulta")
+    .replace(/\bsi mostra stato\b/gi, "risulta")
+    .replace(/\bsi mostra caratterizzata da\b/gi, "mostra")
+    .replace(/\bsi mostra caratterizzato da\b/gi, "mostra")
+    .replace(/\bsi mostra operato\b/gi, "risulta costruito");
+  return t.trim();
+}
+
+function polishGrammar(s) {
+  let t = (s || "");
+  t = t
+    .replace(/\brestano implicito\b/gi, "restano implicite")
+    .replace(/\bresta impliciti\b/gi, "resta implicito")
+    .replace(/\bsi mostra stato fatto\b/gi, "risulta costruito")
+    .replace(/\bsi mostra stata fatta\b/gi, "risulta costruita")
+    .replace(/\bsi mostra stato\b/gi, "risulta")
+    .replace(/\bsi mostra stata\b/gi, "risulta")
+    .replace(/\btende a avere\b/gi, "tende ad avere")
+    .replace(/\bdella informazione\b/gi, "dell'informazione")
+    .replace(/\bdella innocenza\b/gi, "dell'innocenza")
+    .replace(/\ba una atmosfera\b/gi, "a un'atmosfera")
+    .replace(/\bun atmosfera\b/gi, "un'atmosfera")
+    .replace(/\buna atmosfera\b/gi, "un'atmosfera")
+    .replace(/\bdel giocatore sembra cercare\b/gi, "del giocatore cerca")
+    .replace(/\bsembra cercare\b/gi, "cerca")
+    .replace(/\bsembra mantenere\b/gi, "mantiene")
+    .replace(/\bsembra creare\b/gi, "crea")
+    .replace(/\bsembra controllare\b/gi, "controlla")
+    .replace(/\bsembra pesare\b/gi, "pesa")
+    .replace(/\bsembra privilegiare\b/gi, "privilegia");
   return t.trim();
 }
 
