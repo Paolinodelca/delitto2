@@ -23,32 +23,32 @@
 
     [
       "[PARTNER] Partiamo semplice: dov’eri davvero? Non “più o meno”. Dove.",
-      "[PARTNER] Perché non mi hai risposto subito? Dimmi la ragione che ti sembra più difendibile.",
+      "[PARTNER] Ieri sera ti ho scritto un messaggio. Perché non mi hai risposto subito? Io vengo sempre dopo tutti e tutto?",
       "[PARTNER] Chi era con te? Non dirmi “gente”. Chi.",
-      "[PARTNER] C’è un dettaglio che stai evitando perché pensi che mi farebbe cambiare idea?",
+      "[PARTNER] C’è qualcosa che non mi stai dicendo! Non so se il nostro rapporto si muova più su cose non dichiarate o più su bugie: cosa hai da dire su questo?",
       "[PARTNER] Se fossi al mio posto, quale parte di questa storia ti farebbe dubitare?"
     ],
 
     [
-      "[PARTNER] Ho visto una notifica comparire e sparire. Che cosa dovrei capire da quella velocità?",
+      "[PARTNER] Ho visto una notifica comparire e sparire. Si tratta solo di indecisione o hai solo rimediato furtivamente ad un tuo sbaglio di destinatario?",
       "[PARTNER] Mi hai detto che era una cosa breve. Allora perché torni con quell’aria da fine del mondo?",
-      "[PARTNER] Quando dici “tranquillo/a”, stai cercando di calmarmi o di chiudere la conversazione?",
-      "[PARTNER] Se io avessi solo una versione incompleta di questa storia, quale pezzo ti metterebbe più in difficoltà?",
-      "[PARTNER] Dimmi una cosa concreta che potrei verificare. Una sola."
+      "[PARTNER] Quando dici “tranquillo/a”, è un modo dal calmarmi o di chiudere la conversazione?",
+      "[PARTNER] Evidentemente io ho solo una versione incompleta di questa storia. Non capisco perchè non ti fidi di me! Ma allora perchè io dovrei fidarmi di te?",
+      "[PARTNER] Vorrei verificare la tua versione, ma ho paura di cosa succederebbe se lo facessi! Siamo davvero a questo punto?"
     ],
 
     [
-      "[PARTNER] Quando ti ho chiesto dove eri, hai risposto troppo velocemente. Era preparata?",
-      "[PARTNER] C’è qualcuno che preferiresti non nominare in questa storia?",
-      "[PARTNER] Se la serata fosse raccontata da un’altra persona presente, che cosa direbbe di diverso?",
+      "[PARTNER] Quando ti ho chiesto dove eri, hai risposto troppo velocemente. Ti sei preparato una versione per me?",
+      "[PARTNER] Io credo di meritare da te onestà. Ma come faccio a fidarmi di te se ti nascondi dietro scuse da studente liceale?",
+      "[PARTNER] Se la serata fosse raccontata da un’altra persona presente, che cosa direbbe di diverso da te?",
       "[PARTNER] Qual è il punto della storia dove pensi che io abbia iniziato a dubitare?",
       "[PARTNER] Se ti dicessi che non mi convinci, quale parte proveresti a spiegare meglio?"
     ],
 
     [
       "[PARTNER] Che differenza c’è tra quello che mi stai raccontando e quello che diresti a un amico?",
-      "[PARTNER] C’è un momento della serata in cui hai pensato: “questa cosa è meglio non raccontarla”?",
-      "[PARTNER] Se togliamo tutte le giustificazioni, qual è il fatto nudo di questa storia?",
+      "[PARTNER] C’è un momento della serata in cui hai pensato: “questa cosa è meglio non raccontarla”, vero?",
+      "[PARTNER] Se togliamo tutte le tue giustificazioni, qual è il fatto nudo di questa storia?",
       "[PARTNER] C’è qualcuno che potrebbe raccontare la serata in modo più preciso di te?",
       "[PARTNER] Che cosa ti preoccupa di più: che io non ti creda o che io capisca troppo bene?"
     ],
@@ -57,15 +57,15 @@
       "[PARTNER] Quando ti guardo mentre racconti, vedo che scegli molto bene le parole. Che cosa stai cercando di evitare?",
       "[PARTNER] Qual è la versione più semplice della storia, quella senza protezioni?",
       "[PARTNER] Se questa conversazione avvenisse tra una settimana, cosa cambierebbe nel tuo racconto?",
-      "[PARTNER] C’è un dettaglio piccolo ma vero che renderebbe tutto più credibile?",
-      "[PARTNER] Se io decidessi di fidarmi comunque, quale responsabilità ti staresti prendendo?"
+      "[PARTNER] Hai qualcosa in più da dire che possa convincermi a credere alla tua versione?",
+      "[PARTNER] Se io adesso decidessi di fidarmi ancora di te, quale responsabilità ti senti di prendendere nei miei confronti?"
     ],
 
     [
       "[PARTNER] C’è qualcosa che non mi stai dicendo perché pensi che reagirei male?",
       "[PARTNER] In questa storia, che ruolo vuoi avere: quello che spiega o quello che minimizza?",
       "[PARTNER] Se io sentissi questa storia da qualcun altro, quale parte cambierebbe?",
-      "[PARTNER] Cosa ti farebbe dire: “ok, capisco perché dubiti”?",
+      "[PARTNER] Non mi stai raccontando tutto! Come faccio a non dubitare di te?",
       "[PARTNER] Alla fine di questa conversazione, quale versione vorresti che io credessi?"
     ]
 

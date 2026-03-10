@@ -13,39 +13,39 @@
   "contextHtmlTemplate": "<div class=\"contextBox\"><h3>Dopo il racconto</h3><div>Sei in una stanza sobria, illuminata troppo bene. Hai già raccontato qualcosa che suona assurdo se detta male e pericolosa se detta troppo bene.</div><h4 style=\"margin-top:10px;\">Chi ti sta leggendo</h4><ul><li><strong>{{roleResponsabile}}</strong> – vuole capire se sei credibile o se stai coprendo altro</li><li><strong>{{roleAmico}}</strong> – ascolta i dettagli come se bastasse un errore per smontarti</li><li><strong>{{partnerName}}</strong> – non sa se preoccuparsi per quello che hai visto o per il modo in cui lo stai raccontando</li></ul></div>",
 
   "introTitle": "ALTRI",
-  "introText": "<p><strong>Questo non è un test.</strong></p><p>Sei qui perché hai raccontato una cosa che, detta male, ti rende inaffidabile.<br>Detta bene, ti rende un problema… di un altro tipo.</p><p>Non valutiamo se esistono o no.<br>Valutiamo <em>come</em> rendi sostenibile la tua versione sotto lettura ostile.</p>",
+  "introText": "<p><strong>Questo non è un test.</strong></p><p>Sei qui perché hai raccontato una cosa che, detta male, ti rende inaffidabile (per non dire visionario).<br>Detta bene, ti rende un problema… di un altro tipo.</p><p>Non valutiamo se esistono o no.<br>Valutiamo <em>come</em> rendi sostenibile la tua versione sotto lettura ostile.</p>",
 
-  "scenarioHtmlTemplate": "<p>Hai raccontato di aver avuto un incontro che non sai nominare senza peggiorare la situazione.</p><p>Da quando l’hai detto ad alta voce, la tua versione si è divisa in due letture: o hai visto qualcosa di reale, oppure stai usando una storia estrema per coprire qualcos’altro.</p><p>Il problema non è soltanto quello che affermi di avere incontrato, ma il modo in cui reggono i dettagli sotto pressione.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come rendere leggibile la tua versione.</em></p>",
+  "scenarioHtmlTemplate": "<p>Hai raccontato di aver avuto un incontro che non sai <<classificare>> senza peggiorare la situazione.</p><p>Da quando l’hai detto ad alta voce, la tua versione si è divisa in due letture: o hai visto qualcosa di reale, oppure stai usando una storia estrema per coprire qualcos’altro.</p><p>Il problema non è soltanto quello che affermi di avere incontrato, ma il modo in cui reggono i dettagli sotto pressione.</p><p><em>Quello che è successo è successo.<br>Ora devi decidere come rendere leggibile la tua versione.</em></p>",
 
-  "microcopyText": "<p>Non è una ricostruzione dei fatti.</p><p>È una lettura di come costruisci una versione quando sai che verrà interpretata.</p><p>Rispondi a 5 domande. Ogni domanda stringe il cerchio.</p>",
+  "microcopyText": "<p>NON E' UNA RICOSTRUZIONE DEI FATTI.</p><p>È una lettura di come costruisci una versione quando sai che verrà interpretata.</p><p>Rispondi a 5 domande. Ogni domanda stringe il cerchio.</p>",
 
   "questionSets": [
     [
-      "[COMMISSIONE] Quando dici “li ho incontrati”, qual è il minimo dettaglio che vuoi rendere stabile senza rovinarti da solo?",
+      "[COMMISSIONE] Quando dici “li ho incontrati”, ti riferisci ad un tuo <<viaggio interiore>> oppure vuoi rovinarti da solo alludendo e dettagliando un evento concreto?",
       "[TECNICO] Se ti chiedessi perché dovremmo crederti, useresti una ragione tecnica, personale o morale?",
-      "[COMMISSIONE] C’è un punto del racconto che tieni fuori perché temi di diventare ridicolo?",
+      "[COMMISSIONE] Quale punto del racconto stai tenendo fuori perché sai che diventeresti ridicolo?",
       "[TECNICO] Se qualcuno dicesse “stai coprendo altro con una storia assurda”, come reagisci senza indignarti?",
-      "[PARTNER] Che cosa ti spaventa di più: quello che dici di avere visto o il fatto che io possa non riconoscerti più?"
+      "[PARTNER] Che cosa ti spaventa di più: quello che dici di avere visto o il fatto che io possa non crederti più?"
     ],
     [
-      "[COMMISSIONE] Hai usato parole come “messaggi”, “segnali”, “contatti”. In quale cornice vuoi costringerle?",
-      "[TECNICO] Cosa ci guadagni tu a raccontarlo? Rispondi senza costruirti un’aura.",
-      "[COMMISSIONE] Qual è il dettaglio che, se venisse letto da qualcuno competente, ti smentirebbe in dieci secondi?",
-      "[TECNICO] Se ti accusassero di inventare per spostare l’attenzione, quale punto useresti per non crollare?",
-      "[PARTNER] Anche nella tua versione cosa resta fuori campo, e perché non riesci a dirmelo tutto?"
+      "[COMMISSIONE] Hai parlato di “messaggi”, “segnali”, “contatti”. Come pensi che potremmo mai classificare queste cose se non come allucinazioni?",
+      "[TECNICO] Cosa ci guadagni tu a raccontare questa cosa? E' la tua occasione di sentirti per una volta protagonista?",
+      "[COMMISSIONE] Non credi che entrando in un qualunque dettaglio, se analizzato da un esperto, crollerebbe come un castello di carte?",
+      "[TECNICO] Se ti accusassero di inventare questa cosa per spostare l’attenzione da un qualche tuo problema, come ti difenderesti?",
+      "[PARTNER] Cosa c'è ancora nella tua versione che resta fuori campo, e perché non riesci a dirmelo tutto?"
     ],
     [
-      "[COMMISSIONE] Quando parli dell’incontro, stai descrivendo un fatto o stai proteggendo un’esperienza?",
-      "[TECNICO] Se togliessimo tutte le parole “misteriose”, che cosa resterebbe davvero osservabile?",
-      "[COMMISSIONE] Qual è il punto del tuo racconto in cui chi ascolta comincia fisiologicamente a dubitare?",
-      "[TECNICO] C’è un dettaglio troppo preciso per sembrare inventato, ma troppo strano per sembrare affidabile?",
+      "[COMMISSIONE] Quando parli dell’incontro, stai descrivendo un fatto o stai descrivendo un’esperienza?",
+      "[TECNICO] Se togliessimo tutte le parole “misteriose” che ci hai raccontato, che cosa rimarrebbe di concretamente osservabile?",
+      "[COMMISSIONE] Secondo te qual è il punto del tuo racconto in cui, chi ascolta, comincia fisiologicamente a dubitare?",
+      "[TECNICO] Nel tuo racconto c’è un dettaglio troppo preciso per sembrare inventato, eppure è troppo strano per essere affidabile! vuoi riassumercelo cercando di renderlo più <<normale>>?",
       "[PARTNER] Da quando lo racconti, sei più preoccupato che ti credano o che capiscano cosa significherebbe crederti?"
     ],
     [
-      "[COMMISSIONE] Se ti chiedessi di distinguere tra “ho visto” e “ho interpretato”, dove cade il confine?",
-      "[TECNICO] Quale parte della tua versione regge meglio se la leggiamo come errore percettivo?",
-      "[COMMISSIONE] C’è un elemento del racconto che tieni stretto non perché è solido, ma perché è il più scenico?",
-      "[TECNICO] Se dovessi rinunciare a un dettaglio per salvare il resto, quale sacrificheresti?",
+      "[COMMISSIONE] Se ti chiedessi di distinguere tra “ho visto” e “ho interpretato” quello che ci hai raccontato, dove cade il confine?",
+      "[TECNICO] Non credi che tua versione reggerebbe meglio se ammettessi che è stato un errore percettivo?",
+      "[COMMISSIONE] C’è un elemento del tuo racconto che tieni stretto non perché è solido, ma perché è il più scenico e ti da visibilità?",
+      "[TECNICO] Se dovessi rinunciare a un dettaglio per rendere credibile il resto, quale sacrificheresti?",
       "[PARTNER] Quando torni con questa storia, vuoi che io ti faccia da testimone o da rifugio?"
     ],
     [
@@ -56,11 +56,11 @@
       "[PARTNER] Io devo decidere se seguirti in questa storia o difendermi da essa: che cosa mi stai chiedendo davvero?"
     ],
     [
-      "[COMMISSIONE] Se la tua storia uscisse a pezzi — solo un frammento, una frase, un dettaglio — quale pezzo ti distruggerebbe di più?",
+      "[COMMISSIONE] Se la tua storia uscisse a pezzi — solo un frammento, una frase, un dettaglio — quale pezzo credi che sarebbe più difficile da far credere??",
       "[TECNICO] Il tuo racconto vuole essere verificato o soltanto creduto?",
       "[COMMISSIONE] Hai più paura di sembrare folle o di sembrare calcolatore?",
-      "[TECNICO] Se domani cambiassi una sola parola importante del tuo racconto, quale sarebbe?",
-      "[PARTNER] Se io ti dicessi “non so se temo loro o il modo in cui li stai portando qui”, cosa mi risponderesti?"
+      "[TECNICO] Se domani cambiassi un elemento importante del tuo racconto, quale sarebbe?",
+      "[PARTNER] Se io ti dicessi “non so se temo di più loro o il modo in cui tu li stai portando qui”, cosa mi risponderesti?"
     ]
   ]
 }

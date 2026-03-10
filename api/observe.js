@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  console.log("OBSERVE VERSION: AMP-V8");
+  console.log("OBSERVE VERSION: AMP-V9");
 
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -67,6 +67,11 @@ Usale solo per capire il frame, la pressione e il tipo di incalzare.
 NON valutare se il contenuto della risposta è “giusto” rispetto alla domanda.
 Osserva come il giocatore si dispone davanti alla domanda.
 
+SCRITTURA:
+- frasi concrete, pulite, non accademiche
+- evita formule come: “appare caratterizzato da”, “sembra utilizzare”, “tende a essere”, “la gestione di”, “l’aspetto”, “la questione”
+- preferisci verbi semplici: mette, lascia, sposta, stringe, allarga, devia, regge, schiva
+
 VINCOLO ANTI-RIASSUNTO:
 Non nominare luoghi o eventi specifici salvo per dire che restano fuori campo.
 Non usare cronologia (“prima/poi/dopo”) né catene causali.
@@ -101,6 +106,11 @@ Usale solo per capire pressione, tono e tipo di richiesta.
 NON valutare la correttezza fattuale della risposta rispetto alla domanda.
 Osserva il modo in cui il giocatore entra, devia, regge o schiva la domanda.
 
+SCRITTURA:
+- frasi concrete, non scolastiche
+- evita formule come: “appare caratterizzato da”, “sembra utilizzare”, “tende a essere”, “la gestione di”
+- non usare parole troppo cliniche o troppo astratte
+
 Vietate anche: “innocenza”, “accuse”, “negazione”, “speculazioni”.
 
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione).
@@ -114,7 +124,7 @@ FUORI CAMPO: (1 frase, usa “resta fuori campo / rimane implicito”)
 
 PAROLA-OMBRA:
 scrivi solo la parola. niente spiegazione.
-opacità, attrito, urgenza, distanza, frizione, scarto, sobrietà, pressione, crepa, esitazione, trattenimento, esposizione
+opacità, attrito, urgenza, distanza, frizione, scarto, sobrietà, pressione, crepa, esitazione, trattenimento, esposizione, sfasatura, deriva
 Preferisci parole meno letterali rispetto ai contenuti espliciti delle risposte.
 Evita parole generiche come “rigidità” o “difesa”.
 Evita di riutilizzare la stessa parola-ombra della run precedente.
@@ -154,12 +164,12 @@ Osserva come la risposta si dispone rispetto alla domanda: la affronta, la piega
 
 Vietato “potrebbe” (o almeno: massimo 1 volta per sezione)
 
-Stile obbligatorio:
+STILE OBBLIGATORIO:
 - vietato iniziare le frasi con: "La regia narrativa", "La struttura delle risposte", "La decisione di"
 - non riprendere o citare frammenti testuali presenti nelle ricorrenze osservate
-- facoltativo: può comparire “tra … e …”
-- evita formulazioni astratte come “la gestione di”, “l’aspetto”, “la questione”
+- evita formule come: “appare caratterizzato da”, “sembra utilizzare”, “tende a essere”, “la gestione di”, “l’aspetto”, “la questione”
 - preferisci osservazioni concrete sulla logica del racconto
+- facoltativo: può comparire “tra … e …”
 
 VINCOLO ANTI-CLONE:
 - IPOTESI 1: criteri e trade-off (priorità, rischio, delega, soglia di accettabilità)
@@ -185,9 +195,7 @@ Almeno una frase deve rivelare una tensione implicita.
     for (let i = 0; i < pairCount; i++) {
       const q = trimmedQuestions[i] || "[domanda non disponibile]";
       const a = trimmedAnswers[i] || "[vuoto]";
-      exchanges.push(
-        `DOMANDA ${i + 1}:\n${q}\nRISPOSTA ${i + 1}:\n${a}`
-      );
+      exchanges.push(`DOMANDA ${i + 1}:\n${q}\nRISPOSTA ${i + 1}:\n${a}`);
     }
 
     const userContext = `
@@ -284,7 +292,13 @@ Non importare nomi o ruoli da altri scenari.
     psicOut = cleanPlaceholders(psicOut);
     ampOut = cleanPlaceholders(ampOut);
 
+    fringeOut = softenManualese(fringeOut);
+    psicOut = softenManualese(psicOut);
     ampOut = softenManualese(ampOut);
+
+    fringeOut = dewoodifyText(fringeOut);
+    psicOut = dewoodifyText(psicOut);
+    ampOut = dewoodifyText(ampOut);
 
     return res.status(200).json({
       osservazioni: { fringe: fringeOut, psicologico: psicOut, amplificato: ampOut }
@@ -365,7 +379,7 @@ function enforceAmplificatoShape(s, scarce = false) {
       : "Nella forma si intravede un criterio di priorità: alcune ragioni vengono messe davanti e altre restano implicite. Tra copertura e urgenza si legge un trade-off, con soglie di accettabilità non dichiarate. La delega funziona come spostamento del rischio dentro il perimetro del racconto.";
 
     const b = scarce
-      ? "La regia è ridotta a opacità/assenza di materiale: non si costruisce un frame riconoscibile. Il fuori campo domina e non si stabilizza una sequenza. Resta un controllo minimo del sospetto per mancanza di dettagli."
+      ? "La regia è ridotta a opacità o assenza di materiale: non si costruisce un frame riconoscibile. Il fuori campo domina e non si stabilizza una sequenza. Resta un controllo minimo del sospetto per mancanza di dettagli."
       : "La regia costruisce una cornice di ammissibilità: compressioni e dilatazioni guidano il ritmo. Gli altri interlocutori funzionano come elementi di frame più che come fatti. Il taglio delle informazioni mantiene fuori campo ciò che altrimenti cambierebbe la lettura.";
 
     return [
@@ -414,7 +428,31 @@ function softenManualese(s) {
     .replace(/\bun obiettivo primario\b/gi, "un punto di tenuta")
     .replace(/\bsuggerisce una strategia\b/gi, "fa leggere una linea")
     .replace(/\bsembra essere quella di\b/gi, "si dispone su")
-    .replace(/\bsembra essere\b/gi, "appare");
+    .replace(/\bsembra essere\b/gi, "appare")
+    .replace(/\btende a stare cercando\b/gi, "cerca")
+    .replace(/\btende a cercare\b/gi, "cerca")
+    .replace(/\brealtà oggettiva\b/gi, "versione salda")
+    .replace(/\bappare caratterizzato da\b/gi, "mostra")
+    .replace(/\bsembra utilizzare\b/gi, "usa")
+    .replace(/\btende a essere\b/gi, "risulta")
+    .replace(/\bappare guidata da\b/gi, "si dispone su");
+  return t.trim();
+}
+
+function dewoodifyText(s) {
+  let t = (s || "");
+  t = t
+    .replace(/\bil Giocatore\b/g, "il giocatore")
+    .replace(/\bIl Giocatore\b/g, "Il giocatore")
+    .replace(/\bappare\b/gi, "si mostra")
+    .replace(/\brisulta caratterizzato da\b/gi, "mostra")
+    .replace(/\bè caratterizzato da\b/gi, "mostra")
+    .replace(/\bsi mostra guidat[oa] da\b/gi, "si dispone su")
+    .replace(/\bdi una certa\b/gi, "di")
+    .replace(/\bpiuttosto alta\b/gi, "alta")
+    .replace(/\bpiuttosto bassa\b/gi, "bassa")
+    .replace(/\bmolto alta\b/gi, "alta")
+    .replace(/\bmolto bassa\b/gi, "bassa");
   return t.trim();
 }
 
@@ -445,7 +483,7 @@ function proceduralFallbackV2(body) {
         "L’attribuzione dell’azione resta generica e non si stabilizza un criterio ricorrente.",
         "Rimane soprattutto una cornice minimale, senza trade-off leggibili.",
         "IPOTESI 2 — MESSA IN SCENA:",
-        "La regia è ridotta a opacità/assenza di materiale: non si costruisce un frame riconoscibile.",
+        "La regia è ridotta a opacità o assenza di materiale: non si costruisce un frame riconoscibile.",
         "Il personaggio resta piatto e non prende forma un controllo del sospetto coerente.",
         "Rimane un fuori campo dominante, più che una messa in scena compiuta."
       ].join("\n")
