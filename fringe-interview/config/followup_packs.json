@@ -1,0 +1,40 @@
+{
+  "followUps": [
+    {
+      "type": "concretizza",
+      "goal": "Portare una risposta vaga su un episodio reale",
+      "variants": [
+        "Fammi un episodio preciso, non una qualità astratta.",
+        "Portami un caso reale: che cosa è successo davvero?",
+        "Questo è ancora generale: dimmelo con un esempio concreto."
+      ]
+    },
+    {
+      "type": "prova",
+      "goal": "Chiedere evidenza, risultato o verificabilità",
+      "variants": [
+        "Come faccio a vedere questa cosa in un fatto o in un risultato?",
+        "Quale risultato concreto dimostra quello che stai dicendo?",
+        "Dammi un elemento che renda questa risposta più verificabile."
+      ]
+    },
+    {
+      "type": "stringi",
+      "goal": "Ridurre una risposta lunga o dispersiva a un punto chiaro",
+      "variants": [
+        "Stringimela in due frasi: qual è il punto vero?",
+        "Se tolgo il contorno, cosa devo capire davvero da questa risposta?",
+        "Qual è il nucleo della tua risposta, senza girarci intorno?"
+      ]
+    },
+    {
+      "type": "ruolo",
+      "goal": "Riportare la risposta sul ruolo target",
+      "variants": [
+        "In che modo questo si collega davvero al ruolo per cui ti candidi?",
+        "Portami questa risposta più vicino al lavoro che vuoi ottenere.",
+        "Perché questa cosa conta per il ruolo, e non solo per la tua storia in generale?"
+      ]
+    }
+  ]
+}

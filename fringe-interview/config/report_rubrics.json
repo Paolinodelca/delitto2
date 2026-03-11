@@ -1,0 +1,29 @@
+{
+  "sections": [
+    {
+      "id": "posture",
+      "label": "Come sei risultato",
+      "description": "Postura, tono, tenuta, modo di stare nella domanda"
+    },
+    {
+      "id": "strengths",
+      "label": "Cosa ha funzionato",
+      "description": "Punti di forza emersi nel colloquio"
+    },
+    {
+      "id": "weaknesses",
+      "label": "Dove perdi forza",
+      "description": "Zone vaghe, difensive o poco aderenti"
+    },
+    {
+      "id": "advice",
+      "label": "Come rifarei il colloquio",
+      "description": "Indicazioni pratiche e spendibili"
+    }
+  ],
+  "cvFitSection": {
+    "id": "cv_job_fit",
+    "label": "Aderenza CV ↔ ruolo",
+    "description": "Quanto il CV copre il profilo richiesto e dove è debole"
+  }
+}

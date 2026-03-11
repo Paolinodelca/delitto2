@@ -1,0 +1,118 @@
+{
+  "families": [
+    {
+      "id": "motivazione",
+      "label": "Motivazione",
+      "goal": "Capire perché il candidato vuole il ruolo e come costruisce la propria aderenza",
+      "variants": [
+        {
+          "id": "motivazione_neutral_01",
+          "tone": "neutral",
+          "pressure": 1,
+          "text": "Che cosa ti interessa davvero di questo ruolo?"
+        },
+        {
+          "id": "motivazione_demanding_01",
+          "tone": "demanding",
+          "pressure": 2,
+          "text": "Perché dovremmo scegliere te per questo ruolo, e non un profilo più lineare?"
+        }
+      ]
+    },
+    {
+      "id": "esperienza_concreta",
+      "label": "Esperienza concreta",
+      "goal": "Far emergere episodi reali e non solo auto-descrizioni",
+      "variants": [
+        {
+          "id": "esperienza_neutral_01",
+          "tone": "neutral",
+          "pressure": 1,
+          "text": "Raccontami un episodio concreto in cui hai gestito una responsabilità simile a questa."
+        },
+        {
+          "id": "esperienza_demanding_01",
+          "tone": "demanding",
+          "pressure": 2,
+          "text": "Dammi un esempio preciso, recente e verificabile: cosa è successo, cosa hai fatto tu, con quale risultato?"
+        }
+      ]
+    },
+    {
+      "id": "gestione_difficolta",
+      "label": "Gestione difficoltà",
+      "goal": "Osservare come il candidato parla di errore, ostacolo o tensione",
+      "variants": [
+        {
+          "id": "difficolta_neutral_01",
+          "tone": "neutral",
+          "pressure": 1,
+          "text": "Parlami di una situazione difficile che hai dovuto gestire sul lavoro."
+        },
+        {
+          "id": "difficolta_demanding_01",
+          "tone": "demanding",
+          "pressure": 2,
+          "text": "Descrivi un errore o una difficoltà reale: dove si è complicata la situazione e che cosa hai fatto tu?"
+        }
+      ]
+    },
+    {
+      "id": "priorita_tradeoff",
+      "label": "Priorità e trade-off",
+      "goal": "Vedere come il candidato sceglie tra vincoli o richieste in tensione",
+      "variants": [
+        {
+          "id": "tradeoff_neutral_01",
+          "tone": "neutral",
+          "pressure": 1,
+          "text": "Raccontami una situazione in cui hai dovuto gestire priorità in conflitto."
+        },
+        {
+          "id": "tradeoff_demanding_01",
+          "tone": "demanding",
+          "pressure": 2,
+          "text": "Quando due priorità si scontrano davvero, quale criterio usi per decidere? Dammi un caso concreto."
+        }
+      ]
+    },
+    {
+      "id": "aderenza_ruolo",
+      "label": "Aderenza al ruolo",
+      "goal": "Verificare quanto il candidato entra davvero nel profilo cercato",
+      "variants": [
+        {
+          "id": "ruolo_neutral_01",
+          "tone": "neutral",
+          "pressure": 1,
+          "text": "Quale parte del tuo profilo pensi sia più aderente a questo ruolo?"
+        },
+        {
+          "id": "ruolo_demanding_01",
+          "tone": "demanding",
+          "pressure": 2,
+          "text": "Dimmi qual è il punto del tuo profilo che regge meglio questo ruolo, e quale invece oggi regge meno."
+        }
+      ]
+    },
+    {
+      "id": "sintesi_finale",
+      "label": "Sintesi finale",
+      "goal": "Osservare capacità di chiusura, sintesi e posizionamento",
+      "variants": [
+        {
+          "id": "sintesi_neutral_01",
+          "tone": "neutral",
+          "pressure": 1,
+          "text": "Se dovessi lasciarmi un’unica idea forte su di te, quale sarebbe?"
+        },
+        {
+          "id": "sintesi_demanding_01",
+          "tone": "demanding",
+          "pressure": 2,
+          "text": "Hai 20 secondi: perché dovrei ricordarmi di te dopo questo colloquio?"
+        }
+      ]
+    }
+  ]
+}

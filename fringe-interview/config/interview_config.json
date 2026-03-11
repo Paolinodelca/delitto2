@@ -1,0 +1,26 @@
+{
+  "appId": "fringe-interview",
+  "version": "0.1",
+  "modes": [
+    {
+      "id": "standard",
+      "label": "Standard",
+      "description": "Simulazione completa con feedback finale"
+    }
+  ],
+  "interviewerTones": [
+    {
+      "id": "neutral",
+      "label": "Neutro"
+    },
+    {
+      "id": "demanding",
+      "label": "Esigente"
+    }
+  ],
+  "questionCounts": [5, 7],
+  "defaultMode": "standard",
+  "defaultTone": "neutral",
+  "defaultQuestionCount": 5,
+  "defaultDomainPack": "generic-interview"
+}
