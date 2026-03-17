@@ -10,7 +10,31 @@ function normalizeString(value) {
   return value.trim();
 }
 
-function buildQuestionLookup(structuredQuestionBank) {
+function uniqueStrings(values) {
+  const seen = new Set();
+  const result = [];
+
+  for (const value of ensureArray(values)) {
+    const clean = normalizeString(value);
+
+    if (!clean) {
+      continue;
+    }
+
+    const key = clean.toLowerCase();
+
+    if (seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    result.push(clean);
+  }
+
+  return result;
+}
+
+function buildQuestionMap(structuredQuestionBank) {
   const questions = ensureArray(structuredQuestionBank?.questions);
   const map = new Map();
 
@@ -27,41 +51,102 @@ function buildQuestionLookup(structuredQuestionBank) {
   return map;
 }
 
-function resolvePromptFromQuestion(question, requestedTone) {
-  const variants = question?.variants && typeof question.variants === "object"
-    ? question.variants
-    : {};
+function resolveVariantForTone(question, requestedTone) {
+  const variants = question?.variants || {};
+  const normalizedRequestedTone = normalizeString(requestedTone);
 
-  const requestedToneKey = normalizeString(requestedTone);
-  const requestedVariant = variants[requestedToneKey];
-
-  if (requestedVariant && normalizeString(requestedVariant.prompt)) {
+  if (
+    normalizedRequestedTone &&
+    variants[normalizedRequestedTone] &&
+    normalizeString(variants[normalizedRequestedTone]?.prompt)
+  ) {
     return {
-      prompt: normalizeString(requestedVariant.prompt),
-      toneUsed: requestedToneKey,
-      resolutionSource: "tone_variant"
+      toneUsed: normalizedRequestedTone,
+      source: "tone_variant",
+      prompt: normalizeString(variants[normalizedRequestedTone]?.prompt)
     };
   }
 
-  const standardVariant = variants.standard;
-
-  if (standardVariant && normalizeString(standardVariant.prompt)) {
+  if (variants.standard && normalizeString(variants.standard?.prompt)) {
     return {
-      prompt: normalizeString(standardVariant.prompt),
-      toneUsed: requestedToneKey || "standard",
-      resolutionSource: "standard_variant"
+      toneUsed: "standard",
+      source: "standard_variant",
+      prompt: normalizeString(variants.standard?.prompt)
     };
   }
 
-  if (normalizeString(question?.prompt)) {
+  const firstVariantEntry = Object.entries(variants).find(([, value]) =>
+    normalizeString(value?.prompt)
+  );
+
+  if (firstVariantEntry) {
     return {
-      prompt: normalizeString(question.prompt),
-      toneUsed: requestedToneKey || "standard",
-      resolutionSource: "base_prompt"
+      toneUsed: normalizeString(firstVariantEntry[0]),
+      source: "fallback_variant",
+      prompt: normalizeString(firstVariantEntry[1]?.prompt)
     };
   }
 
-  return null;
+  return {
+    toneUsed: "",
+    source: "missing_variant",
+    prompt: ""
+  };
+}
+
+function buildStageEntries(questionSelectionStrategy) {
+  const entries = [];
+
+  const stageDefinitions = [
+    {
+      stage: "mandatory",
+      keys: ensureArray(questionSelectionStrategy?.mandatoryQuestionKeys)
+    },
+    {
+      stage: "seniority",
+      keys: ensureArray(questionSelectionStrategy?.seniorityQuestionKeys)
+    },
+    {
+      stage: "secondary",
+      keys: ensureArray(questionSelectionStrategy?.secondaryQuestionKeys)
+    },
+    {
+      stage: "person_perception",
+      keys: ensureArray(questionSelectionStrategy?.personPerceptionQuestionKeys)
+    },
+    {
+      stage: "closing",
+      keys: ensureArray(questionSelectionStrategy?.closingQuestionKeys)
+    }
+  ];
+
+  let order = 1;
+
+  for (const definition of stageDefinitions) {
+    for (const key of uniqueStrings(definition.keys)) {
+      entries.push({
+        key,
+        stage: definition.stage,
+        stageOrder: order
+      });
+      order += 1;
+    }
+  }
+
+  return entries;
+}
+
+function humanizeCategory(category) {
+  const clean = normalizeString(category);
+
+  if (!clean) {
+    return "";
+  }
+
+  return clean
+    .split("_")
+    .map((item) => item.charAt(0).toUpperCase() + item.slice(1))
+    .join(" ");
 }
 
 export function selectQuestionToneVariant({
@@ -80,50 +165,47 @@ export function selectQuestionToneVariant({
     );
   }
 
-  const requestedTone = normalizeString(questionSelectionStrategy?.toneMode) || "standard";
-  const selectedQuestionKeys = ensureArray(
-    questionSelectionStrategy?.selectedQuestionKeys
-  )
-    .map((item) => normalizeString(item))
+  const toneMode = normalizeString(questionSelectionStrategy?.toneMode) || "standard";
+  const questionMap = buildQuestionMap(structuredQuestionBank);
+  const stageEntries = buildStageEntries(questionSelectionStrategy);
+
+  const resolvedQuestions = stageEntries
+    .map((entry) => {
+      const question = questionMap.get(entry.key);
+
+      if (!question) {
+        return null;
+      }
+
+      const resolvedVariant = resolveVariantForTone(question, toneMode);
+      const prompt = normalizeString(resolvedVariant.prompt);
+
+      if (!prompt) {
+        return null;
+      }
+
+      return {
+        key: normalizeString(question?.key),
+        category: normalizeString(question?.category),
+        categoryLabel: humanizeCategory(question?.category),
+        stage: entry.stage,
+        stageOrder: entry.stageOrder,
+        prompt,
+        question: prompt,
+        toneUsed: normalizeString(resolvedVariant.toneUsed),
+        source: normalizeString(resolvedVariant.source),
+        selectionWeight: normalizeString(question?.selectionWeight),
+        signals: ensureArray(question?.signals),
+        tags: ensureArray(question?.tags)
+      };
+    })
     .filter(Boolean);
-
-  const questionLookup = buildQuestionLookup(structuredQuestionBank);
-
-  const resolvedQuestions = [];
-  const missingKeys = [];
-
-  for (const key of selectedQuestionKeys) {
-    const question = questionLookup.get(key);
-
-    if (!question) {
-      missingKeys.push(key);
-      continue;
-    }
-
-    const resolved = resolvePromptFromQuestion(question, requestedTone);
-
-    if (!resolved) {
-      missingKeys.push(key);
-      continue;
-    }
-
-    resolvedQuestions.push({
-      key: normalizeString(question?.key),
-      category: normalizeString(question?.category),
-      prompt: resolved.prompt,
-      toneUsed: resolved.toneUsed,
-      resolutionSource: resolved.resolutionSource
-    });
-  }
 
   return {
     resolvedStructuredQuestions: {
-      resolvedQuestions,
-      metadata: {
-        requestedTone,
-        resolvedCount: resolvedQuestions.length,
-        missingKeys
-      }
+      toneMode,
+      questions: resolvedQuestions,
+      resolvedQuestions
     }
   };
 }

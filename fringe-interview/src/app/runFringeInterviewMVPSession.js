@@ -15,7 +15,8 @@ export async function runFringeInterviewMVPSession({
   userNotes = "",
   roleNotes = "",
   modelAdapter,
-  answers = []
+  answers = [],
+  interviewLengthMode = ""
 }) {
   if (typeof cvText !== "string" || !cvText.trim()) {
     throw new Error("runFringeInterviewMVPSession: cvText is required.");
@@ -34,7 +35,8 @@ export async function runFringeInterviewMVPSession({
     jdText,
     userNotes,
     roleNotes,
-    modelAdapter
+    modelAdapter,
+    interviewLengthMode
   });
 
   const mvp = mvpResult.fringeInterviewMVP;
@@ -80,7 +82,11 @@ export async function runFringeInterviewMVPSession({
         completed: true,
         answersProvided: ensureArray(answers).length,
         answersRecorded: runtime?.runtimeState?.answers?.length ?? 0,
-        sessionCompleted: runtime?.runtimeState?.isCompleted ?? false
+        sessionCompleted: runtime?.runtimeState?.isCompleted ?? false,
+        requestedInterviewLengthMode: interviewLengthMode || "",
+        resolvedInterviewLengthMode:
+          mvp.interviewQuestionSet?.contextualSelection?.questionSelectionStrategy?.interviewLengthMode ||
+          ""
       }
     }
   };

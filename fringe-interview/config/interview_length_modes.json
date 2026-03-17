@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "defaultMode": "standard",
+  "supportedModes": ["short", "standard", "deep"],
+  "modes": {
+    "short": {
+      "mandatoryRoleFitCountJunior": 1,
+      "mandatoryRoleFitCountDefault": 1,
+      "includeForcedSeniorityQuestion": true,
+      "secondaryQuestionCountJunior": 0,
+      "secondaryQuestionCountDefault": 0,
+      "personPerceptionQuestionCount": 1,
+      "closingQuestionCount": 1
+    },
+    "standard": {
+      "mandatoryRoleFitCountJunior": 1,
+      "mandatoryRoleFitCountDefault": 2,
+      "includeForcedSeniorityQuestion": true,
+      "secondaryQuestionCountJunior": 1,
+      "secondaryQuestionCountDefault": 1,
+      "personPerceptionQuestionCount": 1,
+      "closingQuestionCount": 1
+    },
+    "deep": {
+      "mandatoryRoleFitCountJunior": 2,
+      "mandatoryRoleFitCountDefault": 2,
+      "includeForcedSeniorityQuestion": true,
+      "secondaryQuestionCountJunior": 2,
+      "secondaryQuestionCountDefault": 2,
+      "personPerceptionQuestionCount": 1,
+      "closingQuestionCount": 1
+    }
+  }
+}

@@ -1,3 +1,5 @@
+import { loadInterviewLengthModes } from "./loadInterviewLengthModes.js";
+
 function ensureArray(value) {
   return Array.isArray(value) ? value : [];
 }
@@ -65,8 +67,74 @@ function pickTopExcludingKeys(rankedQuestions, excludedKeys, limit = 1) {
     .slice(0, limit);
 }
 
+function pickTopExcludingKeysByCategory(
+  rankedQuestions,
+  excludedKeys,
+  category,
+  limit = 1
+) {
+  const excluded = new Set(
+    uniqueStrings(excludedKeys).map((item) => item.toLowerCase())
+  );
+
+  return ensureArray(rankedQuestions)
+    .filter((item) => {
+      const key = normalizeString(item?.key).toLowerCase();
+      return (
+        normalizeString(item?.category) === category &&
+        key &&
+        !excluded.has(key)
+      );
+    })
+    .slice(0, limit);
+}
+
+function shouldForceSeniorityCalibration(interviewContextProfile) {
+  const seniorityContext = normalizeString(
+    interviewContextProfile?.seniorityContext
+  );
+
+  return ["senior", "lead", "executive"].includes(seniorityContext);
+}
+
+function shouldForcePressureSignal(interviewContextProfile) {
+  const companyContext = normalizeString(interviewContextProfile?.companyContext);
+  const toneMode = normalizeString(interviewContextProfile?.defaultTone);
+
+  return (
+    companyContext === "consultancy_client_facing" ||
+    toneMode === "pressure"
+  );
+}
+
+function isJuniorLike(interviewContextProfile) {
+  const seniorityContext = normalizeString(
+    interviewContextProfile?.seniorityContext
+  );
+
+  return ["entry", "junior"].includes(seniorityContext);
+}
+
+function resolveInterviewLengthMode(requestedMode) {
+  const { interviewLengthModes } = loadInterviewLengthModes();
+
+  const normalizedRequestedMode = normalizeString(requestedMode);
+  const supportedModes = ensureArray(interviewLengthModes?.supportedModes);
+
+  const modeKey = supportedModes.includes(normalizedRequestedMode)
+    ? normalizedRequestedMode
+    : interviewLengthModes.defaultMode;
+
+  return {
+    modeKey,
+    modeConfig: interviewLengthModes.modes[modeKey],
+    defaultMode: interviewLengthModes.defaultMode
+  };
+}
+
 function buildSelectionRationale({
   contextProfile,
+  interviewLengthMode,
   mandatoryQuestions,
   seniorityQuestions,
   secondaryQuestions,
@@ -89,6 +157,10 @@ function buildSelectionRationale({
 
   if (defaultTone) {
     rationale.push(`tone_mode:${defaultTone}`);
+  }
+
+  if (interviewLengthMode) {
+    rationale.push(`interview_length_mode:${interviewLengthMode}`);
   }
 
   if (mandatoryQuestions.length > 0) {
@@ -124,35 +196,10 @@ function buildSelectionRationale({
   return rationale;
 }
 
-function shouldForceSeniorityCalibration(interviewContextProfile) {
-  const seniorityContext = normalizeString(
-    interviewContextProfile?.seniorityContext
-  );
-
-  return ["senior", "lead", "executive"].includes(seniorityContext);
-}
-
-function shouldForcePressureSignal(interviewContextProfile) {
-  const companyContext = normalizeString(interviewContextProfile?.companyContext);
-  const toneMode = normalizeString(interviewContextProfile?.defaultTone);
-
-  return (
-    companyContext === "consultancy_client_facing" ||
-    toneMode === "pressure"
-  );
-}
-
-function isJuniorLike(interviewContextProfile) {
-  const seniorityContext = normalizeString(
-    interviewContextProfile?.seniorityContext
-  );
-
-  return ["entry", "junior"].includes(seniorityContext);
-}
-
 export function deriveQuestionSelectionStrategy({
   interviewContextProfile,
-  rankedStructuredQuestions
+  rankedStructuredQuestions,
+  interviewLengthMode
 }) {
   if (!interviewContextProfile || typeof interviewContextProfile !== "object") {
     throw new Error(
@@ -169,21 +216,34 @@ export function deriveQuestionSelectionStrategy({
   const rankedQuestions = ensureArray(rankedStructuredQuestions?.rankedQuestions);
   const juniorMode = isJuniorLike(interviewContextProfile);
 
-  const mandatoryRoleFitLimit = juniorMode ? 1 : 2;
+  const {
+    modeKey,
+    modeConfig,
+    defaultMode
+  } = resolveInterviewLengthMode(interviewLengthMode);
+
+  const mandatoryRoleFitCount = juniorMode
+    ? modeConfig.mandatoryRoleFitCountJunior
+    : modeConfig.mandatoryRoleFitCountDefault;
+
   const mandatoryQuestions = pickTopByCategory(
     rankedQuestions,
     "role_fit",
-    mandatoryRoleFitLimit
+    mandatoryRoleFitCount
   );
   const mandatoryQuestionKeys = mandatoryQuestions.map((item) => item.key);
 
-  const closingQuestions = pickTopByCategory(rankedQuestions, "closing", 1);
+  const closingQuestions = pickTopByCategory(
+    rankedQuestions,
+    "closing",
+    modeConfig.closingQuestionCount
+  );
   const closingQuestionKeys = closingQuestions.map((item) => item.key);
 
   const personPerceptionQuestions = pickTopByCategory(
     rankedQuestions,
     "person_perception",
-    1
+    modeConfig.personPerceptionQuestionCount
   );
   const personPerceptionQuestionKeys = personPerceptionQuestions.map(
     (item) => item.key
@@ -197,7 +257,10 @@ export function deriveQuestionSelectionStrategy({
 
   const seniorityQuestions = [];
 
-  if (shouldForceSeniorityCalibration(interviewContextProfile)) {
+  if (
+    modeConfig.includeForcedSeniorityQuestion &&
+    shouldForceSeniorityCalibration(interviewContextProfile)
+  ) {
     const seniorityPick = pickFirstAvailableByCategory(
       rankedQuestions,
       "seniority_calibration",
@@ -217,41 +280,65 @@ export function deriveQuestionSelectionStrategy({
   ];
 
   const secondaryQuestions = [];
+  const secondaryQuestionCount = juniorMode
+    ? modeConfig.secondaryQuestionCountJunior
+    : modeConfig.secondaryQuestionCountDefault;
 
-  if (juniorMode) {
-    const juniorCalibrationPick = pickFirstAvailableByCategory(
-      rankedQuestions,
-      "seniority_calibration",
-      excludedKeys
-    );
+  if (secondaryQuestionCount > 0) {
+    if (juniorMode) {
+      const juniorSecondary = [];
 
-    if (juniorCalibrationPick) {
-      secondaryQuestions.push(juniorCalibrationPick);
-      excludedKeys = [...excludedKeys, juniorCalibrationPick.key];
-    }
+      juniorSecondary.push(
+        ...pickTopExcludingKeysByCategory(
+          rankedQuestions,
+          excludedKeys,
+          "seniority_calibration",
+          1
+        )
+      );
 
-    const extraRoleFitPick = pickTopExcludingKeys(rankedQuestions, excludedKeys, 1)
-      .filter((item) => normalizeString(item?.category) === "role_fit");
-
-    if (extraRoleFitPick.length > 0) {
-      secondaryQuestions.push(...extraRoleFitPick);
       excludedKeys = [
         ...excludedKeys,
-        ...extraRoleFitPick.map((item) => item.key)
+        ...juniorSecondary.map((item) => item.key)
       ];
-    }
-  } else if (shouldForcePressureSignal(interviewContextProfile)) {
-    const pressurePick = pickTopExcludingKeys(rankedQuestions, excludedKeys, 1);
-    if (pressurePick.length > 0) {
-      secondaryQuestions.push(...pressurePick);
+
+      if (juniorSecondary.length < secondaryQuestionCount) {
+        const remaining = secondaryQuestionCount - juniorSecondary.length;
+
+        const extraRoleFit = pickTopExcludingKeysByCategory(
+          rankedQuestions,
+          excludedKeys,
+          "role_fit",
+          remaining
+        );
+
+        juniorSecondary.push(...extraRoleFit);
+        excludedKeys = [
+          ...excludedKeys,
+          ...extraRoleFit.map((item) => item.key)
+        ];
+      }
+
+      secondaryQuestions.push(...juniorSecondary);
+    } else if (shouldForcePressureSignal(interviewContextProfile)) {
+      const pressureSecondary = pickTopExcludingKeys(
+        rankedQuestions,
+        excludedKeys,
+        secondaryQuestionCount
+      );
+
+      secondaryQuestions.push(...pressureSecondary);
       excludedKeys = [
         ...excludedKeys,
-        ...pressurePick.map((item) => item.key)
+        ...pressureSecondary.map((item) => item.key)
       ];
-    }
-  } else {
-    const genericSecondary = pickTopExcludingKeys(rankedQuestions, excludedKeys, 1);
-    if (genericSecondary.length > 0) {
+    } else {
+      const genericSecondary = pickTopExcludingKeys(
+        rankedQuestions,
+        excludedKeys,
+        secondaryQuestionCount
+      );
+
       secondaryQuestions.push(...genericSecondary);
       excludedKeys = [
         ...excludedKeys,
@@ -265,6 +352,7 @@ export function deriveQuestionSelectionStrategy({
   return {
     questionSelectionStrategy: {
       toneMode: normalizeString(interviewContextProfile?.defaultTone) || "standard",
+      interviewLengthMode: modeKey,
       mandatoryQuestionKeys,
       seniorityQuestionKeys,
       secondaryQuestionKeys,
@@ -279,6 +367,7 @@ export function deriveQuestionSelectionStrategy({
       ]),
       selectionRationale: buildSelectionRationale({
         contextProfile: interviewContextProfile,
+        interviewLengthMode: modeKey,
         mandatoryQuestions,
         seniorityQuestions,
         secondaryQuestions,
@@ -293,7 +382,10 @@ export function deriveQuestionSelectionStrategy({
         forcedPressureSignal: shouldForcePressureSignal(
           interviewContextProfile
         ),
-        juniorMode
+        juniorMode,
+        requestedInterviewLengthMode: normalizeString(interviewLengthMode) || "",
+        resolvedInterviewLengthMode: modeKey,
+        defaultInterviewLengthMode: defaultMode
       }
     }
   };

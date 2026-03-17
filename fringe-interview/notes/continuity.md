@@ -2180,3 +2180,235 @@ The next sensible step can now be chosen more calmly between:
 3. further expanding the bank with additional sector-specific / role-family-specific prompts
 
 At this checkpoint, documentation should be considered updated and trustworthy.
+---
+
+## Update — interview length modes implemented and validated
+
+### Current checkpoint
+A new user-facing product dimension has now been implemented:
+
+- `short`
+- `standard`
+- `deep`
+
+This is now part of the contextual interview engine prototype.
+
+### New config file introduced
+- `config/interview_length_modes.json`
+
+### New loader introduced
+- `src/interview/loadInterviewLengthModes.js`
+
+### Core integration completed
+`src/interview/deriveQuestionSelectionStrategy.js` now supports:
+- explicit `interviewLengthMode`
+- config-driven selection counts
+- fallback to default mode when not provided
+
+The selected strategy now includes:
+- `interviewLengthMode`
+- metadata about:
+  - requested mode
+  - resolved mode
+  - default mode
+
+### Validation script introduced
+- `scripts/test_compare_interview_lengths.js`
+
+This script compares the same context profile across:
+- `short`
+- `standard`
+- `deep`
+
+### Validation result
+The interview length modes were successfully validated.
+
+#### Short
+Observed behavior:
+- lighter and faster flow
+- for `lead / incisive`, current result is:
+  - 1 mandatory
+  - 1 seniority
+  - 1 person-perception
+  - 1 closing
+
+Interpretation:
+- this is a real short mode, not only a slightly reduced standard mode
+
+#### Standard
+Observed behavior:
+- preserves the current reference flow
+- for `lead / incisive`, current result is:
+  - 2 mandatory
+  - 1 seniority
+  - 1 secondary
+  - 1 person-perception
+  - 1 closing
+
+Interpretation:
+- this remains the stable default mode
+
+#### Deep
+Observed behavior:
+- adds more exploration through extra secondary questions
+- for `lead / incisive`, current result is:
+  - 2 mandatory
+  - 1 seniority
+  - 2 secondary
+  - 1 person-perception
+  - 1 closing
+
+Interpretation:
+- this is a meaningful deepening of the interview, not just longer repetition
+
+### Stability check
+After introducing interview length modes, the existing contextual scenario comparison remained stable:
+
+- `junior + corporate_structured + supportive`
+- `lead + corporate_structured + incisive`
+- `senior + consultancy_client_facing + pressure`
+
+This confirms that:
+- the new length layer did not break contextual differentiation
+- context and length are now coexisting coherently
+
+### Product significance
+This is an important product milestone because the system now supports not only:
+- different interviewer styles
+- different company contexts
+- different seniority expectations
+
+but also:
+- different session depths
+
+This moves FRINGE closer to a usable product control surface.
+
+### New open design question
+A product choice is now visible:
+
+Should `junior + standard` remain relatively short by design,
+or should standard mode force one more question for junior profiles?
+
+This is not yet treated as a bug.
+It is now considered a deliberate future product choice.
+
+### Recommended next step
+The next sensible step is:
+1. update documentation
+2. checkpoint this milestone
+3. only after that decide whether to:
+   - integrate contextual engine into the legacy composer
+   - or further refine product behavior for junior standard mode
+   ---
+
+## Update — contextual engine now drives the real MVP interview flow
+
+### Current checkpoint
+The contextual interview engine is no longer only attached as side metadata.
+
+It is now actively driving the real MVP interview session flow.
+
+### What changed
+A first real runtime-level integration has now been completed.
+
+Previously:
+- the contextual engine produced:
+  - context profile
+  - ranking
+  - selection strategy
+- but the final interview session still used legacy primary questions
+
+Now:
+- `buildInterviewQuestionSet.js` builds and stores:
+  - `interviewContextProfile`
+  - `rankedStructuredQuestions`
+  - `questionSelectionStrategy`
+  - `resolvedStructuredQuestions`
+- `composeInterviewSession.js` uses the contextual engine output to build:
+  - real `coreQuestionBlocks`
+  - real contextual `closingPrompt`
+
+### Files updated in this phase
+- `src/interview/buildInterviewQuestionSet.js`
+- `src/interview/composeInterviewSession.js`
+- `src/interview/selectQuestionToneVariant.js`
+- `src/app/runFringeInterviewMVP.js`
+- `src/app/runFringeInterviewMVPSession.js`
+- `scripts/test_run_fringe_interview_mvp_session.js`
+
+### Current session behavior
+The real interview session now uses contextual structured questions for the core interview flow.
+
+Observed example in generated MVP result:
+- `stakeholder_interaction`
+- `accountability_examples`
+- `decision_tradeoffs`
+- `leadership_scope`
+- `pressure_handling`
+
+The contextual closing question is also now used as the real closing prompt.
+
+### Important structural fix completed
+A bug was found in the first contextual composition pass:
+- resolved structured questions were not carrying proper stage information
+- therefore everything was appearing as generic `contextual`
+- and even `closing_reflection` was leaking into the core question list
+
+This was fixed by replacing `selectQuestionToneVariant.js` so that resolved question objects now preserve:
+- `stage`
+- `stageOrder`
+- `toneUsed`
+- `source`
+- `prompt`
+
+This allowed `composeInterviewSession.js` to:
+- exclude contextual closing from core questions
+- use contextual closing correctly in the closing block
+
+### Interview length mode now active end-to-end
+The new product control:
+- `short`
+- `standard`
+- `deep`
+
+is now not only available in isolation,
+but also passed through the real app MVP/session entrypoints.
+
+### Session test recalibrated
+The full session integration test had become outdated because the new contextual flow made the interview longer than the old legacy test expected.
+
+`test_run_fringe_interview_mvp_session.js` was updated to:
+- explicitly request `interviewLengthMode: "short"`
+- use a revised answer set aligned with the new contextual questions
+
+### Validation result
+After this recalibration:
+- `Interview length mode requested: short`
+- `Interview length mode resolved: short`
+- `Answers provided: 6`
+- `Answers recorded: 6`
+- `Session completed: true`
+
+This confirms that:
+- the real MVP flow now runs successfully using contextual questions
+- the new interview length control is working in the real session pipeline
+- end-to-end generation still completes successfully
+
+### Current conclusion
+The contextual engine has now crossed a major threshold:
+
+it is no longer only:
+- a prototype branch
+- a sidecar strategy layer
+- a future design experiment
+
+it is now:
+- part of the actual MVP interview generation flow
+
+### Recommended next step
+The next sensible step should now be chosen between:
+
+1. improve labeling / UX presentation of contextual stages in the local shell
+2. reduce remaining legacy summary artifacts such as old `selectedFamilies` reporting
+3. refine adaptive follow-up logic so it becomes more aware of contextual question stages
+4. checkpoint and stabilize before another expansion

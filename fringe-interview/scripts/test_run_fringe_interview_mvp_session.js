@@ -34,10 +34,11 @@ async function main() {
 
   const sampleAnswers = [
     "Mi interessa questo ruolo perché collega analisi, reporting e coordinamento operativo, che sono tre aree in cui ho già lavorato con continuità.",
-    "Non ho esperienza diretta in SaaS, ma ho lavorato in contesti digitali e cross-funzionali dove costruivo dashboard settimanali e traducevo bisogni di business in miglioramenti concreti.",
-    "In un ruolo possedevo il flusso di KPI settimanale, decidevo quali metriche fossero davvero rilevanti per i manager e adattavo la dashboard quando emergevano colli di bottiglia ricorrenti.",
-    "Questo lavoro ha reso più veloci le discussioni operative e ha ridotto del 25 percento il tempo speso in riconciliazioni manuali.",
-    "Quello che ho imparato è che l’analisi ha valore solo quando rende più semplice decidere e agire."
+    "In una situazione con stakeholder diversi, ho raccolto aspettative contrastanti, ho ricondotto la discussione a priorità comuni e ho proposto una sintesi operativa condivisa.",
+    "Ero direttamente responsabile del flusso settimanale dei KPI operativi e delle modifiche alla dashboard usata dai manager per decidere dove intervenire.",
+    "In una decisione difficile ho scelto di privilegiare poche metriche davvero azionabili invece di mostrare tutto, perché serviva velocizzare le decisioni e non aumentare il rumore.",
+    "La mia responsabilità reale era definire la struttura del reporting, decidere quali segnali evidenziare e rivedere l’impostazione quando emergevano colli di bottiglia ricorrenti.",
+    "Quando la pressione aumentava, cercavo di proteggere chiarezza e priorità, lasciando temporaneamente indietro analisi secondarie che non cambiavano le decisioni immediate."
   ];
 
   printSection("Running full FRINGE Interview MVP session");
@@ -48,6 +49,7 @@ async function main() {
     userNotes: "",
     roleNotes: "",
     answers: sampleAnswers,
+    interviewLengthMode: "short",
     modelAdapter: ({ task, system, user }) =>
       runGroqParserModel({
         task,
@@ -65,6 +67,14 @@ async function main() {
   const session = result?.fringeInterviewMVPSession || {};
 
   printSection("Summary");
+  console.log(
+    "Interview length mode requested:",
+    session?.meta?.requestedInterviewLengthMode || "(missing)"
+  );
+  console.log(
+    "Interview length mode resolved:",
+    session?.meta?.resolvedInterviewLengthMode || "(missing)"
+  );
   console.log(
     "Answers provided:",
     session?.meta?.answersProvided ?? "(missing)"

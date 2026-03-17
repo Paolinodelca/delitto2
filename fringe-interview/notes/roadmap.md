@@ -1065,3 +1065,177 @@ Expand the structured bank by:
 - interviewer style
 
 All three directions are now realistic.
+---
+
+## Latest milestone — interview length modes added
+
+A new product-facing control layer has now been implemented for interview depth:
+
+- `short`
+- `standard`
+- `deep`
+
+### New capability
+The contextual engine now supports not only:
+- different scenarios
+- different tones
+- different company contexts
+- different seniority paths
+
+but also:
+- different interview lengths
+
+### Technical implementation
+Implemented:
+- `config/interview_length_modes.json`
+- `loadInterviewLengthModes.js`
+- integration into `deriveQuestionSelectionStrategy.js`
+- validation script:
+  - `test_compare_interview_lengths.js`
+
+### Validation outcome
+The length modes were validated successfully on a `lead / corporate_structured / incisive` scenario.
+
+Observed behavior:
+
+#### Short
+A clearly reduced flow:
+- faster
+- sharper
+- suitable for quick simulation
+
+#### Standard
+The current default:
+- balanced
+- coherent
+- aligned with the previously stabilized selection logic
+
+#### Deep
+A genuinely extended flow:
+- more exploration
+- more secondary probing
+- richer simulation
+
+### Important stability result
+The introduction of interview length modes did not break the contextual engine.
+
+The standard scenario comparison remains coherent across:
+- junior / supportive
+- lead / incisive
+- consultancy / pressure
+
+### Product significance
+This is a major product improvement because users can now control both:
+- the type of interviewer
+and
+- the depth of the session
+
+This makes the engine feel more like a configurable simulation product rather than a fixed pipeline.
+
+### New design choice emerging
+A new explicit product decision is now visible:
+
+Should junior users in `standard` mode receive:
+- a naturally shorter interview
+or
+- a standard-length interview with one more junior-specific question?
+
+This is not yet an issue to fix.
+It is now a product behavior choice to decide explicitly later.
+
+### Recommended next step
+The next branch should now be chosen between:
+
+#### Option A
+Integrate contextual engine outputs gradually into the legacy composer.
+
+#### Option B
+Refine the behavior of `standard` mode for junior profiles.
+
+At this stage, both are realistic next steps.
+---
+
+## Latest milestone — contextual engine integrated into real MVP session flow
+
+A major milestone has now been reached:
+
+the contextual interview engine is no longer only generating selection metadata.
+
+It is now actively driving the real MVP interview flow.
+
+### What is now contextual in the real session
+The following parts of the final interview session now come from the contextual engine:
+
+- core question blocks
+- closing prompt
+- interview length mode control
+
+### Integration completed
+The contextual pipeline now runs through the real MVP flow as follows:
+
+- parser
+- job fit analysis
+- legacy interview plan
+- contextual context profiling
+- structured question ranking
+- contextual selection strategy
+- tone variant resolution
+- real session composition using contextual questions
+
+### Important technical fix completed
+A structural issue in contextual question resolution was fixed:
+
+Resolved questions now preserve:
+- stage
+- stage order
+- tone used
+- source
+
+This allowed the composer to:
+- separate core questions from contextual closing correctly
+- avoid treating all contextual questions as generic undifferentiated blocks
+
+### Session test updated
+The full session test was recalibrated to the new contextual flow by:
+- explicitly using `interviewLengthMode: "short"`
+- updating the answer sequence to better match the contextual prompts
+
+### Validation result
+The end-to-end full session test now passes again with:
+- requested mode: `short`
+- resolved mode: `short`
+- `sessionCompleted: true`
+
+### Product significance
+This milestone is a major transition point.
+
+The project has now moved from:
+- contextual engine alongside the MVP
+
+toward:
+- contextual engine inside the MVP
+
+This means FRINGE is now closer to:
+- real contextual interview simulation
+rather than:
+- legacy interview flow with experimental side modules
+
+### New likely next priorities
+The next branch should now be chosen between:
+
+#### Option A — stabilize and clean presentation
+- improve local shell labels for contextual stages
+- reduce remaining legacy summary artifacts
+- improve readability of contextual question categories
+
+#### Option B — adaptive contextual intelligence
+- make adaptive follow-up selection aware of:
+  - contextual stage
+  - tone
+  - interview length mode
+
+#### Option C — further product controls
+- expose interview length more explicitly in future UI
+- later expose tone selection as a user-facing control
+
+At this stage, the contextual engine can be considered part of the real working MVP.

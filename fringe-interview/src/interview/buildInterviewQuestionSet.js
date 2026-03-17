@@ -1,5 +1,10 @@
 import { loadInterviewConfig } from "./readInterviewConfig.js";
 import { getInterviewLocale } from "../i18n/getInterviewLocale.js";
+import { deriveInterviewContextProfile } from "./deriveInterviewContextProfile.js";
+import { loadStructuredQuestionBank } from "./loadStructuredQuestionBank.js";
+import { rankStructuredQuestions } from "./rankStructuredQuestions.js";
+import { deriveQuestionSelectionStrategy } from "./deriveQuestionSelectionStrategy.js";
+import { selectQuestionToneVariant } from "./selectQuestionToneVariant.js";
 
 function ensureArray(value) {
   return Array.isArray(value) ? value : [];
@@ -247,7 +252,90 @@ function buildConversationFlow(interviewPlan, questionFamilySelections, followup
   };
 }
 
-export async function buildInterviewQuestionSet({ interviewPlan }) {
+function extractResolvedQuestionItems(resolvedStructuredQuestions) {
+  if (!resolvedStructuredQuestions || typeof resolvedStructuredQuestions !== "object") {
+    return [];
+  }
+
+  const directQuestions = ensureArray(resolvedStructuredQuestions.questions);
+  if (directQuestions.length > 0) {
+    return directQuestions;
+  }
+
+  const resolvedQuestions = ensureArray(resolvedStructuredQuestions.resolvedQuestions);
+  if (resolvedQuestions.length > 0) {
+    return resolvedQuestions;
+  }
+
+  return [];
+}
+
+function buildContextualSelection({
+  candidateProfile,
+  roleProfile,
+  jobFitAnalysis,
+  interviewLengthMode
+}) {
+  try {
+    const { interviewContextProfile } = deriveInterviewContextProfile({
+      candidateProfile,
+      roleProfile,
+      jobFitAnalysis
+    });
+
+    const { structuredQuestionBank } = loadStructuredQuestionBank();
+
+    const { rankedStructuredQuestions } = rankStructuredQuestions({
+      interviewContextProfile,
+      structuredQuestionBank
+    });
+
+    const { questionSelectionStrategy } = deriveQuestionSelectionStrategy({
+      interviewContextProfile,
+      rankedStructuredQuestions,
+      interviewLengthMode
+    });
+
+    const resolvedSelectionResult = selectQuestionToneVariant({
+      structuredQuestionBank,
+      questionSelectionStrategy
+    });
+
+    const resolvedStructuredQuestions =
+      resolvedSelectionResult?.resolvedStructuredQuestions || null;
+
+    return {
+      contextualSelection: {
+        integrationStatus: "contextual_selection_ready",
+        interviewContextProfile,
+        rankedStructuredQuestions,
+        questionSelectionStrategy,
+        resolvedStructuredQuestions,
+        resolvedQuestionCount: extractResolvedQuestionItems(resolvedStructuredQuestions).length
+      }
+    };
+  } catch (error) {
+    return {
+      contextualSelection: {
+        interviewContextProfile: null,
+        rankedStructuredQuestions: null,
+        questionSelectionStrategy: null,
+        resolvedStructuredQuestions: null,
+        resolvedQuestionCount: 0,
+        integrationStatus: "contextual_selection_failed",
+        integrationError: normalizeString(error?.message) || "unknown_error"
+      }
+    };
+  }
+}
+
+export async function buildInterviewQuestionSet({
+  interviewPlan,
+  candidateProfile,
+  roleProfile,
+  jobFitAnalysis,
+  interviewLengthMode
+}) {
   if (!interviewPlan || typeof interviewPlan !== "object") {
     throw new Error("buildInterviewQuestionSet: interviewPlan is required.");
   }
@@ -273,6 +361,13 @@ export async function buildInterviewQuestionSet({ interviewPlan }) {
     followupSelections
   );
 
+  const contextualSelectionResult = buildContextualSelection({
+    candidateProfile,
+    roleProfile,
+    jobFitAnalysis,
+    interviewLengthMode
+  });
+
   return {
     interviewQuestionSet: {
       sessionStrategy: interviewPlan.sessionStrategy || {},
@@ -281,7 +376,8 @@ export async function buildInterviewQuestionSet({ interviewPlan }) {
       primaryQuestions,
       selectedFollowupPacks: followupSelections,
       conversationFlow,
-      reportEmphasis: interviewPlan.reportEmphasis || {}
+      reportEmphasis: interviewPlan.reportEmphasis || {},
+      ...contextualSelectionResult
     }
   };
 }

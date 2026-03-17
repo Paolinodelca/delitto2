@@ -11,7 +11,8 @@ export async function runFringeInterviewMVP({
   jdText,
   userNotes = "",
   roleNotes = "",
-  modelAdapter
+  modelAdapter,
+  interviewLengthMode = ""
 }) {
   if (typeof cvText !== "string" || !cvText.trim()) {
     throw new Error("runFringeInterviewMVP: cvText is required.");
@@ -40,7 +41,11 @@ export async function runFringeInterviewMVP({
   });
 
   const questionSetResult = await buildInterviewQuestionSet({
-    interviewPlan: interviewPlanResult.interviewPlan
+    interviewPlan: interviewPlanResult.interviewPlan,
+    candidateProfile: parserResult.candidateProfile,
+    roleProfile: parserResult.roleProfile,
+    jobFitAnalysis: parserResult.jobFitAnalysis,
+    interviewLengthMode
   });
 
   const interviewSessionResult = composeInterviewSession({
@@ -71,7 +76,11 @@ export async function runFringeInterviewMVP({
           questionSelection: true,
           sessionComposition: true,
           runtimeInitialization: true
-        }
+        },
+        requestedInterviewLengthMode: interviewLengthMode || "",
+        resolvedInterviewLengthMode:
+          questionSetResult.interviewQuestionSet?.contextualSelection?.questionSelectionStrategy?.interviewLengthMode ||
+          ""
       }
     }
   };
