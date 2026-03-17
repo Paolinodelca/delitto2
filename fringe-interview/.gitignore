@@ -1,0 +1,6 @@
+# temp / runtime outputs
+tmp/
+*.log
+.DS_Store
+tmp/**/*.json
+tmp/**/*.html
