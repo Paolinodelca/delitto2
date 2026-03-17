@@ -1,0 +1,156 @@
+{
+  "version": 1,
+  "seniorityContexts": {
+    "entry": {
+      "description": "Primo ingresso o profilo quasi senza esperienza strutturata.",
+      "signalsToPrioritize": [
+        "curiosity",
+        "coachability",
+        "energy",
+        "learning_orientation"
+      ],
+      "answerExpectations": [
+        "potenziale",
+        "chiarezza",
+        "motivazione",
+        "esempi anche piccoli ma concreti"
+      ]
+    },
+    "junior": {
+      "description": "Profilo con esperienza iniziale ma ancora in crescita.",
+      "signalsToPrioritize": [
+        "initiative",
+        "learning_orientation",
+        "reliability",
+        "collaboration"
+      ],
+      "answerExpectations": [
+        "ownership limitata ma chiara",
+        "voglia di imparare",
+        "esempi concreti",
+        "struttura leggibile"
+      ]
+    },
+    "mid": {
+      "description": "Profilo operativo autonomo con responsabilità riconoscibili.",
+      "signalsToPrioritize": [
+        "autonomy",
+        "execution_focus",
+        "clarity",
+        "ownership"
+      ],
+      "answerExpectations": [
+        "azioni personali chiare",
+        "risultati",
+        "decisioni pratiche",
+        "gestione del contesto"
+      ]
+    },
+    "senior": {
+      "description": "Profilo con responsabilità ampia, decisioni e forte ownership.",
+      "signalsToPrioritize": [
+        "decision_scope",
+        "accountability",
+        "stakeholder_management",
+        "judgment"
+      ],
+      "answerExpectations": [
+        "trade-off",
+        "risultati",
+        "leadership situazionale",
+        "contesto complesso"
+      ]
+    },
+    "lead": {
+      "description": "Profilo con guida di persone, processi o domini rilevanti.",
+      "signalsToPrioritize": [
+        "leadership",
+        "influence",
+        "alignment",
+        "resilience"
+      ],
+      "answerExpectations": [
+        "influenza su altri",
+        "prioritizzazione",
+        "coordinamento",
+        "risultati sostenibili"
+      ]
+    },
+    "executive": {
+      "description": "Profilo di forte responsabilità strategica e organizzativa.",
+      "signalsToPrioritize": [
+        "strategic_judgment",
+        "influence",
+        "decision_quality",
+        "composure_under_pressure"
+      ],
+      "answerExpectations": [
+        "visione",
+        "scelte difficili",
+        "impatto organizzativo",
+        "leadership in contesti complessi"
+      ]
+    }
+  },
+  "companyContexts": {
+    "corporate_structured": {
+      "description": "Organizzazione strutturata, processi chiari, stakeholder multipli.",
+      "signalsToPrioritize": [
+        "clarity",
+        "collaboration",
+        "process_awareness",
+        "stakeholder_alignment"
+      ]
+    },
+    "scaleup_dynamic": {
+      "description": "Organizzazione in crescita, contesto dinamico, priorità mobili.",
+      "signalsToPrioritize": [
+        "adaptability",
+        "ownership",
+        "speed",
+        "ambiguity_tolerance"
+      ]
+    },
+    "startup_pragmatic": {
+      "description": "Contesto pragmatico, poche risorse, forte bisogno di execution.",
+      "signalsToPrioritize": [
+        "resourcefulness",
+        "initiative",
+        "execution_focus",
+        "autonomy"
+      ]
+    },
+    "consultancy_client_facing": {
+      "description": "Ruolo orientato al cliente, pressione esterna, bisogno di sintesi.",
+      "signalsToPrioritize": [
+        "composure",
+        "client_empathy",
+        "adaptability",
+        "communication_clarity"
+      ]
+    },
+    "small_business_operational": {
+      "description": "Contesto ridotto, molto pratico, bassa distanza tra problema e azione.",
+      "signalsToPrioritize": [
+        "pragmatism",
+        "reliability",
+        "autonomy",
+        "versatility"
+      ]
+    }
+  },
+  "personPerceptionSignals": {
+    "curiosity": "Il candidato appare interessato a capire, imparare e crescere.",
+    "coachability": "Il candidato sembra ricettivo a feedback e miglioramento.",
+    "energy": "Il candidato trasmette slancio, motivazione e presenza.",
+    "initiative": "Il candidato appare capace di attivarsi senza spinta continua.",
+    "collaboration": "Il candidato suggerisce buona integrazione con altri.",
+    "discipline": "Il candidato trasmette costanza, rigore e affidabilità.",
+    "resilience": "Il candidato sembra reggere difficoltà e pressione.",
+    "autonomy": "Il candidato appare capace di muoversi con indipendenza.",
+    "execution_focus": "Il candidato sembra orientato a portare a termine e produrre risultato.",
+    "composure_under_pressure": "Il candidato sembra reggere bene tensione o pressione.",
+    "communication_warmth": "Il candidato appare relazionale, leggibile e facile da coinvolgere.",
+    "decisiveness": "Il candidato suggerisce capacità di scelta e presa di posizione."
+  }
+}

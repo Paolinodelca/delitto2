@@ -1,0 +1,133 @@
+{
+  "meta": {
+    "version": "1.0",
+    "purpose": "Question family definitions for Fringe Interview (Italian).",
+    "notes": [
+      "Each family groups interview questions by investigative intent.",
+      "Families are selected from interviewPlan.suggestedQuestionFamilies and focusBlocks.",
+      "This file is the Italian localized version."
+    ]
+  },
+  "families": {
+    "general_fit": {
+      "label": "Aderenza Generale",
+      "intent": "allineamento generale al ruolo",
+      "recommendedWhen": [
+        "famiglia di fallback predefinita",
+        "serve esplorare l’aderenza generale al ruolo",
+        "non emerge chiaramente una famiglia più specifica"
+      ],
+      "questions": [
+        "Puoi raccontarmi il tuo percorso e spiegare perché questo ruolo ti sembra il passo successivo naturale?",
+        "Quali parti della tua esperienza ritieni più rilevanti per questa posizione?",
+        "In quale tipo di contesto lavori meglio?",
+        "Che cosa ti renderebbe adatto a questo ruolo oltre alla corrispondenza più evidente di competenze?"
+      ]
+    },
+    "ownership_scope": {
+      "label": "Ampiezza dell’Ownership",
+      "intent": "capire ownership, accountability e responsabilità end-to-end",
+      "recommendedWhen": [
+        "l’ownership non è chiara",
+        "i segnali di delivery ownership sono deboli o parziali",
+        "il ruolo richiede responsabilità end-to-end"
+      ],
+      "questions": [
+        "Raccontami un’attività o iniziativa che hai seguito personalmente dall’inizio alla fine.",
+        "Come distingui tra il supportare un’iniziativa e possederla davvero?",
+        "Puoi descrivere una situazione in cui eri responsabile di un risultato, non solo di un task?",
+        "Quali decisioni dipendevano direttamente da te nel progetto più rilevante che hai seguito?"
+      ]
+    },
+    "stakeholder_management": {
+      "label": "Gestione degli Stakeholder",
+      "intent": "capire influenza, allineamento e comunicazione con stakeholder diversi",
+      "recommendedWhen": [
+        "la gestione degli stakeholder è importante per il ruolo",
+        "il CV suggerisce comunicazione ma la portata non è chiara",
+        "serve validare esposizione verso stakeholder senior"
+      ],
+      "questions": [
+        "Raccontami un caso in cui hai dovuto allineare persone con priorità diverse.",
+        "Come hai gestito le aspettative degli stakeholder quando non potevi soddisfare tutti contemporaneamente?",
+        "Con che livello di stakeholder hai lavorato più spesso, e in quale contesto?",
+        "Puoi farmi un esempio di una situazione in cui hai influenzato una decisione senza avere autorità formale?"
+      ]
+    },
+    "transferability": {
+      "label": "Trasferibilità",
+      "intent": "verificare se un’esperienza adiacente può trasferirsi nel ruolo target",
+      "recommendedWhen": [
+        "il candidato ha esperienza vicina ma non diretta",
+        "esiste un gap di dominio ma non strutturale",
+        "il growth potential è rilevante"
+      ],
+      "questions": [
+        "Il tuo background è vicino a questo ruolo ma non identico. Che cosa ti fa pensare che la transizione possa funzionare bene?",
+        "Quali parti della tua esperienza precedente si trasferiscono più direttamente a questo ruolo?",
+        "Quale sarebbe per te la curva di apprendimento più ripida in questa posizione, e come la affronteresti?",
+        "Puoi descrivere una situazione passata in cui ti sei adattato con successo a un contesto o dominio nuovo?"
+      ]
+    },
+    "analytical_depth": {
+      "label": "Profondità Analitica",
+      "intent": "testare profondità di analisi, qualità del reporting, ragionamento sui KPI e struttura del pensiero",
+      "recommendedWhen": [
+        "il ruolo richiede analisi, reporting, KPI o uso di SQL/BI",
+        "serve validare punti forti analitici",
+        "affermazioni superficiali devono essere approfondite"
+      ],
+      "questions": [
+        "Parlami di un’attività di reporting o analisi che si è rivelata più complessa del previsto. Come l’hai gestita?",
+        "Come decidi quali metriche contano davvero in una dashboard o in un report ricorrente?",
+        "Puoi descrivere un caso in cui la tua analisi ha cambiato una decisione o migliorato un risultato operativo?",
+        "Quando lavori con dati incompleti o disordinati, come fai a mantenere affidabili le tue conclusioni?"
+      ]
+    },
+    "seniority_calibration": {
+      "label": "Calibrazione della Seniority",
+      "intent": "verificare se il candidato opera davvero al livello richiesto dal ruolo",
+      "recommendedWhen": [
+        "i segnali di seniority sono ambigui",
+        "il livello del ruolo può superare lo scope visibile del candidato",
+        "il candidato potrebbe stare facendo un salto verso l’alto"
+      ],
+      "questions": [
+        "Come è cambiata l’ampiezza delle tue responsabilità negli ultimi anni?",
+        "Che tipo di problemi oggi ti viene affidato di gestire in autonomia?",
+        "Come descriveresti il livello a cui operi oggi: esecuzione, coordinamento, ownership o influenza più strategica?",
+        "Quali elementi del tuo lavoro recente mostrano meglio che sei pronto per il livello successivo?"
+      ]
+    },
+    "communication_clarity": {
+      "label": "Chiarezza Comunicativa",
+      "intent": "valutare quanto il candidato sa spiegare il proprio lavoro in modo chiaro e strutturato",
+      "recommendedWhen": [
+        "la comunicazione è importante per il ruolo",
+        "il linguaggio del CV è vago o generico",
+        "reporting o lavoro con stakeholder richiedono chiarezza"
+      ],
+      "questions": [
+        "Spiegami un lavoro complesso che hai svolto in modo che possa capirlo anche una persona non specialista.",
+        "Raccontami una situazione in cui una comunicazione poco chiara ha creato attrito. Cosa hai fatto?",
+        "Come adatti il tuo messaggio quando parli con stakeholder tecnici rispetto a stakeholder non tecnici?",
+        "Quando presenti un aggiornamento, come decidi cosa includere e cosa tralasciare?"
+      ]
+    },
+    "leadership_scope": {
+      "label": "Ampiezza della Leadership",
+      "intent": "capire leadership, mentoring e capacità di influenza",
+      "recommendedWhen": [
+        "i segnali di leadership sono parziali o poco chiari",
+        "il ruolo valorizza mentoring o influenza sulle persone",
+        "il candidato può avere avuto leadership informale"
+      ],
+      "questions": [
+        "Hai mai guidato o orientato altre persone anche senza essere manager formalmente?",
+        "Raccontami una situazione in cui qualcuno faceva affidamento su di te per avere direzione o supporto.",
+        "Che cosa significa per te leadership nel tipo di ruolo che ricopri oggi?",
+        "In che modo hai contribuito ad alzare la qualità del lavoro intorno a te?"
+      ]
+    }
+  }
+}

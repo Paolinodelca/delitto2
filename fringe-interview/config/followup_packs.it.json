@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "version": "1.0",
+    "purpose": "Follow-up packs for Fringe Interview (Italian).",
+    "notes": [
+      "Each pack is activated by followupTriggers from jobFitAnalysis.",
+      "This file is the Italian localized version."
+    ]
+  },
+  "packs": {
+    "leadership_depth": {
+      "label": "Approfondimento Leadership",
+      "triggerType": "leadership_depth",
+      "goal": "Chiarire se i segnali di leadership riflettono davvero influenza, mentoring o responsabilità di gestione.",
+      "useWhen": [
+        "la people leadership è debole o parziale",
+        "il mentoring è citato ma poco dettagliato",
+        "il ruolo valorizza influenza o guida del team"
+      ],
+      "followups": [
+        "Di cosa eri esattamente responsabile in quella situazione?",
+        "Chi faceva affidamento su di te, e in che modo?",
+        "Hai dato direzione, preso decisioni, oppure hai soprattutto supportato l’esecuzione?",
+        "Che cosa è cambiato concretamente grazie al tuo intervento?"
+      ]
+    },
+    "responsibility_probe": {
+      "label": "Verifica della Responsabilità",
+      "triggerType": "responsibility_probe",
+      "goal": "Verificare quanta ownership e accountability avesse davvero il candidato.",
+      "useWhen": [
+        "l’ownership è implicita ma non esplicita",
+        "lo scope dell’iniziativa non è chiaro",
+        "il ruolo richiede responsabilità end-to-end"
+      ],
+      "followups": [
+        "Quali parti erano completamente sotto la tua responsabilità e quali dipendevano da altri?",
+        "Quali decisioni potevi prendere direttamente senza escalation?",
+        "Come veniva misurato il successo di quel lavoro?",
+        "Se l’esito fosse stato negativo, dove sarebbe ricaduta la responsabilità?"
+      ]
+    },
+    "tool_adaptation": {
+      "label": "Adattamento agli Strumenti",
+      "triggerType": "tool_adaptation",
+      "goal": "Capire se un’esperienza con strumenti simili è sufficiente per adattarsi rapidamente.",
+      "useWhen": [
+        "il candidato conosce uno strumento simile ma non quello esatto richiesto",
+        "esiste un mismatch sugli strumenti senza che sia un blocco strutturale"
+      ],
+      "followups": [
+        "Quanto è simile lo strumento che hai usato rispetto a quello richiesto qui?",
+        "Quali parti pensi che si trasferirebbero facilmente e quali no?",
+        "Quanto rapidamente hai imparato nuovi strumenti nei ruoli precedenti?",
+        "Puoi fare un esempio di quando hai adattato il tuo modo di lavorare a un nuovo sistema o piattaforma?"
+      ]
+    },
+    "achievement_quantification": {
+      "label": "Quantificazione dei Risultati",
+      "triggerType": "achievement_quantification",
+      "goal": "Spingere il candidato a rendere i risultati più concreti e misurabili.",
+      "useWhen": [
+        "le risposte restano generiche",
+        "l’impatto è descritto senza outcome",
+        "il CV mostra poca metrica"
+      ],
+      "followups": [
+        "Come misuravi il successo in quel caso?",
+        "Che cosa è cambiato concretamente dopo il tuo lavoro?",
+        "Hai numeri, percentuali, risparmi di tempo o indicatori di business che mostrino l’impatto?",
+        "Rispetto alla situazione iniziale, che cosa è migliorato e di quanto?"
+      ]
+    },
+    "stakeholder_examples": {
+      "label": "Esempi sugli Stakeholder",
+      "triggerType": "stakeholder_examples",
+      "goal": "Trasformare affermazioni astratte sulla comunicazione in esempi concreti di gestione stakeholder.",
+      "useWhen": [
+        "la gestione degli stakeholder è dichiarata ma poco dimostrata",
+        "il ruolo dipende da influenza cross-funzionale"
+      ],
+      "followups": [
+        "Chi erano gli stakeholder in quell’esempio e che cosa stava a cuore a ciascuno?",
+        "Dov’era il punto di tensione o disallineamento in quella situazione?",
+        "Come hai adattato la comunicazione per pubblici diversi?",
+        "Qual è stato l’esito finale di quella interazione?"
+      ]
+    },
+    "transferability_probe": {
+      "label": "Verifica della Trasferibilità",
+      "triggerType": "transferability_probe",
+      "goal": "Testare se un’esperienza adiacente può davvero sostenere la performance nel ruolo target.",
+      "useWhen": [
+        "il candidato sta passando tra ruoli o domini diversi",
+        "l’esperienza diretta è limitata ma quella adiacente è promettente"
+      ],
+      "followups": [
+        "Che cosa c’è di più simile tra il tuo contesto precedente e questo ruolo target?",
+        "Che cosa è materialmente diverso, e come pensi di compensare questo gap?",
+        "Perché ritieni che la tua esperienza passata possa comunque avere valore qui?",
+        "Puoi fare un esempio di quando hai avuto successo in un contesto inizialmente poco familiare?"
+      ]
+    }
+  }
+}

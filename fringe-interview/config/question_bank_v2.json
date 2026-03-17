@@ -1,0 +1,951 @@
+{
+  "version": 1,
+  "questions": [
+    {
+      "key": "transferability_examples",
+      "category": "role_fit",
+      "intent": "Detect whether the candidate can explain why past experience is transferable to the target role.",
+      "signals": [
+        "transferability",
+        "clarity",
+        "ownership"
+      ],
+      "senioritySuitability": [
+        "entry",
+        "junior",
+        "mid"
+      ],
+      "companyContextSuitability": [
+        "corporate_structured",
+        "scaleup_dynamic",
+        "startup_pragmatic",
+        "small_business_operational"
+      ],
+      "toneSuitability": [
+        "standard",
+        "supportive",
+        "incisive",
+        "business_direct",
+        "hr_relational"
+      ],
+      "selectionWeight": "high",
+      "variants": {
+        "standard": {
+          "prompt": "Your background is related to this role, but not identical. What makes you think this transition can work well?"
+        },
+        "supportive": {
+          "prompt": "Would you like to walk me through why you believe your previous experience can transfer well into this role?"
+        },
+        "hr_relational": {
+          "prompt": "How do you personally connect your past experience to what this role is asking for?"
+        },
+        "incisive": {
+          "prompt": "Be specific: why should I believe your past experience is genuinely transferable to this role?"
+        },
+        "business_direct": {
+          "prompt": "Explain clearly why your previous experience is relevant enough for this role."
+        }
+      },
+      "tags": [
+        "role_fit_core",
+        "transferability",
+        "career_transition_friendly"
+      ],
+      "metadata": {},
+      "extensions": {}
+    },
+    {
+      "key": "learning_orientation",
+      "category": "seniority_calibration",
+      "intent": "Detect whether the candidate shows learning ability, self-development, and growth readiness.",
+      "signals": [
+        "curiosity",
+        "coachability",
+        "learning_orientation"
+      ],
+      "senioritySuitability": [
+        "entry",
+        "junior",
+        "mid"
+      ],
+      "companyContextSuitability": [
+        "corporate_structured",
+        "scaleup_dynamic",
+        "startup_pragmatic",
+        "consultancy_client_facing",
+        "small_business_operational"
+      ],
+      "toneSuitability": [
+        "standard",
+        "supportive",
+        "hr_relational",
+        "incisive"
+      ],
+      "selectionWeight": "medium",
+      "variants": {
+        "standard": {
+          "prompt": "Tell me about a situation where you had to learn something quickly to handle a new challenge."
+        },
+        "supportive": {
+          "prompt": "Can you share an example of a time when you learned something new and used it to handle a challenge better?"
+        },
+        "hr_relational": {
+          "prompt": "What kind of experience has helped you grow the most recently, and how did you apply that learning?"
+        },
+        "incisive": {
+          "prompt": "Give me one concrete example of how you learned quickly and applied it in practice."
+        }
+      },
+      "tags": [
+        "seniority_calibration",
+        "junior_friendly",
+        "growth_signal"
+      ],
+      "metadata": {},
+      "extensions": {}
+    },
+    {
+      "key": "initiative_examples",
+      "category": "person_perception",
+      "intent": "Detect whether the candidate takes initiative beyond assigned tasks.",
+      "signals": [
+        "initiative",
+        "ownership",
+        "proactivity"
+      ],
+      "senioritySuitability": [
+        "entry",
+        "junior",
+        "mid"
+      ],
+      "companyContextSuitability": [
+        "scaleup_dynamic",
+        "startup_pragmatic",
+        "small_business_operational",
+        "consultancy_client_facing"
+      ],
+      "toneSuitability": [
+        "standard",
+        "supportive",
+        "incisive",
+        "business_direct"
+      ],
+      "selectionWeight": "medium",
+      "variants": {
+        "standard": {
+          "prompt": "Can you tell me about a time when you took initiative beyond what was explicitly asked of you?"
+        },
+        "supportive": {
+          "prompt": "Would you like to share an example of a moment when you stepped forward on your own initiative?"
+        },
+        "incisive": {
+          "prompt": "Give me one concrete example of initiative you took without being directly asked."
+        },
+        "business_direct": {
+          "prompt": "Describe a case where you acted proactively without waiting for instruction."
+        }
+      },
+      "tags": [
+        "person_perception",
+        "initiative",
+        "junior_friendly"
+      ],
+      "metadata": {},
+      "extensions": {}
+    },
+    {
+      "key": "stakeholder_interaction",
+      "category": "role_fit",
+      "intent": "Detect whether the candidate can work credibly with stakeholders, managers, clients, or cross-functional counterparts.",
+      "signals": [
+        "stakeholder_management",
+        "communication_clarity",
+        "collaboration"
+      ],
+      "senioritySuitability": [
+        "mid",
+        "senior",
+        "lead"
+      ],
+      "companyContextSuitability": [
+        "corporate_structured",
+        "consultancy_client_facing",
+        "scaleup_dynamic"
+      ],
+      "toneSuitability": [
+        "standard",
+        "incisive",
+        "pressure",
+        "business_direct",
+        "hr_relational"
+      ],
+      "selectionWeight": "high",
+      "variants": {
+        "standard": {
+          "prompt": "Tell me about a situation where you had to align with stakeholders who had different expectations."
+        },
+        "hr_relational": {
+          "prompt": "How do you usually approach situations where different stakeholders expect different things from you?"
+        },
+        "incisive": {
+          "prompt": "Describe a real case where stakeholder expectations conflicted. What did you actually do?"
+        },
+        "business_direct": {
+          "prompt": "Describe a stakeholder conflict you managed and the outcome you produced."
+        },
+        "pressure": {
+          "prompt": "Give me an example of a difficult stakeholder situation. Why should I believe you handled it well?"
+        }
+      },
+      "tags": [
+        "role_fit_core",
+        "stakeholders",
+        "cross_functional"
+      ],
+      "metadata": {},
+      "extensions": {}
+    },
+    {
+      "key": "closing_reflection",
+      "category": "closing",
+      "intent": "Consolidate the interview by checking whether the candidate can close with reflection, self-awareness, and a final signal of fit.",
+      "signals": [
+        "reflection",
+        "self_awareness",
+        "fit_articulation"
+      ],
+      "senioritySuitability": [
+        "entry",
+        "junior",
+        "mid",
+        "senior",
+        "lead",
+        "executive"
+      ],
+      "companyContextSuitability": [
+        "corporate_structured",
+        "scaleup_dynamic",
+        "startup_pragmatic",
+        "consultancy_client_facing",
+        "small_business_operational"
+      ],
+      "toneSuitability": [
+        "standard",
+        "supportive",
+        "hr_relational",
+        "business_direct"
+      ],
+      "selectionWeight": "medium",
+      "variants": {
+        "standard": {
+          "prompt": "Before we close, what would you most want the interviewer to remember about your fit for this role?"
+        },
+        "supportive": {
+          "prompt": "As we close, what do you feel is the strongest message you would want to leave about your fit for this role?"
+        },
+        "hr_relational": {
+          "prompt": "If you had to leave one final impression about why you fit this role, what would you want it to be?"
+        },
+        "business_direct": {
+          "prompt": "Close by stating clearly why you believe you are a credible fit for this role."
+        }
+      },
+      "tags": [
+        "closing",
+        "reflection",
+        "fit_signal"
+      ],
+      "metadata": {},
+      "extensions": {}
+    },
+    {
+      "key": "leadership_scope",
+      "category": "seniority_calibration",
+      "intent": "Detect whether the candidate can explain real scope of leadership, influence, and people or decision responsibility.",
+      "signals": [
+        "leadership_scope",
+        "accountability",
+        "decision_quality"
+      ],
+      "senioritySuitability": [
+        "senior",
+        "lead",
+        "executive"
+      ],
+      "companyContextSuitability": [
+        "corporate_structured",
+        "scaleup_dynamic",
+        "consultancy_client_facing",
+        "small_business_operational"
+      ],
+      "toneSuitability": [
+        "standard",
+        "supportive",
+        "hr_relational",
+        "incisive",
+        "business_direct"
+      ],
+      "selectionWeight": "high",
+      "variants": {
+        "standard": {
+          "prompt": "Tell me about a situation where you had meaningful responsibility over people, priorities, or important decisions."
+        },
+        "supportive": {
+          "prompt": "Can you share an example of a situation where you had significant responsibility over people or important decisions?"
+        },
+        "hr_relational": {
+          "prompt": "What kind of leadership or responsibility scope have you actually held in practice?"
+        },
+        "incisive": {
+          "prompt": "Be precise: what were you actually accountable for, and which decisions were truly yours?"
+        },
+        "business_direct": {
+          "prompt": "What did you really own in terms of people, priorities, or decisions?"
+        }
+      },
+      "tags": [
+        "seniority_calibration",
+        "leadership",
+        "higher_seniority"
+      ],
+      "metadata": {},
+      "extensions": {}
+    },
+    {
+      "key": "decision_tradeoffs",
+      "category": "seniority_calibration",
+      "intent": "Detect whether the candidate can reason through difficult decisions and explain trade-offs under imperfect conditions.",
+      "signals": [
+        "decision_quality",
+        "tradeoff_reasoning",
+        "judgment"
+      ],
+      "senioritySuitability": [
+        "mid",
+        "senior",
+        "lead",
+        "executive"
+      ],
+      "companyContextSuitability": [
+        "corporate_structured",
+        "scaleup_dynamic",
+        "startup_pragmatic",
+        "consultancy_client_facing"
+      ],
+      "toneSuitability": [
+        "standard",
+        "supportive",
+        "hr_relational",
+        "incisive",
+        "business_direct",
+        "pressure"
+      ],
+      "selectionWeight": "high",
+      "variants": {
+        "standard": {
+          "prompt": "Describe a difficult decision you had to make when there was no perfect option available."
+        },
+        "supportive": {
+          "prompt": "Can you walk me through a difficult decision where you had to balance competing priorities?"
+        },
+        "hr_relational": {
+          "prompt": "How do you usually approach decisions where there is no clearly ideal option?"
+        },
+        "incisive": {
+          "prompt": "Tell me about a decision where there was no clear right answer. What trade-off did you choose and why?"
+        },
+        "business_direct": {
+          "prompt": "What trade-off did you face, and how did you decide?"
+        },
+        "pressure": {
+          "prompt": "Describe a hard trade-off you chose. Why was your decision the right one under pressure?"
+        }
+      },
+      "tags": [
+        "seniority_calibration",
+        "judgment",
+        "decision_making"
+      ],
+      "metadata": {},
+      "extensions": {}
+    },
+    {
+      "key": "ambiguity_management",
+      "category": "seniority_calibration",
+      "intent": "Detect whether the candidate can move forward effectively when goals, constraints, or paths are unclear.",
+      "signals": [
+        "ambiguity_management",
+        "autonomy",
+        "execution_focus"
+      ],
+      "senioritySuitability": [
+        "mid",
+        "senior",
+        "lead"
+      ],
+      "companyContextSuitability": [
+        "scaleup_dynamic",
+        "startup_pragmatic",
+        "corporate_structured",
+        "consultancy_client_facing"
+      ],
+      "toneSuitability": [
+        "standard",
+        "supportive",
+        "hr_relational",
+        "incisive",
+        "business_direct"
+      ],
+      "selectionWeight": "medium",
+      "variants": {
+        "standard": {
+          "prompt": "Tell me about a situation where things were ambiguous and it was not immediately clear what to do."
+        },
+        "supportive": {
+          "prompt": "Can you share an example of how you handled a situation where things were unclear or evolving?"
+        },
+        "hr_relational": {
+          "prompt": "How do you usually move forward when the situation is unclear and there is no obvious path?"
+        },
+        "incisive": {
+          "prompt": "When things were unclear, how did you decide what to do? Walk me through your reasoning."
+        },
+        "business_direct": {
+          "prompt": "How did you move forward without clarity?"
+        }
+      },
+      "tags": [
+        "seniority_calibration",
+        "ambiguity",
+        "autonomy"
+      ],
+      "metadata": {},
+      "extensions": {}
+    },
+    {
+      "key": "accountability_examples",
+      "category": "role_fit",
+      "intent": "Detect whether the candidate can point to outcomes they directly owned and explain the resulting impact.",
+      "signals": [
+        "accountability",
+        "ownership",
+        "evidence"
+      ],
+      "senioritySuitability": [
+        "mid",
+        "senior",
+        "lead",
+        "executive"
+      ],
+      "companyContextSuitability": [
+        "corporate_structured",
+        "scaleup_dynamic",
+        "startup_pragmatic",
+        "consultancy_client_facing",
+        "small_business_operational"
+      ],
+      "toneSuitability": [
+        "standard",
+        "supportive",
+        "hr_relational",
+        "incisive",
+        "business_direct"
+      ],
+      "selectionWeight": "high",
+      "variants": {
+        "standard": {
+          "prompt": "Tell me about a result you were directly accountable for."
+        },
+        "supportive": {
+          "prompt": "Can you describe a result you were personally responsible for achieving?"
+        },
+        "hr_relational": {
+          "prompt": "Which result do you feel most directly responsible for, and why?"
+        },
+        "incisive": {
+          "prompt": "What result were you directly accountable for, and what happened because of your actions?"
+        },
+        "business_direct": {
+          "prompt": "What did you own and what was the outcome?"
+        }
+      },
+      "tags": [
+        "role_fit_core",
+        "accountability",
+        "results"
+      ],
+      "metadata": {},
+      "extensions": {}
+    },
+    {
+      "key": "pressure_handling",
+      "category": "person_perception",
+      "intent": "Detect how the candidate behaves under pressure and what signals of composure or prioritization emerge.",
+      "signals": [
+        "composure_under_pressure",
+        "resilience",
+        "prioritization"
+      ],
+      "senioritySuitability": [
+        "mid",
+        "senior",
+        "lead",
+        "executive"
+      ],
+      "companyContextSuitability": [
+        "consultancy_client_facing",
+        "scaleup_dynamic",
+        "startup_pragmatic",
+        "corporate_structured"
+      ],
+      "toneSuitability": [
+        "standard",
+        "supportive",
+        "hr_relational",
+        "incisive",
+        "business_direct",
+        "pressure"
+      ],
+      "selectionWeight": "medium",
+      "variants": {
+        "standard": {
+          "prompt": "Tell me about a situation where you had to work under significant pressure."
+        },
+        "supportive": {
+          "prompt": "Can you share how you handled a situation where you were under significant pressure?"
+        },
+        "hr_relational": {
+          "prompt": "How do you usually react when you work under strong pressure? Give me a real example."
+        },
+        "incisive": {
+          "prompt": "When under pressure, what did you prioritize and what did you deliberately let go?"
+        },
+        "business_direct": {
+          "prompt": "How do you behave under pressure?"
+        },
+        "pressure": {
+          "prompt": "Describe a high-pressure moment. What did you keep under control, and what almost slipped?"
+        }
+      },
+      "tags": [
+        "person_perception",
+        "pressure",
+        "resilience"
+      ],
+      "metadata": {},
+      "extensions": {}
+    },
+{
+  "key": "motivation_for_role",
+  "category": "person_perception",
+  "intent": "Detect whether the candidate can express credible motivation for the role in a way that feels specific rather than generic.",
+  "signals": [
+    "motivation",
+    "energy",
+    "role_interest"
+  ],
+  "senioritySuitability": [
+    "entry",
+    "junior",
+    "mid"
+  ],
+  "companyContextSuitability": [
+    "corporate_structured",
+    "scaleup_dynamic",
+    "startup_pragmatic",
+    "small_business_operational",
+    "consultancy_client_facing"
+  ],
+  "toneSuitability": [
+    "standard",
+    "supportive",
+    "hr_relational",
+    "incisive"
+  ],
+  "selectionWeight": "medium",
+  "variants": {
+    "standard": {
+      "prompt": "What makes this role genuinely interesting to you, beyond the job title itself?"
+    },
+    "supportive": {
+      "prompt": "What is it about this role that genuinely attracts you?"
+    },
+    "hr_relational": {
+      "prompt": "What do you feel connects you personally to this role?"
+    },
+    "incisive": {
+      "prompt": "Be specific: why this role, and not just any similar opportunity?"
+    }
+  },
+  "tags": [
+    "person_perception",
+    "motivation",
+    "junior_friendly"
+  ],
+  "metadata": {},
+  "extensions": {}
+},
+{
+  "key": "feedback_application",
+  "category": "seniority_calibration",
+  "intent": "Detect whether the candidate can receive feedback, apply it, and improve behavior or performance.",
+  "signals": [
+    "coachability",
+    "learning_orientation",
+    "self_awareness"
+  ],
+  "senioritySuitability": [
+    "entry",
+    "junior",
+    "mid"
+  ],
+  "companyContextSuitability": [
+    "corporate_structured",
+    "scaleup_dynamic",
+    "consultancy_client_facing",
+    "small_business_operational"
+  ],
+  "toneSuitability": [
+    "standard",
+    "supportive",
+    "hr_relational",
+    "incisive"
+  ],
+  "selectionWeight": "medium",
+  "variants": {
+    "standard": {
+      "prompt": "Tell me about a piece of feedback you received and how you applied it."
+    },
+    "supportive": {
+      "prompt": "Can you share an example of feedback that helped you improve something important?"
+    },
+    "hr_relational": {
+      "prompt": "What is a piece of feedback that stayed with you and changed the way you work?"
+    },
+    "incisive": {
+      "prompt": "Give me one concrete example of feedback you acted on. What changed because of it?"
+    }
+  },
+  "tags": [
+    "seniority_calibration",
+    "coachability",
+    "junior_friendly"
+  ],
+  "metadata": {},
+  "extensions": {}
+},
+{
+  "key": "team_contribution_examples",
+  "category": "role_fit",
+  "intent": "Detect whether the candidate can describe how they contributed within a team without disappearing into vague collective language.",
+  "signals": [
+    "collaboration",
+    "ownership",
+    "team_fit"
+  ],
+  "senioritySuitability": [
+    "entry",
+    "junior",
+    "mid"
+  ],
+  "companyContextSuitability": [
+    "corporate_structured",
+    "scaleup_dynamic",
+    "consultancy_client_facing",
+    "small_business_operational"
+  ],
+  "toneSuitability": [
+    "standard",
+    "supportive",
+    "hr_relational",
+    "incisive",
+    "business_direct"
+  ],
+  "selectionWeight": "medium",
+  "variants": {
+    "standard": {
+      "prompt": "Tell me about a team situation where your contribution made a real difference."
+    },
+    "supportive": {
+      "prompt": "Can you share an example of working well within a team and what your contribution was?"
+    },
+    "hr_relational": {
+      "prompt": "How do you usually contribute when a team is trying to reach a shared result?"
+    },
+    "incisive": {
+      "prompt": "In a team setting, what did you personally contribute that mattered?"
+    },
+    "business_direct": {
+      "prompt": "What was your concrete contribution to the team outcome?"
+    }
+  },
+  "tags": [
+    "role_fit",
+    "teamwork",
+    "junior_friendly"
+  ],
+  "metadata": {},
+  "extensions": {}
+},
+{
+  "key": "adaptability_examples",
+  "category": "person_perception",
+  "intent": "Detect whether the candidate can adapt to change, uncertainty, or new working conditions without becoming passive.",
+  "signals": [
+    "adaptability",
+    "resilience",
+    "learning_orientation"
+  ],
+  "senioritySuitability": [
+    "entry",
+    "junior",
+    "mid",
+    "senior"
+  ],
+  "companyContextSuitability": [
+    "scaleup_dynamic",
+    "startup_pragmatic",
+    "corporate_structured",
+    "consultancy_client_facing",
+    "small_business_operational"
+  ],
+  "toneSuitability": [
+    "standard",
+    "supportive",
+    "hr_relational",
+    "incisive",
+    "business_direct"
+  ],
+  "selectionWeight": "medium",
+  "variants": {
+    "standard": {
+      "prompt": "Tell me about a situation where something changed and you had to adapt quickly."
+    },
+    "supportive": {
+      "prompt": "Can you share an example of a time when you adjusted well to a change or an unexpected situation?"
+    },
+    "hr_relational": {
+      "prompt": "How do you usually react when plans change or the context shifts unexpectedly?"
+    },
+    "incisive": {
+      "prompt": "Describe a real example of change. How did you adapt, concretely?"
+    },
+    "business_direct": {
+      "prompt": "What do you do when conditions change and you need to adapt fast?"
+    }
+  },
+  "tags": [
+    "person_perception",
+    "adaptability",
+    "junior_friendly"
+  ],
+  "metadata": {},
+  "extensions": {}
+},
+{
+  "key": "client_pushback_handling",
+  "category": "role_fit",
+  "intent": "Detect whether the candidate can handle skeptical or resistant client reactions without becoming defensive or vague.",
+  "signals": [
+    "client_handling",
+    "composure_under_pressure",
+    "communication_clarity"
+  ],
+  "senioritySuitability": [
+    "mid",
+    "senior",
+    "lead"
+  ],
+  "companyContextSuitability": [
+    "consultancy_client_facing",
+    "corporate_structured",
+    "scaleup_dynamic"
+  ],
+  "toneSuitability": [
+    "standard",
+    "hr_relational",
+    "incisive",
+    "business_direct",
+    "pressure"
+  ],
+  "selectionWeight": "high",
+  "variants": {
+    "standard": {
+      "prompt": "Tell me about a time when a client or stakeholder pushed back strongly on your proposal or recommendation."
+    },
+    "hr_relational": {
+      "prompt": "How do you usually respond when a client reacts with skepticism or resistance?"
+    },
+    "incisive": {
+      "prompt": "Describe a real case where a client pushed back hard. What did you say and how did you regain control of the conversation?"
+    },
+    "business_direct": {
+      "prompt": "How did you handle serious pushback from a client?"
+    },
+    "pressure": {
+      "prompt": "Tell me about a client who challenged you aggressively. Why should I believe you handled that situation well?"
+    }
+  },
+  "tags": [
+    "consultancy",
+    "client_handling",
+    "pressure_relevant"
+  ],
+  "metadata": {},
+  "extensions": {}
+},
+{
+  "key": "clarity_under_challenge",
+  "category": "person_perception",
+  "intent": "Detect whether the candidate remains clear, structured, and credible when challenged directly.",
+  "signals": [
+    "clarity",
+    "composure_under_pressure",
+    "credibility"
+  ],
+  "senioritySuitability": [
+    "mid",
+    "senior",
+    "lead",
+    "executive"
+  ],
+  "companyContextSuitability": [
+    "consultancy_client_facing",
+    "corporate_structured",
+    "scaleup_dynamic"
+  ],
+  "toneSuitability": [
+    "standard",
+    "incisive",
+    "business_direct",
+    "pressure"
+  ],
+  "selectionWeight": "medium",
+  "variants": {
+    "standard": {
+      "prompt": "Tell me about a moment when you had to explain something important while being questioned closely."
+    },
+    "incisive": {
+      "prompt": "When someone challenged your reasoning directly, how did you keep your explanation clear and credible?"
+    },
+    "business_direct": {
+      "prompt": "How do you stay clear when someone is pushing back on your logic?"
+    },
+    "pressure": {
+      "prompt": "Describe a moment when you were under scrutiny and had to stay sharp. What kept your explanation from falling apart?"
+    }
+  },
+  "tags": [
+    "pressure",
+    "clarity",
+    "consultancy"
+  ],
+  "metadata": {},
+  "extensions": {}
+},
+{
+  "key": "priority_conflict_management",
+  "category": "seniority_calibration",
+  "intent": "Detect whether the candidate can manage conflicting priorities under delivery pressure without losing focus.",
+  "signals": [
+    "prioritization",
+    "delivery_judgment",
+    "pressure_management"
+  ],
+  "senioritySuitability": [
+    "mid",
+    "senior",
+    "lead"
+  ],
+  "companyContextSuitability": [
+    "consultancy_client_facing",
+    "scaleup_dynamic",
+    "startup_pragmatic",
+    "corporate_structured"
+  ],
+  "toneSuitability": [
+    "standard",
+    "incisive",
+    "business_direct",
+    "pressure"
+  ],
+  "selectionWeight": "high",
+  "variants": {
+    "standard": {
+      "prompt": "Tell me about a situation where multiple priorities collided and you had to decide what to protect first."
+    },
+    "incisive": {
+      "prompt": "When priorities conflicted and not everything could be done well, what did you choose to protect and why?"
+    },
+    "business_direct": {
+      "prompt": "What did you prioritize when everything mattered at once?"
+    },
+    "pressure": {
+      "prompt": "Describe a moment when competing priorities were crashing into each other. What did you sacrifice, and why was that the right call?"
+    }
+  },
+  "tags": [
+    "pressure",
+    "prioritization",
+    "consultancy"
+  ],
+  "metadata": {},
+  "extensions": {}
+},
+{
+  "key": "expectation_reset",
+  "category": "role_fit",
+  "intent": "Detect whether the candidate can reset unrealistic expectations with clients or stakeholders while preserving trust.",
+  "signals": [
+    "stakeholder_management",
+    "credibility",
+    "expectation_management"
+  ],
+  "senioritySuitability": [
+    "mid",
+    "senior",
+    "lead"
+  ],
+  "companyContextSuitability": [
+    "consultancy_client_facing",
+    "corporate_structured",
+    "scaleup_dynamic"
+  ],
+  "toneSuitability": [
+    "standard",
+    "hr_relational",
+    "incisive",
+    "business_direct",
+    "pressure"
+  ],
+  "selectionWeight": "medium",
+  "variants": {
+    "standard": {
+      "prompt": "Tell me about a time when you had to reset expectations that were unrealistic or misaligned."
+    },
+    "hr_relational": {
+      "prompt": "How do you usually handle situations where expectations are not realistic but you still need to preserve trust?"
+    },
+    "incisive": {
+      "prompt": "Describe a real case where expectations were unrealistic. How did you reset them without losing credibility?"
+    },
+    "business_direct": {
+      "prompt": "How did you correct unrealistic expectations while keeping alignment?"
+    },
+    "pressure": {
+      "prompt": "Tell me about a situation where someone expected too much, too fast. How did you push back without losing the relationship?"
+    }
+  },
+  "tags": [
+    "consultancy",
+    "stakeholders",
+    "expectation_management"
+  ],
+  "metadata": {},
+  "extensions": {}
+}
+
+
+
+  ]
+}

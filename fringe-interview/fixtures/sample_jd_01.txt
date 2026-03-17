@@ -1,0 +1,34 @@
+Job Title: Product Operations Manager
+
+We are looking for a Product Operations Manager to support alignment between product, operations, and commercial teams in a fast-paced B2B SaaS environment.
+
+The role will help improve operational visibility, drive KPI reporting, and support execution of cross-functional initiatives. You will work closely with product managers and business stakeholders to identify friction points, improve processes, and help teams make better data-informed decisions.
+
+Key responsibilities:
+- Own recurring operational and product performance reporting
+- Build and improve dashboards for internal stakeholders
+- Partner with Product, Sales, and Customer Success to improve execution
+- Translate business needs into reporting and workflow improvements
+- Support prioritization by identifying operational inefficiencies and recurring issues
+- Present insights and updates to senior stakeholders
+- Help drive accountability across teams for key initiatives
+
+Requirements:
+- 4+ years of experience in operations, business analysis, product operations, or a similar role
+- Strong SQL skills
+- Experience with BI tools such as Power BI or Tableau
+- Strong stakeholder management and cross-functional collaboration
+- Ability to work in fast-paced environments with changing priorities
+- Strong communication and structured problem-solving skills
+
+Preferred:
+- Experience in SaaS or B2B software environments
+- Experience working closely with Product teams
+- Experience owning processes or initiatives end-to-end
+- Familiarity with customer lifecycle or success operations
+
+Nice to have:
+- Experience mentoring junior team members
+- Experience with workflow design or operational playbooks
+
+This role is ideal for someone who combines analytical discipline with operational judgment and can create clarity across multiple teams.

@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "tones": {
+    "standard": {
+      "label": "standard",
+      "description": "Tono neutro, professionale, bilanciato.",
+      "promptStyle": [
+        "chiaro",
+        "professionale",
+        "non aggressivo"
+      ],
+      "followupStyle": [
+        "approfondimento ordinato",
+        "richiesta di esempio",
+        "chiarimento ragionato"
+      ]
+    },
+    "supportive": {
+      "label": "supportive",
+      "description": "Tono incoraggiante, adatto a simulazioni iniziali o utenti inesperti.",
+      "promptStyle": [
+        "caldo",
+        "accogliente",
+        "facilitante"
+      ],
+      "followupStyle": [
+        "domande aperte",
+        "invito a dettagliare",
+        "pressione bassa"
+      ]
+    },
+    "incisive": {
+      "label": "incisive",
+      "description": "Tono più diretto, con domande che chiedono precisione e sostanza.",
+      "promptStyle": [
+        "diretto",
+        "serrato",
+        "centrato"
+      ],
+      "followupStyle": [
+        "richiesta di concretezza",
+        "verifica di ownership",
+        "poca tolleranza per vaghezza"
+      ]
+    },
+    "pressure": {
+      "label": "pressure",
+      "description": "Tono orientato a testare composure, tenuta e chiarezza sotto pressione.",
+      "promptStyle": [
+        "sfidante",
+        "più freddo",
+        "più teso"
+      ],
+      "followupStyle": [
+        "domande ravvicinate",
+        "verifica della coerenza",
+        "stress controllato"
+      ]
+    },
+    "hr_relational": {
+      "label": "hr_relational",
+      "description": "Tono più orientato alla persona, alla compatibilità e alla lettura relazionale.",
+      "promptStyle": [
+        "relazionale",
+        "esplorativo",
+        "osservativo"
+      ],
+      "followupStyle": [
+        "motivazioni",
+        "stile di lavoro",
+        "segnali personali"
+      ]
+    },
+    "business_direct": {
+      "label": "business_direct",
+      "description": "Tono pragmatico, orientato a risultati, impatto e sintesi.",
+      "promptStyle": [
+        "asciutto",
+        "business-like",
+        "risultato-centrico"
+      ],
+      "followupStyle": [
+        "cosa hai fatto",
+        "quale risultato",
+        "perché conta"
+      ]
+    }
+  }
+}

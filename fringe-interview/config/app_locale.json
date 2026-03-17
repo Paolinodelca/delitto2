@@ -1,0 +1,5 @@
+{
+  "defaultLocale": "it",
+  "fallbackLocale": "en",
+  "supportedLocales": ["it", "en"]
+}

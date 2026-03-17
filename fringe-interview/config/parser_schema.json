@@ -1,0 +1,138 @@
+{
+  "candidateProfile": {
+    "summary": "string",
+    "currentPositioning": "string",
+    "senioritySignal": "junior | mid | senior | lead | unclear",
+    "experienceSignals": {
+      "yearsDetected": "string",
+      "leadershipExposure": "none | limited | moderate | strong | unclear",
+      "ownershipLevel": "low | medium | high | unclear",
+      "autonomyLevel": "low | medium | high | unclear",
+      "scopeLevel": "narrow | moderate | broad | unclear"
+    },
+    "skills": {
+      "technical": ["string"],
+      "tools": ["string"],
+      "methodologies": ["string"],
+      "soft": ["string"],
+      "languages": ["string"]
+    },
+    "domainSignals": ["string"],
+    "responsibilitySignals": ["string"],
+    "careerSignals": {
+      "stakeholderManagement": "none | weak | partial | strong | unclear",
+      "crossFunctionalCollaboration": "none | weak | partial | strong | unclear",
+      "deliveryOwnership": "none | weak | partial | strong | unclear",
+      "peopleLeadership": "none | weak | partial | strong | unclear",
+      "clientExposure": "none | weak | partial | strong | unclear",
+      "analyticalRigour": "none | weak | partial | strong | unclear",
+      "communicationClarity": "low | medium | high | unclear"
+    },
+    "evidence": {
+      "overallEvidenceLevel": "low | medium | high",
+      "evidenceRichAreas": ["string"],
+      "weaklySupportedAreas": ["string"],
+      "quantifiedAchievementsPresent": true
+    },
+    "education": ["string"],
+    "certifications": ["string"],
+    "strengthAreas": ["string"],
+    "riskAreas": ["string"],
+    "ambiguities": ["string"]
+  },
+  "roleProfile": {
+    "title": "string",
+    "summary": "string",
+    "seniorityDetected": "junior | mid | senior | lead | unclear",
+    "requirements": {
+      "mustHave": ["string"],
+      "preferred": ["string"],
+      "bonus": ["string"]
+    },
+    "skills": {
+      "technical": ["string"],
+      "tools": ["string"],
+      "methodologies": ["string"],
+      "soft": ["string"],
+      "languages": ["string"]
+    },
+    "responsibilities": ["string"],
+    "successSignals": ["string"],
+    "domainContext": {
+      "industry": ["string"],
+      "businessModel": ["string"],
+      "environmentSignals": ["string"],
+      "pressureSignals": ["string"]
+    },
+    "contextType": "string",
+    "languageStyle": "string",
+    "redFlags": ["string"],
+    "ambiguities": ["string"]
+  },
+  "jobFitAnalysis": {
+    "fitSummary": {
+      "overallScore": "number",
+      "fitLevel": "low | medium | high",
+      "recommendationBand": "strong_fit | solid_fit | plausible_fit | stretch_fit | weak_fit",
+      "confidence": "low | medium | high",
+      "shortRationale": "string"
+    },
+    "dimensionScores": {
+      "technicalFit": "number",
+      "toolsFit": "number",
+      "domainFit": "number",
+      "seniorityFit": "number",
+      "responsibilityFit": "number",
+      "evidenceStrength": "number",
+      "growthPotential": "number"
+    },
+    "matches": [
+      {
+        "dimension": "technical_fit | tools_fit | domain_fit | seniority_fit | responsibility_fit | evidence_strength | growth_potential",
+        "roleItem": "string",
+        "candidateSignal": "string",
+        "matchType": "direct_match | partial_match | adjacent_match | transferable_match | weak_signal",
+        "score": "number",
+        "explanation": "string"
+      }
+    ],
+    "gaps": [
+      {
+        "dimension": "technical_fit | tools_fit | domain_fit | seniority_fit | responsibility_fit | evidence_strength",
+        "roleItem": "string",
+        "gapType": "missing | weak_signal | contradicted",
+        "severity": "low | medium | high | critical",
+        "recoverability": "easy_to_reframe | easy_to_learn | interview_clarifiable | structurally_missing",
+        "explanation": "string"
+      }
+    ],
+    "ambiguities": ["string"],
+    "transferableStrengths": ["string"],
+    "strongSignals": ["string"],
+    "weakSignals": ["string"],
+    "matchedSkills": ["string"],
+    "missingSkills": ["string"],
+    "questionFocusAreas": ["string"],
+    "interviewFocus": [
+      {
+        "priority": "high | medium | low",
+        "focusType": "verify_strength | probe_gap | clarify_ambiguity | assess_transferability | validate_seniority | test_depth",
+        "topic": "string",
+        "reason": "string"
+      }
+    ],
+    "followupTriggers": [
+      {
+        "triggerType": "leadership_depth | responsibility_probe | tool_adaptation | achievement_quantification | stakeholder_examples | transferability_probe",
+        "reason": "string"
+      }
+    ],
+    "cvImprovementHints": ["string"],
+    "reportHighlights": {
+      "strengths": ["string"],
+      "risks": ["string"],
+      "clarificationsNeeded": ["string"],
+      "positioningHints": ["string"]
+    }
+  }
+}

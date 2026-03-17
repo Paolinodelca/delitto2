@@ -1,0 +1,206 @@
+
+{
+  "type": "object",
+  "required": ["answerAnnotation"],
+  "properties": {
+    "answerAnnotation": {
+      "type": "object",
+      "required": [
+        "answerId",
+        "questionLabel",
+        "questionPrompt",
+        "answerText",
+        "reviewMode",
+        "summary",
+        "tags",
+        "annotations",
+        "strengths",
+        "weaknesses",
+        "coachTip",
+        "upgradeSuggestion",
+        "improvedAnswerDraft"
+      ],
+      "properties": {
+        "answerId": {
+          "type": "string"
+        },
+        "questionLabel": {
+          "type": "string"
+        },
+        "questionPrompt": {
+          "type": "string"
+        },
+        "answerText": {
+          "type": "string"
+        },
+        "reviewMode": {
+          "type": "string",
+          "enum": ["interview", "training_generic"]
+        },
+        "summary": {
+          "type": "object",
+          "required": [
+            "overallBand",
+            "oneLineDiagnosis",
+            "topStrength",
+            "topImprovementArea"
+          ],
+          "properties": {
+            "overallBand": {
+              "type": "string",
+              "enum": ["weak", "medium", "strong"]
+            },
+            "oneLineDiagnosis": {
+              "type": "string"
+            },
+            "topStrength": {
+              "type": "string"
+            },
+            "topImprovementArea": {
+              "type": "string"
+            }
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "label", "weight"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["strength", "evidence", "weakness", "opportunity"]
+              },
+              "label": {
+                "type": "string"
+              },
+              "weight": {
+                "type": "string",
+                "enum": ["low", "medium", "high"]
+              }
+            }
+          }
+        },
+        "annotations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "annotationId",
+              "type",
+              "dimension",
+              "label",
+              "reason",
+              "start",
+              "end",
+              "excerpt"
+            ],
+            "properties": {
+              "annotationId": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["strength", "evidence", "weakness", "opportunity"]
+              },
+              "dimension": {
+                "type": "string",
+                "enum": [
+                  "concreteness",
+                  "specificity",
+                  "evidence",
+                  "ownership",
+                  "structure",
+                  "clarity",
+                  "reflection",
+                  "generic"
+                ]
+              },
+              "label": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "start": {
+                "type": "number"
+              },
+              "end": {
+                "type": "number"
+              },
+              "excerpt": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "strengths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "explanation"],
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "weaknesses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "explanation"],
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "explanation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "coachTip": {
+          "type": "object",
+          "required": ["title", "message"],
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "upgradeSuggestion": {
+          "type": "object",
+          "required": ["goal", "instruction"],
+          "properties": {
+            "goal": {
+              "type": "string"
+            },
+            "instruction": {
+              "type": "string"
+            }
+          }
+        },
+        "improvedAnswerDraft": {
+          "type": "object",
+          "required": ["isProvided", "text"],
+          "properties": {
+            "isProvided": {
+              "type": "boolean"
+            },
+            "text": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

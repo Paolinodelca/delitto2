@@ -1,0 +1,61 @@
+Marco Bianchi
+Milan, Italy
+marco.bianchi@email.com
+LinkedIn: linkedin.com/in/marcobianchi
+
+Professional Summary
+Business analyst with 6 years of experience in digital services and e-commerce environments. Worked across reporting, process improvement, dashboarding, and cross-functional coordination between operations, sales, and product teams. Strong exposure to KPI tracking, weekly performance reviews, and stakeholder communication. Looking to move into a more ownership-focused product operations role.
+
+Work Experience
+
+Senior Business Analyst
+NorthWave Commerce
+2022 - Present
+
+- Built and maintained weekly and monthly performance dashboards for operations and commercial teams using SQL, Excel, and Tableau.
+- Coordinated reporting requirements across sales, operations, and product teams.
+- Presented weekly KPI updates to department managers and supported monthly business review preparation.
+- Improved order issue tracking workflow, reducing manual reconciliation time by 25%.
+- Worked with product managers to define reporting needs for new internal tools.
+- Supported prioritization discussions by surfacing recurring operational bottlenecks.
+- Trained two junior analysts on dashboard maintenance and reporting routines.
+
+Business Analyst
+RetailBridge
+2020 - 2022
+
+- Produced recurring reports on sales performance, fulfilment issues, and customer support trends.
+- Managed data extraction and cleaning using SQL and Excel.
+- Collaborated with operations and customer care leads to identify recurring failure points.
+- Helped standardize weekly reporting templates used across three teams.
+- Contributed to ad hoc analysis for leadership meetings.
+
+Operations Reporting Specialist
+FastLane Delivery
+2018 - 2020
+
+- Prepared daily and weekly reports on delivery performance and exception handling.
+- Maintained Excel trackers and supported KPI monitoring for local operations managers.
+- Flagged recurring issues and escalated them to central operations.
+- Supported process reviews aimed at reducing reporting inconsistencies.
+
+Education
+Master's Degree in Management Engineering
+Politecnico di Milano
+
+Bachelor's Degree in Economics
+University of Milan
+
+Skills
+SQL
+Tableau
+Excel
+KPI reporting
+Dashboarding
+Process improvement
+Cross-functional collaboration
+Stakeholder communication
+
+Languages
+Italian - Native
+English - Professional working proficiency

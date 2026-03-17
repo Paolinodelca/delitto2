@@ -1,40 +1,106 @@
 {
-  "followUps": [
-    {
-      "type": "concretizza",
-      "goal": "Portare una risposta vaga su un episodio reale",
-      "variants": [
-        "Fammi un episodio preciso, non una qualità astratta.",
-        "Portami un caso reale: che cosa è successo davvero?",
-        "Questo è ancora generale: dimmelo con un esempio concreto."
+  "meta": {
+    "version": "1.0",
+    "purpose": "Follow-up packs triggered by JobFitAnalysis and interview focus signals.",
+    "notes": [
+      "Each pack is activated by followupTriggers from jobFitAnalysis.",
+      "Packs are designed to deepen evidence, reduce ambiguity, or test readiness.",
+      "Follow-up questions are meant to come after an initial answer, not as opening questions."
+    ]
+  },
+  "packs": {
+    "leadership_depth": {
+      "label": "Leadership Depth",
+      "triggerType": "leadership_depth",
+      "goal": "Clarify whether leadership claims reflect real influence, mentoring, or management scope.",
+      "useWhen": [
+        "people leadership is weak or partial",
+        "mentoring is mentioned but not detailed",
+        "the role values influence or team guidance"
+      ],
+      "followups": [
+        "What exactly were you responsible for in that situation?",
+        "Who was relying on you, and in what way?",
+        "Did you set direction, make decisions, or mainly support execution?",
+        "What changed because of your involvement?"
       ]
     },
-    {
-      "type": "prova",
-      "goal": "Chiedere evidenza, risultato o verificabilità",
-      "variants": [
-        "Come faccio a vedere questa cosa in un fatto o in un risultato?",
-        "Quale risultato concreto dimostra quello che stai dicendo?",
-        "Dammi un elemento che renda questa risposta più verificabile."
+    "responsibility_probe": {
+      "label": "Responsibility Probe",
+      "triggerType": "responsibility_probe",
+      "goal": "Test how much ownership and accountability the candidate actually had.",
+      "useWhen": [
+        "ownership is implied but not explicit",
+        "initiative scope is unclear",
+        "the role expects end-to-end responsibility"
+      ],
+      "followups": [
+        "Which parts were fully yours, and which parts depended on others?",
+        "What decisions could you make directly without escalation?",
+        "How was success measured for that work?",
+        "If the outcome had failed, where would the accountability have landed?"
       ]
     },
-    {
-      "type": "stringi",
-      "goal": "Ridurre una risposta lunga o dispersiva a un punto chiaro",
-      "variants": [
-        "Stringimela in due frasi: qual è il punto vero?",
-        "Se tolgo il contorno, cosa devo capire davvero da questa risposta?",
-        "Qual è il nucleo della tua risposta, senza girarci intorno?"
+    "tool_adaptation": {
+      "label": "Tool Adaptation",
+      "triggerType": "tool_adaptation",
+      "goal": "Assess whether adjacent tool experience is enough for quick adaptation.",
+      "useWhen": [
+        "the candidate knows a similar tool but not the exact one requested",
+        "tool mismatch exists without being a structural blocker"
+      ],
+      "followups": [
+        "How similar is the tool you used to the one required here?",
+        "What parts do you expect would transfer easily, and what would not?",
+        "How quickly have you learned new tools in past roles?",
+        "Can you give an example of adapting your workflow to a new system or platform?"
       ]
     },
-    {
-      "type": "ruolo",
-      "goal": "Riportare la risposta sul ruolo target",
-      "variants": [
-        "In che modo questo si collega davvero al ruolo per cui ti candidi?",
-        "Portami questa risposta più vicino al lavoro che vuoi ottenere.",
-        "Perché questa cosa conta per il ruolo, e non solo per la tua storia in generale?"
+    "achievement_quantification": {
+      "label": "Achievement Quantification",
+      "triggerType": "achievement_quantification",
+      "goal": "Push the candidate to make results concrete and measurable.",
+      "useWhen": [
+        "answers remain generic",
+        "impact is described without outcomes",
+        "CV evidence lacks metrics"
+      ],
+      "followups": [
+        "How did you measure success in that case?",
+        "What changed in concrete terms after your work?",
+        "Do you have any numbers, percentages, time savings, or business indicators that show impact?",
+        "Compared with the previous situation, what improved and by how much?"
+      ]
+    },
+    "stakeholder_examples": {
+      "label": "Stakeholder Examples",
+      "triggerType": "stakeholder_examples",
+      "goal": "Turn abstract communication claims into concrete stakeholder scenarios.",
+      "useWhen": [
+        "stakeholder management is claimed but not clearly evidenced",
+        "the role depends on cross-functional influence"
+      ],
+      "followups": [
+        "Who were the stakeholders in that example, and what did each of them care about?",
+        "Where was the tension or misalignment in that situation?",
+        "How did you adapt your communication for different audiences?",
+        "What was the final outcome of that interaction?"
+      ]
+    },
+    "transferability_probe": {
+      "label": "Transferability Probe",
+      "triggerType": "transferability_probe",
+      "goal": "Test whether adjacent experience can realistically support performance in the target role.",
+      "useWhen": [
+        "candidate is transitioning across role or domain boundaries",
+        "direct experience is limited but adjacent experience is promising"
+      ],
+      "followups": [
+        "What is most similar between your previous context and this target role?",
+        "What is materially different, and how would you compensate for that gap?",
+        "Why do you think your past experience would still be valuable here?",
+        "Can you give an example of succeeding in a context that was initially unfamiliar to you?"
       ]
     }
-  ]
+  }
 }
