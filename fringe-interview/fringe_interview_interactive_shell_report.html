@@ -1,0 +1,1467 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <title>FRINGE Interview Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #4b5563;
+      --line: #dbe3f0;
+      --green-shell-a: #0f5f4a;
+      --green-shell-b: #0a4d3c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 0 20px 24px 20px;
+      line-height: 1.55;
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding-top: 12px;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .report-shell-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: linear-gradient(180deg, var(--green-shell-a) 0%, var(--green-shell-b) 100%);
+      color: white;
+      border-radius: 16px;
+      padding: 12px 14px 14px 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 24px rgba(10,77,60,0.22);
+    }
+
+    .report-shell-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .report-shell-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      margin-bottom: 4px;
+    }
+
+    .report-shell-subtitle {
+      font-size: 14px;
+      line-height: 1.45;
+      color: rgba(255,255,255,0.92);
+      max-width: 860px;
+    }
+
+    .switch-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+      text-decoration: none;
+      background: rgba(255,255,255,0.16);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.34);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .single-line-nav {
+      display: grid;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .single-line-nav-5 {
+      grid-template-columns: 1fr 1.2fr 1fr 1fr 1fr;
+    }
+
+    .top-tab {
+      position: relative;
+      min-height: 88px;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      padding: 12px 12px 10px 12px;
+      cursor: pointer;
+      text-align: left;
+      box-shadow:
+        0 10px 18px rgba(15, 23, 42, 0.10),
+        inset 0 1px 0 rgba(255,255,255,0.85);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+
+    .top-tab:hover {
+      transform: translateY(-1px);
+    }
+
+    .top-tab.is-active {
+      border-width: 3px;
+      box-shadow:
+        0 14px 24px rgba(15, 23, 42, 0.20),
+        inset 0 0 0 1px rgba(255,255,255,0.6);
+    }
+
+    .top-tab-free {
+      background: linear-gradient(180deg, #ffffff 0%, #ecfdf5 100%);
+    }
+
+    .top-tab-paid {
+      background: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%);
+    }
+
+    .top-tab-index {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+    }
+
+    .top-tab-index-free {
+      background: #16a34a;
+    }
+
+    .top-tab-index-pro {
+      background: #7c3aed;
+    }
+
+    .top-tab-index-premium {
+      background: #9333ea;
+    }
+
+    .plan-chip {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      color: white;
+    }
+
+    .plan-chip-free {
+      background: #16a34a;
+    }
+
+    .plan-chip-pro {
+      background: #7c3aed;
+    }
+
+    .plan-chip-premium {
+      background: #9333ea;
+    }
+
+    .top-tab-lock {
+      position: absolute;
+      top: 40px;
+      right: 12px;
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .top-tab-main {
+      display: block;
+      padding-left: 38px;
+      padding-right: 34px;
+      padding-top: 2px;
+    }
+
+    .top-tab-label {
+      display: block;
+      font-size: 15px;
+      font-weight: 800;
+      color: #111827;
+    }
+
+    .top-tab-note {
+      display: block;
+      font-size: 13px;
+      color: #475467;
+      margin-top: 4px;
+      line-height: 1.35;
+    }
+
+    .top-tab-free.is-active {
+      border-color: #16a34a;
+    }
+
+    .top-tab-paid.is-active {
+      border-color: #7c3aed;
+    }
+
+    .section-shell {
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+    }
+
+    .section-shell-header {
+      margin-bottom: 14px;
+    }
+
+    .section-shell-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .section-shell-subtitle {
+      color: #475467;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 14px;
+      align-items: stretch;
+    }
+
+    .summary-panel {
+      background: #f8fafc;
+      border: 2px solid #dbe3f0;
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .summary-panel-main {
+      background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%);
+      border-color: #86efac;
+    }
+
+    .summary-panel-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #475467;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .summary-main-text {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.4;
+      color: #111827;
+      margin-bottom: 12px;
+    }
+
+    .summary-helper-text {
+      font-size: 15px;
+      color: #374151;
+      margin-top: auto;
+      line-height: 1.55;
+    }
+
+    .summary-score-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      height: 100%;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 0;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+      border: 2px solid #dbe3f0;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .equal-grid > .card {
+      height: 100%;
+    }
+
+    .card h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .section-subtitle {
+      color: #4b5563;
+      font-size: 15px;
+      line-height: 1.5;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .score-summary-card {
+      background: #ffffff;
+      border: 3px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      min-height: 176px;
+    }
+
+    .frame-ok {
+      border-color: #16a34a;
+      background: #ecfdf3;
+    }
+
+    .frame-mid {
+      border-color: #f59e0b;
+      background: #fff7ed;
+    }
+
+    .frame-weak {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .frame-neutral {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+    }
+
+    .score-summary-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .score-summary-title {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .score-summary-subtitle {
+      font-size: 14px;
+      color: #4b5563;
+      min-height: 42px;
+      margin-bottom: 10px;
+      line-height: 1.45;
+    }
+
+    .score-summary-main {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+      margin-top: auto;
+      margin-bottom: 8px;
+    }
+
+    .score-summary-status {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .score-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+
+    .dot-ok {
+      background: #16a34a;
+    }
+
+    .dot-mid {
+      background: #d97706;
+    }
+
+    .dot-weak {
+      background: #dc2626;
+    }
+
+    .dot-neutral {
+      background: #94a3b8;
+    }
+
+    .positive-card {
+      background: #f0fdf4;
+      border-color: #86efac;
+    }
+
+    .risk-card {
+      background: #fef2f2;
+      border-color: #fca5a5;
+    }
+
+    .warm-card {
+      background: #fff7ed;
+      border-color: #fdba74;
+    }
+
+    ul {
+      padding-left: 20px;
+      margin-top: 8px;
+    }
+
+    li {
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    .muted {
+      color: #6b7280;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .small {
+      font-size: 15px;
+      color: #4b5563;
+      line-height: 1.5;
+    }
+
+    .status-ok {
+      color: #065f46;
+      font-weight: 800;
+    }
+
+    .status-mid {
+      color: #92400e;
+      font-weight: 800;
+    }
+
+    .status-weak {
+      color: #991b1b;
+      font-weight: 800;
+    }
+
+    .status-neutral {
+      color: #334155;
+      font-weight: 800;
+    }
+
+    .subtab-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+      margin-bottom: 16px;
+    }
+
+    .subtab-button {
+      border: 2px solid #cbd5e1;
+      background: #eef2ff;
+      color: #312e81;
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .subtab-button.is-active {
+      background: #312e81;
+      color: white;
+      border-color: #312e81;
+      box-shadow: 0 8px 16px rgba(49,46,129,0.20);
+    }
+
+    .answer-tab-panel {
+      display: none;
+    }
+
+    .answer-tab-panel.is-active {
+      display: block;
+    }
+
+    .answer-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .answer-stage-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      background: #e2e8f0;
+      color: #0f172a;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 7px 12px;
+    }
+
+    .answer-score-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 14px;
+      border: 3px solid #d1d5db;
+      background: white;
+      padding: 9px 14px;
+    }
+
+    .answer-score-number {
+      font-size: 18px;
+      font-weight: 900;
+      color: #111827;
+    }
+
+    .answer-score-band {
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .stack-card {
+      background: #ffffff;
+      border: 2px solid #dbe3f0;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .stack-card-title {
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #475467;
+      margin-bottom: 8px;
+    }
+
+    .stack-card-text {
+      font-size: 16px;
+      color: #111827;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .analysis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .analysis-card {
+      border-radius: 14px;
+      padding: 16px;
+      border: 2px solid transparent;
+      min-height: 165px;
+    }
+
+    .analysis-card-reading {
+      background: #f8fafc;
+      border-color: #dbe3f0;
+    }
+
+    .analysis-card-action {
+      background: #fff7ed;
+      border-color: #fdba74;
+      box-shadow: inset 0 0 0 1px rgba(251,146,60,0.12);
+    }
+
+    .analysis-card-title {
+      font-size: 14px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    .analysis-card-text {
+      font-size: 16px;
+      color: #111827;
+      line-height: 1.65;
+    }
+
+    .locked-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .locked-preview {
+      position: relative;
+      margin-top: 8px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px dashed #d1d5db;
+      background: linear-gradient(180deg, #fafafa 0%, #f3f4f6 100%);
+      min-height: 240px;
+    }
+
+    .locked-blur {
+      padding: 18px;
+      filter: blur(2px);
+      opacity: 0.4;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .locked-overlay-copy {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      padding: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.86) 0%, rgba(255,255,255,0.96) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .locked-overlay-pill {
+      display: inline-flex;
+      align-items: center;
+      align-self: flex-start;
+      border-radius: 999px;
+      background: #4f46e5;
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 10px;
+      margin-bottom: 10px;
+      letter-spacing: 0.05em;
+    }
+
+    .locked-overlay-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+
+    .locked-overlay-text {
+      font-size: 16px;
+      color: #374151;
+      margin-bottom: 14px;
+      max-width: 760px;
+      line-height: 1.55;
+    }
+
+    .upgrade-button {
+      align-self: flex-start;
+      border: none;
+      border-radius: 12px;
+      padding: 11px 16px;
+      background: #4f46e5;
+      color: white;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(79,70,229,0.24);
+    }
+
+    .marketing-preview {
+      max-width: 760px;
+    }
+
+    @media (max-width: 1180px) {
+      .single-line-nav-5 {
+        grid-template-columns: 1fr 1.15fr 1fr 1fr 1fr;
+      }
+
+      .top-tab-note {
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .summary-grid,
+      .summary-score-grid,
+      .grid-2,
+      .analysis-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .single-line-nav-5 {
+        grid-template-columns: 1fr;
+      }
+
+      .report-shell-header {
+        position: static;
+      }
+
+      .report-shell-top {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+
+    @media (max-width: 760px) {
+      body {
+        padding: 0 10px 18px 10px;
+      }
+
+      .page {
+        padding-top: 10px;
+      }
+
+      .report-shell-title {
+        font-size: 16px;
+      }
+
+      .section-shell-title {
+        font-size: 22px;
+      }
+
+      .summary-main-text,
+      .stack-card-text,
+      .analysis-card-text,
+      .locked-overlay-text,
+      .muted,
+      .small,
+      li {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    
+    <section class="report-shell-header">
+      <div class="report-shell-top">
+        <div>
+          <div class="report-shell-title">REPORT DELLA SIMULAZIONE DI COLLOQUIO</div>
+          <div class="report-shell-subtitle">
+            Seleziona sulla barra le aree da visitare: sintesi del risultato, lettura delle risposte, CV e contenuti avanzati disponibili con i piani superiori.
+          </div>
+        </div>
+        <a class="switch-link" href="./fringe_interview_interactive_shell_setup.html">← Vai al setup</a>
+      </div>
+
+      <div class="single-line-nav single-line-nav-5">
+        
+              <button class="top-tab top-tab-free is-active is-unlocked" data-report-tab="overview" type="button">
+                <span class="top-tab-index top-tab-index-free">1</span>
+                <span class="plan-chip plan-chip-free">FREE</span>
+                
+                <span class="top-tab-main">
+                  <span class="top-tab-label">Sintesi</span>
+                  <span class="top-tab-note">feedback generale incluso</span>
+                </span>
+              </button>
+            
+
+              <button class="top-tab top-tab-free is-unlocked" data-report-tab="answers" type="button">
+                <span class="top-tab-index top-tab-index-free">2</span>
+                <span class="plan-chip plan-chip-free">FREE</span>
+                
+                <span class="top-tab-main">
+                  <span class="top-tab-label">Profilo e risposte</span>
+                  <span class="top-tab-note">lettura delle risposte date</span>
+                </span>
+              </button>
+            
+
+              <button class="top-tab top-tab-free is-unlocked" data-report-tab="cv" type="button">
+                <span class="top-tab-index top-tab-index-free">3</span>
+                <span class="plan-chip plan-chip-free">FREE</span>
+                
+                <span class="top-tab-main">
+                  <span class="top-tab-label">CV</span>
+                  <span class="top-tab-note">indicazioni generali sul CV</span>
+                </span>
+              </button>
+            
+
+              <button class="top-tab top-tab-paid is-locked" data-report-tab="training" type="button">
+                <span class="top-tab-index top-tab-index-pro">4</span>
+                <span class="plan-chip plan-chip-pro">PRO</span>
+                <span class="top-tab-lock">🔒</span>
+                <span class="top-tab-main">
+                  <span class="top-tab-label">Training guidato</span>
+                  <span class="top-tab-note">analisi più dettagliata</span>
+                </span>
+              </button>
+            
+
+              <button class="top-tab top-tab-paid is-locked" data-report-tab="selection" type="button">
+                <span class="top-tab-index top-tab-index-premium">5</span>
+                <span class="plan-chip plan-chip-premium">PREMIUM</span>
+                <span class="top-tab-lock">🔒</span>
+                <span class="top-tab-main">
+                  <span class="top-tab-label">Lettura selezione</span>
+                  <span class="top-tab-note">include tutto il Pro + lettura recruiter</span>
+                </span>
+              </button>
+            
+      </div>
+    </section>
+  
+
+    <div id="reportPanel_overview" class="report-main-panel">
+      
+    <div class="section-shell">
+      <div class="section-shell-header">
+        <div class="section-shell-title">Risultato della simulazione</div>
+        <div class="section-shell-subtitle">
+          Una lettura sintetica di come il profilo del CV e il modo di rispondere risultano oggi rispetto al ruolo scelto.
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="summary-panel summary-panel-main">
+          <div class="summary-panel-title">Messaggio principale</div>
+          <div class="summary-main-text">Il potenziale c’è, ma al momento il candidato rischia di apparire meno forte di quanto potrebbe a causa di risposte troppo generiche o poco supportate.</div>
+          <div class="summary-helper-text">
+            La sessione ha raccolto segnali utili ma con una copertura ancora parziale delle fasi chiave. È stato esplorato anche il livello decisionale. È stata toccata anche la gestione della pressione o dell’attrito. Alcune fasi sono state chiuse per avanzamento forzato (2), segnale che non sempre il candidato ha portato evidenze sufficienti entro il budget disponibile. Nel runtime sono emersi segnali osservabili soprattutto sull’asse decisione, sintesi, gestione dell’attrito. La fragilità più ricorrente emersa nel colloquio è questa: Gli esempi restano ancora troppo generici e poco dimostrativi.
+          </div>
+        </div>
+
+        <div class="summary-panel">
+          <div class="summary-panel-title">Numeri di supporto</div>
+          <div class="summary-score-grid">
+            
+    <div class="score-summary-card frame-mid">
+      <div class="score-summary-top">
+        <span class="score-dot dot-mid"></span>
+        <span class="score-summary-title">Compatibilità con il ruolo</span>
+      </div>
+      <div class="score-summary-subtitle">Quanto il profilo ricavato soprattutto da CV e job fit analysis appare coerente con la posizione scelta.</div>
+      <div class="score-summary-main">70 / 100</div>
+      <div class="score-summary-status status-mid">Da rafforzare</div>
+    </div>
+  
+            
+    <div class="score-summary-card frame-weak">
+      <div class="score-summary-top">
+        <span class="score-dot dot-weak"></span>
+        <span class="score-summary-title">Qualità delle risposte</span>
+      </div>
+      <div class="score-summary-subtitle">Quanto le risposte date in simulazione risultano convincenti, chiare e concrete.</div>
+      <div class="score-summary-main">41 / 100</div>
+      <div class="score-summary-status status-weak">Debole</div>
+    </div>
+  
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2 equal-grid">
+        
+    <section class="card ">
+      <h3>Come si posiziona oggi il profilo</h3>
+      
+      
+            <p><strong>Ruolo target:</strong> Product Operations Manager</p>
+            <p><strong>Valutazione complessiva:</strong> Buona aderenza</p>
+            <p class="small">Questa parte legge soprattutto quanto il profilo di base sembra adatto al ruolo. Le risposte della simulazione servono invece a capire quanto questo potenziale viene sostenuto bene nel colloquio.</p>
+          
+    </section>
+  
+
+        
+    <section class="card ">
+      <h3>Che cosa limita oggi il risultato</h3>
+      
+      
+            <p>La sessione ha raccolto segnali utili ma con una copertura ancora parziale delle fasi chiave. È stato esplorato anche il livello decisionale. È stata toccata anche la gestione della pressione o dell’attrito. In alcuni passaggi il sistema è dovuto andare avanti senza raccogliere abbastanza elementi forti, segnale che non sempre il candidato ha portato evidenze sufficienti entro il budget disponibile. Nel runtime sono emersi segnali osservabili soprattutto sull’asse decisione, sintesi, gestione dell’attrito. La fragilità più ricorrente emersa nel colloquio è questa: Gli esempi restano ancora troppo generici e poco dimostrativi.</p>
+          
+    </section>
+  
+      </div>
+
+      <div class="grid-2 equal-grid">
+        
+    <section class="card positive-card">
+      <h3>Che cosa sostiene oggi il profilo</h3>
+      
+      
+    <ul>
+      <li>Competenze tecniche</li>
+<li>Esperienza con strumenti di business intelligence</li>
+    </ul>
+  
+    </section>
+  
+
+        
+    <section class="card risk-card">
+      <h3>Aree da rafforzare</h3>
+      
+      
+    <ul>
+      <li>Usa esempi più concreti invece di parlare in termini troppo generali.</li>
+<li>Supporta più risposte con risultati, metriche o effetti di business visibili.</li>
+<li>Rendi più espliciti il contributo personale e lo scope delle tue decisioni.</li>
+<li>Usa una forma di risposta più ripetibile, ad esempio situazione, azione, risultato.</li>
+<li>Aggiungi una breve riflessione su ciò che hai imparato, cambiato o migliorato.</li>
+    </ul>
+  
+    </section>
+  
+      </div>
+    </div>
+  
+    </div>
+
+    <div id="reportPanel_answers" class="report-main-panel" style="display:none;">
+      
+    <div class="section-shell">
+      <div class="section-shell-header">
+        <div class="section-shell-title">Profilo e risposte</div>
+        <div class="section-shell-subtitle">
+          Qui vedi il filo della simulazione e il modo in cui le singole risposte hanno sostenuto o indebolito il profilo.
+        </div>
+      </div>
+
+      <div class="subtab-row">
+        
+                  <button class="subtab-button is-active" data-answer-tab="0" type="button">
+                    Risposta 1
+                  </button>
+                
+
+                  <button class="subtab-button " data-answer-tab="1" type="button">
+                    Risposta 2
+                  </button>
+                
+
+                  <button class="subtab-button " data-answer-tab="2" type="button">
+                    Risposta 3
+                  </button>
+                
+
+                  <button class="subtab-button " data-answer-tab="3" type="button">
+                    Risposta 4
+                  </button>
+                
+
+                  <button class="subtab-button " data-answer-tab="4" type="button">
+                    Risposta 5
+                  </button>
+                
+
+                  <button class="subtab-button " data-answer-tab="5" type="button">
+                    Risposta 6
+                  </button>
+                
+
+                  <button class="subtab-button " data-answer-tab="6" type="button">
+                    Risposta 7
+                  </button>
+                
+      </div>
+
+      
+                  <div class="answer-tab-panel is-active" data-answer-panel="0">
+                    <div class="answer-header-row">
+                      <div class="answer-stage-pill">Opening</div>
+                      <div class="answer-score-card frame-weak">
+                        <span class="score-dot dot-weak"></span>
+                        <span class="answer-score-number">36 / 100</span>
+                        <span class="answer-score-band status-weak">Debole</span>
+                      </div>
+                    </div>
+
+                    <div class="stack-grid">
+                      <div class="stack-card">
+                        <div class="stack-card-title">Domanda</div>
+                        <div class="stack-card-text">Apri il colloquio inquadrando la rilevanza del profilo rispetto al ruolo, poi passa rapidamente ai segnali più importanti di fit e di rischio.</div>
+                      </div>
+
+                      <div class="stack-card">
+                        <div class="stack-card-title">Risposta</div>
+                        <div class="stack-card-text">Volentieri. Ti racconto il mio percorso mettendo a fuoco le esperienze più rilevanti per questo ruolo e dove penso di poter trasferire valore rapidamente.</div>
+                      </div>
+                    </div>
+
+                    <div class="analysis-grid">
+                      <div class="analysis-card analysis-card-reading">
+                        <div class="analysis-card-title">Lettura della risposta</div>
+                        <div class="analysis-card-text">La risposta resta ancora troppo generale e non aiuta a capire bene situazione, azione e valore portato.</div>
+                      </div>
+
+                      <div class="analysis-card analysis-card-action">
+                        <div class="analysis-card-title">Come rafforzarla</div>
+                        <div class="analysis-card-text">Conviene agganciare la risposta a un episodio preciso: contesto, cosa hai fatto tu, risultato ottenuto.</div>
+                      </div>
+                    </div>
+                  </div>
+                
+
+                  <div class="answer-tab-panel " data-answer-panel="1">
+                    <div class="answer-header-row">
+                      <div class="answer-stage-pill">Percorso</div>
+                      <div class="answer-score-card frame-weak">
+                        <span class="score-dot dot-weak"></span>
+                        <span class="answer-score-number">44 / 100</span>
+                        <span class="answer-score-band status-weak">Debole</span>
+                      </div>
+                    </div>
+
+                    <div class="stack-grid">
+                      <div class="stack-card">
+                        <div class="stack-card-title">Domanda</div>
+                        <div class="stack-card-text">Puoi raccontarmi il tuo percorso e spiegare perché questo ruolo ti sembra il passo successivo naturale?</div>
+                      </div>
+
+                      <div class="stack-card">
+                        <div class="stack-card-title">Risposta</div>
+                        <div class="stack-card-text">Ti faccio un esempio concreto: in un’attività di reporting che si è complicata più del previsto ho dovuto ricostruire i dati, ridefinire alcune metriche e chiarire con gli stakeholder cosa servisse davvero. Ho riorganizzato il lavoro, isolato gli indicatori più affidabili e consegnato un output più leggibile, utile per decidere.</div>
+                      </div>
+                    </div>
+
+                    <div class="analysis-grid">
+                      <div class="analysis-card analysis-card-reading">
+                        <div class="analysis-card-title">Lettura della risposta</div>
+                        <div class="analysis-card-text">La risposta inizia a mostrare esperienza reale e una discreta presenza personale nel racconto.</div>
+                      </div>
+
+                      <div class="analysis-card analysis-card-action">
+                        <div class="analysis-card-title">Come rafforzarla</div>
+                        <div class="analysis-card-text">Per renderla più forte manca soprattutto un risultato misurabile o comunque un effetto finale più chiaro.</div>
+                      </div>
+                    </div>
+                  </div>
+                
+
+                  <div class="answer-tab-panel " data-answer-panel="2">
+                    <div class="answer-header-row">
+                      <div class="answer-stage-pill">Approfondimento Leadership</div>
+                      <div class="answer-score-card frame-weak">
+                        <span class="score-dot dot-weak"></span>
+                        <span class="answer-score-number">37 / 100</span>
+                        <span class="answer-score-band status-weak">Debole</span>
+                      </div>
+                    </div>
+
+                    <div class="stack-grid">
+                      <div class="stack-card">
+                        <div class="stack-card-title">Domanda</div>
+                        <div class="stack-card-text">Di cosa eri esattamente responsabile in quella situazione?</div>
+                      </div>
+
+                      <div class="stack-card">
+                        <div class="stack-card-title">Risposta</div>
+                        <div class="stack-card-text">Per essere concreto: la parte di analisi e costruzione dell’output era sotto la mia responsabilità diretta; il confronto con altri serviva a validare assunzioni e priorità, ma le decisioni operative sul lavoro quotidiano le prendevo io.</div>
+                      </div>
+                    </div>
+
+                    <div class="analysis-grid">
+                      <div class="analysis-card analysis-card-reading">
+                        <div class="analysis-card-title">Lettura della risposta</div>
+                        <div class="analysis-card-text">La risposta inizia a mostrare esperienza reale e una discreta presenza personale nel racconto.</div>
+                      </div>
+
+                      <div class="analysis-card analysis-card-action">
+                        <div class="analysis-card-title">Come rafforzarla</div>
+                        <div class="analysis-card-text">Per renderla più forte manca soprattutto un risultato misurabile o comunque un effetto finale più chiaro.</div>
+                      </div>
+                    </div>
+                  </div>
+                
+
+                  <div class="answer-tab-panel " data-answer-panel="3">
+                    <div class="answer-header-row">
+                      <div class="answer-stage-pill">Caso concreto</div>
+                      <div class="answer-score-card frame-weak">
+                        <span class="score-dot dot-weak"></span>
+                        <span class="answer-score-number">44 / 100</span>
+                        <span class="answer-score-band status-weak">Debole</span>
+                      </div>
+                    </div>
+
+                    <div class="stack-grid">
+                      <div class="stack-card">
+                        <div class="stack-card-title">Domanda</div>
+                        <div class="stack-card-text">Parlami di una decisione in cui non c’era una risposta chiaramente giusta. Quale trade-off hai scelto e perché?</div>
+                      </div>
+
+                      <div class="stack-card">
+                        <div class="stack-card-title">Risposta</div>
+                        <div class="stack-card-text">In quel caso ho deciso di rinunciare ad alcune analisi secondarie per concentrarmi sulle metriche più affidabili e più utili alla decisione. Il trade-off è stato sacrificare completezza apparente per garantire chiarezza e affidabilità, assumendomi la responsabilità della scelta e spiegandone bene le conseguenze.</div>
+                      </div>
+                    </div>
+
+                    <div class="analysis-grid">
+                      <div class="analysis-card analysis-card-reading">
+                        <div class="analysis-card-title">Lettura della risposta</div>
+                        <div class="analysis-card-text">La risposta inizia a mostrare esperienza reale e una discreta presenza personale nel racconto.</div>
+                      </div>
+
+                      <div class="analysis-card analysis-card-action">
+                        <div class="analysis-card-title">Come rafforzarla</div>
+                        <div class="analysis-card-text">Per renderla più forte manca soprattutto un risultato misurabile o comunque un effetto finale più chiaro.</div>
+                      </div>
+                    </div>
+                  </div>
+                
+
+                  <div class="answer-tab-panel " data-answer-panel="4">
+                    <div class="answer-header-row">
+                      <div class="answer-stage-pill">Pressione / Attrito</div>
+                      <div class="answer-score-card frame-weak">
+                        <span class="score-dot dot-weak"></span>
+                        <span class="answer-score-number">44 / 100</span>
+                        <span class="answer-score-band status-weak">Debole</span>
+                      </div>
+                    </div>
+
+                    <div class="stack-grid">
+                      <div class="stack-card">
+                        <div class="stack-card-title">Domanda</div>
+                        <div class="stack-card-text">Descrivi un caso reale in cui le aspettative degli stakeholder erano in conflitto. Tu che cosa hai fatto concretamente?</div>
+                      </div>
+
+                      <div class="stack-card">
+                        <div class="stack-card-title">Risposta</div>
+                        <div class="stack-card-text">Quando ho ricevuto resistenza o disaccordo su una proposta di reporting, ho mantenuto la relazione ma preso posizione. Ho chiarito i vincoli, spiegato perché alcune metriche erano davvero prioritarie e difeso una scelta operativa che riduceva il rumore e aiutava a decidere più in fretta.</div>
+                      </div>
+                    </div>
+
+                    <div class="analysis-grid">
+                      <div class="analysis-card analysis-card-reading">
+                        <div class="analysis-card-title">Lettura della risposta</div>
+                        <div class="analysis-card-text">La risposta inizia a mostrare esperienza reale e una discreta presenza personale nel racconto.</div>
+                      </div>
+
+                      <div class="analysis-card analysis-card-action">
+                        <div class="analysis-card-title">Come rafforzarla</div>
+                        <div class="analysis-card-text">Per renderla più forte manca soprattutto un risultato misurabile o comunque un effetto finale più chiaro.</div>
+                      </div>
+                    </div>
+                  </div>
+                
+
+                  <div class="answer-tab-panel " data-answer-panel="5">
+                    <div class="answer-header-row">
+                      <div class="answer-stage-pill">Ampiezza della Leadership</div>
+                      <div class="answer-score-card frame-weak">
+                        <span class="score-dot dot-weak"></span>
+                        <span class="answer-score-number">44 / 100</span>
+                        <span class="answer-score-band status-weak">Debole</span>
+                      </div>
+                    </div>
+
+                    <div class="stack-grid">
+                      <div class="stack-card">
+                        <div class="stack-card-title">Domanda</div>
+                        <div class="stack-card-text">Hai mai guidato o orientato altre persone anche senza essere manager formalmente?</div>
+                      </div>
+
+                      <div class="stack-card">
+                        <div class="stack-card-title">Risposta</div>
+                        <div class="stack-card-text">Quando ho ricevuto resistenza o disaccordo su una proposta di reporting, ho mantenuto la relazione ma preso posizione. Ho chiarito i vincoli, spiegato perché alcune metriche erano davvero prioritarie e difeso una scelta operativa che riduceva il rumore e aiutava a decidere più in fretta.</div>
+                      </div>
+                    </div>
+
+                    <div class="analysis-grid">
+                      <div class="analysis-card analysis-card-reading">
+                        <div class="analysis-card-title">Lettura della risposta</div>
+                        <div class="analysis-card-text">La risposta inizia a mostrare esperienza reale e una discreta presenza personale nel racconto.</div>
+                      </div>
+
+                      <div class="analysis-card analysis-card-action">
+                        <div class="analysis-card-title">Come rafforzarla</div>
+                        <div class="analysis-card-text">Per renderla più forte manca soprattutto un risultato misurabile o comunque un effetto finale più chiaro.</div>
+                      </div>
+                    </div>
+                  </div>
+                
+
+                  <div class="answer-tab-panel " data-answer-panel="6">
+                    <div class="answer-header-row">
+                      <div class="answer-stage-pill">Closing</div>
+                      <div class="answer-score-card frame-weak">
+                        <span class="score-dot dot-weak"></span>
+                        <span class="answer-score-number">36 / 100</span>
+                        <span class="answer-score-band status-weak">Debole</span>
+                      </div>
+                    </div>
+
+                    <div class="stack-grid">
+                      <div class="stack-card">
+                        <div class="stack-card-title">Domanda</div>
+                        <div class="stack-card-text">Prima di chiudere, qual è il messaggio principale che vorresti restasse sulla tua aderenza a questo ruolo?</div>
+                      </div>
+
+                      <div class="stack-card">
+                        <div class="stack-card-title">Risposta</div>
+                        <div class="stack-card-text">Il messaggio che vorrei lasciare è questo: porto solidità analitica, capacità di adattamento e disponibilità a entrare rapidamente nel dominio, sapendo trasformare l’analisi in decisioni utili.</div>
+                      </div>
+                    </div>
+
+                    <div class="analysis-grid">
+                      <div class="analysis-card analysis-card-reading">
+                        <div class="analysis-card-title">Lettura della risposta</div>
+                        <div class="analysis-card-text">La risposta porta almeno un contesto abbastanza concreto, ma lascia ancora poco visibile il tuo contributo personale.</div>
+                      </div>
+
+                      <div class="analysis-card analysis-card-action">
+                        <div class="analysis-card-title">Come rafforzarla</div>
+                        <div class="analysis-card-text">Rendi più esplicito che cosa dipendeva da te e, se possibile, chiudi con un risultato concreto o un effetto visibile.</div>
+                      </div>
+                    </div>
+                  </div>
+                
+    </div>
+  
+    </div>
+
+    <div id="reportPanel_cv" class="report-main-panel" style="display:none;">
+      
+    <div class="section-shell">
+      <div class="section-shell-header">
+        <div class="section-shell-title">CV</div>
+        <div class="section-shell-subtitle">
+          Una prima lettura del CV rispetto al ruolo scelto, con suggerimenti di impostazione generale.
+        </div>
+      </div>
+
+      <div class="grid-2 equal-grid">
+        
+    <section class="card ">
+      <h3>Che impressione trasmette oggi il CV</h3>
+      
+      
+            <p>Analista di business con 6 anni di esperienza in ambienti di servizi digitali e commercio elettronico</p>
+            <p class="small">Questa è una lettura generale: serve a capire l’impressione iniziale che il CV tende a dare.</p>
+          
+    </section>
+  
+
+        
+    <section class="card warm-card">
+      <h3>Che cosa conviene migliorare per prima</h3>
+      
+      
+    <ul>
+      <li>Aggiungere esperienza di leadership</li>
+<li>Aggiungere competenze con Power BI</li>
+    </ul>
+  
+    </section>
+  
+      </div>
+
+      <div class="grid-2 equal-grid">
+        
+    <section class="card positive-card">
+      <h3>Posizionamento consigliato</h3>
+      
+      
+    <ul>
+      <li>Sottolineare l'esperienza nel settore dei servizi digitali</li>
+<li>Sottolineare le competenze tecniche e strumenti pertinenti al ruolo</li>
+    </ul>
+  
+    </section>
+  
+
+        
+    <section class="card risk-card">
+      <h3>Che cosa manca ancora</h3>
+      
+      
+    <ul>
+      <li>Proprietà della reportistica operativa</li>
+    </ul>
+  
+    </section>
+  
+      </div>
+    </div>
+  
+    </div>
+
+    <div id="reportPanel_training" class="report-main-panel" style="display:none;">
+      
+    <div class="section-shell">
+      <div class="section-shell-header">
+        <div class="section-shell-title">Training guidato</div>
+        <div class="section-shell-subtitle">
+          Questa è la parte in cui il feedback smette di essere generale e diventa davvero utile per allenarsi meglio.
+        </div>
+      </div>
+
+      
+    <section class="card locked-card">
+      <h3>Con il piano PRO entri nella parte davvero utile per allenarti</h3>
+      <p class="section-subtitle">Con il piano PRO entri nel livello in cui il sistema ti aiuta davvero a migliorare le risposte.</p>
+      <div class="locked-preview">
+        <div class="locked-overlay-copy">
+          <div class="locked-overlay-pill">PRO</div>
+          <div class="locked-overlay-title">Con il piano PRO entri nella parte davvero utile per allenarti</div>
+          <div class="locked-overlay-text">Qui trovi un aiuto guidato per migliorare le risposte: capisci meglio che effetto fanno, dove si indeboliscono e come renderle più convincenti già dal tentativo successivo.</div>
+          <button class="upgrade-button">Passa a PRO</button>
+        </div>
+        <div class="locked-blur">
+          
+          <div class="marketing-preview">
+            <p>Qui trovi un aiuto guidato per migliorare le risposte: capisci meglio che effetto fanno, dove si indeboliscono e come renderle più convincenti già dal tentativo successivo.</p>
+            
+    <ul>
+      <li>lettura più precisa delle singole risposte</li>
+<li>indicazioni operative su cosa correggere</li>
+<li>migliore comprensione di come vieni percepito</li>
+<li>supporto più concreto per allenarti prima dei colloqui</li>
+    </ul>
+  
+          </div>
+        
+        </div>
+      </div>
+    </section>
+  
+    </div>
+  
+    </div>
+
+    <div id="reportPanel_selection" class="report-main-panel" style="display:none;">
+      
+    <div class="section-shell">
+      <div class="section-shell-header">
+        <div class="section-shell-title">Lettura selezione</div>
+        <div class="section-shell-subtitle">
+          Qui entri nella parte più vicina a una lettura reale di selezione e di posizionamento competitivo.
+        </div>
+      </div>
+
+      
+    <section class="card locked-card">
+      <h3>Con il piano PREMIUM accedi al livello più vicino a un vero supporto di selezione</h3>
+      <p class="section-subtitle">Con il piano PREMIUM accedi al livello più ricco: lettura avanzata del CV, simulazione completa e prospettiva recruiter.</p>
+      <div class="locked-preview">
+        <div class="locked-overlay-copy">
+          <div class="locked-overlay-pill">PREMIUM</div>
+          <div class="locked-overlay-title">Con il piano PREMIUM accedi al livello più vicino a un vero supporto di selezione</div>
+          <div class="locked-overlay-text">Qui trovi un aiuto più operativo e più forte: guida per ottimizzare il CV rispetto a una posizione specifica, supporto per migliorare qualità e contenuti delle risposte, e una lettura più vicina a quella di un selezionatore esperto.</div>
+          <button class="upgrade-button">Passa a PREMIUM</button>
+        </div>
+        <div class="locked-blur">
+          
+          <div class="marketing-preview">
+            <p>Qui trovi un aiuto più operativo e più forte: guida per ottimizzare il CV rispetto a una posizione specifica, supporto per migliorare qualità e contenuti delle risposte, e una lettura più vicina a quella di un selezionatore esperto.</p>
+            
+    <ul>
+      <li>guida più mirata per ottimizzare il CV</li>
+<li>supporto operativo per migliorare le risposte</li>
+<li>lettura più avanzata del profilo rispetto al ruolo</li>
+<li>visione più vicina a una vera selezione</li>
+    </ul>
+  
+          </div>
+        
+        </div>
+      </div>
+    </section>
+  
+    </div>
+  
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      function switchMainTab(tabKey) {
+        var allButtons = document.querySelectorAll("[data-report-tab]");
+        var allPanels = document.querySelectorAll(".report-main-panel");
+
+        allButtons.forEach(function (button) {
+          button.classList.toggle("is-active", button.getAttribute("data-report-tab") === tabKey);
+        });
+
+        allPanels.forEach(function (panel) {
+          panel.style.display = panel.id === ("reportPanel_" + tabKey) ? "" : "none";
+        });
+      }
+
+      function switchAnswerTab(index) {
+        document.querySelectorAll("[data-answer-tab]").forEach(function (button) {
+          button.classList.toggle("is-active", String(button.getAttribute("data-answer-tab")) === String(index));
+        });
+
+        document.querySelectorAll("[data-answer-panel]").forEach(function (panel) {
+          panel.classList.toggle("is-active", String(panel.getAttribute("data-answer-panel")) === String(index));
+        });
+      }
+
+      document.querySelectorAll("[data-report-tab]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          switchMainTab(button.getAttribute("data-report-tab"));
+        });
+      });
+
+      document.querySelectorAll("[data-answer-tab]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          switchAnswerTab(button.getAttribute("data-answer-tab"));
+        });
+      });
+
+      switchMainTab("overview");
+
+      if (document.querySelectorAll("[data-answer-tab]").length > 0) {
+        switchAnswerTab(0);
+      }
+    })();
+  </script>
+</body>
+</html>
