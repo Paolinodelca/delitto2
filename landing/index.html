@@ -1,170 +1,542 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<title>FRINGE Interview</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FRINGE Interview</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --surface: #fffdf8;
+      --surface-2: #f8f3ea;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #5b6472;
+      --line: #d8d1c6;
+      --accent: #9a3412;
+      --accent-2: #c2410c;
+      --accent-soft: #fff1e8;
+      --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #0e0e0e;
-  color: #ffffff;
-}
+    * {
+      box-sizing: border-box;
+    }
 
-.container {
-  max-width: 1100px;
-  margin: auto;
-  padding: 30px 20px;
-}
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, var(--bg) 0%, #fbfaf7 100%);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-h1 {
-  font-size: 42px;
-  line-height: 1.2;
-}
+    body {
+      min-height: 100vh;
+    }
 
-.section {
-  margin-top: 40px;
-}
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 20px 40px;
+    }
 
-.small {
-  opacity: 0.7;
-  font-size: 14px;
-}
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
 
-.cta {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 14px 22px;
-  background: #ffffff;
-  color: #000;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 6px;
-}
+    .brand {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
 
-.block {
-  margin-top: 20px;
-  padding: 20px;
-  background: #1a1a1a;
-  border-left: 3px solid #ffffff;
-}
+    .topbar-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-.question {
-  color: #aaa;
-}
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      cursor: pointer;
+    }
 
-.fringe {
-  color: #ff4d4d;
-}
-</style>
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, var(--accent) 0%, var(--accent-2) 100%);
+      color: white;
+      box-shadow: 0 10px 20px rgba(154, 52, 18, 0.18);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--accent);
+      border: 2px solid #fdba74;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .hero-main,
+    .hero-side {
+      background: var(--surface);
+      border: 2px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      padding: 28px 28px 24px;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid #fdba74;
+      margin-bottom: 14px;
+    }
+
+    .hero-title {
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title .accent {
+      color: var(--accent);
+    }
+
+    .hero-copy {
+      margin-top: 18px;
+      font-size: 19px;
+      line-height: 1.55;
+      color: #374151;
+      max-width: 860px;
+    }
+
+    .hero-copy strong {
+      color: #111827;
+    }
+
+    .hero-punch {
+      margin-top: 18px;
+      font-size: 24px;
+      line-height: 1.35;
+      font-weight: 900;
+      color: #111827;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .hero-note {
+      margin-top: 12px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .hero-side {
+      padding: 20px;
+      background: linear-gradient(180deg, #fffdfa 0%, var(--surface-2) 100%);
+    }
+
+    .side-title {
+      margin: 0 0 12px 0;
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #6b7280;
+    }
+
+    .teaser-box {
+      background: white;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .teaser-label {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .teaser-text {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #1f2937;
+      font-weight: 700;
+    }
+
+    .teaser-fringe {
+      border-left: 4px solid var(--accent);
+      background: #fff7ed;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+      margin-top: 26px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 2px solid var(--line);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .card.offset {
+      margin-top: 26px;
+    }
+
+    .card.alt {
+      background: linear-gradient(180deg, #ffffff 0%, #faf7f1 100%);
+    }
+
+    .card-title {
+      margin: 0 0 10px 0;
+      font-size: 28px;
+      line-height: 1.15;
+    }
+
+    .card-copy {
+      font-size: 17px;
+      line-height: 1.6;
+      color: #374151;
+    }
+
+    .card-copy strong {
+      color: #111827;
+    }
+
+    .list {
+      margin: 14px 0 0 0;
+      padding-left: 18px;
+      color: #374151;
+      font-size: 16px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .list li + li {
+      margin-top: 8px;
+    }
+
+    .modes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .mode {
+      background: #fffdfa;
+      border: 2px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .mode-name {
+      font-size: 16px;
+      font-weight: 900;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .mode-copy {
+      font-size: 15px;
+      line-height: 1.5;
+      color: #374151;
+      font-weight: 700;
+    }
+
+    .final-cta {
+      margin-top: 34px;
+      background: linear-gradient(180deg, #fff7ed 0%, #fffdf9 100%);
+      border: 2px solid #fdba74;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .final-cta-title {
+      font-size: 32px;
+      line-height: 1.15;
+      margin: 0 0 12px 0;
+    }
+
+    .final-cta-copy {
+      font-size: 18px;
+      line-height: 1.55;
+      color: #374151;
+      font-weight: 700;
+      max-width: 820px;
+      margin: 0 auto 18px;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 13px;
+      color: #6b7280;
+      font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .grid,
+      .modes {
+        grid-template-columns: 1fr;
+      }
+
+      .card.offset {
+        margin-top: 0;
+      }
+
+      .hero-title {
+        font-size: 34px;
+      }
+
+      .hero-punch {
+        font-size: 21px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 16px 14px 30px;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .topbar-actions {
+        width: 100%;
+      }
+
+      .topbar-actions .btn {
+        width: 100%;
+      }
+
+      .hero-main,
+      .hero-side,
+      .card,
+      .final-cta {
+        padding: 18px;
+      }
+
+      .hero-title {
+        font-size: 30px;
+      }
+
+      .card-title {
+        font-size: 24px;
+      }
+
+      .final-cta-title {
+        font-size: 28px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <main class="page">
 
-<div class="container">
+    <div class="topbar">
+      <div class="brand">FRINGE Interview</div>
+      <div class="topbar-actions">
+        <a class="btn btn-secondary" href="https://fringe-interview-app.vercel.app/">Vai a Fringe Interview</a>
+        <a class="btn btn-primary" href="https://fringe-interview-app.vercel.app/">Prova Quick Interview</a>
+      </div>
+    </div>
 
-<!-- HERO -->
+    <section class="hero">
+      <div class="hero-main">
+        <div class="hero-kicker">Simulazione colloquio + lettura CV</div>
 
-<h1>
-Stai cercando lavoro?<br><br>
+        <h1 class="hero-title">
+          Stai cercando lavoro?<br>
+          Devi affrontare un colloquio?<br>
+          <span class="accent">Allora preparati sul serio.</span>
+        </h1>
 
-Devi affrontare un colloquio?<br><br>
+        <div class="hero-copy">
+          Sai che un recruiter decide in pochi minuti se <strong>scartarti</strong>
+          oppure <strong>portarti avanti nella selezione</strong>?
 
-Un recruiter decide in pochi minuti se scartarti.<br><br>
+          <br><br>
 
-Non perché non sei capace.<br>
-Ma perché <strong>non reggi le domande vere.</strong>
-</h1>
+          Tutto comincia dal tuo <strong>CV</strong>: è davvero ottimizzato per la posizione che stai cercando?
 
-<a class="cta" href="https://fringe-interview-app.vercel.app">
-Prova una Quick Interview
-</a>
+          <br><br>
 
-<div class="small">dura pochi minuti. ma dice molto.</div>
+          E quando arrivi al colloquio, il modo in cui rispondi fa spesso la differenza
+          ancora prima che entrino davvero in gioco le tue competenze.
+        </div>
 
-<!-- WOW BLOCK -->
+        <div class="hero-punch">
+          Sei pronto a reggere la pressione<br>
+          e a dimostrare di essere la persona giusta?
+        </div>
 
-<div class="section">
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://fringe-interview-app.vercel.app/">Prova una Quick Interview</a>
+          <a class="btn btn-secondary" href="https://fringe-interview-app.vercel.app/">Apri il tool</a>
+        </div>
 
-<h2>Il problema non è la prima risposta.</h2>
-<h2>È la seconda domanda.</h2>
+        <div class="hero-note">
+          Quick Interview dura pochi minuti, ma può già far emergere dove il tuo profilo regge e dove invece vacilla.
+        </div>
+      </div>
 
-<div class="block">
+      <aside class="hero-side">
+        <div class="side-title">Come funziona davvero</div>
 
-<div class="question">
-Domanda:<br>
-"Parlami di una decisione difficile."
-</div>
+        <div class="teaser-box">
+          <div class="teaser-label">Domanda</div>
+          <div class="teaser-text">“Parlami di una decisione difficile.”</div>
+        </div>
 
-<br>
+        <div class="teaser-box">
+          <div class="teaser-label">Risposta debole</div>
+          <div class="teaser-text">“Ho lavorato su diversi progetti complessi...”</div>
+        </div>
 
-<div>
-Risposta:<br>
-"Ho lavorato su diversi progetti complessi..."
-</div>
+        <div class="teaser-box teaser-fringe">
+          <div class="teaser-label">FRINGE</div>
+          <div class="teaser-text">“Non è una risposta.<br>Quale decisione? Quale trade-off?”</div>
+        </div>
+      </aside>
+    </section>
 
-<br>
+    <section class="grid">
+      <div class="card alt">
+        <h2 class="card-title">FRINGE Interview è diverso dagli altri simulatori</h2>
+        <div class="card-copy">
+          Non si limita a farti una domanda e passare oltre.
 
-<div class="fringe">
-FRINGE:<br>
-"Non è una risposta.<br>
-Quale decisione? Quale trade-off?"
-</div>
+          <br><br>
 
-</div>
+          Ti mette davanti a domande credibili, ascolta come rispondi,
+          valuta la qualità della risposta e, se è debole,
+          <strong>ti incalza come farebbe un recruiter che vuole capire davvero.</strong>
+        </div>
+      </div>
 
-</div>
+      <div class="card offset">
+        <h2 class="card-title">Il tuo problema non sarà la prima risposta.</h2>
+        <div class="card-copy">
+          <strong>Sarà la seconda domanda.</strong>
 
-<!-- DIFFERENZA -->
+          <br><br>
 
-<div class="section">
+          È lì che vengono a galla:
+        </div>
+        <ul class="list">
+          <li>le risposte vaghe</li>
+          <li>gli esempi poco concreti</li>
+          <li>la mancanza di evidenze</li>
+          <li>le frasi “preparate” che non reggono</li>
+        </ul>
+      </div>
+    </section>
 
-<h2>La maggior parte dei simulatori ti lascia andare avanti.</h2>
+    <section class="grid">
+      <div class="card offset">
+        <h2 class="card-title">Il CV ti fa entrare. Il colloquio decide se resti in corsa.</h2>
+        <div class="card-copy">
+          Per essere selezionato non basta quello che sai.
 
-<div class="block">
-Se la risposta è debole → ti ferma<br>
-Se è vaga → scava<br>
-Se non reggi → <strong>viene a galla</strong>
-</div>
+          <br><br>
 
-</div>
+          <strong>Conta come dimostri di essere la persona giusta.</strong>
 
-<!-- IDENTIFICAZIONE -->
+          <br><br>
 
-<div class="section">
+          Ed è esattamente lì che molti candidati si bloccano.
+        </div>
+      </div>
 
-<h2>Ti sei preparato così?</h2>
+      <div class="card alt">
+        <h2 class="card-title">Quanto vuoi spingerti?</h2>
+        <div class="modes">
+          <div class="mode">
+            <div class="mode-name">Quick</div>
+            <div class="mode-copy">Breve e incisiva. Ottima per una prova veloce o una demo.</div>
+          </div>
+          <div class="mode">
+            <div class="mode-name">Standard</div>
+            <div class="mode-copy">Più equilibrata. Simula un colloquio realistico senza diventare troppo lunga.</div>
+          </div>
+          <div class="mode">
+            <div class="mode-name">Deep</div>
+            <div class="mode-copy">Più severa. Più aree, più pressione, più occasioni per vedere dove cedi.</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<div class="block">
-Con un amico<br>
-Con ChatGPT<br>
-Ripetendo risposte "giuste"<br><br>
+    <section class="final-cta">
+      <h2 class="final-cta-title">Provalo. Poi capisci se sei davvero pronto.</h2>
+      <div class="final-cta-copy">
+        FRINGE Interview ti aiuta a vedere dove il tuo CV regge, dove la tua risposta convince
+        e dove invece un recruiter serio inizierebbe a scavare.
+      </div>
+      <a class="btn btn-primary" href="https://fringe-interview-app.vercel.app/">Avvia Quick Interview</a>
+    </section>
 
-Poi al colloquio:<br><br>
+    <div class="footer-note">
+      Simulazione breve, lettura CV, report e training guidato: FRINGE è pensato per chi vuole prepararsi meglio e capire dove rischia davvero di uscire dalla selezione.
+    </div>
 
-Ti fanno una domanda diversa.<br>
-E lì ti blocchi.
-</div>
-
-</div>
-
-<!-- CHIUSURA -->
-
-<div class="section">
-
-<h2>
-La differenza non è cosa sai.<br><br>
-È cosa succede quando ti chiedono di dimostrarlo.
-</h2>
-
-<a class="cta" href="https://fringe-interview-app.vercel.app">
-Prova ora
-</a>
-
-</div>
-
-</div>
-
+  </main>
 </body>
 </html>
