@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>FRINGE Interview Setup</title>
 
-
 <style>
   :root {
     --bg: #f4f6fb;
@@ -606,38 +605,161 @@
     text-align: center;
   }
 
-  @media (max-width: 1120px) {
-    .nav-strip {
-      grid-template-columns: 1fr;
-    }
 
-    .mini-grid {
-      grid-template-columns: 1fr;
-    }
+
+@media (max-width: 1120px) {
+  .mini-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .title-row {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 8px;
   }
 
-  @media (max-width: 760px) {
-    .title-row {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .page {
-      padding: 0 12px 24px 12px;
-    }
-
-    .title-main {
-      font-size: 17px;
-    }
-
-    .title-sub {
-      font-size: 14px;
-    }
-
-    .title-help {
-      font-size: 12px;
-    }
+  .top-shell-inner {
+    padding: 8px 10px 10px 10px;
   }
+
+  .page {
+    padding: 0 12px 24px 12px;
+  }
+
+  .title-main {
+    font-size: 15px;
+  }
+
+  .title-sub {
+    font-size: 12px;
+    margin-top: 3px;
+    line-height: 1.25;
+  }
+
+  .title-help {
+    font-size: 11px;
+    margin-top: 4px;
+    line-height: 1.25;
+  }
+
+  .nav-strip {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-strip::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .nav-strip::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.35);
+    border-radius: 999px;
+  }
+
+  .nav-btn,
+  .nav-link {
+    flex: 0 0 220px;
+    min-height: 56px;
+    padding: 8px 9px;
+    border-radius: 12px;
+  }
+
+  .nav-top {
+    margin-bottom: 3px;
+  }
+
+  .nav-index {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    font-size: 10px;
+  }
+
+  .plan-chip {
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+
+  .nav-title {
+    font-size: 13px;
+    line-height: 1.05;
+  }
+
+  .nav-desc {
+    font-size: 10px;
+    margin-top: 2px;
+    line-height: 1.15;
+  }
+
+  .prep-checks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px;
+    margin-top: 5px;
+  }
+
+  .prep-check-label {
+    font-size: 10px;
+  }
+
+  .prep-dot {
+    width: 8px;
+    height: 8px;
+    min-width: 8px;
+  }
+
+  .nav-lock {
+    top: 30px;
+    right: 10px;
+    font-size: 14px;
+  }
+
+  .card {
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  .intro {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .field-box,
+  .mini-card,
+  .sim-box {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  input,
+  textarea,
+  select {
+    padding: 10px 10px;
+    font-size: 14px;
+  }
+
+  .cta {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+
 </style>
 </head>
 
