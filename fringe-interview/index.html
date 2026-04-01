@@ -115,201 +115,238 @@
     font-weight: 600;
   }
 
-  .nav-strip {
-    display: grid;
-    grid-template-columns: 1.7fr 0.95fr 0.9fr 1fr 1fr;
-    gap: 8px;
-    align-items: stretch;
-  }
 
-  .nav-btn,
-  .nav-link {
-    position: relative;
-    min-height: 70px;
-    border-radius: 14px;
-    border: 2px solid transparent;
-    padding: 9px 11px;
-    background: white;
-    text-align: left;
-    box-shadow:
-      0 10px 18px rgba(15, 23, 42, 0.10),
-      inset 0 1px 0 rgba(255,255,255,0.85);
-    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
-  }
 
-  .nav-btn:hover,
-  .nav-link:hover {
-    transform: translateY(-1px);
-  }
+.nav-strip {
+  display: grid;
+  grid-template-columns: 1.45fr 0.85fr 0.82fr 0.92fr 0.92fr;
+  gap: 8px;
+  align-items: stretch;
+}
 
-  .nav-btn {
-    cursor: pointer;
-  }
+.nav-btn,
+.nav-link {
+  position: relative;
+  min-height: 62px;
+  border-radius: 13px;
+  border: 2px solid transparent;
+  padding: 8px 10px 9px 10px;
+  background: white;
+  text-align: left;
+  box-shadow:
+    0 8px 16px rgba(15, 23, 42, 0.08),
+    inset 0 1px 0 rgba(255,255,255,0.85);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
 
-  .nav-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-  }
+.nav-btn:hover,
+.nav-link:hover {
+  transform: translateY(-1px);
+}
 
-  .nav-btn.active,
-  .nav-link.active {
-    border-width: 3px;
-    transform: translateY(-1px);
-    box-shadow:
-      0 14px 24px rgba(15, 23, 42, 0.20),
-      inset 0 0 0 1px rgba(255,255,255,0.65);
-  }
+.nav-btn {
+  cursor: pointer;
+}
 
-  .nav-btn.prep,
-  .nav-link.prep {
-    background: linear-gradient(180deg, #ffffff 0%, var(--prep-bg) 100%);
-    border-color: var(--prep-border);
-  }
+.nav-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
 
-  .nav-btn.free,
-  .nav-link.free {
-    background: linear-gradient(180deg, #ffffff 0%, #fffaf0 100%);
-    border-color: var(--free-border);
-  }
+.nav-btn.active,
+.nav-link.active {
+  border-width: 3px;
+  transform: translateY(-1px);
+  box-shadow:
+    0 14px 24px rgba(15, 23, 42, 0.18),
+    inset 0 0 0 1px rgba(255,255,255,0.65);
+}
 
-  .nav-btn.pro,
-  .nav-link.pro {
-    background: linear-gradient(180deg, #ffffff 0%, var(--pro-bg) 100%);
-    border-color: var(--pro-border);
-  }
+.nav-btn.active::after,
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 5px;
+  height: 4px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: 0.28;
+}
 
-  .nav-btn.premium,
-  .nav-link.premium {
-    background: linear-gradient(180deg, #ffffff 0%, var(--premium-bg) 100%);
-    border-color: var(--premium-border);
-  }
+.nav-btn.prep,
+.nav-link.prep {
+  background: linear-gradient(180deg, #ffffff 0%, var(--prep-bg) 100%);
+  border-color: var(--prep-border);
+  color: var(--prep-text);
+}
 
-  .nav-btn.prep.active,
-  .nav-link.prep.active {
-    border-color: var(--prep-active);
-    background: linear-gradient(180deg, #ffffff 0%, #ffe8d1 100%);
-  }
+.nav-btn.free,
+.nav-link.free {
+  background: linear-gradient(180deg, #ffffff 0%, #fffaf0 100%);
+  border-color: var(--free-border);
+  color: #8a5a00;
+}
 
-  .nav-btn.free.active,
-  .nav-link.free.active {
-    border-color: var(--free-active);
-    background: linear-gradient(180deg, #ffffff 0%, #fff1cc 100%);
-  }
+.nav-btn.pro,
+.nav-link.pro {
+  background: linear-gradient(180deg, #ffffff 0%, var(--pro-bg) 100%);
+  border-color: var(--pro-border);
+  color: var(--pro-text);
+}
 
-  .nav-btn.pro.active,
-  .nav-link.pro.active {
-    border-color: var(--pro-active);
-    background: linear-gradient(180deg, #ffffff 0%, #ede9fe 100%);
-  }
+.nav-btn.premium,
+.nav-link.premium {
+  background: linear-gradient(180deg, #ffffff 0%, var(--premium-bg) 100%);
+  border-color: var(--premium-border);
+  color: var(--premium-text);
+}
 
-  .nav-btn.premium.active,
-  .nav-link.premium.active {
-    border-color: var(--premium-active);
-    background: linear-gradient(180deg, #ffffff 0%, #f5e8ff 100%);
-  }
+.nav-btn.prep.active,
+.nav-link.prep.active {
+  border-color: var(--prep-active);
+  background: linear-gradient(180deg, #ffffff 0%, #ffe8d1 100%);
+}
 
-  .nav-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 5px;
-  }
+.nav-btn.free.active,
+.nav-link.free.active {
+  border-color: var(--free-active);
+  background: linear-gradient(180deg, #ffffff 0%, #fff1cc 100%);
+}
 
-  .nav-index {
-    width: 28px;
-    height: 28px;
-    min-width: 28px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 900;
-    color: white;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.16);
-  }
+.nav-btn.pro.active,
+.nav-link.pro.active {
+  border-color: var(--pro-active);
+  background: linear-gradient(180deg, #ffffff 0%, #ede9fe 100%);
+}
 
-  .nav-index.prep { background: #ea580c; }
-  .nav-index.free { background: #d97706; }
-  .nav-index.pro { background: #7c3aed; }
-  .nav-index.premium { background: #9333ea; }
+.nav-btn.premium.active,
+.nav-link.premium.active {
+  border-color: var(--premium-active);
+  background: linear-gradient(180deg, #ffffff 0%, #f5e8ff 100%);
+}
 
-  .plan-chip {
-    display: inline-flex;
-    align-items: center;
-    border-radius: 999px;
-    padding: 4px 8px;
-    font-size: 10px;
-    font-weight: 900;
-    letter-spacing: 0.04em;
-    color: white;
-  }
+.nav-row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
 
-  .plan-chip.free { background: #16a34a; }
-  .plan-chip.pro { background: #7c3aed; }
-  .plan-chip.premium { background: #9333ea; }
+.nav-index {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 900;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+  align-self: start;
+  margin-top: 1px;
+}
 
-  .nav-title {
-    font-size: 15px;
-    font-weight: 800;
-    line-height: 1.1;
-    color: #111827;
-  }
+.nav-index.prep { background: #ea580c; }
+.nav-index.free { background: #d97706; }
+.nav-index.pro { background: #7c3aed; }
+.nav-index.premium { background: #9333ea; }
 
-  .nav-desc {
-    font-size: 12px;
-    color: #475467;
-    margin-top: 3px;
-    line-height: 1.25;
-  }
+.nav-copy {
+  min-width: 0;
+}
 
-  .prep-checks {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
-    margin-top: 7px;
-  }
+.nav-headline {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 6px;
+}
 
-  .prep-check {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    min-width: 0;
-  }
+.plan-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 3px 7px;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: white;
+  line-height: 1;
+  margin-top: 1px;
+}
 
-  .prep-dot {
-    width: 10px;
-    height: 10px;
-    min-width: 10px;
-    border-radius: 999px;
-    background: #cbd5e1;
-    border: 1px solid #94a3b8;
-  }
+.plan-chip.free { background: #16a34a; }
+.plan-chip.pro { background: #7c3aed; }
+.plan-chip.premium { background: #9333ea; }
 
-  .prep-dot.ok {
-    background: #16a34a;
-    border-color: #166534;
-    box-shadow: 0 0 0 2px rgba(22,163,74,0.14);
-  }
+.nav-title {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.05;
+  color: #111827;
+}
 
-  .prep-check-label {
-    font-size: 11px;
-    font-weight: 700;
-    color: #475467;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+.nav-desc {
+  font-size: 11px;
+  color: #475467;
+  margin-top: 3px;
+  line-height: 1.2;
+  max-width: 100%;
+}
 
-  .nav-lock {
-    position: absolute;
-    top: 36px;
-    right: 12px;
-    font-size: 18px;
-    line-height: 1;
-  }
+.prep-checks {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px 6px;
+  margin-top: 6px;
+}
+
+.prep-check {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.prep-dot {
+  width: 9px;
+  height: 9px;
+  min-width: 9px;
+  border-radius: 999px;
+  background: #cbd5e1;
+  border: 1px solid #94a3b8;
+}
+
+.prep-dot.ok {
+  background: #16a34a;
+  border-color: #166534;
+  box-shadow: 0 0 0 2px rgba(22,163,74,0.14);
+}
+
+.prep-check-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #475467;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-lock {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 14px;
+  line-height: 1;
+}
+
+
+
 
   .page {
     max-width: 1180px;
@@ -617,11 +654,11 @@
   .title-row {
     flex-direction: column;
     align-items: stretch;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
 
   .top-shell-inner {
-    padding: 8px 10px 10px 10px;
+    padding: 8px 10px 9px 10px;
   }
 
   .page {
@@ -635,13 +672,13 @@
   .title-sub {
     font-size: 12px;
     margin-top: 3px;
-    line-height: 1.25;
+    line-height: 1.2;
   }
 
   .title-help {
     font-size: 11px;
     margin-top: 4px;
-    line-height: 1.25;
+    line-height: 1.2;
   }
 
   .nav-strip {
@@ -665,14 +702,15 @@
 
   .nav-btn,
   .nav-link {
-    flex: 0 0 220px;
-    min-height: 56px;
-    padding: 8px 9px;
-    border-radius: 12px;
+    flex: 0 0 176px;
+    min-height: 52px;
+    padding: 7px 8px 8px 8px;
+    border-radius: 11px;
   }
 
-  .nav-top {
-    margin-bottom: 3px;
+  .nav-row {
+    grid-template-columns: 22px minmax(0, 1fr);
+    gap: 6px;
   }
 
   .nav-index {
@@ -680,15 +718,16 @@
     height: 22px;
     min-width: 22px;
     font-size: 10px;
+    margin-top: 0;
   }
 
   .plan-chip {
-    padding: 3px 6px;
-    font-size: 9px;
+    padding: 2px 6px;
+    font-size: 8px;
   }
 
   .nav-title {
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.05;
   }
 
@@ -700,12 +739,8 @@
 
   .prep-checks {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 4px;
+    gap: 3px 5px;
     margin-top: 5px;
-  }
-
-  .prep-check-label {
-    font-size: 10px;
   }
 
   .prep-dot {
@@ -714,10 +749,14 @@
     min-width: 8px;
   }
 
+  .prep-check-label {
+    font-size: 9px;
+  }
+
   .nav-lock {
-    top: 30px;
-    right: 10px;
-    font-size: 14px;
+    top: 6px;
+    right: 6px;
+    font-size: 12px;
   }
 
   .card {
@@ -759,7 +798,6 @@
 }
 
 
-
 </style>
 </head>
 
@@ -776,58 +814,86 @@
         </div>
 
         <div class="nav-strip">
-          <button class="nav-btn prep active" type="button" data-panel="prep">
-            <div class="nav-top">
-              <span class="nav-index prep">1</span>
-              <span class="plan-chip free">FREE</span>
-            </div>
-            <div class="nav-title">Preparazione</div>
-            <div class="nav-desc">Dati essenziali, lingua e formato colloquio</div>
-            <div class="prep-checks">
-              <div class="prep-check"><span class="prep-dot" id="dotRole"></span><span class="prep-check-label">Ruolo</span></div>
-              <div class="prep-check"><span class="prep-dot" id="dotCv"></span><span class="prep-check-label">CV</span></div>
-              <div class="prep-check"><span class="prep-dot" id="dotJd"></span><span class="prep-check-label">JD</span></div>
-              <div class="prep-check"><span class="prep-dot ok" id="dotLang"></span><span class="prep-check-label">Lingua</span></div>
-            </div>
-          </button>
+         
+        
+        <button class="nav-btn prep active" type="button" data-panel="prep">
+  <div class="nav-row">
+    <span class="nav-index prep">1</span>
+    <div class="nav-copy">
+      <div class="nav-headline">
+        <div class="nav-title">Preparazione</div>
+        <span class="plan-chip free">FREE</span>
+      </div>
+      <div class="nav-desc">Dati essenziali<br>e lingua</div>
+      <div class="prep-checks">
+        <div class="prep-check"><span class="prep-dot" id="dotRole"></span><span class="prep-check-label">Ruolo</span></div>
+        <div class="prep-check"><span class="prep-dot" id="dotCv"></span><span class="prep-check-label">CV</span></div>
+        <div class="prep-check"><span class="prep-dot" id="dotJd"></span><span class="prep-check-label">JD</span></div>
+        <div class="prep-check"><span class="prep-dot ok" id="dotLang"></span><span class="prep-check-label">Lingua</span></div>
+      </div>
+    </div>
+  </div>
+</button>
+
 
           <button class="nav-btn free" type="button" data-panel="simulation">
-            <div class="nav-top">
-              <span class="nav-index free">2</span>
-              <span class="plan-chip free">FREE</span>
-            </div>
-            <div class="nav-title">Simulazione</div>
-            <div class="nav-desc">Controllo finale e avvio del colloquio</div>
-          </button>
+  <div class="nav-row">
+    <span class="nav-index free">2</span>
+    <div class="nav-copy">
+      <div class="nav-headline">
+        <div class="nav-title">Simulazione</div>
+        <span class="plan-chip free">FREE</span>
+      </div>
+      <div class="nav-desc">Controllo finale<br>e avvio</div>
+    </div>
+  </div>
+</button>
 
-          <a class="nav-link free" href="./fringe_interview_interactive_shell_report.html">
-            <div class="nav-top">
-              <span class="nav-index free">3</span>
-              <span class="plan-chip free">FREE</span>
-            </div>
-            <div class="nav-title">Report</div>
-            <div class="nav-desc">Apri il report generato della simulazione</div>
-          </a>
+<a class="nav-link free" href="./fringe_interview_interactive_shell_report.html">
+  <div class="nav-row">
+    <span class="nav-index free">3</span>
+    <div class="nav-copy">
+      <div class="nav-headline">
+        <div class="nav-title">Report</div>
+        <span class="plan-chip free">FREE</span>
+      </div>
+      <div class="nav-desc">Apri il report<br>della simulazione</div>
+    </div>
+  </div>
+</a>
 
-          <button class="nav-btn pro" type="button" data-panel="pro">
-            <div class="nav-top">
-              <span class="nav-index pro">4</span>
-              <span class="plan-chip pro">PRO</span>
-            </div>
-            <div class="nav-lock">🔒</div>
-            <div class="nav-title">Training guidato</div>
-            <div class="nav-desc">Feedback più specifici e lavoro sulle risposte</div>
-          </button>
+
+
+         <button class="nav-btn pro" type="button" data-panel="pro">
+  <div class="nav-lock">🔒</div>
+  <div class="nav-row">
+    <span class="nav-index pro">4</span>
+    <div class="nav-copy">
+      <div class="nav-headline">
+        <div class="nav-title">Training</div>
+        <span class="plan-chip pro">PRO</span>
+      </div>
+      <div class="nav-desc">Feedback mirato<br>e guida</div>
+    </div>
+  </div>
+</button>
+
 
           <button class="nav-btn premium" type="button" data-panel="premium">
-            <div class="nav-top">
-              <span class="nav-index premium">5</span>
-              <span class="plan-chip premium">PREMIUM</span>
-            </div>
-            <div class="nav-lock">🔒</div>
-            <div class="nav-title">Lettura selezione</div>
-            <div class="nav-desc">Include tutto il Pro + CV avanzato e visione recruiter</div>
-          </button>
+  <div class="nav-lock">🔒</div>
+  <div class="nav-row">
+    <span class="nav-index premium">5</span>
+    <div class="nav-copy">
+      <div class="nav-headline">
+        <div class="nav-title">Selezione</div>
+        <span class="plan-chip premium">PREMIUM</span>
+      </div>
+      <div class="nav-desc">Visione recruiter<br>e CV avanzato</div>
+    </div>
+  </div>
+</button>
+
+
         </div>
       </div>
     </div>
