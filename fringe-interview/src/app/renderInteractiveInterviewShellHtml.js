@@ -1,5 +1,5 @@
 function safeJsonForHtml(value) {
-  return JSON.stringify(value ?? {}, null, 2).replace(/</g, "\\u003c");
+  return JSON.stringify(value ?? {}, null, 2).replace(/</g, "\u003c");
 }
 
 export function renderInteractiveInterviewShellHtml({
@@ -149,6 +149,7 @@ export function renderInteractiveInterviewShellHtml({
     min-height: 92px;
     padding: 12px 58px 12px 12px;
     border-radius: 15px;
+    overflow: hidden;
     background: white;
     border: 2px solid #d8e0ea;
     text-align: left;
@@ -360,11 +361,11 @@ export function renderInteractiveInterviewShellHtml({
 
   .nav-side-tag {
     position: absolute;
-    top: -1px;
-    right: -1px;
-    bottom: -1px;
+    top: 0;
+    right: 0;
+    bottom: 0;
     width: 36px;
-    border-radius: 0 12px 12px 0;
+    border-radius: 14px 0 0 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -384,7 +385,7 @@ export function renderInteractiveInterviewShellHtml({
 
   .nav-lock {
     position: absolute;
-    right: -1px;
+    right: 0;
     bottom: 8px;
     width: 36px;
     display: flex;
@@ -610,6 +611,42 @@ export function renderInteractiveInterviewShellHtml({
     color: #166534;
   }
 
+  .demo-grid {
+    display: grid;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .demo-button {
+    width: 100%;
+    border: 2px solid #d8dee8;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 11px 12px;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.05);
+  }
+
+  .demo-button:hover {
+    border-color: #f59e0b;
+    background: #fffaf2;
+  }
+
+  .demo-button-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: #111827;
+  }
+
+  .demo-button-desc {
+    margin-top: 3px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #475467;
+    line-height: 1.25;
+  }
+
   .cta-row {
     display: flex;
     flex-wrap: wrap;
@@ -728,8 +765,8 @@ export function renderInteractiveInterviewShellHtml({
     }
 
     .nav-strip-wrap {
-      padding: 0 18px;
-      margin: 0 -8px;
+      padding: 0 22px;
+      margin: 0 -10px;
     }
 
     .nav-strip {
@@ -755,25 +792,26 @@ export function renderInteractiveInterviewShellHtml({
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 16px;
-      height: 36px;
+      width: 22px;
+      height: 52px;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: rgba(226,232,240,0.88);
-      font-size: 16px;
+      color: rgba(226,232,240,0.92);
+      font-size: 42px;
       font-weight: 900;
       pointer-events: none;
       z-index: 2;
       text-shadow: 0 1px 1px rgba(0,0,0,0.16);
+      line-height: 1;
     }
 
     .nav-scroll-hint.left {
-      left: 0;
+      left: -2px;
     }
 
     .nav-scroll-hint.right {
-      right: 0;
+      right: -2px;
     }
 
     .nav-btn,
@@ -839,7 +877,7 @@ export function renderInteractiveInterviewShellHtml({
 
     .nav-copy {
       justify-content: flex-start;
-      padding-top: 1px;
+      padding-top: 2px;
     }
 
     .nav-index {
@@ -847,7 +885,7 @@ export function renderInteractiveInterviewShellHtml({
       height: 28px;
       min-width: 28px;
       font-size: 11px;
-      margin-top: 1px;
+      margin-top: 0;
     }
 
     .nav-title {
@@ -888,17 +926,13 @@ export function renderInteractiveInterviewShellHtml({
     }
 
     .nav-side-tag {
-      top: -1px;
-      right: -1px;
-      bottom: -1px;
       width: 28px;
-      border-radius: 0 11px 11px 0;
+      border-radius: 11px 0 0 11px;
       font-size: 9px;
       letter-spacing: 0.08em;
     }
 
     .nav-lock {
-      right: -1px;
       bottom: 8px;
       width: 28px;
       font-size: 15px;
@@ -924,7 +958,8 @@ export function renderInteractiveInterviewShellHtml({
 
     .field-box,
     .mini-card,
-    .sim-box {
+    .sim-box,
+    .demo-button {
       padding: 12px;
       border-radius: 12px;
     }
@@ -955,129 +990,75 @@ export function renderInteractiveInterviewShellHtml({
             <div class="title-help">Seleziona dalla barra: 1) preparazione, 2) simulazione, 3) report. Le aree PRO e PREMIUM mostrano i livelli di supporto avanzato.</div>
           </div>
         </div>
-<div class="nav-strip-wrap">
+        <div class="nav-strip-wrap">
           <div class="nav-scroll-hint left">‹</div>
           <div class="nav-scroll-hint right">›</div>
           <div class="nav-strip">
+            <button class="nav-btn prep active" type="button" data-panel="prep">
+              <span class="nav-side-tag free">FREE</span>
+              <div class="nav-row">
+                <span class="nav-index prep">1</span>
+                <div class="nav-copy">
+                  <div class="nav-title">Preparazione</div>
+                  <div class="nav-desc">Dati essenziali</div>
+                  <div class="prep-checks">
+                    <div class="prep-check"><span class="prep-dot" id="dotRole"></span><span class="prep-check-label">Ruolo</span></div>
+                    <div class="prep-check"><span class="prep-dot" id="dotCv"></span><span class="prep-check-label">CV</span></div>
+                    <div class="prep-check"><span class="prep-dot" id="dotJd"></span><span class="prep-check-label">Job Descr.</span></div>
+                    <div class="prep-check"><span class="prep-dot ok" id="dotLang"></span><span class="prep-check-label">Lingua</span></div>
+                  </div>
+                </div>
+              </div>
+            </button>
 
-  <button class="nav-btn prep active" type="button" data-panel="prep">
-    <span class="nav-side-tag free">FREE</span>
-    <div class="nav-row">
-      <span class="nav-index prep">1</span>
-      <div class="nav-copy">
-        <div class="nav-title">Preparazione</div>
-        <div class="nav-desc">Dati essenziali</div>
-        <div class="prep-checks">
-          <div class="prep-check"><span class="prep-dot" id="dotRole"></span><span class="prep-check-label">Ruolo</span></div>
-          <div class="prep-check"><span class="prep-dot" id="dotCv"></span><span class="prep-check-label">CV</span></div>
-          <div class="prep-check"><span class="prep-dot" id="dotJd"></span><span class="prep-check-label">Job Descr.</span></div>
-          <div class="prep-check"><span class="prep-dot ok" id="dotLang"></span><span class="prep-check-label">Lingua</span></div>
+            <button class="nav-btn free" type="button" data-panel="simulation">
+              <span class="nav-side-tag free">FREE</span>
+              <div class="nav-row">
+                <span class="nav-index free">2</span>
+                <div class="nav-copy">
+                  <div class="nav-title">Simulazione</div>
+                  <div class="nav-desc">Controllo finale<br>e avvio</div>
+                </div>
+              </div>
+            </button>
+
+            <a class="nav-link free" href="./fringe_interview_interactive_shell_report.html">
+              <span class="nav-side-tag free">FREE</span>
+              <div class="nav-row">
+                <span class="nav-index free">3</span>
+                <div class="nav-copy">
+                  <div class="nav-title">Report</div>
+                  <div class="nav-desc">Apri il report<br>della simulazione</div>
+                </div>
+              </div>
+            </a>
+
+            <button class="nav-btn pro" type="button" data-panel="pro">
+              <span class="nav-side-tag pro">PRO</span>
+              <div class="nav-row">
+                <span class="nav-index pro">4</span>
+                <div class="nav-copy">
+                  <div class="nav-title">Training</div>
+                  <div class="nav-desc">Feedback mirato<br>e guida</div>
+                </div>
+              </div>
+              <div class="nav-lock">🔒</div>
+            </button>
+
+            <button class="nav-btn premium" type="button" data-panel="premium">
+              <span class="nav-side-tag premium">PREMIUM</span>
+              <div class="nav-row">
+                <span class="nav-index premium">5</span>
+                <div class="nav-copy">
+                  <div class="nav-title">Selezione</div>
+                  <div class="nav-desc">Visione recruiter<br>e CV avanzato</div>
+                </div>
+              </div>
+              <div class="nav-lock">🔒</div>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </button>
-
-  <button class="nav-btn free" type="button" data-panel="simulation">
-    <span class="nav-side-tag free">FREE</span>
-    <div class="nav-row">
-      <span class="nav-index free">2</span>
-      <div class="nav-copy">
-        <div class="nav-title">Simulazione</div>
-        <div class="nav-desc">Controllo finale<br>e avvio</div>
-      </div>
-    </div>
-  </button>
-
-  <a class="nav-link free" href="./fringe_interview_interactive_shell_report.html">
-    <span class="nav-side-tag free">FREE</span>
-    <div class="nav-row">
-      <span class="nav-index free">3</span>
-      <div class="nav-copy">
-        <div class="nav-title">Report</div>
-        <div class="nav-desc">Apri il report<br>della simulazione</div>
-      </div>
-    </div>
-  </a>
-
-  <button class="nav-btn pro" type="button" data-panel="pro">
-    <span class="nav-side-tag pro">PRO</span>
-    <div class="nav-row">
-      <span class="nav-index pro">4</span>
-      <div class="nav-copy">
-        <div class="nav-title">Training</div>
-        <div class="nav-desc">Feedback mirato<br>e guida</div>
-      </div>
-    </div>
-    <div class="nav-lock">🔒</div>
-  </button>
-
-  <button class="nav-btn premium" type="button" data-panel="premium">
-    <span class="nav-side-tag premium">PREMIUM</span>
-    <div class="nav-row">
-      <span class="nav-index premium">5</span>
-      <div class="nav-copy">
-        <div class="nav-title">Selezione</div>
-        <div class="nav-desc">Visione recruiter<br>e CV avanzato</div>
-      </div>
-    </div>
-    <div class="nav-lock">🔒</div>
-  </button>
-
-</div>
-        </div>
-        </div>
-      </div>
-    </div>
-  </button>
-
-  <button class="nav-btn free" type="button" data-panel="simulation">
-    <span class="nav-side-tag free">FREE</span>
-    <div class="nav-row">
-      <span class="nav-index free">2</span>
-      <div class="nav-copy">
-        <div class="nav-title">Simulazione</div>
-        <div class="nav-desc">Controllo finale<br>e avvio</div>
-      </div>
-    </div>
-  </button>
-
-  <a class="nav-link free" href="./fringe_interview_interactive_shell_report.html">
-    <span class="nav-side-tag free">FREE</span>
-    <div class="nav-row">
-      <span class="nav-index free">3</span>
-      <div class="nav-copy">
-        <div class="nav-title">Report</div>
-        <div class="nav-desc">Apri il report<br>della simulazione</div>
-      </div>
-    </div>
-  </a>
-
-  <button class="nav-btn pro" type="button" data-panel="pro">
-    <span class="nav-side-tag pro">PRO</span>
-    <div class="nav-row">
-      <span class="nav-index pro">4</span>
-      <div class="nav-copy">
-        <div class="nav-title">Training</div>
-        <div class="nav-desc">Feedback mirato<br>e guida</div>
-      </div>
-    </div>
-    <div class="nav-lock">🔒</div>
-  </button>
-
-  <button class="nav-btn premium" type="button" data-panel="premium">
-    <span class="nav-side-tag premium">PREMIUM</span>
-    <div class="nav-row">
-      <span class="nav-index premium">5</span>
-      <div class="nav-copy">
-        <div class="nav-title">Selezione</div>
-        <div class="nav-desc">Visione recruiter<br>e CV avanzato</div>
-      </div>
-    </div>
-    <div class="nav-lock">🔒</div>
-  </button>
-
-</div>
-        </div>
     </div>
   </div>
 
@@ -1183,8 +1164,23 @@ export function renderInteractiveInterviewShellHtml({
           </div>
         </div>
 
-        <div class="cta-row">
-          <button class="cta secondary" id="fillDemoButton" type="button">Carica esempio</button>
+        <div class="demo-grid">
+          <button class="demo-button" type="button" data-demo="pom">
+            <div class="demo-button-title">Carica dati essenziali di esempio · Product Operations Manager</div>
+            <div class="demo-button-desc">Profilo orientato a processi, stakeholder e coordinamento cross-funzionale.</div>
+          </button>
+          <button class="demo-button" type="button" data-demo="pm">
+            <div class="demo-button-title">Project Manager</div>
+            <div class="demo-button-desc">Scenario centrato su delivery, priorità, coordinamento e gestione avanzamento.</div>
+          </button>
+          <button class="demo-button" type="button" data-demo="ops">
+            <div class="demo-button-title">Operations Manager</div>
+            <div class="demo-button-desc">Esempio più vicino a organizzazione operativa, efficienza e miglioramento continuo.</div>
+          </button>
+          <button class="demo-button" type="button" data-demo="ba">
+            <div class="demo-button-title">Business Analyst</div>
+            <div class="demo-button-desc">Profilo basato su analisi, reporting, dashboard e lettura dati per decisioni.</div>
+          </button>
         </div>
       </div>
     </section>
@@ -1286,6 +1282,45 @@ export function renderInteractiveInterviewShellHtml({
       inputMode: sessionResult.inputMode || "text"
     };
 
+    const demoPresets = {
+      pom: {
+        targetRole: "Product Operations Manager",
+        cvText: "Business Analyst con 6 anni di esperienza in contesti digitali, reporting, dashboard, stakeholder management, analisi SQL/Tableau e coordinamento tra team prodotto e operations.",
+        jdText: "Ricerchiamo una figura capace di coordinare processi cross-funzionali, lavorare con team prodotto e operations, gestire priorità, stakeholder e miglioramento continuo.",
+        uiLocale: "it",
+        sessionLocale: "it",
+        interviewLengthMode: "short",
+        inputMode: "text"
+      },
+      pm: {
+        targetRole: "Project Manager",
+        cvText: "Project coordinator con 7 anni di esperienza nella gestione piani di lavoro, avanzamenti, dipendenze, stakeholder interni, fornitori e monitoraggio deliverable.",
+        jdText: "Cerchiamo un Project Manager capace di guidare planning, execution, risk tracking, comunicazione interfunzionale e rispetto delle milestone.",
+        uiLocale: "it",
+        sessionLocale: "it",
+        interviewLengthMode: "standard",
+        inputMode: "text"
+      },
+      ops: {
+        targetRole: "Operations Manager",
+        cvText: "Responsabile operations con esperienza in organizzazione flussi, KPI operativi, turni, qualità, riduzione inefficienze e coordinamento team di processo.",
+        jdText: "La posizione richiede presidio dei processi, miglioramento continuo, gestione criticità operative, lettura KPI e capacità di coordinare più funzioni.",
+        uiLocale: "it",
+        sessionLocale: "it",
+        interviewLengthMode: "standard",
+        inputMode: "text"
+      },
+      ba: {
+        targetRole: "Business Analyst",
+        cvText: "Analista con esperienza su reporting, raccolta requisiti, strutturazione dati, insight per decisioni, dashboard e supporto al business in ambienti SaaS.",
+        jdText: "Cerchiamo un Business Analyst capace di tradurre esigenze business in analisi chiare, dashboard utili, KPI coerenti e raccomandazioni operative.",
+        uiLocale: "it",
+        sessionLocale: "it",
+        interviewLengthMode: "short",
+        inputMode: "text"
+      }
+    };
+
     const intakeState = { ...defaultIntakeState };
 
     const panelMap = {
@@ -1332,8 +1367,8 @@ export function renderInteractiveInterviewShellHtml({
     const simInputModeValue = document.getElementById("simInputModeValue");
     const simulationReadinessText = document.getElementById("simulationReadinessText");
 
-    const fillDemoButton = document.getElementById("fillDemoButton");
     const fakeStartButton = document.getElementById("fakeStartButton");
+    const demoButtons = Array.from(document.querySelectorAll(".demo-button[data-demo]"));
 
     const modeCopy = {
       short: {
@@ -1476,17 +1511,21 @@ export function renderInteractiveInterviewShellHtml({
     interviewLengthModeSelect.value = intakeState.interviewLengthMode;
     inputModeSelect.value = intakeState.inputMode;
 
-    fillDemoButton.addEventListener("click", () => {
-      targetRoleInput.value = "Product Operations Manager";
-      cvTextInput.value =
-        "Business Analyst con 6 anni di esperienza in contesti digitali, reporting, dashboard, stakeholder management e analisi SQL/Tableau.";
-      jdTextInput.value =
-        "Ricerchiamo una figura capace di coordinare processi cross-funzionali, lavorare con team prodotto e operations, gestire priorità, stakeholder e miglioramento continuo.";
-      uiLocaleSelect.value = "it";
-      sessionLocaleSelect.value = "it";
-      interviewLengthModeSelect.value = "short";
-      inputModeSelect.value = "text";
-      updateUi();
+    demoButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const presetKey = button.getAttribute("data-demo");
+        const preset = demoPresets[presetKey];
+        if (!preset) return;
+
+        targetRoleInput.value = preset.targetRole;
+        cvTextInput.value = preset.cvText;
+        jdTextInput.value = preset.jdText;
+        uiLocaleSelect.value = preset.uiLocale;
+        sessionLocaleSelect.value = preset.sessionLocale;
+        interviewLengthModeSelect.value = preset.interviewLengthMode;
+        inputModeSelect.value = preset.inputMode;
+        updateUi();
+      });
     });
 
     fakeStartButton.addEventListener("click", () => {
