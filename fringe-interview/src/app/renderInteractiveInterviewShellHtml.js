@@ -303,12 +303,14 @@ export function renderInteractiveInterviewShellHtml({
   }
 
   .nav-title {
-    font-size: 16px;
-    font-weight: 900;
-    line-height: 1.04;
-    color: #111827;
-    padding-right: 2px;
-  }
+  font-size: 17px;
+  font-weight: 900;
+  line-height: 1.02;
+  color: #0b1220;
+  letter-spacing: -0.01em;
+  padding-right: 2px;
+}
+
 
   .nav-desc {
     font-size: 12px;
@@ -895,11 +897,19 @@ export function renderInteractiveInterviewShellHtml({
   display: none;
 }
 
-    .nav-title {
-      font-size: 14px;
-      font-weight: 900;
-      line-height: 1.05;
-    }
+  .nav-title {
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.02;
+  color: #0b1220;
+  letter-spacing: -0.01em;
+}
+
+.nav-btn.active .nav-title,
+.nav-link.active .nav-title {
+  color: #000000;
+}
+
 
 .nav-desc {
   font-size: 11px;
@@ -907,6 +917,7 @@ export function renderInteractiveInterviewShellHtml({
   line-height: 1.15;
   margin-top: 4px;
   width: 100%;
+  color: #374151;
 }
 .prep-checks {
   gap: 5px 6px;
@@ -953,12 +964,30 @@ export function renderInteractiveInterviewShellHtml({
   font-size: 11px;
   font-weight: 900;
   line-height: 1;
-  text-shadow: 0 1px 1px rgba(0,0,0,0.2);
-  background: rgba(17,24,39,0.28);
-  border: 1px solid rgba(255,255,255,0.35);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+  text-shadow: 0 1px 1px rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
 }
 
+.nav-btn.prep::after,
+.nav-link.prep::after {
+  background: #ea580c;
+}
+
+.nav-btn.free::after,
+.nav-link.free::after {
+  background: #16a34a;
+}
+
+.nav-btn.pro::after,
+.nav-link.pro::after {
+  background: #7c3aed;
+}
+
+.nav-btn.premium::after,
+.nav-link.premium::after {
+  background: #9333ea;
+}
 
 .nav-btn.prep::after,
 .nav-link.prep::after { content: "1"; }
@@ -1083,14 +1112,14 @@ export function renderInteractiveInterviewShellHtml({
     font-weight: 900;
     line-height: 1.05;
   }
-
-  .nav-desc {
-    font-size: 11px;
-    font-weight: 800;
-    line-height: 1.15;
-    margin-top: 4px;
-    width: 100%;
-  }
+.nav-desc {
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-top: 4px;
+  width: 100%;
+  color: #374151;
+}
 
   .prep-checks {
     gap: 5px 6px;
@@ -1125,24 +1154,46 @@ export function renderInteractiveInterviewShellHtml({
   }
 
   .nav-btn::after,
-  .nav-link::after {
-    top: 6px;
-    right: 3px;
-    width: 18px;
-    height: 18px;
-    border-radius: 999px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 11px;
-    font-weight: 900;
-    line-height: 1;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
-    background: rgba(17,24,39,0.28);
-    border: 1px solid rgba(255,255,255,0.35);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
-  }
+.nav-link::after {
+  position: absolute;
+  top: 6px;
+  right: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.6);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
+}
+
+.nav-btn.prep::after,
+.nav-link.prep::after {
+  background: #ea580c;
+}
+
+.nav-btn.free::after,
+.nav-link.free::after {
+  background: #16a34a;
+}
+
+.nav-btn.pro::after,
+.nav-link.pro::after {
+  background: #7c3aed;
+}
+
+.nav-btn.premium::after,
+.nav-link.premium::after {
+  background: #9333ea;
+}
+  
+  
 }
 
 
