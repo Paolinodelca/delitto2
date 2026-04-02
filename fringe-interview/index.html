@@ -601,8 +601,18 @@
 
   .demo-grid {
     display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
     margin-top: 14px;
+  }
+
+  .demo-section-title {
+    margin-top: 14px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #7c2d12;
   }
 
   .demo-button {
@@ -610,7 +620,7 @@
     border: 2px solid #d8dee8;
     background: #ffffff;
     border-radius: 12px;
-    padding: 11px 12px;
+    padding: 10px 11px;
     text-align: left;
     cursor: pointer;
     box-shadow: 0 6px 14px rgba(15, 23, 42, 0.05);
@@ -622,9 +632,10 @@
   }
 
   .demo-button-title {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 900;
     color: #111827;
+    line-height: 1.18;
   }
 
   .demo-button-desc {
@@ -952,11 +963,12 @@
       border-radius: 12px;
     }
 
-    input,
-    textarea,
-    select {
-      padding: 10px 10px;
-      font-size: 14px;
+    .demo-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .demo-section-title {
+      font-size: 11px;
     }
 
     .cta {
@@ -1152,9 +1164,10 @@
           </div>
         </div>
 
+        <div class="demo-section-title">Carica dati essenziali di esempio</div>
         <div class="demo-grid">
           <button class="demo-button" type="button" data-demo="pom">
-            <div class="demo-button-title">Carica dati essenziali di esempio · Product Operations Manager</div>
+            <div class="demo-button-title">Product Operations Manager</div>
             <div class="demo-button-desc">Profilo orientato a processi, stakeholder e coordinamento cross-funzionale.</div>
           </button>
           <button class="demo-button" type="button" data-demo="pm">
@@ -3810,151 +3823,152 @@
     }
 
     function setCompleteState({ boxEl, stateEl, complete, okLabel = "Completo", missingLabel = "Da inserire" }) {
-      boxEl.classList.toggle("complete", complete);
-      stateEl.classList.toggle("ok", complete);
-      stateEl.classList.toggle("missing", !complete);
-      stateEl.textContent = complete ? okLabel : missingLabel;
-    }
+function setCompleteState({ boxEl, stateEl, complete, okLabel = "Completo", missingLabel = "Da inserire" }) {
+  boxEl.classList.toggle("complete", complete);
+  stateEl.classList.toggle("ok", complete);
+  stateEl.classList.toggle("missing", !complete);
+  stateEl.textContent = complete ? okLabel : missingLabel;
+}
 
-    function setDotState(dotEl, complete) {
-      dotEl.classList.toggle("ok", complete);
-    }
+function setDotState(dotEl, complete) {
+  dotEl.classList.toggle("ok", complete);
+}
 
-    function switchPanel(panelKey) {
-      Object.entries(panelMap).forEach(([key, panel]) => {
-        panel.classList.toggle("active", key === panelKey);
-      });
+function switchPanel(panelKey) {
+  Object.entries(panelMap).forEach(([key, panel]) => {
+    panel.classList.toggle("active", key === panelKey);
+  });
 
-      navButtons.forEach((button) => {
-        button.classList.toggle("active", button.getAttribute("data-panel") === panelKey);
-      });
-    }
+  navButtons.forEach((button) => {
+    button.classList.toggle("active", button.getAttribute("data-panel") === panelKey);
+  });
+}
 
-    function updateUi() {
-      intakeState.targetRole = targetRoleInput.value;
-      intakeState.cvText = cvTextInput.value;
-      intakeState.jdText = jdTextInput.value;
-      intakeState.uiLocale = uiLocaleSelect.value;
-      intakeState.sessionLocale = sessionLocaleSelect.value;
-      intakeState.interviewLengthMode = interviewLengthModeSelect.value;
-      intakeState.inputMode = inputModeSelect.value;
+function updateUi() {
+  intakeState.targetRole = targetRoleInput.value;
+  intakeState.cvText = cvTextInput.value;
+  intakeState.jdText = jdTextInput.value;
+  intakeState.uiLocale = uiLocaleSelect.value;
+  intakeState.sessionLocale = sessionLocaleSelect.value;
+  intakeState.interviewLengthMode = interviewLengthModeSelect.value;
+  intakeState.inputMode = inputModeSelect.value;
 
-      const roleReady = hasText(intakeState.targetRole);
-      const cvReady = hasText(intakeState.cvText);
-      const jdReady = hasText(intakeState.jdText);
-      const prepReady = roleReady && cvReady;
+  const roleReady = hasText(intakeState.targetRole);
+  const cvReady = hasText(intakeState.cvText);
+  const jdReady = hasText(intakeState.jdText);
+  const prepReady = roleReady && cvReady;
 
-      setCompleteState({
-        boxEl: boxRole,
-        stateEl: stateRole,
-        complete: roleReady,
-        okLabel: "Completo",
-        missingLabel: "Da inserire"
-      });
+  setCompleteState({
+    boxEl: boxRole,
+    stateEl: stateRole,
+    complete: roleReady,
+    okLabel: "Completo",
+    missingLabel: "Da inserire"
+  });
 
-      setCompleteState({
-        boxEl: boxCv,
-        stateEl: stateCv,
-        complete: cvReady,
-        okLabel: "Completo",
-        missingLabel: "Da inserire"
-      });
+  setCompleteState({
+    boxEl: boxCv,
+    stateEl: stateCv,
+    complete: cvReady,
+    okLabel: "Completo",
+    missingLabel: "Da inserire"
+  });
 
-      setCompleteState({
-        boxEl: boxJd,
-        stateEl: stateJd,
-        complete: jdReady,
-        okLabel: "Presente",
-        missingLabel: "Consigliata"
-      });
+  setCompleteState({
+    boxEl: boxJd,
+    stateEl: stateJd,
+    complete: jdReady,
+    okLabel: "Presente",
+    missingLabel: "Consigliata"
+  });
 
-      setDotState(dotRole, roleReady);
-      setDotState(dotCv, cvReady);
-      setDotState(dotJd, jdReady);
+  setDotState(dotRole, roleReady);
+  setDotState(dotCv, cvReady);
+  setDotState(dotJd, jdReady);
 
-      if (prepReady) {
-        statusPrepValue.textContent = jdReady ? "Pronta" : "Quasi pronta";
-        prepNextHint.textContent = jdReady
-          ? "Hai tutto il necessario per una simulazione ben centrata"
-          : "Puoi partire già ora, ma con la job description il risultato migliora";
-        prepNextHint.classList.add("ok");
-      } else {
-        statusPrepValue.textContent = "Da completare";
-        prepNextHint.textContent = "Completa almeno CV e ruolo target";
-        prepNextHint.classList.remove("ok");
-      }
+  if (prepReady) {
+    statusPrepValue.textContent = jdReady ? "Pronta" : "Quasi pronta";
+    prepNextHint.textContent = jdReady
+      ? "Hai tutto il necessario per una simulazione ben centrata"
+      : "Puoi partire già ora, ma con la job description il risultato migliora";
+    prepNextHint.classList.add("ok");
+  } else {
+    statusPrepValue.textContent = "Da completare";
+    prepNextHint.textContent = "Completa almeno CV e ruolo target";
+    prepNextHint.classList.remove("ok");
+  }
 
-      const selectedMode = modeCopy[intakeState.interviewLengthMode] || modeCopy.standard;
-      selectedModeValue.textContent = selectedMode.label;
-      selectedModeSubtext.textContent = selectedMode.subtext;
-      interviewLengthModeHelp.textContent = selectedMode.help;
-      modeHighlightText.textContent = selectedMode.highlight;
+  const selectedMode = modeCopy[intakeState.interviewLengthMode] || modeCopy.standard;
+  selectedModeValue.textContent = selectedMode.label;
+  selectedModeSubtext.textContent = selectedMode.subtext;
+  interviewLengthModeHelp.textContent = selectedMode.help;
+  modeHighlightText.textContent = selectedMode.highlight;
 
-      simRoleValue.textContent = roleReady ? intakeState.targetRole.trim() : "Non inserito";
-      simCvValue.textContent = cvReady ? "Presente" : "Non inserito";
-      simJdValue.textContent = jdReady ? "Presente" : "Non inserita";
-      simLangValue.textContent = intakeState.sessionLocale === "en" ? "English" : "Italiano";
-      simModeValue.textContent = selectedMode.label;
-      simInputModeValue.textContent = intakeState.inputMode === "voice" ? "Voice ready" : "Text";
+  simRoleValue.textContent = roleReady ? intakeState.targetRole.trim() : "Non inserito";
+  simCvValue.textContent = cvReady ? "Presente" : "Non inserito";
+  simJdValue.textContent = jdReady ? "Presente" : "Non inserita";
+  simLangValue.textContent = intakeState.sessionLocale === "en" ? "English" : "Italiano";
+  simModeValue.textContent = selectedMode.label;
+  simInputModeValue.textContent = intakeState.inputMode === "voice" ? "Voice ready" : "Text";
 
-      simulationReadinessText.textContent = prepReady
-        ? (jdReady
-            ? "La simulazione può partire con una base completa e più credibile."
-            : "La simulazione può partire. Aggiungere la job description renderebbe il contesto ancora più preciso.")
-        : "Per abilitare davvero la simulazione servono almeno CV e ruolo target.";
-    }
+  simulationReadinessText.textContent = prepReady
+    ? (jdReady
+        ? "La simulazione può partire con una base completa e più credibile."
+        : "La simulazione può partire. Aggiungere la job description renderebbe il contesto ancora più preciso.")
+    : "Per abilitare davvero la simulazione servono almeno CV e ruolo target.";
+}
 
-    [
-      targetRoleInput,
-      cvTextInput,
-      jdTextInput,
-      uiLocaleSelect,
-      sessionLocaleSelect,
-      interviewLengthModeSelect,
-      inputModeSelect
-    ].forEach((el) => {
-      el.addEventListener("input", updateUi);
-      el.addEventListener("change", updateUi);
-    });
+[
+  targetRoleInput,
+  cvTextInput,
+  jdTextInput,
+  uiLocaleSelect,
+  sessionLocaleSelect,
+  interviewLengthModeSelect,
+  inputModeSelect
+].forEach((el) => {
+  el.addEventListener("input", updateUi);
+  el.addEventListener("change", updateUi);
+});
 
-    targetRoleInput.value = intakeState.targetRole;
-    cvTextInput.value = intakeState.cvText;
-    jdTextInput.value = intakeState.jdText;
-    uiLocaleSelect.value = intakeState.uiLocale;
-    sessionLocaleSelect.value = intakeState.sessionLocale;
-    interviewLengthModeSelect.value = intakeState.interviewLengthMode;
-    inputModeSelect.value = intakeState.inputMode;
+targetRoleInput.value = intakeState.targetRole;
+cvTextInput.value = intakeState.cvText;
+jdTextInput.value = intakeState.jdText;
+uiLocaleSelect.value = intakeState.uiLocale;
+sessionLocaleSelect.value = intakeState.sessionLocale;
+interviewLengthModeSelect.value = intakeState.interviewLengthMode;
+inputModeSelect.value = intakeState.inputMode;
 
-    demoButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const presetKey = button.getAttribute("data-demo");
-        const preset = demoPresets[presetKey];
-        if (!preset) return;
+demoButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const presetKey = button.getAttribute("data-demo");
+    const preset = demoPresets[presetKey];
+    if (!preset) return;
 
-        targetRoleInput.value = preset.targetRole;
-        cvTextInput.value = preset.cvText;
-        jdTextInput.value = preset.jdText;
-        uiLocaleSelect.value = preset.uiLocale;
-        sessionLocaleSelect.value = preset.sessionLocale;
-        interviewLengthModeSelect.value = preset.interviewLengthMode;
-        inputModeSelect.value = preset.inputMode;
-        updateUi();
-      });
-    });
-
-    fakeStartButton.addEventListener("click", () => {
-      switchPanel("simulation");
-      updateUi();
-    });
-
-    document.querySelectorAll(".nav-btn[data-panel]").forEach((button) => {
-      button.addEventListener("click", () => {
-        switchPanel(button.getAttribute("data-panel"));
-      });
-    });
-
+    targetRoleInput.value = preset.targetRole;
+    cvTextInput.value = preset.cvText;
+    jdTextInput.value = preset.jdText;
+    uiLocaleSelect.value = preset.uiLocale;
+    sessionLocaleSelect.value = preset.sessionLocale;
+    interviewLengthModeSelect.value = preset.interviewLengthMode;
+    inputModeSelect.value = preset.inputMode;
     updateUi();
-    switchPanel("prep");
+  });
+});
+
+fakeStartButton.addEventListener("click", () => {
+  switchPanel("simulation");
+  updateUi();
+});
+
+document.querySelectorAll(".nav-btn[data-panel]").forEach((button) => {
+  button.addEventListener("click", () => {
+    switchPanel(button.getAttribute("data-panel"));
+  });
+});
+
+updateUi();
+switchPanel("prep");
   </script>
 </body>
 </html>
