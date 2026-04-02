@@ -908,13 +908,12 @@ export function renderInteractiveInterviewShellHtml({
   margin-top: 4px;
   width: 100%;
 }
-    .prep-checks {
-      gap: 5px 7px;
-      margin-top: 7px;
-      margin-left: -22px;
-      width: calc(100% + 22px);
-    }
-
+.prep-checks {
+  gap: 5px 6px;
+  margin-top: 7px;
+  margin-left: 0;
+  width: 100%;
+}
     .prep-check {
       gap: 5px;
       align-items: center;
@@ -932,26 +931,34 @@ export function renderInteractiveInterviewShellHtml({
       color: #374151;
     }
 
-    .nav-side-tag {
-      width: 28px;
-      border-radius: 11px 0 0 11px;
-      font-size: 9px;
-      letter-spacing: 0.08em;
-    }
+ .nav-side-tag {
+  width: 24px;
+  border-radius: 10px 0 0 10px;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
 
 .nav-btn::after,
 .nav-link::after {
   position: absolute;
-  top: 7px;
-  right: 6px;
-  width: 16px;
-  text-align: center;
+  top: 6px;
+  right: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
   font-size: 11px;
   font-weight: 900;
   line-height: 1;
   text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+  background: rgba(17,24,39,0.28);
+  border: 1px solid rgba(255,255,255,0.35);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
 }
+
 
 .nav-btn.prep::after,
 .nav-link.prep::after { content: "1"; }
@@ -961,12 +968,11 @@ export function renderInteractiveInterviewShellHtml({
 .nav-btn.premium::after { content: "5"; }
 
 
-    .nav-lock {
-      bottom: 8px;
-      width: 28px;
-      font-size: 15px;
-    }
-
+.nav-lock {
+  bottom: 8px;
+  width: 24px;
+  font-size: 14px;
+}
     .card {
       padding: 14px;
       border-radius: 14px;
@@ -1006,6 +1012,141 @@ export function renderInteractiveInterviewShellHtml({
       justify-content: center;
     }
   }
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .nav-strip-wrap {
+    padding: 0 22px;
+    margin: 0 -10px;
+  }
+
+  .nav-strip {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 8px;
+    padding: 2px 1px 6px 1px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-scroll-hint {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(226,232,240,0.92);
+    font-size: 42px;
+    font-weight: 900;
+    pointer-events: none;
+    z-index: 2;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.16);
+    line-height: 1;
+  }
+
+  .nav-scroll-hint.left {
+    left: -2px;
+  }
+
+  .nav-scroll-hint.right {
+    right: -2px;
+  }
+
+  .nav-btn,
+  .nav-link {
+    flex: 0 0 168px;
+    min-height: 84px;
+    padding: 10px 42px 10px 10px;
+    border-radius: 13px;
+  }
+
+  .nav-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    align-items: start;
+  }
+
+  .nav-index {
+    display: none;
+  }
+
+  .nav-copy {
+    justify-content: flex-start;
+    padding-top: 2px;
+  }
+
+  .nav-title {
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1.05;
+  }
+
+  .nav-desc {
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-top: 4px;
+    width: 100%;
+  }
+
+  .prep-checks {
+    gap: 5px 6px;
+    margin-top: 7px;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .prep-dot {
+    width: 9px;
+    height: 9px;
+    min-width: 9px;
+  }
+
+  .prep-check-label {
+    font-size: 10px;
+    font-weight: 900;
+    color: #374151;
+  }
+
+  .nav-side-tag {
+    width: 24px;
+    border-radius: 10px 0 0 10px;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+  }
+
+  .nav-lock {
+    bottom: 8px;
+    width: 24px;
+    font-size: 14px;
+  }
+
+  .nav-btn::after,
+  .nav-link::after {
+    top: 6px;
+    right: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    background: rgba(17,24,39,0.28);
+    border: 1px solid rgba(255,255,255,0.35);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+}
+
+
+
 </style>
 </head>
 
