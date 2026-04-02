@@ -72,13 +72,13 @@
     background: transparent;
   }
 
-  .top-shell {
-    max-width: 1180px;
-    margin: 0 auto;
-    background: linear-gradient(180deg, rgba(154,52,18,0.98) 0%, rgba(194,65,12,0.98) 100%);
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
-    border-radius: 0 0 18px 18px;
-  }
+.top-shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  background: linear-gradient(180deg, #4a1708 0%, #7c2d12 34%, #9a3412 66%, #c2410c 100%);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  border-radius: 0 0 18px 18px;
+}
 
   .top-shell-inner {
     padding: 10px 18px 12px 18px;
@@ -371,19 +371,19 @@
   .nav-side-tag.pro { background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%); }
   .nav-side-tag.premium { background: linear-gradient(180deg, #a855f7 0%, #7e22ce 100%); }
 
-  .nav-lock {
-    position: absolute;
-    right: 0;
-    bottom: 8px;
-    width: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-    line-height: 1;
-    filter: drop-shadow(0 1px 0 rgba(255,255,255,0.45));
-    pointer-events: none;
-  }
+ .nav-lock {
+  position: absolute;
+  right: 0;
+  bottom: 5px;
+  width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  line-height: 1;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.45));
+  pointer-events: none;
+}
 
   .page {
     max-width: 1180px;
@@ -632,7 +632,7 @@
   }
 
 .demo-button-title {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 900;
   color: #111827;
   line-height: 1.18;
@@ -868,11 +868,11 @@
         inset 0 1px 0 rgba(255,255,255,0.95);
     }
 
-    .nav-row {
-      grid-template-columns: 28px minmax(0, 1fr);
-      gap: 8px;
-      align-items: start;
-    }
+   .nav-row {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  align-items: start;
+}
 
     .nav-copy {
       justify-content: flex-start;
@@ -880,12 +880,7 @@
     }
 
 .nav-index {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  font-size: 12px;
-  font-weight: 900;
-  margin-top: 0;
+  display: none;
 }
 
     .nav-title {
@@ -899,8 +894,7 @@
   font-weight: 800;
   line-height: 1.15;
   margin-top: 4px;
-  margin-left: -36px;
-  width: calc(100% + 18px);
+  width: 100%;
 }
     .prep-checks {
       gap: 5px 7px;
@@ -932,6 +926,28 @@
       font-size: 9px;
       letter-spacing: 0.08em;
     }
+
+.nav-btn::after,
+.nav-link::after {
+  position: absolute;
+  top: 7px;
+  right: 6px;
+  width: 16px;
+  text-align: center;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+}
+
+.nav-btn.prep::after,
+.nav-link.prep::after { content: "1"; }
+.nav-btn.free[data-panel="simulation"]::after { content: "2"; }
+.nav-link.free[href="./fringe_interview_interactive_shell_report.html"]::after { content: "3"; }
+.nav-btn.pro::after { content: "4"; }
+.nav-btn.premium::after { content: "5"; }
+
 
     .nav-lock {
       bottom: 8px;
@@ -1070,8 +1086,9 @@
         <div class="kicker">Step 1 · Preparazione</div>
         <h2>Inserisci i dati per iniziare</h2>
         <div class="intro">
-          Per partire davvero servono il CV e il ruolo target. La job description non è obbligatoria, ma migliora la qualità della simulazione e rende il feedback più centrato.
-        </div>
+  Per partire davvero servono il CV e il ruolo target.<br>
+  La job description non è obbligatoria, ma migliora la qualità della simulazione e rende il feedback più centrato.
+</div>
 
         <div class="field-grid">
           <div class="field-box" id="boxRole">
@@ -3797,34 +3814,33 @@
     const simulationReadinessText = document.getElementById("simulationReadinessText");
 
     const fakeStartButton = document.getElementById("fakeStartButton");
-    const demoButtons = Array.from(document.querySelectorAll(".demo-button[data-demo]"));
+const demoButtons = Array.from(document.querySelectorAll(".demo-button[data-demo]"));
 
-    const modeCopy = {
-      short: {
-        label: "Quick Interview",
-        subtext: "Breve, veloce, utile per demo o prima prova.",
-        help: "Versione rapida: poche domande ma con un affondo adattivo se emerge una debolezza forte.",
-        highlight: "Quick Interview è la scelta migliore per una prova veloce o una demo: resta breve, ma se trova una debolezza importante stringe comunque il punto con un approfondimento mirato."
-      },
-      standard: {
-        label: "Standard Interview",
-        subtext: "Equilibrio tra rapidità, copertura e approfondimento.",
-        help: "Versione bilanciata: copre più aree, mantiene ritmo e lascia spazio a segnali utili per il report.",
-        highlight: "Standard Interview è la scelta più equilibrata: copre bene il profilo, lascia emergere i punti deboli e mantiene una durata credibile per un uso reale."
-      },
-      deep: {
-        label: "Deep Interview",
-        subtext: "Più esplorazione, più pressione, più materiale per il report.",
-        help: "Versione estesa: più spazio per follow-up, coerenza narrativa, attriti e approfondimento.",
-        highlight: "Deep Interview è la scelta giusta quando vuoi una lettura più ricca: aumenta l’esplorazione, stressa meglio la tenuta delle risposte e rende il report più denso."
-      }
-    };
+const modeCopy = {
+  short: {
+    label: "Quick Interview",
+    subtext: "Breve, veloce, utile per demo o prima prova.",
+    help: "Versione rapida: poche domande ma con un affondo adattivo se emerge una debolezza forte.",
+    highlight: "Quick Interview è la scelta migliore per una prova veloce o una demo: resta breve, ma se trova una debolezza importante stringe comunque il punto con un approfondimento mirato."
+  },
+  standard: {
+    label: "Standard Interview",
+    subtext: "Equilibrio tra rapidità, copertura e approfondimento.",
+    help: "Versione bilanciata: copre più aree, mantiene ritmo e lascia spazio a segnali utili per il report.",
+    highlight: "Standard Interview è la scelta più equilibrata: copre bene il profilo, lascia emergere i punti deboli e mantiene una durata credibile per un uso reale."
+  },
+  deep: {
+    label: "Deep Interview",
+    subtext: "Più esplorazione, più pressione, più materiale per il report.",
+    help: "Versione estesa: più spazio per follow-up, coerenza narrativa, attriti e approfondimento.",
+    highlight: "Deep Interview è la scelta giusta quando vuoi una lettura più ricca: aumenta l’esplorazione, stressa meglio la tenuta delle risposte e rende il report più denso."
+  }
+};
 
-    function hasText(value) {
-      return typeof value === "string" && value.trim().length > 0;
-    }
+function hasText(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
 
-    function setCompleteState({ boxEl, stateEl, complete, okLabel = "Completo", missingLabel = "Da inserire" }) {
 function setCompleteState({ boxEl, stateEl, complete, okLabel = "Completo", missingLabel = "Da inserire" }) {
   boxEl.classList.toggle("complete", complete);
   stateEl.classList.toggle("ok", complete);
@@ -3958,10 +3974,12 @@ demoButtons.forEach((button) => {
   });
 });
 
-fakeStartButton.addEventListener("click", () => {
-  switchPanel("simulation");
-  updateUi();
-});
+if (fakeStartButton) {
+  fakeStartButton.addEventListener("click", () => {
+    switchPanel("simulation");
+    updateUi();
+  });
+}
 
 document.querySelectorAll(".nav-btn[data-panel]").forEach((button) => {
   button.addEventListener("click", () => {
