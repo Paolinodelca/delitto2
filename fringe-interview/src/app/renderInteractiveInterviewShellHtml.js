@@ -127,6 +127,10 @@ export function renderInteractiveInterviewShellHtml({
     font-weight: 600;
   }
 
+  .nav-strip-wrap {
+    position: relative;
+  }
+
   .nav-strip {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -134,12 +138,16 @@ export function renderInteractiveInterviewShellHtml({
     align-items: stretch;
   }
 
+  .nav-scroll-hint {
+    display: none;
+  }
+
   .nav-btn,
   .nav-link {
     position: relative;
     display: block;
     min-height: 92px;
-    padding: 12px 50px 12px 12px;
+    padding: 12px 58px 12px 12px;
     border-radius: 15px;
     background: white;
     border: 2px solid #d8e0ea;
@@ -195,7 +203,8 @@ export function renderInteractiveInterviewShellHtml({
     border-color: #111827;
     box-shadow:
       0 18px 28px rgba(15, 23, 42, 0.18),
-      0 0 0 4px rgba(17,24,39,0.18),
+      0 0 0 4px rgba(255,255,255,0.60),
+      0 0 0 7px rgba(17,24,39,0.14),
       inset 0 1px 0 rgba(255,255,255,0.95);
   }
 
@@ -204,7 +213,8 @@ export function renderInteractiveInterviewShellHtml({
     border-color: var(--prep-active);
     box-shadow:
       0 18px 28px rgba(15, 23, 42, 0.18),
-      0 0 0 4px rgba(234,88,12,0.24),
+      0 0 0 4px rgba(255,255,255,0.62),
+      0 0 0 7px rgba(234,88,12,0.22),
       inset 0 1px 0 rgba(255,255,255,0.95);
   }
 
@@ -213,7 +223,8 @@ export function renderInteractiveInterviewShellHtml({
     border-color: var(--free-active);
     box-shadow:
       0 18px 28px rgba(15, 23, 42, 0.18),
-      0 0 0 4px rgba(217,119,6,0.24),
+      0 0 0 4px rgba(255,255,255,0.62),
+      0 0 0 7px rgba(217,119,6,0.22),
       inset 0 1px 0 rgba(255,255,255,0.95);
   }
 
@@ -222,7 +233,8 @@ export function renderInteractiveInterviewShellHtml({
     border-color: var(--pro-active);
     box-shadow:
       0 18px 28px rgba(15, 23, 42, 0.18),
-      0 0 0 4px rgba(124,58,237,0.24),
+      0 0 0 4px rgba(255,255,255,0.62),
+      0 0 0 7px rgba(124,58,237,0.22),
       inset 0 1px 0 rgba(255,255,255,0.95);
   }
 
@@ -231,33 +243,30 @@ export function renderInteractiveInterviewShellHtml({
     border-color: var(--premium-active);
     box-shadow:
       0 18px 28px rgba(15, 23, 42, 0.18),
-      0 0 0 4px rgba(147,51,234,0.24),
+      0 0 0 4px rgba(255,255,255,0.62),
+      0 0 0 7px rgba(147,51,234,0.22),
       inset 0 1px 0 rgba(255,255,255,0.95);
   }
 
   .nav-row {
     display: grid;
-    grid-template-columns: 34px minmax(0, 1fr);
+    grid-template-columns: 36px minmax(0, 1fr);
     gap: 10px;
-    align-items: center;
+    align-items: start;
   }
 
   .nav-copy {
     min-width: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-  }
-
-  .nav-btn.prep .nav-copy,
-  .nav-link.prep .nav-copy {
     justify-content: flex-start;
+    padding-top: 1px;
   }
 
   .nav-index {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
     border-radius: 999px;
     background: #111827;
     color: white;
@@ -267,6 +276,9 @@ export function renderInteractiveInterviewShellHtml({
     align-items: center;
     justify-content: center;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+    text-shadow: 0 0 1px rgba(255,255,255,0.18);
+    letter-spacing: -0.01em;
+    margin-top: 1px;
   }
 
   .nav-btn.prep.active .nav-index,
@@ -294,6 +306,7 @@ export function renderInteractiveInterviewShellHtml({
     font-weight: 900;
     line-height: 1.04;
     color: #111827;
+    padding-right: 2px;
   }
 
   .nav-desc {
@@ -302,6 +315,7 @@ export function renderInteractiveInterviewShellHtml({
     line-height: 1.2;
     color: #475467;
     margin-top: 4px;
+    padding-right: 2px;
   }
 
   .prep-checks {
@@ -309,6 +323,8 @@ export function renderInteractiveInterviewShellHtml({
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 5px 8px;
     margin-top: 8px;
+    margin-left: -28px;
+    width: calc(100% + 28px);
   }
 
   .prep-check {
@@ -344,22 +360,22 @@ export function renderInteractiveInterviewShellHtml({
 
   .nav-side-tag {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    bottom: 8px;
-    width: 32px;
-    border-radius: 11px;
+    top: -1px;
+    right: -1px;
+    bottom: -1px;
+    width: 36px;
+    border-radius: 0 12px 12px 0;
     display: flex;
     align-items: center;
     justify-content: center;
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 900;
     letter-spacing: 0.08em;
     color: white;
     text-shadow: 0 1px 1px rgba(0,0,0,0.18);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+    box-shadow: inset 1px 0 0 rgba(255,255,255,0.18), inset 0 1px 0 rgba(255,255,255,0.18);
   }
 
   .nav-side-tag.free { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); }
@@ -368,11 +384,16 @@ export function renderInteractiveInterviewShellHtml({
 
   .nav-lock {
     position: absolute;
-    right: 14px;
-    bottom: 9px;
-    font-size: 16px;
+    right: -1px;
+    bottom: 8px;
+    width: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
     line-height: 1;
-    filter: drop-shadow(0 1px 0 rgba(255,255,255,0.4));
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,0.45));
+    pointer-events: none;
   }
 
   .page {
@@ -706,6 +727,11 @@ export function renderInteractiveInterviewShellHtml({
       line-height: 1.2;
     }
 
+    .nav-strip-wrap {
+      padding: 0 18px;
+      margin: 0 -8px;
+    }
+
     .nav-strip {
       display: flex;
       overflow-x: auto;
@@ -725,11 +751,36 @@ export function renderInteractiveInterviewShellHtml({
       border-radius: 999px;
     }
 
+    .nav-scroll-hint {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(226,232,240,0.88);
+      font-size: 16px;
+      font-weight: 900;
+      pointer-events: none;
+      z-index: 2;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.16);
+    }
+
+    .nav-scroll-hint.left {
+      left: 0;
+    }
+
+    .nav-scroll-hint.right {
+      right: 0;
+    }
+
     .nav-btn,
     .nav-link {
       flex: 0 0 168px;
       min-height: 84px;
-      padding: 10px 42px 10px 10px;
+      padding: 10px 46px 10px 10px;
       border-radius: 13px;
     }
 
@@ -739,7 +790,8 @@ export function renderInteractiveInterviewShellHtml({
       transform: none;
       box-shadow:
         0 12px 22px rgba(0,0,0,0.16),
-        0 0 0 3px rgba(17,24,39,0.18),
+        0 0 0 3px rgba(255,255,255,0.62),
+        0 0 0 6px rgba(17,24,39,0.15),
         inset 0 1px 0 rgba(255,255,255,0.95);
     }
 
@@ -747,7 +799,8 @@ export function renderInteractiveInterviewShellHtml({
     .nav-link.prep.active {
       box-shadow:
         0 12px 22px rgba(0,0,0,0.16),
-        0 0 0 3px rgba(234,88,12,0.24),
+        0 0 0 3px rgba(255,255,255,0.62),
+        0 0 0 6px rgba(234,88,12,0.22),
         inset 0 1px 0 rgba(255,255,255,0.95);
     }
 
@@ -755,7 +808,8 @@ export function renderInteractiveInterviewShellHtml({
     .nav-link.free.active {
       box-shadow:
         0 12px 22px rgba(0,0,0,0.16),
-        0 0 0 3px rgba(217,119,6,0.24),
+        0 0 0 3px rgba(255,255,255,0.62),
+        0 0 0 6px rgba(217,119,6,0.22),
         inset 0 1px 0 rgba(255,255,255,0.95);
     }
 
@@ -763,7 +817,8 @@ export function renderInteractiveInterviewShellHtml({
     .nav-link.pro.active {
       box-shadow:
         0 12px 22px rgba(0,0,0,0.16),
-        0 0 0 3px rgba(124,58,237,0.24),
+        0 0 0 3px rgba(255,255,255,0.62),
+        0 0 0 6px rgba(124,58,237,0.22),
         inset 0 1px 0 rgba(255,255,255,0.95);
     }
 
@@ -771,18 +826,20 @@ export function renderInteractiveInterviewShellHtml({
     .nav-link.premium.active {
       box-shadow:
         0 12px 22px rgba(0,0,0,0.16),
-        0 0 0 3px rgba(147,51,234,0.24),
+        0 0 0 3px rgba(255,255,255,0.62),
+        0 0 0 6px rgba(147,51,234,0.22),
         inset 0 1px 0 rgba(255,255,255,0.95);
     }
 
     .nav-row {
       grid-template-columns: 28px minmax(0, 1fr);
       gap: 8px;
-      align-items: flex-start;
+      align-items: start;
     }
 
     .nav-copy {
       justify-content: flex-start;
+      padding-top: 1px;
     }
 
     .nav-index {
@@ -809,6 +866,8 @@ export function renderInteractiveInterviewShellHtml({
     .prep-checks {
       gap: 5px 7px;
       margin-top: 7px;
+      margin-left: -22px;
+      width: calc(100% + 22px);
     }
 
     .prep-check {
@@ -829,18 +888,20 @@ export function renderInteractiveInterviewShellHtml({
     }
 
     .nav-side-tag {
-      top: 8px;
-      right: 8px;
-      bottom: 8px;
-      width: 26px;
+      top: -1px;
+      right: -1px;
+      bottom: -1px;
+      width: 28px;
+      border-radius: 0 11px 11px 0;
       font-size: 9px;
       letter-spacing: 0.08em;
     }
 
     .nav-lock {
-      right: 10px;
+      right: -1px;
       bottom: 8px;
-      font-size: 14px;
+      width: 28px;
+      font-size: 15px;
     }
 
     .card {
@@ -894,7 +955,10 @@ export function renderInteractiveInterviewShellHtml({
             <div class="title-help">Seleziona dalla barra: 1) preparazione, 2) simulazione, 3) report. Le aree PRO e PREMIUM mostrano i livelli di supporto avanzato.</div>
           </div>
         </div>
-<div class="nav-strip">
+<div class="nav-strip-wrap">
+          <div class="nav-scroll-hint left">‹</div>
+          <div class="nav-scroll-hint right">›</div>
+          <div class="nav-strip">
 
   <button class="nav-btn prep active" type="button" data-panel="prep">
     <span class="nav-side-tag free">FREE</span>
@@ -908,6 +972,59 @@ export function renderInteractiveInterviewShellHtml({
           <div class="prep-check"><span class="prep-dot" id="dotCv"></span><span class="prep-check-label">CV</span></div>
           <div class="prep-check"><span class="prep-dot" id="dotJd"></span><span class="prep-check-label">Job Descr.</span></div>
           <div class="prep-check"><span class="prep-dot ok" id="dotLang"></span><span class="prep-check-label">Lingua</span></div>
+        </div>
+      </div>
+    </div>
+  </button>
+
+  <button class="nav-btn free" type="button" data-panel="simulation">
+    <span class="nav-side-tag free">FREE</span>
+    <div class="nav-row">
+      <span class="nav-index free">2</span>
+      <div class="nav-copy">
+        <div class="nav-title">Simulazione</div>
+        <div class="nav-desc">Controllo finale<br>e avvio</div>
+      </div>
+    </div>
+  </button>
+
+  <a class="nav-link free" href="./fringe_interview_interactive_shell_report.html">
+    <span class="nav-side-tag free">FREE</span>
+    <div class="nav-row">
+      <span class="nav-index free">3</span>
+      <div class="nav-copy">
+        <div class="nav-title">Report</div>
+        <div class="nav-desc">Apri il report<br>della simulazione</div>
+      </div>
+    </div>
+  </a>
+
+  <button class="nav-btn pro" type="button" data-panel="pro">
+    <span class="nav-side-tag pro">PRO</span>
+    <div class="nav-row">
+      <span class="nav-index pro">4</span>
+      <div class="nav-copy">
+        <div class="nav-title">Training</div>
+        <div class="nav-desc">Feedback mirato<br>e guida</div>
+      </div>
+    </div>
+    <div class="nav-lock">🔒</div>
+  </button>
+
+  <button class="nav-btn premium" type="button" data-panel="premium">
+    <span class="nav-side-tag premium">PREMIUM</span>
+    <div class="nav-row">
+      <span class="nav-index premium">5</span>
+      <div class="nav-copy">
+        <div class="nav-title">Selezione</div>
+        <div class="nav-desc">Visione recruiter<br>e CV avanzato</div>
+      </div>
+    </div>
+    <div class="nav-lock">🔒</div>
+  </button>
+
+</div>
+        </div>
         </div>
       </div>
     </div>
