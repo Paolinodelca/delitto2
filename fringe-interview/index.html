@@ -115,219 +115,253 @@
     font-weight: 600;
   }
 
+  .nav-strip {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    align-items: stretch;
+  }
 
-.nav-strip {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 10px;
-  align-items: stretch;
-}
+  .nav-btn,
+  .nav-link {
+    position: relative;
+    display: block;
+    min-height: 92px;
+    padding: 12px 50px 12px 12px;
+    border-radius: 15px;
+    background: white;
+    border: 2px solid #d8e0ea;
+    text-align: left;
+    box-shadow:
+      0 8px 18px rgba(15, 23, 42, 0.08),
+      inset 0 1px 0 rgba(255,255,255,0.9);
+    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+  }
 
-.nav-btn,
-.nav-link {
-  position: relative;
-  display: block;
-  min-height: 82px;
-  padding: 10px 42px 10px 10px;
-  border-radius: 15px;
-  background: white;
-  border: 2px solid #d8e0ea;
-  text-align: left;
-  box-shadow:
-    0 8px 18px rgba(15, 23, 42, 0.08),
-    inset 0 1px 0 rgba(255,255,255,0.85);
-  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
-}
+  .nav-btn:hover,
+  .nav-link:hover {
+    transform: translateY(-1px);
+  }
 
-.nav-btn:hover,
-.nav-link:hover {
-  transform: translateY(-1px);
-}
+  .nav-btn {
+    cursor: pointer;
+  }
 
-.nav-btn {
-  cursor: pointer;
-}
+  .nav-link {
+    text-decoration: none;
+    color: inherit;
+  }
 
-.nav-link {
-  text-decoration: none;
-  color: inherit;
-}
+  .nav-btn.prep,
+  .nav-link.prep {
+    background: linear-gradient(180deg, #ffffff 0%, var(--prep-bg) 100%);
+    border-color: var(--prep-border);
+  }
 
-.nav-btn.prep,
-.nav-link.prep {
-  background: linear-gradient(180deg, #ffffff 0%, var(--prep-bg) 100%);
-  border-color: var(--prep-border);
-}
+  .nav-btn.free,
+  .nav-link.free {
+    background: linear-gradient(180deg, #ffffff 0%, #fffaf0 100%);
+    border-color: var(--free-border);
+  }
 
-.nav-btn.free,
-.nav-link.free {
-  background: linear-gradient(180deg, #ffffff 0%, #fffaf0 100%);
-  border-color: var(--free-border);
-}
+  .nav-btn.pro,
+  .nav-link.pro {
+    background: linear-gradient(180deg, #ffffff 0%, var(--pro-bg) 100%);
+    border-color: var(--pro-border);
+  }
 
-.nav-btn.pro,
-.nav-link.pro {
-  background: linear-gradient(180deg, #ffffff 0%, var(--pro-bg) 100%);
-  border-color: var(--pro-border);
-}
+  .nav-btn.premium,
+  .nav-link.premium {
+    background: linear-gradient(180deg, #ffffff 0%, var(--premium-bg) 100%);
+    border-color: var(--premium-border);
+  }
 
-.nav-btn.premium,
-.nav-link.premium {
-  background: linear-gradient(180deg, #ffffff 0%, var(--premium-bg) 100%);
-  border-color: var(--premium-border);
-}
+  .nav-btn.active,
+  .nav-link.active {
+    transform: translateY(-1px);
+    border-width: 3px;
+    border-color: #111827;
+    box-shadow:
+      0 18px 28px rgba(15, 23, 42, 0.18),
+      0 0 0 4px rgba(17,24,39,0.18),
+      inset 0 1px 0 rgba(255,255,255,0.95);
+  }
 
-/* stato attivo pulito */
-.nav-btn.active,
-.nav-link.active {
-  border-color: #111827;
-  box-shadow:
-    0 14px 24px rgba(15, 23, 42, 0.16),
-    0 0 0 3px rgba(17,24,39,0.14),
-    inset 0 1px 0 rgba(255,255,255,0.85);
-}
+  .nav-btn.prep.active,
+  .nav-link.prep.active {
+    border-color: var(--prep-active);
+    box-shadow:
+      0 18px 28px rgba(15, 23, 42, 0.18),
+      0 0 0 4px rgba(234,88,12,0.24),
+      inset 0 1px 0 rgba(255,255,255,0.95);
+  }
 
-.nav-btn.prep.active,
-.nav-link.prep.active {
-  border-color: var(--prep-active);
-  box-shadow:
-    0 14px 24px rgba(15, 23, 42, 0.16),
-    0 0 0 3px rgba(234,88,12,0.18),
-    inset 0 1px 0 rgba(255,255,255,0.85);
-}
+  .nav-btn.free.active,
+  .nav-link.free.active {
+    border-color: var(--free-active);
+    box-shadow:
+      0 18px 28px rgba(15, 23, 42, 0.18),
+      0 0 0 4px rgba(217,119,6,0.24),
+      inset 0 1px 0 rgba(255,255,255,0.95);
+  }
 
-.nav-btn.free.active,
-.nav-link.free.active {
-  border-color: var(--free-active);
-  box-shadow:
-    0 14px 24px rgba(15, 23, 42, 0.16),
-    0 0 0 3px rgba(217,119,6,0.18),
-    inset 0 1px 0 rgba(255,255,255,0.85);
-}
+  .nav-btn.pro.active,
+  .nav-link.pro.active {
+    border-color: var(--pro-active);
+    box-shadow:
+      0 18px 28px rgba(15, 23, 42, 0.18),
+      0 0 0 4px rgba(124,58,237,0.24),
+      inset 0 1px 0 rgba(255,255,255,0.95);
+  }
 
-.nav-btn.pro.active,
-.nav-link.pro.active {
-  border-color: var(--pro-active);
-  box-shadow:
-    0 14px 24px rgba(15, 23, 42, 0.16),
-    0 0 0 3px rgba(124,58,237,0.18),
-    inset 0 1px 0 rgba(255,255,255,0.85);
-}
+  .nav-btn.premium.active,
+  .nav-link.premium.active {
+    border-color: var(--premium-active);
+    box-shadow:
+      0 18px 28px rgba(15, 23, 42, 0.18),
+      0 0 0 4px rgba(147,51,234,0.24),
+      inset 0 1px 0 rgba(255,255,255,0.95);
+  }
 
-.nav-btn.premium.active,
-.nav-link.premium.active {
-  border-color: var(--premium-active);
-  box-shadow:
-    0 14px 24px rgba(15, 23, 42, 0.16),
-    0 0 0 3px rgba(147,51,234,0.18),
-    inset 0 1px 0 rgba(255,255,255,0.85);
-}
+  .nav-row {
+    display: grid;
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 10px;
+    align-items: center;
+  }
 
-.nav-row {
-  display: grid;
-  grid-template-columns: 26px minmax(0, 1fr);
-  gap: 8px;
-  align-items: start;
-}
+  .nav-copy {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 
-.nav-index {
-  width: 26px;
-  height: 26px;
-  min-width: 26px;
-  border-radius: 999px;
-  background: #111827;
-  color: white;
-  font-size: 11px;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 0;
-  align-self: start;
-}
+  .nav-btn.prep .nav-copy,
+  .nav-link.prep .nav-copy {
+    justify-content: flex-start;
+  }
 
-.nav-title {
-  font-size: 15px;
-  font-weight: 900;
-  line-height: 1.08;
-  color: #111827;
-}
+  .nav-index {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 999px;
+    background: #111827;
+    color: white;
+    font-size: 13px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+  }
 
-.nav-desc {
-  font-size: 12px;
-  font-weight: 800;
-  line-height: 1.18;
-  color: #475467;
-  margin-top: 3px;
-}
+  .nav-btn.prep.active .nav-index,
+  .nav-link.prep.active .nav-index {
+    background: var(--prep-active);
+  }
 
-.prep-checks {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 4px 7px;
-  margin-top: 6px;
-}
+  .nav-btn.free.active .nav-index,
+  .nav-link.free.active .nav-index {
+    background: var(--free-active);
+  }
 
-.prep-check {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
-}
+  .nav-btn.pro.active .nav-index,
+  .nav-link.pro.active .nav-index {
+    background: var(--pro-active);
+  }
 
-.prep-dot {
-  width: 8px;
-  height: 8px;
-  min-width: 8px;
-  border-radius: 999px;
-  background: #d1d5db;
-  border: 1px solid #aeb7c2;
-}
+  .nav-btn.premium.active .nav-index,
+  .nav-link.premium.active .nav-index {
+    background: var(--premium-active);
+  }
 
-.prep-dot.ok {
-  background: #16a34a;
-  border-color: #166534;
-}
+  .nav-title {
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1.04;
+    color: #111827;
+  }
 
-.prep-check-label {
-  font-size: 10px;
-  font-weight: 800;
-  color: #475467;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .nav-desc {
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #475467;
+    margin-top: 4px;
+  }
 
-.nav-side-tag {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  bottom: 8px;
-  width: 26px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  font-size: 8px;
-  font-weight: 900;
-  letter-spacing: 0.06em;
-  color: white;
-}
+  .prep-checks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px 8px;
+    margin-top: 8px;
+  }
 
-.nav-side-tag.free { background: #16a34a; }
-.nav-side-tag.pro { background: #7c3aed; }
-.nav-side-tag.premium { background: #9333ea; }
+  .prep-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+  }
 
-.nav-lock {
-  position: absolute;
-  right: 13px;
-  bottom: 6px;
-  font-size: 11px;
-  line-height: 1;
-}
+  .prep-dot {
+    width: 10px;
+    height: 10px;
+    min-width: 10px;
+    border-radius: 999px;
+    background: #d1d5db;
+    border: 1px solid #aeb7c2;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.65);
+  }
 
+  .prep-dot.ok {
+    background: #16a34a;
+    border-color: #166534;
+  }
+
+  .prep-check-label {
+    font-size: 10px;
+    font-weight: 900;
+    color: #475467;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .nav-side-tag {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    bottom: 8px;
+    width: 32px;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    color: white;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.18);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+
+  .nav-side-tag.free { background: linear-gradient(180deg, #22c55e 0%, #15803d 100%); }
+  .nav-side-tag.pro { background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%); }
+  .nav-side-tag.premium { background: linear-gradient(180deg, #a855f7 0%, #7e22ce 100%); }
+
+  .nav-lock {
+    position: absolute;
+    right: 14px;
+    bottom: 9px;
+    font-size: 16px;
+    line-height: 1;
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,0.4));
+  }
 
   .page {
     max-width: 1180px;
@@ -623,302 +657,217 @@
     text-align: center;
   }
 
-
-
-@media (max-width: 1120px) {
-  .mini-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 760px) {
-  .title-row {
-    flex-direction: column;
-    align-items: stretch;
-    margin-bottom: 6px;
+  @media (max-width: 1120px) {
+    .mini-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
-  .top-shell-inner {
-    padding: 8px 10px 9px 10px;
+  @media (max-width: 760px) {
+    .title-row {
+      flex-direction: column;
+      align-items: stretch;
+      margin-bottom: 6px;
+    }
+
+    .top-shell-inner {
+      padding: 8px 10px 9px 10px;
+    }
+
+    .page {
+      padding: 0 12px 24px 12px;
+    }
+
+    .title-main {
+      font-size: 15px;
+    }
+
+    .title-sub {
+      font-size: 12px;
+      margin-top: 3px;
+      line-height: 1.2;
+    }
+
+    .title-help {
+      font-size: 11px;
+      margin-top: 4px;
+      line-height: 1.2;
+    }
+
+    .nav-strip {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: hidden;
+      gap: 8px;
+      padding: 2px 1px 6px 1px;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-strip::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .nav-strip::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.35);
+      border-radius: 999px;
+    }
+
+    .nav-btn,
+    .nav-link {
+      flex: 0 0 168px;
+      min-height: 84px;
+      padding: 10px 42px 10px 10px;
+      border-radius: 13px;
+    }
+
+    .nav-btn.active,
+    .nav-link.active {
+      border-width: 3px;
+      transform: none;
+      box-shadow:
+        0 12px 22px rgba(0,0,0,0.16),
+        0 0 0 3px rgba(17,24,39,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+    }
+
+    .nav-btn.prep.active,
+    .nav-link.prep.active {
+      box-shadow:
+        0 12px 22px rgba(0,0,0,0.16),
+        0 0 0 3px rgba(234,88,12,0.24),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+    }
+
+    .nav-btn.free.active,
+    .nav-link.free.active {
+      box-shadow:
+        0 12px 22px rgba(0,0,0,0.16),
+        0 0 0 3px rgba(217,119,6,0.24),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+    }
+
+    .nav-btn.pro.active,
+    .nav-link.pro.active {
+      box-shadow:
+        0 12px 22px rgba(0,0,0,0.16),
+        0 0 0 3px rgba(124,58,237,0.24),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+    }
+
+    .nav-btn.premium.active,
+    .nav-link.premium.active {
+      box-shadow:
+        0 12px 22px rgba(0,0,0,0.16),
+        0 0 0 3px rgba(147,51,234,0.24),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+    }
+
+    .nav-row {
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .nav-copy {
+      justify-content: flex-start;
+    }
+
+    .nav-index {
+      width: 28px;
+      height: 28px;
+      min-width: 28px;
+      font-size: 11px;
+      margin-top: 1px;
+    }
+
+    .nav-title {
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.05;
+    }
+
+    .nav-desc {
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-top: 3px;
+    }
+
+    .prep-checks {
+      gap: 5px 7px;
+      margin-top: 7px;
+    }
+
+    .prep-check {
+      gap: 5px;
+      align-items: center;
+    }
+
+    .prep-dot {
+      width: 9px;
+      height: 9px;
+      min-width: 9px;
+    }
+
+    .prep-check-label {
+      font-size: 10px;
+      font-weight: 900;
+      color: #374151;
+    }
+
+    .nav-side-tag {
+      top: 8px;
+      right: 8px;
+      bottom: 8px;
+      width: 26px;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+    }
+
+    .nav-lock {
+      right: 10px;
+      bottom: 8px;
+      font-size: 14px;
+    }
+
+    .card {
+      padding: 14px;
+      border-radius: 14px;
+    }
+
+    h2 {
+      font-size: 20px;
+    }
+
+    h3 {
+      font-size: 16px;
+    }
+
+    .intro {
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .field-box,
+    .mini-card,
+    .sim-box {
+      padding: 12px;
+      border-radius: 12px;
+    }
+
+    input,
+    textarea,
+    select {
+      padding: 10px 10px;
+      font-size: 14px;
+    }
+
+    .cta {
+      width: 100%;
+      justify-content: center;
+    }
   }
-
-  .page {
-    padding: 0 12px 24px 12px;
-  }
-
-  .title-main {
-    font-size: 15px;
-  }
-
-  .title-sub {
-    font-size: 12px;
-    margin-top: 3px;
-    line-height: 1.2;
-  }
-
-  .title-help {
-    font-size: 11px;
-    margin-top: 4px;
-    line-height: 1.2;
-  }
-
-
-.nav-strip {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
-}
-
-/* BASE BUTTON */
-.nav-btn,
-.nav-link {
-  position: relative;
-  min-height: 60px;
-  padding: 8px 10px;
-  border-radius: 12px;
-  background: white;
-  border: 2px solid #e5e7eb;
-  text-align: left;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.08);
-  transition: all 0.15s ease;
-}
-
-.nav-btn:hover,
-.nav-link:hover {
-  transform: translateY(-1px);
-}
-
-/* ACTIVE (NO BARRA GRIGIA!) */
-.nav-btn.active,
-.nav-link.active {
-  border: 2px solid #111827;
-  box-shadow: 0 10px 18px rgba(0,0,0,0.15);
-  background: #ffffff;
-}
-
-/* STRUCTURE */
-.nav-row {
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  gap: 8px;
-  align-items: start;
-}
-
-/* NUMBER */
-.nav-index {
-  width: 24px;
-  height: 24px;
-  border-radius: 999px;
-  background: #111827;
-  color: white;
-  font-size: 11px;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* TEXT */
-.nav-title {
-  font-size: 14px;
-  font-weight: 900;
-  line-height: 1.1;
-  color: #111827;
-}
-
-.nav-desc {
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.2;
-  color: #4b5563;
-  margin-top: 2px;
-}
-
-/* PREP CHECKS */
-.prep-checks {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px 6px;
-  margin-top: 5px;
-}
-
-.prep-check {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.prep-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #d1d5db;
-}
-
-.prep-dot.ok {
-  background: #16a34a;
-}
-
-.prep-check-label {
-  font-size: 10px;
-  font-weight: 700;
-}
-
-/* LOCK */
-.nav-lock {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  font-size: 13px;
-}
-
-/* MOBILE */
-
-@media (max-width: 1120px) {
-  .mini-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 760px) {
-  .title-row {
-    flex-direction: column;
-    align-items: stretch;
-    margin-bottom: 6px;
-  }
-
-  .top-shell-inner {
-    padding: 8px 10px 9px 10px;
-  }
-
-  .page {
-    padding: 0 12px 24px 12px;
-  }
-
-  .title-main {
-    font-size: 15px;
-  }
-
-  .title-sub {
-    font-size: 12px;
-    margin-top: 3px;
-    line-height: 1.2;
-  }
-
-  .title-help {
-    font-size: 11px;
-    margin-top: 4px;
-    line-height: 1.2;
-  }
-
-  .nav-strip {
-    display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
-    gap: 8px;
-    padding-bottom: 4px;
-    scrollbar-width: thin;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .nav-strip::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  .nav-strip::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.35);
-    border-radius: 999px;
-  }
-
-  .nav-btn,
-  .nav-link {
-    flex: 0 0 158px;
-    min-height: 72px;
-    padding: 8px 36px 8px 8px;
-    border-radius: 13px;
-  }
-
-  .nav-row {
-    grid-template-columns: 24px minmax(0, 1fr);
-    gap: 7px;
-  }
-
-  .nav-index {
-    width: 24px;
-    height: 24px;
-    min-width: 24px;
-    font-size: 10px;
-  }
-
-  .nav-title {
-    font-size: 13px;
-    font-weight: 900;
-  }
-
-  .nav-desc {
-    font-size: 11px;
-    font-weight: 800;
-    line-height: 1.15;
-  }
-
-  .prep-check-label {
-    font-size: 9px;
-  }
-
-  .nav-side-tag {
-    top: 7px;
-    right: 7px;
-    bottom: 7px;
-    width: 23px;
-    font-size: 8px;
-  }
-
-  .nav-lock {
-    right: 10px;
-    bottom: 5px;
-    font-size: 10px;
-  }
-
-  .card {
-    padding: 14px;
-    border-radius: 14px;
-  }
-
-  h2 {
-    font-size: 20px;
-  }
-
-  h3 {
-    font-size: 16px;
-  }
-
-  .intro {
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .field-box,
-  .mini-card,
-  .sim-box {
-    padding: 12px;
-    border-radius: 12px;
-  }
-
-  input,
-  textarea,
-  select {
-    padding: 10px 10px;
-    font-size: 14px;
-  }
-
-  .cta {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-
-
 </style>
 </head>
 
@@ -999,8 +948,6 @@
   </button>
 
 </div>
-     
-     
         </div>
     </div>
   </div>
@@ -1146,69 +1093,55 @@
             <div class="mini-card-value" id="simLangValue">Italiano</div>
           </div>
           <div class="mini-card">
-            <div class="mini-card-title">Formato colloquio</div>
+            <div class="mini-card-title">Formato</div>
             <div class="mini-card-value" id="simModeValue">Standard Interview</div>
           </div>
           <div class="mini-card">
-            <div class="mini-card-title">Stile atteso</div>
-            <div class="mini-card-value" id="simModeBehaviorValue">Equilibrato</div>
+            <div class="mini-card-title">Input</div>
+            <div class="mini-card-value" id="simInputModeValue">Text</div>
           </div>
         </div>
 
         <div class="cta-row">
-          <button class="cta" id="fakeStartButton" type="button">Completa prima CV e ruolo target</button>
-        </div>
-
-        <div class="help" id="simulationModeFootnote">
-          In modalità standard il colloquio cerca equilibrio tra copertura e profondità.
+          <button class="cta" id="fakeStartButton" type="button">Avvia simulazione</button>
         </div>
       </div>
     </section>
 
     <section class="panel" id="panel_pro">
       <div class="card paid">
-        <div class="kicker">Piano PRO</div>
-        <div class="locked-title">Con il piano PRO lavori davvero sulle risposte</div>
+        <div class="kicker">PRO · Training guidato</div>
+        <div class="locked-title">Allenamento più leggibile, concreto e mirato</div>
         <div class="locked-text">
-          Qui non trovi solo un giudizio più ricco: trovi un aiuto guidato per migliorare in modo operativo la qualità delle risposte.
+          Il livello PRO non aggiunge solo più testo: aggiunge una guida ragionata. Ti aiuta a capire cosa cercava la domanda, che cosa è davvero emerso nella risposta e dove conviene intervenire per migliorare.
         </div>
         <div class="locked-highlight">
-          <strong>Nel Pro puoi vedere:</strong>
-          <ul>
-            <li>suggerimenti più mirati;</li>
-            <li>lettura risposta per risposta;</li>
-            <li>punti deboli ricorrenti;</li>
-            <li>indicazioni su come rendere più forti contenuto, struttura e credibilità.</li>
-          </ul>
+          <strong>Con PRO puoi ottenere:</strong><br>
+          analisi risposta per risposta, focus sui punti deboli ricorrenti, suggerimenti di riformulazione e una lettura più utile per prepararti davvero.
         </div>
       </div>
     </section>
 
     <section class="panel" id="panel_premium">
       <div class="card paid-premium">
-        <div class="kicker">Piano PREMIUM</div>
-        <div class="locked-title">Con il piano PREMIUM vai oltre il Pro</div>
+        <div class="kicker">PREMIUM · Lettura selezione</div>
+        <div class="locked-title">Una visione più vicina a quella di chi seleziona</div>
         <div class="locked-text">
-          Il Premium include tutto il piano Pro e aggiunge il livello più vicino a una vera lettura di selezione.
+          Il livello PREMIUM include tutto il PRO e aggiunge una lettura più vicina a una valutazione reale: posizionamento, coerenza del percorso, tenuta del CV e percezione complessiva del candidato.
         </div>
         <div class="locked-highlight">
-          <strong>Immagina di avere un recruiter esperto che ti aiuta a:</strong>
-          <ul>
-            <li>capire come il CV si posiziona rispetto a una posizione specifica;</li>
-            <li>individuare dove perdi credibilità in selezione;</li>
-            <li>migliorare davvero contenuti, tono e qualità delle risposte;</li>
-            <li>rafforzare il CV in modo più utile per il ruolo che stai cercando.</li>
-          </ul>
+          <strong>Con PREMIUM puoi ottenere:</strong><br>
+          lettura recruiter-oriented, osservazioni più severe sul CV, segnali di rischio, punti forti sintetici e supporto più concreto sul modo in cui il profilo viene percepito.
         </div>
       </div>
     </section>
 
     <div class="footer-note">
-      Questa pagina prepara la simulazione. Il report si apre dal pulsante “Report” nella barra superiore.
+      Demo shell locale · FRINGE Interview setup
     </div>
   </main>
 
-  <script id="session-data" type="application/json">{
+  <script id="session-result-json" type="application/json">{
   "fringeInterviewMVPSession": {
     "parserResult": {
       "candidateProfile": {
@@ -3628,7 +3561,7 @@
     }
   }
 }</script>
-  <script id="shell-options-data" type="application/json">{
+  <script id="shell-options-json" type="application/json">{
   "scenarioType": "interview",
   "inputMode": "text",
   "uiLocale": "it",
@@ -3636,10 +3569,30 @@
   "inputSource": "upload",
   "frictionType": "none"
 }</script>
-
   <script>
-    const sourceResult = JSON.parse(document.getElementById("session-data").textContent || "{}");
-    const shellOptions = JSON.parse(document.getElementById("shell-options-data").textContent || "{}");
+    const sessionResult = JSON.parse(document.getElementById("session-result-json").textContent || "{}");
+    const shellOptions = JSON.parse(document.getElementById("shell-options-json").textContent || "{}");
+
+    const defaultIntakeState = {
+      targetRole: sessionResult.targetRole || "",
+      cvText: sessionResult.cvText || "",
+      jdText: sessionResult.jobDescriptionText || "",
+      uiLocale: sessionResult.uiLocale || "it",
+      sessionLocale: sessionResult.sessionLocale || "it",
+      interviewLengthMode: sessionResult.interviewLengthMode || "standard",
+      inputMode: sessionResult.inputMode || "text"
+    };
+
+    const intakeState = { ...defaultIntakeState };
+
+    const panelMap = {
+      prep: document.getElementById("panel_prep"),
+      simulation: document.getElementById("panel_simulation"),
+      pro: document.getElementById("panel_pro"),
+      premium: document.getElementById("panel_premium")
+    };
+
+    const navButtons = Array.from(document.querySelectorAll(".nav-btn[data-panel]"));
 
     const targetRoleInput = document.getElementById("targetRoleInput");
     const cvTextInput = document.getElementById("cvTextInput");
@@ -3648,131 +3601,155 @@
     const sessionLocaleSelect = document.getElementById("sessionLocaleSelect");
     const interviewLengthModeSelect = document.getElementById("interviewLengthModeSelect");
     const inputModeSelect = document.getElementById("inputModeSelect");
-    const fakeStartButton = document.getElementById("fakeStartButton");
+
+    const boxRole = document.getElementById("boxRole");
+    const boxCv = document.getElementById("boxCv");
+    const boxJd = document.getElementById("boxJd");
+    const stateRole = document.getElementById("stateRole");
+    const stateCv = document.getElementById("stateCv");
+    const stateJd = document.getElementById("stateJd");
+
+    const dotRole = document.getElementById("dotRole");
+    const dotCv = document.getElementById("dotCv");
+    const dotJd = document.getElementById("dotJd");
+
+    const statusPrepValue = document.getElementById("statusPrepValue");
+    const prepNextHint = document.getElementById("prepNextHint");
+
+    const selectedModeValue = document.getElementById("selectedModeValue");
+    const selectedModeSubtext = document.getElementById("selectedModeSubtext");
+    const interviewLengthModeHelp = document.getElementById("interviewLengthModeHelp");
+    const modeHighlightText = document.getElementById("modeHighlightText");
+
+    const simRoleValue = document.getElementById("simRoleValue");
+    const simCvValue = document.getElementById("simCvValue");
+    const simJdValue = document.getElementById("simJdValue");
+    const simLangValue = document.getElementById("simLangValue");
+    const simModeValue = document.getElementById("simModeValue");
+    const simInputModeValue = document.getElementById("simInputModeValue");
+    const simulationReadinessText = document.getElementById("simulationReadinessText");
+
     const fillDemoButton = document.getElementById("fillDemoButton");
+    const fakeStartButton = document.getElementById("fakeStartButton");
 
-    function text(value) {
-      return String(value ?? "").trim();
+    const modeCopy = {
+      short: {
+        label: "Quick Interview",
+        subtext: "Breve, veloce, utile per demo o prima prova.",
+        help: "Versione rapida: poche domande ma con un affondo adattivo se emerge una debolezza forte.",
+        highlight: "Quick Interview è la scelta migliore per una prova veloce o una demo: resta breve, ma se trova una debolezza importante stringe comunque il punto con un approfondimento mirato."
+      },
+      standard: {
+        label: "Standard Interview",
+        subtext: "Equilibrio tra rapidità, copertura e approfondimento.",
+        help: "Versione bilanciata: copre più aree, mantiene ritmo e lascia spazio a segnali utili per il report.",
+        highlight: "Standard Interview è la scelta più equilibrata: copre bene il profilo, lascia emergere i punti deboli e mantiene una durata credibile per un uso reale."
+      },
+      deep: {
+        label: "Deep Interview",
+        subtext: "Più esplorazione, più pressione, più materiale per il report.",
+        help: "Versione estesa: più spazio per follow-up, coerenza narrativa, attriti e approfondimento.",
+        highlight: "Deep Interview è la scelta giusta quando vuoi una lettura più ricca: aumenta l’esplorazione, stressa meglio la tenuta delle risposte e rende il report più denso."
+      }
+    };
+
+    function hasText(value) {
+      return typeof value === "string" && value.trim().length > 0;
     }
 
-    function setState(elId, value, okText, missingText) {
-      const el = document.getElementById(elId);
-      if (!el) return;
-      const ok = !!value;
-      el.textContent = ok ? okText : missingText;
-      el.className = "field-state " + (ok ? "ok" : "missing");
+    function setCompleteState({ boxEl, stateEl, complete, okLabel = "Completo", missingLabel = "Da inserire" }) {
+      boxEl.classList.toggle("complete", complete);
+      stateEl.classList.toggle("ok", complete);
+      stateEl.classList.toggle("missing", !complete);
+      stateEl.textContent = complete ? okLabel : missingLabel;
     }
 
-    function setBoxComplete(boxId, value) {
-      const box = document.getElementById(boxId);
-      if (!box) return;
-      box.classList.toggle("complete", !!value);
-    }
-
-    function setDot(id, isOk) {
-      const dot = document.getElementById(id);
-      if (!dot) return;
-      dot.classList.toggle("ok", !!isOk);
+    function setDotState(dotEl, complete) {
+      dotEl.classList.toggle("ok", complete);
     }
 
     function switchPanel(panelKey) {
-      document.querySelectorAll(".panel").forEach((panel) => {
-        panel.classList.toggle("active", panel.id === "panel_" + panelKey);
+      Object.entries(panelMap).forEach(([key, panel]) => {
+        panel.classList.toggle("active", key === panelKey);
       });
 
-      document.querySelectorAll(".nav-btn[data-panel]").forEach((button) => {
+      navButtons.forEach((button) => {
         button.classList.toggle("active", button.getAttribute("data-panel") === panelKey);
       });
     }
 
-    function humanizeLocale(value) {
-      return value === "en" ? "English" : "Italiano";
-    }
-
-    function getModeCopy(mode) {
-      if (mode === "short") {
-        return {
-          title: "Quick Interview",
-          help: "Versione rapida: poche domande ma con un affondo adattivo se emerge una debolezza forte.",
-          subtext: "Breve, incisiva, ottima per prova veloce o demo.",
-          behavior: "Rapido ma incisivo",
-          footnote: "In Quick Interview il sistema resta breve ma, se trova una debolezza forte, può affondare una sola volta nel punto critico.",
-          highlight: "Quick Interview è la scelta migliore per una prova veloce o una demo: resta breve, ma se trova una debolezza importante stringe comunque il punto con un approfondimento mirato.",
-          buttonReady: "Avvia Quick Interview"
-        };
-      }
-
-      if (mode === "deep") {
-        return {
-          title: "Deep Interview",
-          help: "Versione più estesa: più copertura, più pressione e più spazio per emergere o andare in difficoltà.",
-          subtext: "Più lunga, più esplorativa, più vicina a un test serio.",
-          behavior: "Più esigente",
-          footnote: "In Deep Interview il sistema esplora più aree e lascia più spazio agli approfondimenti adattivi.",
-          highlight: "Deep Interview è la scelta giusta quando vuoi un test più severo: più ampiezza, più verifica, più occasioni per far emergere punti forti e fragilità.",
-          buttonReady: "Avvia Deep Interview"
-        };
-      }
-
-      return {
-        title: "Standard Interview",
-        help: "Versione bilanciata: copertura buona, ritmo sostenibile e spazio per almeno un approfondimento quando serve.",
-        subtext: "Equilibrio tra rapidità, copertura e approfondimento.",
-        behavior: "Equilibrato",
-        footnote: "In modalità standard il colloquio cerca equilibrio tra copertura e profondità.",
-        highlight: "Standard Interview è la scelta più equilibrata: abbastanza ampia da dare un quadro credibile, ma senza diventare troppo lunga.",
-        buttonReady: "Avvia simulazione"
-      };
-    }
-
     function updateUi() {
-      const hasRole = !!text(targetRoleInput.value);
-      const hasCv = !!text(cvTextInput.value);
-      const hasJd = !!text(jdTextInput.value);
-      const prepReady = hasRole && hasCv;
-      const mode = interviewLengthModeSelect.value || "standard";
-      const modeCopy = getModeCopy(mode);
+      intakeState.targetRole = targetRoleInput.value;
+      intakeState.cvText = cvTextInput.value;
+      intakeState.jdText = jdTextInput.value;
+      intakeState.uiLocale = uiLocaleSelect.value;
+      intakeState.sessionLocale = sessionLocaleSelect.value;
+      intakeState.interviewLengthMode = interviewLengthModeSelect.value;
+      intakeState.inputMode = inputModeSelect.value;
 
-      setState("stateRole", hasRole, "Compilato", "Da inserire");
-      setState("stateCv", hasCv, "Compilato", "Da inserire");
-      setState("stateJd", hasJd, "Inserita", "Consigliata");
+      const roleReady = hasText(intakeState.targetRole);
+      const cvReady = hasText(intakeState.cvText);
+      const jdReady = hasText(intakeState.jdText);
+      const prepReady = roleReady && cvReady;
 
-      setBoxComplete("boxRole", hasRole);
-      setBoxComplete("boxCv", hasCv);
-      setBoxComplete("boxJd", hasJd);
+      setCompleteState({
+        boxEl: boxRole,
+        stateEl: stateRole,
+        complete: roleReady,
+        okLabel: "Completo",
+        missingLabel: "Da inserire"
+      });
 
-      setDot("dotRole", hasRole);
-      setDot("dotCv", hasCv);
-      setDot("dotJd", hasJd);
+      setCompleteState({
+        boxEl: boxCv,
+        stateEl: stateCv,
+        complete: cvReady,
+        okLabel: "Completo",
+        missingLabel: "Da inserire"
+      });
 
-      document.getElementById("statusPrepValue").textContent = prepReady ? "Pronta" : "Da completare";
+      setCompleteState({
+        boxEl: boxJd,
+        stateEl: stateJd,
+        complete: jdReady,
+        okLabel: "Presente",
+        missingLabel: "Consigliata"
+      });
 
-      const nextHint = document.getElementById("prepNextHint");
-      nextHint.textContent = prepReady
-        ? "Preparazione completa → passa alla simulazione"
-        : "Completa almeno CV e ruolo target";
-      nextHint.classList.toggle("ok", prepReady);
+      setDotState(dotRole, roleReady);
+      setDotState(dotCv, cvReady);
+      setDotState(dotJd, jdReady);
 
-      document.getElementById("selectedModeValue").textContent = modeCopy.title;
-      document.getElementById("selectedModeSubtext").textContent = modeCopy.subtext;
-      document.getElementById("interviewLengthModeHelp").textContent = modeCopy.help;
-      document.getElementById("modeHighlightText").textContent = modeCopy.highlight;
+      if (prepReady) {
+        statusPrepValue.textContent = jdReady ? "Pronta" : "Quasi pronta";
+        prepNextHint.textContent = jdReady
+          ? "Hai tutto il necessario per una simulazione ben centrata"
+          : "Puoi partire già ora, ma con la job description il risultato migliora";
+        prepNextHint.classList.add("ok");
+      } else {
+        statusPrepValue.textContent = "Da completare";
+        prepNextHint.textContent = "Completa almeno CV e ruolo target";
+        prepNextHint.classList.remove("ok");
+      }
 
-      document.getElementById("simRoleValue").textContent = hasRole ? targetRoleInput.value.trim() : "Non inserito";
-      document.getElementById("simCvValue").textContent = hasCv ? "Inserito" : "Non inserito";
-      document.getElementById("simJdValue").textContent = hasJd ? "Inserita" : "Non inserita";
-      document.getElementById("simLangValue").textContent = humanizeLocale(sessionLocaleSelect.value);
-      document.getElementById("simModeValue").textContent = modeCopy.title;
-      document.getElementById("simModeBehaviorValue").textContent = modeCopy.behavior;
-      document.getElementById("simulationModeFootnote").textContent = modeCopy.footnote;
+      const selectedMode = modeCopy[intakeState.interviewLengthMode] || modeCopy.standard;
+      selectedModeValue.textContent = selectedMode.label;
+      selectedModeSubtext.textContent = selectedMode.subtext;
+      interviewLengthModeHelp.textContent = selectedMode.help;
+      modeHighlightText.textContent = selectedMode.highlight;
 
-      document.getElementById("simulationReadinessText").textContent = prepReady
-        ? "I dati essenziali sono pronti. Puoi passare alla simulazione e poi aprire il report."
+      simRoleValue.textContent = roleReady ? intakeState.targetRole.trim() : "Non inserito";
+      simCvValue.textContent = cvReady ? "Presente" : "Non inserito";
+      simJdValue.textContent = jdReady ? "Presente" : "Non inserita";
+      simLangValue.textContent = intakeState.sessionLocale === "en" ? "English" : "Italiano";
+      simModeValue.textContent = selectedMode.label;
+      simInputModeValue.textContent = intakeState.inputMode === "voice" ? "Voice ready" : "Text";
+
+      simulationReadinessText.textContent = prepReady
+        ? (jdReady
+            ? "La simulazione può partire con una base completa e più credibile."
+            : "La simulazione può partire. Aggiungere la job description renderebbe il contesto ancora più preciso.")
         : "Per abilitare davvero la simulazione servono almeno CV e ruolo target.";
-
-      fakeStartButton.textContent = prepReady
-        ? modeCopy.buttonReady
-        : "Completa prima CV e ruolo target";
     }
 
     [
@@ -3787,6 +3764,14 @@
       el.addEventListener("input", updateUi);
       el.addEventListener("change", updateUi);
     });
+
+    targetRoleInput.value = intakeState.targetRole;
+    cvTextInput.value = intakeState.cvText;
+    jdTextInput.value = intakeState.jdText;
+    uiLocaleSelect.value = intakeState.uiLocale;
+    sessionLocaleSelect.value = intakeState.sessionLocale;
+    interviewLengthModeSelect.value = intakeState.interviewLengthMode;
+    inputModeSelect.value = intakeState.inputMode;
 
     fillDemoButton.addEventListener("click", () => {
       targetRoleInput.value = "Product Operations Manager";
