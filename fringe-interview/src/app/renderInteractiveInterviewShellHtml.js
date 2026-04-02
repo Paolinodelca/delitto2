@@ -264,23 +264,23 @@ export function renderInteractiveInterviewShellHtml({
     padding-top: 1px;
   }
 
-  .nav-index {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    border-radius: 999px;
-    background: #111827;
-    color: white;
-    font-size: 13px;
-    font-weight: 900;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
-    text-shadow: 0 0 1px rgba(255,255,255,0.18);
-    letter-spacing: -0.01em;
-    margin-top: 1px;
-  }
+.nav-index {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  border-radius: 999px;
+  background: #111827;
+  color: white;
+  font-size: 14px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+  text-shadow: 0 0 1px rgba(255,255,255,0.22);
+  letter-spacing: -0.02em;
+  margin-top: 1px;
+}
 
   .nav-btn.prep.active .nav-index,
   .nav-link.prep.active .nav-index {
@@ -643,12 +643,12 @@ export function renderInteractiveInterviewShellHtml({
     background: #fffaf2;
   }
 
-  .demo-button-title {
-    font-size: 12px;
-    font-weight: 900;
-    color: #111827;
-    line-height: 1.18;
-  }
+.demo-button-title {
+  font-size: 13px;
+  font-weight: 900;
+  color: #111827;
+  line-height: 1.18;
+}
 
   .demo-button-desc {
     margin-top: 3px;
@@ -891,13 +891,14 @@ export function renderInteractiveInterviewShellHtml({
       padding-top: 2px;
     }
 
-    .nav-index {
-      width: 28px;
-      height: 28px;
-      min-width: 28px;
-      font-size: 11px;
-      margin-top: 0;
-    }
+.nav-index {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  font-size: 12px;
+  font-weight: 900;
+  margin-top: 0;
+}
 
     .nav-title {
       font-size: 14px;
@@ -905,13 +906,14 @@ export function renderInteractiveInterviewShellHtml({
       line-height: 1.05;
     }
 
-    .nav-desc {
-      font-size: 11px;
-      font-weight: 800;
-      line-height: 1.15;
-      margin-top: 3px;
-    }
-
+.nav-desc {
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-top: 4px;
+  margin-left: -36px;
+  width: calc(100% + 18px);
+}
     .prep-checks {
       gap: 5px 7px;
       margin-top: 7px;
