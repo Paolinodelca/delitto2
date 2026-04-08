@@ -770,7 +770,8 @@
   }
 
   .report-shell-header {
-    position: static;
+    position: sticky;
+    top: 0;
   }
 
   .report-shell-top {
@@ -778,6 +779,7 @@
     align-items: stretch;
   }
 }
+
 
 @media (max-width: 760px) {
   body {
@@ -875,7 +877,12 @@
   }
 }
 
-
+/* === TELEFONO ORIZZONTALE: barra NON fissa === */
+@media (max-height: 520px) and (orientation: landscape) {
+  .report-shell-header {
+    position: static;
+  }
+}
 
 
   </style>
