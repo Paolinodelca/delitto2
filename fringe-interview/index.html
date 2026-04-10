@@ -568,6 +568,79 @@
     margin-top: 16px;
   }
 
+/* ===== SETUP COMPACT OPTIONS ===== */
+.compact-options-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.compact-option {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 10px 11px;
+}
+
+.compact-option-title {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 900;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.compact-option select {
+  width: 100%;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 9px 10px;
+  font: inherit;
+  background: white;
+  color: #111827;
+}
+
+.demo-intro-note {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #fffaf2;
+  border: 2px solid #fdba74;
+  color: #7c2d12;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+@media (max-width: 1120px) {
+  .compact-options-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .compact-options-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .compact-option {
+    padding: 10px;
+  }
+
+  .compact-option-title {
+    font-size: 10px;
+  }
+
+  .demo-intro-note {
+    font-size: 12px;
+    padding: 10px;
+  }
+}
+/* ===== END SETUP COMPACT OPTIONS ===== */
+
   .mini-card {
     border: 2px solid var(--line);
     border-radius: 14px;
@@ -1073,8 +1146,7 @@
   color: #581c87;
 }
 
-updateUi();
-switchPanel("prep");
+
 
     .field-box,
     .mini-card,
@@ -1360,13 +1432,12 @@ switchPanel("prep");
   La job description non è obbligatoria, ma migliora la qualità della simulazione e rende il feedback più centrato.
 </div>
 
+
 <div class="flow-banner" id="flowBanner" style="display:none;"></div>
 <div class="demo-active-banner" id="demoActiveBanner" style="display:none;">
   Set dati demo attivo: <strong id="demoActiveLabel">Profilo demo</strong>
 </div>
 
-<div class="demo-active-banner" id="demoActiveBanner" style="display:none;">
-  Set dati demo attivo: <strong id="demoActiveLabel">Profilo demo</strong>
 
   </div>
         <div class="field-grid">
@@ -1401,39 +1472,35 @@ switchPanel("prep");
           </div>
         </div>
 
-        <div class="mini-grid">
-          <div class="mini-card">
-            <div class="mini-card-title">Lingua interfaccia</div>
+
+        <div class="compact-options-row">
+          <div class="compact-option">
+            <div class="compact-option-title">Lingua interfaccia</div>
             <select id="uiLocaleSelect">
               <option value="it">Italiano</option>
               <option value="en">English</option>
             </select>
           </div>
 
-          <div class="mini-card">
-            <div class="mini-card-title">Lingua colloquio</div>
+          <div class="compact-option">
+            <div class="compact-option-title">Lingua colloquio</div>
             <select id="sessionLocaleSelect">
               <option value="it">Italiano</option>
               <option value="en">English</option>
             </select>
           </div>
-        </div>
 
-        <div class="mini-grid">
-          <div class="mini-card">
-            <div class="mini-card-title">Formato colloquio</div>
+          <div class="compact-option">
+            <div class="compact-option-title">Formato</div>
             <select id="interviewLengthModeSelect">
-              <option value="short">Quick Interview · breve e incisiva</option>
-              <option value="standard" selected>Standard Interview · equilibrio</option>
-              <option value="deep">Deep Interview · più esplorazione</option>
+              <option value="short">Quick Interview</option>
+              <option value="standard" selected>Standard Interview</option>
+              <option value="deep">Deep Interview</option>
             </select>
-            <div class="help" id="interviewLengthModeHelp">
-              Versione rapida: poche domande ma con un affondo adattivo se emerge una debolezza forte.
-            </div>
           </div>
 
-          <div class="mini-card">
-            <div class="mini-card-title">Modalità risposta</div>
+          <div class="compact-option">
+            <div class="compact-option-title">Modalità risposta</div>
             <select id="inputModeSelect">
               <option value="text">Text</option>
               <option value="voice">Voice ready</option>
@@ -1441,28 +1508,11 @@ switchPanel("prep");
           </div>
         </div>
 
-        <div class="mini-grid">
-          <div class="mini-card">
-            <div class="mini-card-title">Stato preparazione</div>
-            <div class="mini-card-value" id="statusPrepValue">Da completare</div>
-            <div class="prep-next-hint" id="prepNextHint">Completa almeno CV e ruolo target</div>
-          </div>
-
-          <div class="mini-card">
-            <div class="mini-card-title">Formato selezionato</div>
-            <div class="mini-card-value" id="selectedModeValue">Standard Interview</div>
-            <div class="help" id="selectedModeSubtext">Equilibrio tra rapidità, copertura e approfondimento.</div>
-          </div>
+               <div class="demo-intro-note">
+          Non vuoi perdere tempo a caricare i dati? Prova uno dei profili demo qui sotto per vedere subito come funziona il flusso.
         </div>
+        <div class="demo-section-title">Profili demo</div>
 
-        <div class="mode-highlight">
-          <div class="mode-highlight-title">Suggerimento pratico</div>
-          <div class="mode-highlight-text" id="modeHighlightText">
-            Quick Interview è la scelta migliore per una prova veloce o una demo: resta breve, ma se trova una debolezza importante stringe comunque il punto con un approfondimento mirato.
-          </div>
-        </div>
-
-        <div class="demo-section-title">Carica dati essenziali di esempio</div>
         <div class="demo-grid">
           <button class="demo-button" type="button" data-demo="pom">
             <div class="demo-button-title">Product Operations Manager</div>
@@ -1481,6 +1531,11 @@ switchPanel("prep");
             <div class="demo-button-desc">Profilo basato su analisi, reporting, dashboard e lettura dati per decisioni.</div>
           </button>
         </div>
+
+                <div class="cta-row">
+          <button class="cta secondary" id="resetSetupButton" type="button">Reset campi</button>
+        </div>
+
       </div>
     </section>
 
@@ -1570,12 +1625,12 @@ switchPanel("prep");
     "parserResult": {
       "candidateProfile": {
         "candidateProfile": {
-          "summary": "Analista di business con 6 anni di esperienza in ambienti di servizi digitali e commercio elettronico",
+          "summary": "Professionista cross-funzionale con 7 anni di esperienza in analisi aziendale, coordinamento di progetti, reporting e miglioramento dei processi in ambienti digitali e di servizio.",
           "currentPositioning": "Senior Business Analyst",
-          "senioritySignal": "mid",
+          "senioritySignal": "senior",
           "experienceSignals": {
-            "yearsDetected": "6",
-            "leadershipExposure": "limited",
+            "yearsDetected": "7 anni",
+            "leadershipExposure": "moderate",
             "ownershipLevel": "medium",
             "autonomyLevel": "medium",
             "scopeLevel": "moderate"
@@ -1584,20 +1639,27 @@ switchPanel("prep");
             "technical": [
               "SQL",
               "Tableau",
-              "Excel"
+              "Power BI",
+              "Excel",
+              "Google Sheets",
+              "Jira",
+              "Confluence"
             ],
             "tools": [
+              "SQL",
               "Tableau",
-              "Excel"
+              "Power BI",
+              "Excel",
+              "Google Sheets",
+              "Jira",
+              "Confluence"
             ],
-            "methodologies": [
-              "KPI reporting",
-              "Dashboarding",
-              "Process improvement"
-            ],
+            "methodologies": [],
             "soft": [
-              "Cross-functional collaboration",
-              "Stakeholder communication"
+              "comunicazione",
+              "collaborazione",
+              "problem solving",
+              "analisi dei dati"
             ],
             "languages": [
               "Italiano",
@@ -1605,125 +1667,108 @@ switchPanel("prep");
             ]
           },
           "domainSignals": [
-            "Servizi digitali",
-            "Commercio elettronico"
+            "operations",
+            "business analysis",
+            "project coordination"
           ],
           "responsibilitySignals": [
-            "Reporting",
-            "Process improvement",
-            "Stakeholder communication"
+            "gestione dei progetti",
+            "reporting",
+            "miglioramento dei processi"
           ],
           "careerSignals": {
-            "stakeholderManagement": "partial",
+            "stakeholderManagement": "strong",
             "crossFunctionalCollaboration": "strong",
             "deliveryOwnership": "partial",
-            "peopleLeadership": "weak",
-            "clientExposure": "weak",
+            "peopleLeadership": "none",
+            "clientExposure": "partial",
             "analyticalRigour": "strong",
-            "communicationClarity": "medium"
+            "communicationClarity": "high"
           },
           "evidence": {
-            "overallEvidenceLevel": "medium",
+            "overallEvidenceLevel": "high",
             "evidenceRichAreas": [
-              "Reporting",
-              "Process improvement"
+              "esperienza lavorativa",
+              "competenze tecniche"
             ],
-            "weaklySupportedAreas": [
-              "Leadership"
-            ],
+            "weaklySupportedAreas": [],
             "quantifiedAchievementsPresent": true
           },
           "education": [
-            "Master's Degree in Management Engineering",
-            "Bachelor's Degree in Economics"
+            "MSc in Management Engineering",
+            "BSc in Industrial Engineering"
           ],
           "certifications": [],
           "strengthAreas": [
-            "Analisi dei dati",
-            "Reporting"
+            "analisi dei dati",
+            "comunicazione",
+            "collaborazione"
           ],
-          "riskAreas": [
-            "Leadership"
-          ],
-          "ambiguities": [
-            "Esperienza di leadership"
-          ]
+          "riskAreas": [],
+          "ambiguities": []
         }
       },
       "roleProfile": {
         "roleProfile": {
           "title": "Product Operations Manager",
-          "summary": "Supportare l'allineamento tra i team di prodotto, operazioni e commerciali in un ambiente B2B SaaS veloce",
-          "seniorityDetected": "mid",
+          "summary": "Supportare la scalabilità, la coerenza e la qualità dell'esecuzione dell'organizzazione del prodotto",
+          "seniorityDetected": "senior",
           "requirements": {
             "mustHave": [
-              "4+ anni di esperienza in operazioni, analisi aziendale, operazioni di prodotto o ruolo simile",
-              "Ottime competenze SQL",
-              "Esperienza con strumenti di business intelligence come Power BI o Tableau",
-              "Gestione dei stakeholder e collaborazione cross-funzionale",
-              "Capacità di lavorare in ambienti veloci con priorità che cambiano",
-              "Ottime competenze di comunicazione e risoluzione dei problemi strutturata"
+              "5+ anni di esperienza in Product Operations, Business Operations, Program Management, Business Analysis o ruoli cross-funzionali simili",
+              "Capacità di lavorare across teams e allineare stakeholder con priorità diverse",
+              "Solida mentalità analitica e comfort lavorando con KPI, dashboard e reporting strutturato",
+              "Esperienza nel migliorare processi, flussi di lavoro o governance in ambienti complessi",
+              "Capacità di muoversi tra discussioni strategiche e follow-through operativo"
             ],
             "preferred": [
-              "Esperienza in ambienti SaaS o software B2B",
-              "Esperienza di lavoro a stretto contatto con i team di prodotto",
-              "Esperienza nella gestione di processi o iniziative end-to-end",
-              "Conoscenza del ciclo di vita del cliente o delle operazioni di successo"
+              "Esperienza in SaaS, prodotti digitali o ambienti tecnologici abilitati",
+              "Familiarità con SQL, strumenti BI o tooling analitico strutturato"
             ],
-            "bonus": [
-              "Esperienza nella mentorizzazione di membri del team junior",
-              "Esperienza con la progettazione del flusso di lavoro o dei playbook operativi"
-            ]
+            "bonus": []
           },
           "skills": {
             "technical": [
               "SQL",
-              "Business Intelligence"
+              "Strumenti BI"
             ],
-            "tools": [
-              "Power BI",
-              "Tableau"
-            ],
+            "tools": [],
             "methodologies": [],
             "soft": [
-              "Comunicazione",
-              "Risoluzione dei problemi",
-              "Collaborazione cross-funzionale"
+              "Comunicazione chiara",
+              "Capacità di sintetizzare la complessità in decisioni azionabili",
+              "Lavoro di squadra"
             ],
             "languages": []
           },
           "responsibilities": [
-            "Proprietà della reportistica operativa e delle prestazioni del prodotto",
-            "Creazione e miglioramento dei dashboard per gli stakeholder interni",
-            "Partnership con il team di prodotto, vendite e customer success per migliorare l'esecuzione",
-            "Traduzione dei bisogni aziendali in miglioramenti della reportistica e del flusso di lavoro",
-            "Supporto alla priorità identificando le inefficienze operative e le questioni ricorrenti",
-            "Presentazione di insight e aggiornamenti agli stakeholder senior",
-            "Aiuto a guidare la responsabilità tra i team per le iniziative chiave"
+            "Costruire e migliorare processi operativi del prodotto",
+            "Supportare il team del prodotto nella definizione di flussi di lavoro e framework decisionali",
+            "Partner con Product Manager per migliorare la visibilità sui progressi della roadmap, le dipendenze e i rischi di consegna",
+            "Tradurre problemi operativi ricorrenti e attrito degli stakeholder in iniziative di miglioramento strutturate",
+            "Coordinare iniziative cross-funzionali che coinvolgono team di prodotto, operazioni, supporto, customer success e dati"
           ],
           "successSignals": [
-            "Miglioramento della visibilità operativa",
-            "Miglioramento della reportistica KPI",
-            "Esecuzione efficace delle iniziative cross-funzionali"
+            "Miglioramento della qualità dell'esecuzione del prodotto",
+            "Aumento della visibilità e della trasparenza sui progressi del prodotto",
+            "Riduzione dei rischi di consegna e miglioramento della pianificazione"
           ],
           "domainContext": {
             "industry": [
-              "Software"
+              "Tecnologia"
             ],
             "businessModel": [
-              "B2B SaaS"
+              "SaaS"
             ],
             "environmentSignals": [
-              "Ambiente veloce",
-              "Priorità che cambiano"
+              "Ambiente tecnologico in rapida evoluzione"
             ],
             "pressureSignals": [
-              "Esigenza di migliorare la visibilità operativa",
-              "Esigenza di guidare la responsabilità tra i team"
+              "Pressione per consegnare prodotti di alta qualità in tempi rapidi"
             ]
           },
           "contextType": "aziendale",
-          "languageStyle": "analitico",
+          "languageStyle": "analitico e chiaro",
           "redFlags": [],
           "ambiguities": []
         }
@@ -1731,19 +1776,19 @@ switchPanel("prep");
       "jobFitAnalysis": {
         "jobFitAnalysis": {
           "fitSummary": {
-            "overallScore": 70,
-            "fitLevel": "medium",
+            "overallScore": 80,
+            "fitLevel": "high",
             "recommendationBand": "solid_fit",
             "confidence": "medium",
-            "shortRationale": "Il candidato ha una buona esperienza nel settore dei servizi digitali e del commercio elettronico, con competenze tecniche e strumenti pertinenti al ruolo di Product Operations Manager."
+            "shortRationale": "Il candidato ha una forte esperienza in analisi aziendale e coordinamento di progetti, con competenze tecniche rilevanti come SQL e strumenti BI."
           },
           "dimensionScores": {
-            "technicalFit": 80,
-            "toolsFit": 70,
-            "domainFit": 60,
-            "seniorityFit": 70,
-            "responsibilityFit": 65,
-            "evidenceStrength": 75,
+            "technicalFit": 85,
+            "toolsFit": 80,
+            "domainFit": 75,
+            "seniorityFit": 90,
+            "responsibilityFit": 80,
+            "evidenceStrength": 85,
             "growthPotential": 70
           },
           "matches": [
@@ -1753,106 +1798,87 @@ switchPanel("prep");
               "candidateSignal": "SQL",
               "matchType": "direct_match",
               "score": 90,
-              "explanation": "Il candidato ha esperienza con SQL, che è una competenza richiesta per il ruolo."
-            },
-            {
-              "dimension": "tools_fit",
-              "roleItem": "Tableau",
-              "candidateSignal": "Tableau",
-              "matchType": "direct_match",
-              "score": 90,
-              "explanation": "Il candidato ha esperienza con Tableau, che è uno strumento richiesto per il ruolo."
+              "explanation": "Il candidato ha esperienza con SQL, che è una competenza tecnica richiesta per il ruolo."
             },
             {
               "dimension": "domain_fit",
-              "roleItem": "Servizi digitali",
-              "candidateSignal": "Servizi digitali",
+              "roleItem": "Product Operations",
+              "candidateSignal": "analisi aziendale",
               "matchType": "partial_match",
-              "score": 60,
-              "explanation": "Il candidato ha esperienza nel settore dei servizi digitali, che è pertinente al ruolo di Product Operations Manager."
+              "score": 70,
+              "explanation": "Il candidato ha esperienza in analisi aziendale, che è pertinente per il ruolo di Product Operations."
+            },
+            {
+              "dimension": "seniority_fit",
+              "roleItem": "5+ anni di esperienza",
+              "candidateSignal": "7 anni di esperienza",
+              "matchType": "direct_match",
+              "score": 95,
+              "explanation": "Il candidato ha più di 5 anni di esperienza, che soddisfa il requisito del ruolo."
             }
           ],
           "gaps": [
             {
-              "dimension": "seniority_fit",
-              "roleItem": "4+ anni di esperienza",
+              "dimension": "domain_fit",
+              "roleItem": "SaaS",
               "gapType": "missing",
-              "severity": "medium",
-              "recoverability": "easy_to_learn",
-              "explanation": "Il candidato ha 6 anni di esperienza, ma non è chiaro se ha esperienza specifica nel ruolo di Product Operations Manager."
-            },
-            {
-              "dimension": "responsibility_fit",
-              "roleItem": "Proprietà della reportistica operativa",
-              "gapType": "weak_signal",
               "severity": "low",
-              "recoverability": "interview_clarifiable",
-              "explanation": "Il candidato ha esperienza con la reportistica, ma non è chiaro se ha esperienza con la proprietà della reportistica operativa."
+              "recoverability": "easy_to_learn",
+              "explanation": "Il candidato non ha esperienza diretta con SaaS, ma potrebbe imparare facilmente."
             }
           ],
-          "ambiguities": [
-            "Esperienza di leadership"
-          ],
+          "ambiguities": [],
           "transferableStrengths": [
-            "Analisi dei dati",
-            "Reporting"
+            "comunicazione",
+            "collaborazione"
           ],
           "strongSignals": [
-            "Competenze tecniche",
-            "Esperienza con strumenti di business intelligence"
+            "analisi dei dati",
+            "esperienza lavorativa"
           ],
-          "weakSignals": [
-            "Esperienza di leadership"
-          ],
+          "weakSignals": [],
           "matchedSkills": [
             "SQL",
-            "Tableau"
+            "analisi aziendale"
           ],
           "missingSkills": [
-            "Power BI"
+            "SaaS"
           ],
           "questionFocusAreas": [
-            "Esperienza di leadership",
-            "Proprietà della reportistica operativa"
+            "Esperienza con SaaS",
+            "Capacità di lavorare in ambienti tecnologici in rapida evoluzione"
           ],
           "interviewFocus": [
             {
               "priority": "high",
-              "focusType": "probe_gap",
-              "topic": "Esperienza di leadership",
-              "reason": "Il candidato non ha esperienza di leadership chiara."
-            },
-            {
-              "priority": "medium",
-              "focusType": "clarify_ambiguity",
-              "topic": "Proprietà della reportistica operativa",
-              "reason": "Il candidato ha esperienza con la reportistica, ma non è chiaro se ha esperienza con la proprietà della reportistica operativa."
+              "focusType": "verify_strength",
+              "topic": "analisi dei dati",
+              "reason": "Verificare la capacità del candidato di analizzare i dati e prendere decisioni informate."
             }
           ],
           "followupTriggers": [
             {
-              "triggerType": "leadership_depth",
-              "reason": "Il candidato non ha esperienza di leadership chiara."
+              "triggerType": "achievement_quantification",
+              "reason": "Richiedere esempi concreti di miglioramento dei processi e aumento della qualità dell'esecuzione del prodotto."
             }
           ],
           "cvImprovementHints": [
-            "Aggiungere esperienza di leadership",
-            "Aggiungere competenze con Power BI"
+            "Aggiungere esperienze specifiche con SaaS e ambienti tecnologici in rapida evoluzione."
           ],
           "reportHighlights": {
             "strengths": [
-              "Competenze tecniche",
-              "Esperienza con strumenti di business intelligence"
+              "analisi dei dati",
+              "comunicazione",
+              "collaborazione"
             ],
             "risks": [
-              "Esperienza di leadership"
+              "mancanza di esperienza con SaaS"
             ],
             "clarificationsNeeded": [
-              "Proprietà della reportistica operativa"
+              "Esperienza con SaaS"
             ],
             "positioningHints": [
-              "Sottolineare l'esperienza nel settore dei servizi digitali",
-              "Sottolineare le competenze tecniche e strumenti pertinenti al ruolo"
+              "Sottolineare la capacità di lavorare in ambienti tecnologici in rapida evoluzione e di analizzare i dati per prendere decisioni informate."
             ]
           }
         }
@@ -1877,112 +1903,98 @@ switchPanel("prep");
     },
     "interviewPlan": {
       "candidateSnapshot": {
-        "summary": "Analista di business con 6 anni di esperienza in ambienti di servizi digitali e commercio elettronico",
-        "senioritySignal": "mid",
+        "summary": "Professionista cross-funzionale con 7 anni di esperienza in analisi aziendale, coordinamento di progetti, reporting e miglioramento dei processi in ambienti digitali e di servizio.",
+        "senioritySignal": "senior",
         "strengthAreas": [
-          "Analisi dei dati",
-          "Reporting"
+          "analisi dei dati",
+          "comunicazione",
+          "collaborazione"
         ],
-        "riskAreas": [
-          "Leadership"
-        ]
+        "riskAreas": []
       },
       "roleSnapshot": {
         "title": "Product Operations Manager",
-        "seniorityDetected": "mid",
+        "seniorityDetected": "senior",
         "mustHaveRequirements": [
-          "4+ anni di esperienza in operazioni, analisi aziendale, operazioni di prodotto o ruolo simile",
-          "Ottime competenze SQL",
-          "Esperienza con strumenti di business intelligence come Power BI o Tableau",
-          "Gestione dei stakeholder e collaborazione cross-funzionale",
-          "Capacità di lavorare in ambienti veloci con priorità che cambiano",
-          "Ottime competenze di comunicazione e risoluzione dei problemi strutturata"
+          "5+ anni di esperienza in Product Operations, Business Operations, Program Management, Business Analysis o ruoli cross-funzionali simili",
+          "Capacità di lavorare across teams e allineare stakeholder con priorità diverse",
+          "Solida mentalità analitica e comfort lavorando con KPI, dashboard e reporting strutturato",
+          "Esperienza nel migliorare processi, flussi di lavoro o governance in ambienti complessi",
+          "Capacità di muoversi tra discussioni strategiche e follow-through operativo"
         ],
         "responsibilities": [
-          "Proprietà della reportistica operativa e delle prestazioni del prodotto",
-          "Creazione e miglioramento dei dashboard per gli stakeholder interni",
-          "Partnership con il team di prodotto, vendite e customer success per migliorare l'esecuzione",
-          "Traduzione dei bisogni aziendali in miglioramenti della reportistica e del flusso di lavoro",
-          "Supporto alla priorità identificando le inefficienze operative e le questioni ricorrenti",
-          "Presentazione di insight e aggiornamenti agli stakeholder senior",
-          "Aiuto a guidare la responsabilità tra i team per le iniziative chiave"
+          "Costruire e migliorare processi operativi del prodotto",
+          "Supportare il team del prodotto nella definizione di flussi di lavoro e framework decisionali",
+          "Partner con Product Manager per migliorare la visibilità sui progressi della roadmap, le dipendenze e i rischi di consegna",
+          "Tradurre problemi operativi ricorrenti e attrito degli stakeholder in iniziative di miglioramento strutturate",
+          "Coordinare iniziative cross-funzionali che coinvolgono team di prodotto, operazioni, supporto, customer success e dati"
         ]
       },
       "fitSnapshot": {
-        "overallScore": 70,
-        "fitLevel": "medium",
+        "overallScore": 80,
+        "fitLevel": "high",
         "recommendationBand": "solid_fit",
         "confidence": "medium",
-        "shortRationale": "Il candidato ha una buona esperienza nel settore dei servizi digitali e del commercio elettronico, con competenze tecniche e strumenti pertinenti al ruolo di Product Operations Manager."
+        "shortRationale": "Il candidato ha una forte esperienza in analisi aziendale e coordinamento di progetti, con competenze tecniche rilevanti come SQL e strumenti BI."
       },
       "sessionStrategy": {
         "recommendationBand": "solid_fit",
         "confidence": "medium",
-        "interviewStyle": "validate_then_probe",
-        "shouldProbeRisksEarly": true,
+        "interviewStyle": "validate_strengths",
+        "shouldProbeRisksEarly": false,
         "shouldClarifyEarly": false
       },
       "openingFocus": {
         "validateFirst": [
-          "Competenze tecniche",
-          "Esperienza con strumenti di business intelligence"
+          "analisi dei dati",
+          "comunicazione"
         ],
         "clarifyEarly": [
-          "Proprietà della reportistica operativa"
+          "Esperienza con SaaS"
         ],
         "monitorRisks": [
-          "Esperienza di leadership"
+          "mancanza di esperienza con SaaS"
         ]
       },
       "priorityTopics": [
-        "Esperienza di leadership"
+        "analisi dei dati"
       ],
       "focusBlocks": [
         {
           "priority": "high",
-          "intent": "probe_gap",
-          "questionMode": "gap_probe",
-          "suggestedQuestionFamily": "leadership_scope",
-          "topic": "Esperienza di leadership",
-          "reason": "Il candidato non ha esperienza di leadership chiara."
-        },
-        {
-          "priority": "medium",
-          "intent": "clarify",
-          "questionMode": "clarification",
+          "intent": "validate_strength",
+          "questionMode": "evidence_check",
           "suggestedQuestionFamily": "general_fit",
-          "topic": "Proprietà della reportistica operativa",
-          "reason": "Il candidato ha esperienza con la reportistica, ma non è chiaro se ha esperienza con la proprietà della reportistica operativa."
+          "topic": "analisi dei dati",
+          "reason": "Verificare la capacità del candidato di analizzare i dati e prendere decisioni informate."
         }
       ],
       "suggestedQuestionFamilies": [
-        "leadership_scope",
         "general_fit"
       ],
       "followupPlan": [
         {
-          "triggerType": "leadership_depth",
-          "reason": "Il candidato non ha esperienza di leadership chiara."
+          "triggerType": "achievement_quantification",
+          "reason": "Richiedere esempi concreti di miglioramento dei processi e aumento della qualità dell'esecuzione del prodotto."
         }
       ],
       "reportEmphasis": {
         "strengthsToValidate": [
-          "Competenze tecniche",
-          "Esperienza con strumenti di business intelligence"
+          "analisi dei dati",
+          "comunicazione",
+          "collaborazione"
         ],
         "risksToTest": [
-          "Esperienza di leadership"
+          "mancanza di esperienza con SaaS"
         ],
         "clarificationsToCollect": [
-          "Proprietà della reportistica operativa"
+          "Esperienza con SaaS"
         ],
         "positioningHints": [
-          "Sottolineare l'esperienza nel settore dei servizi digitali",
-          "Sottolineare le competenze tecniche e strumenti pertinenti al ruolo"
+          "Sottolineare la capacità di lavorare in ambienti tecnologici in rapida evoluzione e di analizzare i dati per prendere decisioni informate."
         ],
         "cvImprovementHints": [
-          "Aggiungere esperienza di leadership",
-          "Aggiungere competenze con Power BI"
+          "Aggiungere esperienze specifiche con SaaS e ambienti tecnologici in rapida evoluzione."
         ]
       }
     },
@@ -1990,42 +2002,24 @@ switchPanel("prep");
       "sessionStrategy": {
         "recommendationBand": "solid_fit",
         "confidence": "medium",
-        "interviewStyle": "validate_then_probe",
-        "shouldProbeRisksEarly": true,
+        "interviewStyle": "validate_strengths",
+        "shouldProbeRisksEarly": false,
         "shouldClarifyEarly": false
       },
       "priorityTopics": [
-        "Esperienza di leadership"
+        "analisi dei dati"
       ],
       "selectedQuestionFamilies": [
-        {
-          "familyKey": "leadership_scope",
-          "label": "Ampiezza della Leadership",
-          "intent": "capire leadership, mentoring e capacità di influenza",
-          "priority": "high",
-          "relatedTopics": [
-            "Esperienza di leadership"
-          ],
-          "relatedReasons": [
-            "Il candidato non ha esperienza di leadership chiara."
-          ],
-          "questions": [
-            "Hai mai guidato o orientato altre persone anche senza essere manager formalmente?",
-            "Raccontami una situazione in cui qualcuno faceva affidamento su di te per avere direzione o supporto.",
-            "Che cosa significa per te leadership nel tipo di ruolo che ricopri oggi?",
-            "In che modo hai contribuito ad alzare la qualità del lavoro intorno a te?"
-          ]
-        },
         {
           "familyKey": "general_fit",
           "label": "Aderenza Generale",
           "intent": "allineamento generale al ruolo",
-          "priority": "medium",
+          "priority": "high",
           "relatedTopics": [
-            "Proprietà della reportistica operativa"
+            "analisi dei dati"
           ],
           "relatedReasons": [
-            "Il candidato ha esperienza con la reportistica, ma non è chiaro se ha esperienza con la proprietà della reportistica operativa."
+            "Verificare la capacità del candidato di analizzare i dati e prendere decisioni informate."
           ],
           "questions": [
             "Puoi raccontarmi il tuo percorso e spiegare perché questo ruolo ti sembra il passo successivo naturale?",
@@ -2039,81 +2033,74 @@ switchPanel("prep");
         {
           "familyKey": "general_fit",
           "familyLabel": "Aderenza Generale",
-          "priority": "medium",
+          "priority": "high",
           "question": "Puoi raccontarmi il tuo percorso e spiegare perché questo ruolo ti sembra il passo successivo naturale?",
-          "narrativeRole": "WALKTHROUGH",
+          "narrativeRole": "ROLE_CONTEXT",
           "source": "family_selection",
           "orderHint": 1
+        },
+        {
+          "familyKey": "general_fit",
+          "familyLabel": "Aderenza Generale",
+          "priority": "high",
+          "question": "Quali parti della tua esperienza ritieni più rilevanti per questa posizione?",
+          "narrativeRole": "ROLE_CONTEXT",
+          "source": "family_selection",
+          "orderHint": 2
         },
         {
           "familyKey": "",
           "familyLabel": "Seniority Calibration",
           "priority": "medium",
-          "orderHint": 2,
+          "orderHint": 3,
           "question": "Parlami di una decisione in cui non c’era una risposta chiaramente giusta. Quale trade-off hai scelto e perché?",
           "narrativeRole": "CASE_1",
           "source": "contextual_selection"
         },
         {
           "familyKey": "",
-          "familyLabel": "Role Fit",
+          "familyLabel": "Person Perception",
           "priority": "medium",
-          "orderHint": 3,
-          "question": "Descrivi un caso reale in cui le aspettative degli stakeholder erano in conflitto. Tu che cosa hai fatto concretamente?",
+          "orderHint": 4,
+          "question": "Quando eri sotto pressione, che cosa hai deciso di prioritizzare e che cosa hai scelto di lasciare indietro?",
           "narrativeRole": "PRESSURE_PROBE",
           "source": "contextual_selection"
-        },
-        {
-          "familyKey": "leadership_scope",
-          "familyLabel": "Ampiezza della Leadership",
-          "priority": "high",
-          "question": "Hai mai guidato o orientato altre persone anche senza essere manager formalmente?",
-          "narrativeRole": "",
-          "source": "family_selection",
-          "orderHint": 4
         }
       ],
       "selectedFollowupPacks": [
         {
-          "triggerType": "leadership_depth",
-          "label": "Approfondimento Leadership",
-          "goal": "Chiarire se i segnali di leadership riflettono davvero influenza, mentoring o responsabilità di gestione.",
-          "activationReason": "Il candidato non ha esperienza di leadership chiara.",
+          "triggerType": "achievement_quantification",
+          "label": "Quantificazione dei Risultati",
+          "goal": "Spingere il candidato a rendere i risultati più concreti e misurabili.",
+          "activationReason": "Richiedere esempi concreti di miglioramento dei processi e aumento della qualità dell'esecuzione del prodotto.",
           "followups": [
-            "Di cosa eri esattamente responsabile in quella situazione?",
-            "Chi faceva affidamento su di te, e in che modo?",
-            "Hai dato direzione, preso decisioni, oppure hai soprattutto supportato l’esecuzione?",
-            "Che cosa è cambiato concretamente grazie al tuo intervento?"
+            "Come misuravi il successo in quel caso?",
+            "Che cosa è cambiato concretamente dopo il tuo lavoro?",
+            "Hai numeri, percentuali, risparmi di tempo o indicatori di business che mostrino l’impatto?",
+            "Rispetto alla situazione iniziale, che cosa è migliorato e di quanto?"
           ]
         }
       ],
       "conversationFlow": {
-        "interviewStyle": "validate_then_probe",
+        "interviewStyle": "validate_strengths",
         "openingMove": {
           "validateFirst": [
-            "Competenze tecniche",
-            "Esperienza con strumenti di business intelligence"
+            "analisi dei dati",
+            "comunicazione"
           ],
           "clarifyEarly": [
-            "Proprietà della reportistica operativa"
+            "Esperienza con SaaS"
           ],
           "monitorRisks": [
-            "Esperienza di leadership"
+            "mancanza di esperienza con SaaS"
           ]
         },
         "questionFamilyOrder": [
           {
-            "familyKey": "leadership_scope",
+            "familyKey": "general_fit",
             "priority": "high",
             "relatedTopics": [
-              "Esperienza di leadership"
-            ]
-          },
-          {
-            "familyKey": "general_fit",
-            "priority": "medium",
-            "relatedTopics": [
-              "Proprietà della reportistica operativa"
+              "analisi dei dati"
             ]
           }
         ],
@@ -2122,63 +2109,66 @@ switchPanel("prep");
             "order": 1,
             "familyKey": "general_fit",
             "familyLabel": "Aderenza Generale",
-            "narrativeRole": "WALKTHROUGH",
+            "narrativeRole": "ROLE_CONTEXT",
             "source": "family_selection"
           },
           {
             "order": 2,
+            "familyKey": "general_fit",
+            "familyLabel": "Aderenza Generale",
+            "narrativeRole": "ROLE_CONTEXT",
+            "source": "family_selection"
+          },
+          {
+            "order": 3,
             "familyKey": "",
             "familyLabel": "Seniority Calibration",
             "narrativeRole": "CASE_1",
             "source": "contextual_selection"
           },
           {
-            "order": 3,
+            "order": 4,
             "familyKey": "",
-            "familyLabel": "Role Fit",
+            "familyLabel": "Person Perception",
             "narrativeRole": "PRESSURE_PROBE",
             "source": "contextual_selection"
-          },
-          {
-            "order": 4,
-            "familyKey": "leadership_scope",
-            "familyLabel": "Ampiezza della Leadership",
-            "narrativeRole": "",
-            "source": "family_selection"
           }
         ],
         "followupActivationOrder": [
           {
-            "triggerType": "leadership_depth",
-            "label": "Approfondimento Leadership"
+            "triggerType": "achievement_quantification",
+            "label": "Quantificazione dei Risultati"
           }
         ]
       },
       "reportEmphasis": {
         "strengthsToValidate": [
-          "Competenze tecniche",
-          "Esperienza con strumenti di business intelligence"
+          "analisi dei dati",
+          "comunicazione",
+          "collaborazione"
         ],
         "risksToTest": [
-          "Esperienza di leadership"
+          "mancanza di esperienza con SaaS"
         ],
         "clarificationsToCollect": [
-          "Proprietà della reportistica operativa"
+          "Esperienza con SaaS"
         ],
         "positioningHints": [
-          "Sottolineare l'esperienza nel settore dei servizi digitali",
-          "Sottolineare le competenze tecniche e strumenti pertinenti al ruolo"
+          "Sottolineare la capacità di lavorare in ambienti tecnologici in rapida evoluzione e di analizzare i dati per prendere decisioni informate."
         ],
         "cvImprovementHints": [
-          "Aggiungere esperienza di leadership",
-          "Aggiungere competenze con Power BI"
+          "Aggiungere esperienze specifiche con SaaS e ambienti tecnologici in rapida evoluzione."
         ]
       },
+      "recentQuestionKeys": [],
+      "recentQuestionHistory": [],
+      "llmGapQuestion": null,
+      "llmGapQuestionGenerationError": "",
       "contextualSelection": {
         "integrationStatus": "contextual_selection_ready",
         "interviewContextProfile": {
           "version": 1,
-          "seniorityContext": "lead",
+          "seniorityContext": "executive",
           "companyContext": "corporate_structured",
           "defaultTone": "incisive",
           "personPerceptionFocus": [
@@ -2207,7 +2197,7 @@ switchPanel("prep");
           "version": 1,
           "interviewContextProfile": {
             "version": 1,
-            "seniorityContext": "lead",
+            "seniorityContext": "executive",
             "companyContext": "corporate_structured",
             "defaultTone": "incisive",
             "personPerceptionFocus": [
@@ -2232,6 +2222,8 @@ switchPanel("prep");
             },
             "extensions": {}
           },
+          "recentQuestionKeys": [],
+          "recentQuestionHistory": [],
           "rankedQuestions": [
             {
               "key": "decision_tradeoffs",
@@ -2239,7 +2231,7 @@ switchPanel("prep");
               "score": 16,
               "reasons": [
                 "selectionWeight:high",
-                "seniority:lead",
+                "seniority:executive",
                 "companyContext:corporate_structured",
                 "tone:incisive",
                 "biasSignals:decision_quality"
@@ -2251,22 +2243,10 @@ switchPanel("prep");
               "score": 16,
               "reasons": [
                 "selectionWeight:high",
-                "seniority:lead",
+                "seniority:executive",
                 "companyContext:corporate_structured",
                 "tone:incisive",
                 "biasSignals:decision_quality"
-              ]
-            },
-            {
-              "key": "stakeholder_interaction",
-              "category": "role_fit",
-              "score": 16,
-              "reasons": [
-                "selectionWeight:high",
-                "seniority:lead",
-                "companyContext:corporate_structured",
-                "tone:incisive",
-                "personPerception:collaboration"
               ]
             },
             {
@@ -2275,7 +2255,7 @@ switchPanel("prep");
               "score": 15,
               "reasons": [
                 "selectionWeight:medium",
-                "seniority:lead",
+                "seniority:executive",
                 "companyContext:corporate_structured",
                 "tone:incisive",
                 "personPerception:composure_under_pressure",
@@ -2288,7 +2268,18 @@ switchPanel("prep");
               "score": 14,
               "reasons": [
                 "selectionWeight:high",
-                "seniority:lead",
+                "seniority:executive",
+                "companyContext:corporate_structured",
+                "tone:incisive"
+              ]
+            },
+            {
+              "key": "motivation_for_change",
+              "category": "person_perception",
+              "score": 14,
+              "reasons": [
+                "selectionWeight:high",
+                "seniority:executive",
                 "companyContext:corporate_structured",
                 "tone:incisive"
               ]
@@ -2299,7 +2290,7 @@ switchPanel("prep");
               "score": 13,
               "reasons": [
                 "selectionWeight:medium",
-                "seniority:lead",
+                "seniority:executive",
                 "companyContext:corporate_structured",
                 "tone:incisive",
                 "personPerception:composure_under_pressure",
@@ -2308,30 +2299,14 @@ switchPanel("prep");
               ]
             },
             {
-              "key": "client_pushback_handling",
+              "key": "stakeholder_interaction",
               "category": "role_fit",
               "score": 13,
               "reasons": [
                 "selectionWeight:high",
-                "seniority:lead",
                 "companyContext:corporate_structured",
                 "tone:incisive",
-                "personPerception:composure_under_pressure",
-                "strongConsultancyPenaltyOutsideContext",
-                "pressureLightBoost"
-              ]
-            },
-            {
-              "key": "priority_conflict_management",
-              "category": "seniority_calibration",
-              "score": 13,
-              "reasons": [
-                "selectionWeight:high",
-                "seniority:lead",
-                "companyContext:corporate_structured",
-                "tone:incisive",
-                "consultancyPenaltyOutsideContext",
-                "pressureLightBoost"
+                "personPerception:collaboration"
               ]
             },
             {
@@ -2347,12 +2322,12 @@ switchPanel("prep");
               ]
             },
             {
-              "key": "ambiguity_management",
-              "category": "seniority_calibration",
+              "key": "change_trajectory_logic",
+              "category": "role_fit",
               "score": 12,
               "reasons": [
                 "selectionWeight:medium",
-                "seniority:lead",
+                "seniority:executive",
                 "companyContext:corporate_structured",
                 "tone:incisive"
               ]
@@ -2368,18 +2343,53 @@ switchPanel("prep");
               ]
             },
             {
+              "key": "client_pushback_handling",
+              "category": "role_fit",
+              "score": 10,
+              "reasons": [
+                "selectionWeight:high",
+                "companyContext:corporate_structured",
+                "tone:incisive",
+                "personPerception:composure_under_pressure",
+                "strongConsultancyPenaltyOutsideContext",
+                "pressureLightBoost"
+              ]
+            },
+            {
               "key": "closing_reflection",
               "category": "closing",
               "score": 10,
               "reasons": [
                 "selectionWeight:medium",
-                "seniority:lead",
+                "seniority:executive",
                 "companyContext:corporate_structured"
+              ]
+            },
+            {
+              "key": "priority_conflict_management",
+              "category": "seniority_calibration",
+              "score": 10,
+              "reasons": [
+                "selectionWeight:high",
+                "companyContext:corporate_structured",
+                "tone:incisive",
+                "consultancyPenaltyOutsideContext",
+                "pressureLightBoost"
               ]
             },
             {
               "key": "adaptability_examples",
               "category": "person_perception",
+              "score": 9,
+              "reasons": [
+                "selectionWeight:medium",
+                "companyContext:corporate_structured",
+                "tone:incisive"
+              ]
+            },
+            {
+              "key": "ambiguity_management",
+              "category": "seniority_calibration",
               "score": 9,
               "reasons": [
                 "selectionWeight:medium",
@@ -2418,18 +2428,6 @@ switchPanel("prep");
               ]
             },
             {
-              "key": "expectation_reset",
-              "category": "role_fit",
-              "score": 8,
-              "reasons": [
-                "selectionWeight:medium",
-                "seniority:lead",
-                "companyContext:corporate_structured",
-                "tone:incisive",
-                "strongConsultancyPenaltyOutsideContext"
-              ]
-            },
-            {
               "key": "initiative_examples",
               "category": "person_perception",
               "score": 6,
@@ -2437,14 +2435,26 @@ switchPanel("prep");
                 "selectionWeight:medium",
                 "tone:incisive"
               ]
+            },
+            {
+              "key": "expectation_reset",
+              "category": "role_fit",
+              "score": 5,
+              "reasons": [
+                "selectionWeight:medium",
+                "companyContext:corporate_structured",
+                "tone:incisive",
+                "strongConsultancyPenaltyOutsideContext"
+              ]
             }
           ]
         },
         "questionSelectionStrategy": {
           "toneMode": "incisive",
           "interviewLengthMode": "short",
+          "recentQuestionKeys": [],
           "mandatoryQuestionKeys": [
-            "stakeholder_interaction"
+            "accountability_examples"
           ],
           "seniorityQuestionKeys": [
             "decision_tradeoffs"
@@ -2457,54 +2467,55 @@ switchPanel("prep");
             "closing_reflection"
           ],
           "selectedQuestionKeys": [
-            "stakeholder_interaction",
+            "accountability_examples",
             "decision_tradeoffs",
             "pressure_handling",
             "closing_reflection"
           ],
           "selectionRationale": [
-            "seniority_context:lead",
+            "seniority_context:executive",
             "company_context:corporate_structured",
             "tone_mode:incisive",
             "interview_length_mode:short",
-            "mandatory_role_fit:stakeholder_interaction",
+            "mandatory_role_fit:accountability_examples",
             "seniority_calibration:decision_tradeoffs",
             "person_perception:pressure_handling",
             "closing_selection:closing_reflection"
           ],
           "metadata": {
-            "totalRankedCandidates": 18,
+            "totalRankedCandidates": 20,
             "forcedSeniorityCalibration": true,
             "forcedPressureSignal": false,
             "juniorMode": false,
             "requestedInterviewLengthMode": "short",
             "resolvedInterviewLengthMode": "short",
-            "defaultInterviewLengthMode": "standard"
+            "defaultInterviewLengthMode": "standard",
+            "recentQuestionKeyCount": 0
           }
         },
         "resolvedStructuredQuestions": {
           "toneMode": "incisive",
           "questions": [
             {
-              "key": "stakeholder_interaction",
+              "key": "accountability_examples",
               "category": "role_fit",
               "categoryLabel": "Role Fit",
               "stage": "mandatory",
               "stageOrder": 1,
-              "prompt": "Descrivi un caso reale in cui le aspettative degli stakeholder erano in conflitto. Tu che cosa hai fatto concretamente?",
-              "question": "Descrivi un caso reale in cui le aspettative degli stakeholder erano in conflitto. Tu che cosa hai fatto concretamente?",
+              "prompt": "Di quale risultato eri direttamente responsabile, e che cosa è successo grazie alle tue azioni?",
+              "question": "Di quale risultato eri direttamente responsabile, e che cosa è successo grazie alle tue azioni?",
               "toneUsed": "incisive",
               "source": "tone_variant",
               "selectionWeight": "high",
               "signals": [
-                "stakeholder_management",
-                "communication_clarity",
-                "collaboration"
+                "accountability",
+                "ownership",
+                "evidence"
               ],
               "tags": [
                 "role_fit_core",
-                "stakeholders",
-                "cross_functional"
+                "accountability",
+                "results"
               ]
             },
             {
@@ -2576,25 +2587,25 @@ switchPanel("prep");
           ],
           "resolvedQuestions": [
             {
-              "key": "stakeholder_interaction",
+              "key": "accountability_examples",
               "category": "role_fit",
               "categoryLabel": "Role Fit",
               "stage": "mandatory",
               "stageOrder": 1,
-              "prompt": "Descrivi un caso reale in cui le aspettative degli stakeholder erano in conflitto. Tu che cosa hai fatto concretamente?",
-              "question": "Descrivi un caso reale in cui le aspettative degli stakeholder erano in conflitto. Tu che cosa hai fatto concretamente?",
+              "prompt": "Di quale risultato eri direttamente responsabile, e che cosa è successo grazie alle tue azioni?",
+              "question": "Di quale risultato eri direttamente responsabile, e che cosa è successo grazie alle tue azioni?",
               "toneUsed": "incisive",
               "source": "tone_variant",
               "selectionWeight": "high",
               "signals": [
-                "stakeholder_management",
-                "communication_clarity",
-                "collaboration"
+                "accountability",
+                "ownership",
+                "evidence"
               ],
               "tags": [
                 "role_fit_core",
-                "stakeholders",
-                "cross_functional"
+                "accountability",
+                "results"
               ]
             },
             {
@@ -2671,15 +2682,14 @@ switchPanel("prep");
     "interviewSession": {
       "summary": {
         "recommendationBand": "solid_fit",
-        "overallScore": 70,
+        "overallScore": 80,
         "confidence": "medium",
-        "interviewStyle": "validate_then_probe",
+        "interviewStyle": "validate_strengths",
         "selectedFamilies": [
-          "leadership_scope",
           "general_fit"
         ],
         "selectedFollowupPacks": [
-          "leadership_depth"
+          "achievement_quantification"
         ],
         "contextualIntegrationStatus": "contextual_selection_ready",
         "contextualInterviewLengthMode": "short",
@@ -2690,20 +2700,20 @@ switchPanel("prep");
         "objective": "Impostare il contesto, chiarire la rilevanza del profilo e far emergere presto le aree più importanti da validare.",
         "displayLabel": "Apertura",
         "validateFirst": [
-          "Competenze tecniche",
-          "Esperienza con strumenti di business intelligence"
+          "analisi dei dati",
+          "comunicazione"
         ],
         "clarifyEarly": [
-          "Proprietà della reportistica operativa"
+          "Esperienza con SaaS"
         ],
         "monitorRisks": [
-          "Esperienza di leadership"
+          "mancanza di esperienza con SaaS"
         ],
         "priorityTopics": [
-          "Esperienza di leadership"
+          "analisi dei dati"
         ],
         "openingPrompt": "Apri il colloquio inquadrando la rilevanza del profilo rispetto al ruolo, poi passa rapidamente ai segnali più importanti di fit e di rischio.",
-        "openingScript": "Partirei dal tuo percorso per capire come si avvicina a questo ruolo, soprattutto rispetto a la leadership esercitata fin qui."
+        "openingScript": "Partirei dal tuo percorso per capire come si avvicina a questo ruolo, soprattutto rispetto a analisi dei dati."
       },
       "coreQuestionBlocks": [
         {
@@ -2711,20 +2721,35 @@ switchPanel("prep");
           "sequence": 1,
           "familyKey": "general_fit",
           "familyLabel": "Aderenza Generale",
-          "displayLabel": "Percorso",
-          "priority": "medium",
+          "displayLabel": "Aderenza al ruolo",
+          "priority": "high",
           "question": "Puoi raccontarmi il tuo percorso e spiegare perché questo ruolo ti sembra il passo successivo naturale?",
-          "leadIn": "Parto dal tuo percorso.",
+          "leadIn": "Voglio capire quanto questo percorso si trasferisce davvero nel ruolo.",
           "jdReferenceLine": "",
           "source": "family_selection",
-          "interviewerIntent": "walkthrough",
-          "narrativeRole": "WALKTHROUGH",
-          "objective": "Ricostruire il percorso del candidato e il filo logico delle sue esperienze rilevanti."
+          "interviewerIntent": "role_context",
+          "narrativeRole": "ROLE_CONTEXT",
+          "objective": "Esplorare l’aderenza reale tra esperienza del candidato e ruolo target, partendo da Aderenza Generale."
         },
         {
           "blockType": "core_question",
           "sequence": 2,
-          "familyKey": "primary_2",
+          "familyKey": "general_fit",
+          "familyLabel": "Aderenza Generale",
+          "displayLabel": "Aderenza al ruolo",
+          "priority": "high",
+          "question": "Quali parti della tua esperienza ritieni più rilevanti per questa posizione?",
+          "leadIn": "Voglio capire quanto questo percorso si trasferisce davvero nel ruolo.",
+          "jdReferenceLine": "",
+          "source": "family_selection",
+          "interviewerIntent": "role_context",
+          "narrativeRole": "ROLE_CONTEXT",
+          "objective": "Esplorare l’aderenza reale tra esperienza del candidato e ruolo target, partendo da Aderenza Generale."
+        },
+        {
+          "blockType": "core_question",
+          "sequence": 3,
+          "familyKey": "primary_3",
           "familyLabel": "Seniority Calibration",
           "displayLabel": "Caso concreto",
           "priority": "medium",
@@ -2738,48 +2763,33 @@ switchPanel("prep");
         },
         {
           "blockType": "core_question",
-          "sequence": 3,
-          "familyKey": "primary_3",
-          "familyLabel": "Role Fit",
+          "sequence": 4,
+          "familyKey": "primary_4",
+          "familyLabel": "Person Perception",
           "displayLabel": "Pressione / Attrito",
           "priority": "medium",
-          "question": "Descrivi un caso reale in cui le aspettative degli stakeholder erano in conflitto. Tu che cosa hai fatto concretamente?",
+          "question": "Quando eri sotto pressione, che cosa hai deciso di prioritizzare e che cosa hai scelto di lasciare indietro?",
           "leadIn": "Adesso voglio capire come gestisci pressione e attrito.",
           "jdReferenceLine": "",
           "source": "contextual_selection",
           "interviewerIntent": "pressure_probe",
           "narrativeRole": "PRESSURE_PROBE",
-          "objective": "Esplorare gestione di pressione, attrito e stakeholder su Role Fit."
-        },
-        {
-          "blockType": "core_question",
-          "sequence": 4,
-          "familyKey": "leadership_scope",
-          "familyLabel": "Ampiezza della Leadership",
-          "displayLabel": "Ampiezza della Leadership",
-          "priority": "high",
-          "question": "Hai mai guidato o orientato altre persone anche senza essere manager formalmente?",
-          "leadIn": "Su questo voglio approfondire meglio.",
-          "jdReferenceLine": "",
-          "source": "family_selection",
-          "interviewerIntent": "core_question",
-          "narrativeRole": "",
-          "objective": "Esplora Ampiezza della Leadership."
+          "objective": "Esplorare gestione di pressione, attrito e stakeholder su Person Perception."
         }
       ],
       "followupBlocks": [
         {
           "blockType": "followup_pack",
           "sequence": 1,
-          "triggerType": "leadership_depth",
-          "label": "Approfondimento Leadership",
-          "goal": "Chiarire se i segnali di leadership riflettono davvero influenza, mentoring o responsabilità di gestione.",
-          "activationReason": "Il candidato non ha esperienza di leadership chiara.",
+          "triggerType": "achievement_quantification",
+          "label": "Quantificazione dei Risultati",
+          "goal": "Spingere il candidato a rendere i risultati più concreti e misurabili.",
+          "activationReason": "Richiedere esempi concreti di miglioramento dei processi e aumento della qualità dell'esecuzione del prodotto.",
           "followups": [
-            "Di cosa eri esattamente responsabile in quella situazione?",
-            "Chi faceva affidamento su di te, e in che modo?",
-            "Hai dato direzione, preso decisioni, oppure hai soprattutto supportato l’esecuzione?",
-            "Che cosa è cambiato concretamente grazie al tuo intervento?"
+            "Come misuravi il successo in quel caso?",
+            "Che cosa è cambiato concretamente dopo il tuo lavoro?",
+            "Hai numeri, percentuali, risparmi di tempo o indicatori di business che mostrino l’impatto?",
+            "Rispetto alla situazione iniziale, che cosa è migliorato e di quanto?"
           ]
         }
       ],
@@ -2788,40 +2798,38 @@ switchPanel("prep");
         "objective": "Chiudere la sessione consolidando le evidenze utili per il report finale.",
         "displayLabel": "Chiusura",
         "confirmStrengths": [
-          "Competenze tecniche",
-          "Esperienza con strumenti di business intelligence"
+          "analisi dei dati",
+          "comunicazione",
+          "collaborazione"
         ],
         "unresolvedRisks": [
-          "Esperienza di leadership"
+          "mancanza di esperienza con SaaS"
         ],
         "finalClarificationsNeeded": [
-          "Proprietà della reportistica operativa"
+          "Esperienza con SaaS"
         ],
         "reportUsefulHints": [
-          "Aggiungere esperienza di leadership",
-          "Aggiungere competenze con Power BI"
+          "Aggiungere esperienze specifiche con SaaS e ambienti tecnologici in rapida evoluzione."
         ],
         "closingLeadIn": "Ti faccio un’ultima domanda per chiudere con un messaggio chiaro su punti forti e possibili dubbi.",
         "closingPrompt": "Prima di chiudere, qual è il messaggio principale che vorresti restasse sulla tua aderenza a questo ruolo?",
         "source": "contextual_structured_selection"
       },
       "allTopicsCovered": [
-        "Esperienza di leadership",
-        "Proprietà della reportistica operativa"
+        "analisi dei dati"
       ]
     },
     "interviewRuntime": {
       "sessionSummary": {
         "recommendationBand": "solid_fit",
-        "overallScore": 70,
+        "overallScore": 80,
         "confidence": "medium",
-        "interviewStyle": "validate_then_probe",
+        "interviewStyle": "validate_strengths",
         "selectedFamilies": [
-          "leadership_scope",
           "general_fit"
         ],
         "selectedFollowupPacks": [
-          "leadership_depth"
+          "achievement_quantification"
         ],
         "contextualIntegrationStatus": "contextual_selection_ready",
         "contextualInterviewLengthMode": "short",
@@ -2829,20 +2837,20 @@ switchPanel("prep");
       },
       "sessionFollowupBlocks": [
         {
-          "triggerType": "leadership_depth",
-          "label": "Approfondimento Leadership",
-          "goal": "Chiarire se i segnali di leadership riflettono davvero influenza, mentoring o responsabilità di gestione.",
-          "activationReason": "Il candidato non ha esperienza di leadership chiara.",
+          "triggerType": "achievement_quantification",
+          "label": "Quantificazione dei Risultati",
+          "goal": "Spingere il candidato a rendere i risultati più concreti e misurabili.",
+          "activationReason": "Richiedere esempi concreti di miglioramento dei processi e aumento della qualità dell'esecuzione del prodotto.",
           "followups": [
-            "Di cosa eri esattamente responsabile in quella situazione?",
-            "Chi faceva affidamento su di te, e in che modo?",
-            "Hai dato direzione, preso decisioni, oppure hai soprattutto supportato l’esecuzione?",
-            "Che cosa è cambiato concretamente grazie al tuo intervento?"
+            "Come misuravi il successo in quel caso?",
+            "Che cosa è cambiato concretamente dopo il tuo lavoro?",
+            "Hai numeri, percentuali, risparmi di tempo o indicatori di business che mostrino l’impatto?",
+            "Rispetto alla situazione iniziale, che cosa è migliorato e di quanto?"
           ]
         }
       ],
       "runtimeState": {
-        "currentStepIndex": 7,
+        "currentStepIndex": 6,
         "timeline": [
           {
             "stepType": "opening",
@@ -2853,34 +2861,26 @@ switchPanel("prep");
           {
             "stepType": "core_question",
             "blockIndex": 0,
-            "label": "Percorso",
-            "phaseName": "WALKTHROUGH"
-          },
-          {
-            "stepType": "adaptive_followup_pack",
-            "blockIndex": 0,
-            "label": "Approfondimento Leadership",
-            "triggerType": "leadership_depth",
-            "phaseName": "WALKTHROUGH",
-            "injected": true
+            "label": "Aderenza al ruolo",
+            "phaseName": "ROLE_CONTEXT"
           },
           {
             "stepType": "core_question",
             "blockIndex": 1,
+            "label": "Aderenza al ruolo",
+            "phaseName": "ROLE_CONTEXT"
+          },
+          {
+            "stepType": "core_question",
+            "blockIndex": 2,
             "label": "Caso concreto",
             "phaseName": "CASE_1"
           },
           {
             "stepType": "core_question",
-            "blockIndex": 2,
+            "blockIndex": 3,
             "label": "Pressione / Attrito",
             "phaseName": "PRESSURE_PROBE"
-          },
-          {
-            "stepType": "core_question",
-            "blockIndex": 3,
-            "label": "Ampiezza della Leadership",
-            "phaseName": "DEPTH_CHECK"
           },
           {
             "stepType": "closing",
@@ -2896,10 +2896,18 @@ switchPanel("prep");
             "label": "Opening",
             "answerText": "Volentieri. Ti racconto il mio percorso mettendo a fuoco le esperienze più rilevanti per questo ruolo e dove penso di poter trasferire valore rapidamente.",
             "inputSource": "text",
+            "questionContext": {
+              "questionText": "",
+              "questionKey": "",
+              "narrativeRole": "OPENING",
+              "expectedSignals": [
+                "engagement"
+              ]
+            },
             "answerAnalysis": {
               "answerShapeAnalysis": {
                 "summary": "La risposta mostra un profilo formale misto e beneficerebbe di maggiore evidenza e struttura.",
-                "overallScore": 36,
+                "overallScore": 38,
                 "overallBand": "weak",
                 "dimensionScores": {
                   "concreteness": 45,
@@ -2908,7 +2916,9 @@ switchPanel("prep");
                   "ownership": 20,
                   "structure": 40,
                   "clarity": 55,
-                  "reflection": 20
+                  "reflection": 20,
+                  "questionAlignment": 55,
+                  "motivationForChange": null
                 },
                 "detectedSignals": {
                   "wordCount": 24,
@@ -2917,7 +2927,22 @@ switchPanel("prep");
                   "evidenceMarkers": 0,
                   "structureMarkers": 0,
                   "reflectionMarkers": 0,
-                  "vagueMarkers": 0
+                  "vagueMarkers": 0,
+                  "changeReasonMarkers": 0,
+                  "escapeOnlyMarkers": 0,
+                  "futureDirectionMarkers": 0,
+                  "currentSituationMarkers": 0,
+                  "expectedSignalMatches": 0
+                },
+                "questionContext": {
+                  "questionKey": "",
+                  "narrativeRole": "OPENING",
+                  "questionText": "",
+                  "expectedSignals": [
+                    "engagement"
+                  ],
+                  "offTopicRisk": "low",
+                  "isMotivationForChange": false
                 },
                 "strengths": [],
                 "weaknesses": [
@@ -2929,6 +2954,7 @@ switchPanel("prep");
                   "La risposta non mostra ancora riflessione, apprendimento o adattamento."
                 ],
                 "improvementHints": [
+                  "Resta più vicino alla domanda: prima chiarisci il punto centrale, poi aggiungi contesto.",
                   "Aggiungi una situazione concreta con contesto, azione e risultato invece di restare sul generale.",
                   "Inserisci un outcome, una metrica o un effetto visibile del tuo lavoro.",
                   "Esplicita meglio che cosa hai posseduto, deciso o consegnato personalmente.",
@@ -2937,65 +2963,115 @@ switchPanel("prep");
                 ]
               }
             },
-            "timestamp": "2026-03-26T20:09:47.447Z"
+            "timestamp": "2026-04-09T16:58:21.383Z",
+            "generatedAdaptiveFollowup": {
+              "shouldTrigger": false,
+              "followupQuestion": "",
+              "source": "blocked_by_phase",
+              "focus": "",
+              "usedFallback": false
+            }
           },
           {
             "stepType": "core_question",
-            "phaseName": "WALKTHROUGH",
-            "label": "Percorso",
+            "phaseName": "ROLE_CONTEXT",
+            "label": "Aderenza al ruolo",
             "answerText": "Ti faccio un esempio concreto: in un’attività di reporting che si è complicata più del previsto ho dovuto ricostruire i dati, ridefinire alcune metriche e chiarire con gli stakeholder cosa servisse davvero. Ho riorganizzato il lavoro, isolato gli indicatori più affidabili e consegnato un output più leggibile, utile per decidere.",
             "inputSource": "text",
+            "questionContext": {
+              "questionText": "Puoi raccontarmi il tuo percorso e spiegare perché questo ruolo ti sembra il passo successivo naturale?",
+              "questionKey": "general_fit",
+              "narrativeRole": "ROLE_CONTEXT",
+              "expectedSignals": [
+                "role_understanding",
+                "context_awareness"
+              ]
+            },
             "answerAnalysis": {
               "answerShapeAnalysis": {
-                "summary": "La risposta mostra un profilo formale misto e beneficerebbe di maggiore evidenza e struttura.",
-                "overallScore": 44,
-                "overallBand": "weak",
+                "summary": "La risposta è utilizzabile, ma può ancora migliorare in ownership, evidenza e specificità.",
+                "overallScore": 52,
+                "overallBand": "medium",
                 "dimensionScores": {
                   "concreteness": 70,
                   "specificity": 55,
-                  "evidence": 43,
+                  "evidence": 79,
                   "ownership": 28,
                   "structure": 40,
                   "clarity": 55,
-                  "reflection": 20
+                  "reflection": 20,
+                  "questionAlignment": 65,
+                  "motivationForChange": null
                 },
                 "detectedSignals": {
                   "wordCount": 50,
                   "quantifiers": 0,
                   "ownershipMarkers": 0,
-                  "evidenceMarkers": 1,
+                  "evidenceMarkers": 3,
                   "structureMarkers": 0,
                   "reflectionMarkers": 0,
-                  "vagueMarkers": 0
+                  "vagueMarkers": 0,
+                  "changeReasonMarkers": 0,
+                  "escapeOnlyMarkers": 0,
+                  "futureDirectionMarkers": 0,
+                  "currentSituationMarkers": 0,
+                  "expectedSignalMatches": 0
                 },
-                "strengths": [],
+                "questionContext": {
+                  "questionKey": "general_fit",
+                  "narrativeRole": "ROLE_CONTEXT",
+                  "questionText": "Puoi raccontarmi il tuo percorso e spiegare perché questo ruolo ti sembra il passo successivo naturale?",
+                  "expectedSignals": [
+                    "role_understanding",
+                    "context_awareness"
+                  ],
+                  "offTopicRisk": "low",
+                  "isMotivationForChange": false
+                },
+                "strengths": [
+                  "La risposta fornisce evidenze o supporto orientato ai risultati."
+                ],
                 "weaknesses": [
-                  "La risposta offre evidenze limitate di impatto, risultato o outcome misurabile.",
                   "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
                   "La risposta sarebbe più facile da seguire con una struttura più chiara.",
                   "La risposta non mostra ancora riflessione, apprendimento o adattamento."
                 ],
                 "improvementHints": [
                   "Aggiungi una situazione concreta con contesto, azione e risultato invece di restare sul generale.",
-                  "Inserisci un outcome, una metrica o un effetto visibile del tuo lavoro.",
                   "Esplicita meglio che cosa hai posseduto, deciso o consegnato personalmente.",
                   "Usa una sequenza semplice come situazione, azione, risultato.",
                   "Aggiungi una breve riflessione su ciò che hai imparato o su come ti sei adattato."
                 ]
               }
             },
-            "timestamp": "2026-03-26T20:09:47.449Z"
+            "timestamp": "2026-04-09T16:58:21.385Z",
+            "generatedAdaptiveFollowup": {
+              "shouldTrigger": true,
+              "followupQuestion": "Qual è stato il tuo contributo personale diretto nell'analisi dei dati?",
+              "source": "llm_followup_generation",
+              "focus": "ownership",
+              "usedFallback": false
+            }
           },
           {
-            "stepType": "adaptive_followup_pack",
-            "phaseName": "WALKTHROUGH",
-            "label": "Approfondimento Leadership",
+            "stepType": "core_question",
+            "phaseName": "ROLE_CONTEXT",
+            "label": "Aderenza al ruolo",
             "answerText": "Per essere concreto: la parte di analisi e costruzione dell’output era sotto la mia responsabilità diretta; il confronto con altri serviva a validare assunzioni e priorità, ma le decisioni operative sul lavoro quotidiano le prendevo io.",
             "inputSource": "text",
+            "questionContext": {
+              "questionText": "Quali parti della tua esperienza ritieni più rilevanti per questa posizione?",
+              "questionKey": "general_fit",
+              "narrativeRole": "ROLE_CONTEXT",
+              "expectedSignals": [
+                "role_understanding",
+                "context_awareness"
+              ]
+            },
             "answerAnalysis": {
               "answerShapeAnalysis": {
                 "summary": "La risposta mostra un profilo formale misto e beneficerebbe di maggiore evidenza e struttura.",
-                "overallScore": 37,
+                "overallScore": 41,
                 "overallBand": "weak",
                 "dimensionScores": {
                   "concreteness": 45,
@@ -3004,7 +3080,9 @@ switchPanel("prep");
                   "ownership": 20,
                   "structure": 40,
                   "clarity": 55,
-                  "reflection": 20
+                  "reflection": 20,
+                  "questionAlignment": 65,
+                  "motivationForChange": null
                 },
                 "detectedSignals": {
                   "wordCount": 36,
@@ -3013,7 +3091,23 @@ switchPanel("prep");
                   "evidenceMarkers": 0,
                   "structureMarkers": 0,
                   "reflectionMarkers": 0,
-                  "vagueMarkers": 0
+                  "vagueMarkers": 0,
+                  "changeReasonMarkers": 0,
+                  "escapeOnlyMarkers": 0,
+                  "futureDirectionMarkers": 0,
+                  "currentSituationMarkers": 0,
+                  "expectedSignalMatches": 0
+                },
+                "questionContext": {
+                  "questionKey": "general_fit",
+                  "narrativeRole": "ROLE_CONTEXT",
+                  "questionText": "Quali parti della tua esperienza ritieni più rilevanti per questa posizione?",
+                  "expectedSignals": [
+                    "role_understanding",
+                    "context_awareness"
+                  ],
+                  "offTopicRisk": "low",
+                  "isMotivationForChange": false
                 },
                 "strengths": [],
                 "weaknesses": [
@@ -3032,7 +3126,14 @@ switchPanel("prep");
                 ]
               }
             },
-            "timestamp": "2026-03-26T20:09:47.450Z"
+            "timestamp": "2026-04-09T16:58:21.741Z",
+            "generatedAdaptiveFollowup": {
+              "shouldTrigger": false,
+              "followupQuestion": "",
+              "source": "blocked_by_budget",
+              "focus": "",
+              "usedFallback": false
+            }
           },
           {
             "stepType": "core_question",
@@ -3040,46 +3141,76 @@ switchPanel("prep");
             "label": "Caso concreto",
             "answerText": "In quel caso ho deciso di rinunciare ad alcune analisi secondarie per concentrarmi sulle metriche più affidabili e più utili alla decisione. Il trade-off è stato sacrificare completezza apparente per garantire chiarezza e affidabilità, assumendomi la responsabilità della scelta e spiegandone bene le conseguenze.",
             "inputSource": "text",
+            "questionContext": {
+              "questionText": "Parlami di una decisione in cui non c’era una risposta chiaramente giusta. Quale trade-off hai scelto e perché?",
+              "questionKey": "primary_3",
+              "narrativeRole": "CASE_1",
+              "expectedSignals": [
+                "concrete_example",
+                "evidence"
+              ]
+            },
             "answerAnalysis": {
               "answerShapeAnalysis": {
-                "summary": "La risposta mostra un profilo formale misto e beneficerebbe di maggiore evidenza e struttura.",
-                "overallScore": 44,
-                "overallBand": "weak",
+                "summary": "La risposta è utilizzabile, ma può ancora migliorare in ownership, evidenza e specificità.",
+                "overallScore": 53,
+                "overallBand": "medium",
                 "dimensionScores": {
                   "concreteness": 70,
-                  "specificity": 55,
-                  "evidence": 43,
-                  "ownership": 28,
+                  "specificity": 65,
+                  "evidence": 61,
+                  "ownership": 50,
                   "structure": 40,
                   "clarity": 55,
-                  "reflection": 20
+                  "reflection": 20,
+                  "questionAlignment": 65,
+                  "motivationForChange": null
                 },
                 "detectedSignals": {
                   "wordCount": 44,
                   "quantifiers": 0,
-                  "ownershipMarkers": 0,
-                  "evidenceMarkers": 1,
+                  "ownershipMarkers": 1,
+                  "evidenceMarkers": 2,
                   "structureMarkers": 0,
                   "reflectionMarkers": 0,
-                  "vagueMarkers": 0
+                  "vagueMarkers": 0,
+                  "changeReasonMarkers": 0,
+                  "escapeOnlyMarkers": 0,
+                  "futureDirectionMarkers": 0,
+                  "currentSituationMarkers": 0,
+                  "expectedSignalMatches": 0
+                },
+                "questionContext": {
+                  "questionKey": "primary_3",
+                  "narrativeRole": "CASE_1",
+                  "questionText": "Parlami di una decisione in cui non c’era una risposta chiaramente giusta. Quale trade-off hai scelto e perché?",
+                  "expectedSignals": [
+                    "concrete_example",
+                    "evidence"
+                  ],
+                  "offTopicRisk": "low",
+                  "isMotivationForChange": false
                 },
                 "strengths": [],
                 "weaknesses": [
-                  "La risposta offre evidenze limitate di impatto, risultato o outcome misurabile.",
-                  "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
                   "La risposta sarebbe più facile da seguire con una struttura più chiara.",
                   "La risposta non mostra ancora riflessione, apprendimento o adattamento."
                 ],
                 "improvementHints": [
-                  "Aggiungi una situazione concreta con contesto, azione e risultato invece di restare sul generale.",
-                  "Inserisci un outcome, una metrica o un effetto visibile del tuo lavoro.",
                   "Esplicita meglio che cosa hai posseduto, deciso o consegnato personalmente.",
                   "Usa una sequenza semplice come situazione, azione, risultato.",
                   "Aggiungi una breve riflessione su ciò che hai imparato o su come ti sei adattato."
                 ]
               }
             },
-            "timestamp": "2026-03-26T20:09:47.450Z"
+            "timestamp": "2026-04-09T16:58:21.742Z",
+            "generatedAdaptiveFollowup": {
+              "shouldTrigger": false,
+              "followupQuestion": "",
+              "source": "blocked_by_budget",
+              "focus": "",
+              "usedFallback": false
+            }
           },
           {
             "stepType": "core_question",
@@ -3087,147 +3218,161 @@ switchPanel("prep");
             "label": "Pressione / Attrito",
             "answerText": "Quando ho ricevuto resistenza o disaccordo su una proposta di reporting, ho mantenuto la relazione ma preso posizione. Ho chiarito i vincoli, spiegato perché alcune metriche erano davvero prioritarie e difeso una scelta operativa che riduceva il rumore e aiutava a decidere più in fretta.",
             "inputSource": "text",
+            "questionContext": {
+              "questionText": "Quando eri sotto pressione, che cosa hai deciso di prioritizzare e che cosa hai scelto di lasciare indietro?",
+              "questionKey": "primary_4",
+              "narrativeRole": "PRESSURE_PROBE",
+              "expectedSignals": [
+                "conflict",
+                "assertiveness",
+                "stakeholder_management"
+              ]
+            },
             "answerAnalysis": {
               "answerShapeAnalysis": {
-                "summary": "La risposta mostra un profilo formale misto e beneficerebbe di maggiore evidenza e struttura.",
-                "overallScore": 44,
-                "overallBand": "weak",
+                "summary": "La risposta è utilizzabile, ma può ancora migliorare in ownership, evidenza e specificità.",
+                "overallScore": 53,
+                "overallBand": "medium",
                 "dimensionScores": {
                   "concreteness": 70,
                   "specificity": 55,
-                  "evidence": 43,
+                  "evidence": 61,
                   "ownership": 28,
-                  "structure": 40,
-                  "clarity": 55,
-                  "reflection": 20
+                  "structure": 55,
+                  "clarity": 65,
+                  "reflection": 20,
+                  "questionAlignment": 73,
+                  "motivationForChange": null
                 },
                 "detectedSignals": {
                   "wordCount": 45,
                   "quantifiers": 0,
                   "ownershipMarkers": 0,
-                  "evidenceMarkers": 1,
-                  "structureMarkers": 0,
+                  "evidenceMarkers": 2,
+                  "structureMarkers": 1,
                   "reflectionMarkers": 0,
-                  "vagueMarkers": 0
+                  "vagueMarkers": 0,
+                  "changeReasonMarkers": 0,
+                  "escapeOnlyMarkers": 0,
+                  "futureDirectionMarkers": 0,
+                  "currentSituationMarkers": 0,
+                  "expectedSignalMatches": 0
+                },
+                "questionContext": {
+                  "questionKey": "primary_4",
+                  "narrativeRole": "PRESSURE_PROBE",
+                  "questionText": "Quando eri sotto pressione, che cosa hai deciso di prioritizzare e che cosa hai scelto di lasciare indietro?",
+                  "expectedSignals": [
+                    "conflict",
+                    "assertiveness",
+                    "stakeholder_management"
+                  ],
+                  "offTopicRisk": "low",
+                  "isMotivationForChange": false
                 },
                 "strengths": [],
                 "weaknesses": [
-                  "La risposta offre evidenze limitate di impatto, risultato o outcome misurabile.",
                   "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
-                  "La risposta sarebbe più facile da seguire con una struttura più chiara.",
                   "La risposta non mostra ancora riflessione, apprendimento o adattamento."
                 ],
                 "improvementHints": [
                   "Aggiungi una situazione concreta con contesto, azione e risultato invece di restare sul generale.",
-                  "Inserisci un outcome, una metrica o un effetto visibile del tuo lavoro.",
                   "Esplicita meglio che cosa hai posseduto, deciso o consegnato personalmente.",
                   "Usa una sequenza semplice come situazione, azione, risultato.",
                   "Aggiungi una breve riflessione su ciò che hai imparato o su come ti sei adattato."
                 ]
               }
             },
-            "timestamp": "2026-03-26T20:09:47.451Z"
-          },
-          {
-            "stepType": "core_question",
-            "phaseName": "DEPTH_CHECK",
-            "label": "Ampiezza della Leadership",
-            "answerText": "Quando ho ricevuto resistenza o disaccordo su una proposta di reporting, ho mantenuto la relazione ma preso posizione. Ho chiarito i vincoli, spiegato perché alcune metriche erano davvero prioritarie e difeso una scelta operativa che riduceva il rumore e aiutava a decidere più in fretta.",
-            "inputSource": "text",
-            "answerAnalysis": {
-              "answerShapeAnalysis": {
-                "summary": "La risposta mostra un profilo formale misto e beneficerebbe di maggiore evidenza e struttura.",
-                "overallScore": 44,
-                "overallBand": "weak",
-                "dimensionScores": {
-                  "concreteness": 70,
-                  "specificity": 55,
-                  "evidence": 43,
-                  "ownership": 28,
-                  "structure": 40,
-                  "clarity": 55,
-                  "reflection": 20
-                },
-                "detectedSignals": {
-                  "wordCount": 45,
-                  "quantifiers": 0,
-                  "ownershipMarkers": 0,
-                  "evidenceMarkers": 1,
-                  "structureMarkers": 0,
-                  "reflectionMarkers": 0,
-                  "vagueMarkers": 0
-                },
-                "strengths": [],
-                "weaknesses": [
-                  "La risposta offre evidenze limitate di impatto, risultato o outcome misurabile.",
-                  "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
-                  "La risposta sarebbe più facile da seguire con una struttura più chiara.",
-                  "La risposta non mostra ancora riflessione, apprendimento o adattamento."
-                ],
-                "improvementHints": [
-                  "Aggiungi una situazione concreta con contesto, azione e risultato invece di restare sul generale.",
-                  "Inserisci un outcome, una metrica o un effetto visibile del tuo lavoro.",
-                  "Esplicita meglio che cosa hai posseduto, deciso o consegnato personalmente.",
-                  "Usa una sequenza semplice come situazione, azione, risultato.",
-                  "Aggiungi una breve riflessione su ciò che hai imparato o su come ti sei adattato."
-                ]
-              }
-            },
-            "timestamp": "2026-03-26T20:09:47.451Z"
+            "timestamp": "2026-04-09T16:58:21.743Z",
+            "generatedAdaptiveFollowup": {
+              "shouldTrigger": false,
+              "followupQuestion": "",
+              "source": "blocked_by_budget",
+              "focus": "",
+              "usedFallback": false
+            }
           },
           {
             "stepType": "closing",
             "phaseName": "CLOSING",
             "label": "Closing",
-            "answerText": "Il messaggio che vorrei lasciare è questo: porto solidità analitica, capacità di adattamento e disponibilità a entrare rapidamente nel dominio, sapendo trasformare l’analisi in decisioni utili.",
+            "answerText": "Quando ho ricevuto resistenza o disaccordo su una proposta di reporting, ho mantenuto la relazione ma preso posizione. Ho chiarito i vincoli, spiegato perché alcune metriche erano davvero prioritarie e difeso una scelta operativa che riduceva il rumore e aiutava a decidere più in fretta.",
             "inputSource": "text",
+            "questionContext": {
+              "questionText": "",
+              "questionKey": "",
+              "narrativeRole": "CLOSING",
+              "expectedSignals": [
+                "final_signal"
+              ]
+            },
             "answerAnalysis": {
               "answerShapeAnalysis": {
-                "summary": "La risposta mostra un profilo formale misto e beneficerebbe di maggiore evidenza e struttura.",
-                "overallScore": 36,
-                "overallBand": "weak",
+                "summary": "La risposta è utilizzabile, ma può ancora migliorare in ownership, evidenza e specificità.",
+                "overallScore": 53,
+                "overallBand": "medium",
                 "dimensionScores": {
-                  "concreteness": 45,
-                  "specificity": 45,
-                  "evidence": 25,
-                  "ownership": 20,
-                  "structure": 40,
-                  "clarity": 55,
-                  "reflection": 20
+                  "concreteness": 70,
+                  "specificity": 55,
+                  "evidence": 61,
+                  "ownership": 28,
+                  "structure": 55,
+                  "clarity": 65,
+                  "reflection": 20,
+                  "questionAlignment": 73,
+                  "motivationForChange": null
                 },
                 "detectedSignals": {
-                  "wordCount": 26,
+                  "wordCount": 45,
                   "quantifiers": 0,
                   "ownershipMarkers": 0,
-                  "evidenceMarkers": 0,
-                  "structureMarkers": 0,
+                  "evidenceMarkers": 2,
+                  "structureMarkers": 1,
                   "reflectionMarkers": 0,
-                  "vagueMarkers": 0
+                  "vagueMarkers": 0,
+                  "changeReasonMarkers": 0,
+                  "escapeOnlyMarkers": 0,
+                  "futureDirectionMarkers": 0,
+                  "currentSituationMarkers": 0,
+                  "expectedSignalMatches": 0
+                },
+                "questionContext": {
+                  "questionKey": "",
+                  "narrativeRole": "CLOSING",
+                  "questionText": "",
+                  "expectedSignals": [
+                    "final_signal"
+                  ],
+                  "offTopicRisk": "low",
+                  "isMotivationForChange": false
                 },
                 "strengths": [],
                 "weaknesses": [
-                  "La risposta resta troppo astratta e beneficerebbe di un esempio più concreto.",
-                  "La risposta non è abbastanza specifica su contesto, scope o azioni.",
-                  "La risposta offre evidenze limitate di impatto, risultato o outcome misurabile.",
                   "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
-                  "La risposta sarebbe più facile da seguire con una struttura più chiara.",
                   "La risposta non mostra ancora riflessione, apprendimento o adattamento."
                 ],
                 "improvementHints": [
                   "Aggiungi una situazione concreta con contesto, azione e risultato invece di restare sul generale.",
-                  "Inserisci un outcome, una metrica o un effetto visibile del tuo lavoro.",
                   "Esplicita meglio che cosa hai posseduto, deciso o consegnato personalmente.",
                   "Usa una sequenza semplice come situazione, azione, risultato.",
                   "Aggiungi una breve riflessione su ciò che hai imparato o su come ti sei adattato."
                 ]
               }
             },
-            "timestamp": "2026-03-26T20:09:47.451Z"
+            "timestamp": "2026-04-09T16:58:21.743Z",
+            "generatedAdaptiveFollowup": {
+              "shouldTrigger": false,
+              "followupQuestion": "",
+              "source": "blocked_by_phase",
+              "focus": "",
+              "usedFallback": false
+            }
           }
         ],
-        "usedAdaptiveTriggerTypes": [
-          "leadership_depth"
-        ],
+        "usedAdaptiveTriggerTypes": [],
+        "adaptiveFollowupBudget": 1,
+        "injectedAdaptiveFollowupCount": 1,
+        "resolvedInterviewLengthMode": "short",
         "isCompleted": true,
         "interviewState": {
           "context": {
@@ -3245,19 +3390,23 @@ switchPanel("prep");
           ],
           "observedSignals": [
             "engagement",
+            "evidence",
+            "concrete_example",
             "specificity",
+            "question_alignment",
             "decision",
             "tradeoff",
+            "timeline",
+            "consistency",
             "conflict",
             "stakeholder_management"
           ],
           "deviationFlags": [
-            "no_clear_ownership",
-            "generic_examples"
+            "no_clear_ownership"
           ],
           "coverage": {
-            "walkthrough": true,
-            "roleContext": false,
+            "walkthrough": false,
+            "roleContext": true,
             "case1": true,
             "decision": true,
             "pressure": true,
@@ -3277,7 +3426,7 @@ switchPanel("prep");
               "lastStepLabel": "Opening",
               "notes": [
                 {
-                  "timestamp": "2026-03-26T20:09:47.448Z",
+                  "timestamp": "2026-04-09T16:58:21.384Z",
                   "observedSignals": [
                     "engagement"
                   ],
@@ -3288,57 +3437,63 @@ switchPanel("prep");
               ]
             },
             "WALKTHROUGH": {
-              "status": "completed",
-              "attempts": 2,
-              "completedBy": "forced_exit",
-              "lastStepLabel": "Approfondimento Leadership",
-              "notes": [
-                {
-                  "timestamp": "2026-03-26T20:09:47.449Z",
-                  "observedSignals": [
-                    "specificity",
-                    "engagement"
-                  ],
-                  "matchedSignals": [
-                    "specificity"
-                  ]
-                },
-                {
-                  "timestamp": "2026-03-26T20:09:47.450Z",
-                  "observedSignals": [
-                    "specificity",
-                    "decision",
-                    "tradeoff",
-                    "engagement"
-                  ],
-                  "matchedSignals": [
-                    "specificity"
-                  ]
-                }
-              ]
-            },
-            "ROLE_CONTEXT": {
               "status": "pending",
               "attempts": 0,
               "completedBy": null,
               "lastStepLabel": "",
               "notes": []
             },
-            "CASE_1": {
+            "ROLE_CONTEXT": {
               "status": "completed",
-              "attempts": 1,
-              "completedBy": null,
-              "lastStepLabel": "Caso concreto",
+              "attempts": 2,
+              "completedBy": "forced_exit",
+              "lastStepLabel": "Aderenza al ruolo",
               "notes": [
                 {
-                  "timestamp": "2026-03-26T20:09:47.450Z",
+                  "timestamp": "2026-04-09T16:58:21.740Z",
+                  "observedSignals": [
+                    "evidence",
+                    "concrete_example",
+                    "specificity",
+                    "question_alignment",
+                    "engagement"
+                  ],
+                  "matchedSignals": []
+                },
+                {
+                  "timestamp": "2026-04-09T16:58:21.741Z",
                   "observedSignals": [
                     "specificity",
+                    "question_alignment",
                     "decision",
                     "tradeoff",
                     "engagement"
                   ],
                   "matchedSignals": []
+                }
+              ]
+            },
+            "CASE_1": {
+              "status": "completed",
+              "attempts": 1,
+              "completedBy": "signal",
+              "lastStepLabel": "Caso concreto",
+              "notes": [
+                {
+                  "timestamp": "2026-04-09T16:58:21.742Z",
+                  "observedSignals": [
+                    "evidence",
+                    "concrete_example",
+                    "specificity",
+                    "question_alignment",
+                    "decision",
+                    "tradeoff",
+                    "engagement"
+                  ],
+                  "matchedSignals": [
+                    "concrete_example",
+                    "evidence"
+                  ]
                 }
               ]
             },
@@ -3356,9 +3511,14 @@ switchPanel("prep");
               "lastStepLabel": "Pressione / Attrito",
               "notes": [
                 {
-                  "timestamp": "2026-03-26T20:09:47.451Z",
+                  "timestamp": "2026-04-09T16:58:21.743Z",
                   "observedSignals": [
+                    "evidence",
+                    "concrete_example",
                     "specificity",
+                    "timeline",
+                    "consistency",
+                    "question_alignment",
                     "tradeoff",
                     "conflict",
                     "stakeholder_management",
@@ -3374,21 +3534,9 @@ switchPanel("prep");
             "DEPTH_CHECK": {
               "status": "completed",
               "attempts": 1,
-              "completedBy": null,
-              "lastStepLabel": "Ampiezza della Leadership",
-              "notes": [
-                {
-                  "timestamp": "2026-03-26T20:09:47.451Z",
-                  "observedSignals": [
-                    "specificity",
-                    "tradeoff",
-                    "conflict",
-                    "stakeholder_management",
-                    "engagement"
-                  ],
-                  "matchedSignals": []
-                }
-              ]
+              "completedBy": "signal",
+              "lastStepLabel": "Closing",
+              "notes": []
             },
             "CLOSING": {
               "status": "completed",
@@ -3397,9 +3545,17 @@ switchPanel("prep");
               "lastStepLabel": "Closing",
               "notes": [
                 {
-                  "timestamp": "2026-03-26T20:09:47.451Z",
+                  "timestamp": "2026-04-09T16:58:21.743Z",
                   "observedSignals": [
-                    "decision",
+                    "evidence",
+                    "concrete_example",
+                    "specificity",
+                    "timeline",
+                    "consistency",
+                    "question_alignment",
+                    "tradeoff",
+                    "conflict",
+                    "stakeholder_management",
                     "engagement"
                   ],
                   "matchedSignals": []
@@ -3407,64 +3563,191 @@ switchPanel("prep");
               ]
             }
           }
-        }
+        },
+        "usedAdaptiveFollowupFocuses": [
+          "ownership"
+        ]
       },
-      "adaptiveFollowupBlocks": [
-        {
-          "triggerType": "leadership_depth",
-          "label": "Approfondimento Leadership",
-          "goal": "Chiarire se i segnali di leadership riflettono davvero influenza, mentoring o responsabilità di gestione.",
-          "activationReason": "Il candidato non ha esperienza di leadership chiara.",
-          "followups": [
-            "Di cosa eri esattamente responsabile in quella situazione?",
-            "Chi faceva affidamento su di te, e in che modo?",
-            "Hai dato direzione, preso decisioni, oppure hai soprattutto supportato l’esecuzione?",
-            "Che cosa è cambiato concretamente grazie al tuo intervento?"
-          ]
-        }
-      ],
-      "currentStep": null,
+      "adaptiveFollowupBlocks": [],
       "meta": {
         "scenarioType": "interview",
         "inputMode": "text",
         "uiLocale": "it",
-        "sessionLocale": "it"
-      }
+        "sessionLocale": "it",
+        "locale": {
+          "code": "it"
+        },
+        "jobFitAnalysis": {
+          "jobFitAnalysis": {
+            "fitSummary": {
+              "overallScore": 80,
+              "fitLevel": "high",
+              "recommendationBand": "solid_fit",
+              "confidence": "medium",
+              "shortRationale": "Il candidato ha una forte esperienza in analisi aziendale e coordinamento di progetti, con competenze tecniche rilevanti come SQL e strumenti BI."
+            },
+            "dimensionScores": {
+              "technicalFit": 85,
+              "toolsFit": 80,
+              "domainFit": 75,
+              "seniorityFit": 90,
+              "responsibilityFit": 80,
+              "evidenceStrength": 85,
+              "growthPotential": 70
+            },
+            "matches": [
+              {
+                "dimension": "technical_fit",
+                "roleItem": "SQL",
+                "candidateSignal": "SQL",
+                "matchType": "direct_match",
+                "score": 90,
+                "explanation": "Il candidato ha esperienza con SQL, che è una competenza tecnica richiesta per il ruolo."
+              },
+              {
+                "dimension": "domain_fit",
+                "roleItem": "Product Operations",
+                "candidateSignal": "analisi aziendale",
+                "matchType": "partial_match",
+                "score": 70,
+                "explanation": "Il candidato ha esperienza in analisi aziendale, che è pertinente per il ruolo di Product Operations."
+              },
+              {
+                "dimension": "seniority_fit",
+                "roleItem": "5+ anni di esperienza",
+                "candidateSignal": "7 anni di esperienza",
+                "matchType": "direct_match",
+                "score": 95,
+                "explanation": "Il candidato ha più di 5 anni di esperienza, che soddisfa il requisito del ruolo."
+              }
+            ],
+            "gaps": [
+              {
+                "dimension": "domain_fit",
+                "roleItem": "SaaS",
+                "gapType": "missing",
+                "severity": "low",
+                "recoverability": "easy_to_learn",
+                "explanation": "Il candidato non ha esperienza diretta con SaaS, ma potrebbe imparare facilmente."
+              }
+            ],
+            "ambiguities": [],
+            "transferableStrengths": [
+              "comunicazione",
+              "collaborazione"
+            ],
+            "strongSignals": [
+              "analisi dei dati",
+              "esperienza lavorativa"
+            ],
+            "weakSignals": [],
+            "matchedSkills": [
+              "SQL",
+              "analisi aziendale"
+            ],
+            "missingSkills": [
+              "SaaS"
+            ],
+            "questionFocusAreas": [
+              "Esperienza con SaaS",
+              "Capacità di lavorare in ambienti tecnologici in rapida evoluzione"
+            ],
+            "interviewFocus": [
+              {
+                "priority": "high",
+                "focusType": "verify_strength",
+                "topic": "analisi dei dati",
+                "reason": "Verificare la capacità del candidato di analizzare i dati e prendere decisioni informate."
+              }
+            ],
+            "followupTriggers": [
+              {
+                "triggerType": "achievement_quantification",
+                "reason": "Richiedere esempi concreti di miglioramento dei processi e aumento della qualità dell'esecuzione del prodotto."
+              }
+            ],
+            "cvImprovementHints": [
+              "Aggiungere esperienze specifiche con SaaS e ambienti tecnologici in rapida evoluzione."
+            ],
+            "reportHighlights": {
+              "strengths": [
+                "analisi dei dati",
+                "comunicazione",
+                "collaborazione"
+              ],
+              "risks": [
+                "mancanza di esperienza con SaaS"
+              ],
+              "clarificationsNeeded": [
+                "Esperienza con SaaS"
+              ],
+              "positioningHints": [
+                "Sottolineare la capacità di lavorare in ambienti tecnologici in rapida evoluzione e di analizzare i dati per prendere decisioni informate."
+              ]
+            }
+          }
+        }
+      },
+      "currentStep": null
     },
     "interviewReport": {
       "sessionStats": {
-        "totalAnswers": 7,
-        "overallScore": 41,
+        "totalAnswers": 6,
+        "overallScore": 48,
         "overallBand": "weak",
         "answerBandCounts": {
           "strong": 0,
-          "medium": 0,
-          "weak": 7
+          "medium": 4,
+          "weak": 2
         }
       },
       "narrativeSummary": "La sessione mostra attualmente un profilo formale debole e trarrebbe beneficio da risposte più concrete, strutturate e supportate da evidenze.",
-      "runtimeNarrative": "La sessione ha raccolto segnali utili ma con una copertura ancora parziale delle fasi chiave. È stato esplorato anche il livello decisionale. È stata toccata anche la gestione della pressione o dell’attrito. Alcune fasi sono state chiuse per avanzamento forzato (2), segnale che non sempre il candidato ha portato evidenze sufficienti entro il budget disponibile. Nel runtime sono emersi segnali osservabili soprattutto sull’asse decisione, sintesi, gestione dell’attrito. La fragilità più ricorrente emersa nel colloquio è questa: Gli esempi restano ancora troppo generici e poco dimostrativi.",
+      "runtimeNarrative": "La sessione ha coperto in modo abbastanza utile aderenza al ruolo e caso concreto, anche se non tutte le fasi sono passate da un walkthrough pieno. È stato esplorato anche il livello decisionale. È stata toccata anche la gestione della pressione o dell’attrito. Le risposte restano mediamente abbastanza aderenti, ma con qualche allargamento o perdita di fuoco. Alcune fasi sono state chiuse per avanzamento forzato (2), segnale che non sempre il candidato ha portato evidenze sufficienti entro il budget disponibile. Nel runtime sono emersi segnali osservabili soprattutto sull’asse decisione, sintesi, gestione dell’attrito. La fragilità più ricorrente emersa nel colloquio è questa: Il contributo personale non emerge ancora con sufficiente chiarezza.",
       "dimensionAverages": {
-        "concreteness": 59,
-        "specificity": 52,
-        "evidence": 35,
-        "ownership": 25,
-        "structure": 40,
-        "clarity": 55,
-        "reflection": 20
+        "concreteness": 62,
+        "specificity": 55,
+        "evidence": 52,
+        "ownership": 29,
+        "structure": 45,
+        "clarity": 58,
+        "reflection": 20,
+        "questionAlignment": 66,
+        "motivationForChange": 0
       },
       "behavioralAxes": {
         "decision": {
-          "score": 46,
-          "band": "weak"
+          "score": 59,
+          "band": "medium"
         },
         "synthesis": {
-          "score": 55,
+          "score": 61,
           "band": "medium"
         },
         "conflict": {
-          "score": 46,
+          "score": 56,
+          "band": "medium"
+        },
+        "positioning": {
+          "score": 42,
           "band": "weak"
+        }
+      },
+      "questionQuality": {
+        "alignment": {
+          "averageScore": 66,
+          "band": "medium",
+          "offTopicRiskCounts": {
+            "low": 6,
+            "medium": 0,
+            "high": 0
+          },
+          "narrative": "L’aderenza alla domanda è complessivamente discreta, ma in alcuni passaggi la risposta tende ad allargarsi o a perdere un po’ di fuoco."
+        },
+        "motivationForChange": {
+          "detected": false,
+          "averageScore": 0,
+          "band": "weak",
+          "narrative": "Nella sessione non è emersa una domanda esplicita sulla motivazione al cambiamento."
         }
       },
       "recurringStrengths": [
@@ -3473,66 +3756,86 @@ switchPanel("prep");
           "count": 5
         },
         {
+          "label": "La risposta resta abbastanza centrata sulla domanda e non deraglia fuori asse.",
+          "count": 5
+        },
+        {
           "label": "La risposta è abbastanza concreta da sembrare ancorata a un’esperienza reale.",
           "count": 4
+        },
+        {
+          "label": "La risposta porta evidenze o risultati concreti a supporto di ciò che afferma.",
+          "count": 4
+        },
+        {
+          "label": "La risposta arriva al punto con una buona chiarezza espositiva.",
+          "count": 2
+        },
+        {
+          "label": "La risposta ha una struttura chiara e facile da seguire.",
+          "count": 2
+        },
+        {
+          "label": "La risposta fornisce evidenze o supporto orientato ai risultati.",
+          "count": 1
         }
       ],
       "recurringWeaknesses": [
         {
-          "label": "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
-          "count": 7
-        },
-        {
           "label": "La risposta non mostra ancora riflessione, apprendimento o adattamento.",
-          "count": 7
+          "count": 6
         },
         {
-          "label": "La risposta offre evidenze limitate di impatto, risultato o outcome misurabile.",
-          "count": 7
+          "label": "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
+          "count": 5
         },
         {
           "label": "La risposta sarebbe più facile da seguire con una struttura più chiara.",
-          "count": 7
+          "count": 4
+        },
+        {
+          "label": "La risposta offre evidenze limitate di impatto, risultato o outcome misurabile.",
+          "count": 2
         },
         {
           "label": "La risposta resta troppo astratta e beneficerebbe di un esempio più concreto.",
-          "count": 3
+          "count": 2
         },
         {
           "label": "La risposta non è abbastanza specifica su contesto, scope o azioni.",
-          "count": 2
+          "count": 1
         }
       ],
       "recurringImprovementHints": [
         {
           "label": "Aggiungi una breve riflessione su ciò che hai imparato o su come ti sei adattato.",
-          "count": 7
-        },
-        {
-          "label": "Aggiungi una situazione concreta con contesto, azione e risultato invece di restare sul generale.",
-          "count": 7
+          "count": 6
         },
         {
           "label": "Esplicita meglio che cosa hai posseduto, deciso o consegnato personalmente.",
-          "count": 7
-        },
-        {
-          "label": "Inserisci un outcome, una metrica o un effetto visibile del tuo lavoro.",
-          "count": 7
+          "count": 6
         },
         {
           "label": "Usa una sequenza semplice come situazione, azione, risultato.",
-          "count": 7
+          "count": 6
+        },
+        {
+          "label": "Aggiungi una situazione concreta con contesto, azione e risultato invece di restare sul generale.",
+          "count": 5
+        },
+        {
+          "label": "Inserisci un outcome, una metrica o un effetto visibile del tuo lavoro.",
+          "count": 2
+        },
+        {
+          "label": "Resta più vicino alla domanda: prima chiarisci il punto centrale, poi aggiungi contesto.",
+          "count": 1
         }
       ],
       "topicCoverage": [
         {
-          "label": "Ampiezza della Leadership",
-          "count": 1
-        },
-        {
-          "label": "Approfondimento Leadership",
-          "count": 1
+          "label": "Aderenza al ruolo",
+          "count": 2
         },
         {
           "label": "Caso concreto",
@@ -3547,18 +3850,14 @@ switchPanel("prep");
           "count": 1
         },
         {
-          "label": "Percorso",
-          "count": 1
-        },
-        {
           "label": "Pressione / Attrito",
           "count": 1
         }
       ],
       "runtimeSignals": {
         "coverage": {
-          "walkthrough": true,
-          "roleContext": false,
+          "walkthrough": false,
+          "roleContext": true,
           "case1": true,
           "decision": true,
           "pressure": true,
@@ -3572,7 +3871,19 @@ switchPanel("prep");
         },
         "observedSignals": [
           {
+            "label": "Aderenza alla domanda",
+            "count": 1
+          },
+          {
+            "label": "Coerenza del racconto",
+            "count": 1
+          },
+          {
             "label": "Coinvolgimento nella risposta",
+            "count": 1
+          },
+          {
+            "label": "Esempio concreto",
             "count": 1
           },
           {
@@ -3588,19 +3899,19 @@ switchPanel("prep");
             "count": 1
           },
           {
-            "label": "Specificità del racconto",
+            "label": "Presenza di evidenze",
             "count": 1
           },
           {
-            "label": "Trade-off esplicitato",
+            "label": "Sequenza chiara delle azioni",
+            "count": 1
+          },
+          {
+            "label": "Specificità del racconto",
             "count": 1
           }
         ],
         "deviationFlags": [
-          {
-            "label": "Gli esempi restano ancora troppo generici e poco dimostrativi.",
-            "count": 1
-          },
           {
             "label": "Il contributo personale non emerge ancora con sufficiente chiarezza.",
             "count": 1
@@ -3608,7 +3919,7 @@ switchPanel("prep");
         ],
         "phaseCompletionStats": {
           "touchedPhases": 7,
-          "completedBySignal": 3,
+          "completedBySignal": 5,
           "completedByForcedExit": 2
         },
         "phaseLedgerSummary": [
@@ -3621,23 +3932,23 @@ switchPanel("prep");
           },
           {
             "phaseName": "WALKTHROUGH",
-            "status": "completed",
-            "attempts": 2,
-            "completedBy": "forced_exit",
-            "lastStepLabel": "Approfondimento Leadership"
-          },
-          {
-            "phaseName": "ROLE_CONTEXT",
             "status": "pending",
             "attempts": 0,
             "completedBy": "",
             "lastStepLabel": ""
           },
           {
+            "phaseName": "ROLE_CONTEXT",
+            "status": "completed",
+            "attempts": 2,
+            "completedBy": "forced_exit",
+            "lastStepLabel": "Aderenza al ruolo"
+          },
+          {
             "phaseName": "CASE_1",
             "status": "completed",
             "attempts": 1,
-            "completedBy": "",
+            "completedBy": "signal",
             "lastStepLabel": "Caso concreto"
           },
           {
@@ -3658,8 +3969,8 @@ switchPanel("prep");
             "phaseName": "DEPTH_CHECK",
             "status": "completed",
             "attempts": 1,
-            "completedBy": "",
-            "lastStepLabel": "Ampiezza della Leadership"
+            "completedBy": "signal",
+            "lastStepLabel": "Closing"
           },
           {
             "phaseName": "CLOSING",
@@ -3685,6 +3996,7 @@ switchPanel("prep");
         "score_layer",
         "role_fit",
         "answer_quality",
+        "question_quality",
         "runtime_read",
         "strengths",
         "risks",
@@ -3695,36 +4007,40 @@ switchPanel("prep");
       ],
       "overall": {
         "title": "Sintesi generale",
-        "candidateSummary": "Analista di business con 6 anni di esperienza in ambienti di servizi digitali e commercio elettronico",
+        "candidateSummary": "Professionista cross-funzionale con 7 anni di esperienza in analisi aziendale, coordinamento di progetti, reporting e miglioramento dei processi in ambienti digitali e di servizio.",
         "roleTitle": "Product Operations Manager",
-        "shortRationale": "Il candidato ha una buona esperienza nel settore dei servizi digitali e del commercio elettronico, con competenze tecniche e strumenti pertinenti al ruolo di Product Operations Manager.",
+        "shortRationale": "Il candidato ha una forte esperienza in analisi aziendale e coordinamento di progetti, con competenze tecniche rilevanti come SQL e strumenti BI.",
         "narrativeSummary": "La sessione mostra attualmente un profilo formale debole e trarrebbe beneficio da risposte più concrete, strutturate e supportate da evidenze.",
-        "runtimeNarrative": "La sessione ha raccolto segnali utili ma con una copertura ancora parziale delle fasi chiave. È stato esplorato anche il livello decisionale. È stata toccata anche la gestione della pressione o dell’attrito. Alcune fasi sono state chiuse per avanzamento forzato (2), segnale che non sempre il candidato ha portato evidenze sufficienti entro il budget disponibile. Nel runtime sono emersi segnali osservabili soprattutto sull’asse decisione, sintesi, gestione dell’attrito. La fragilità più ricorrente emersa nel colloquio è questa: Gli esempi restano ancora troppo generici e poco dimostrativi.",
+        "runtimeNarrative": "La sessione ha coperto in modo abbastanza utile aderenza al ruolo e caso concreto, anche se non tutte le fasi sono passate da un walkthrough pieno. È stato esplorato anche il livello decisionale. È stata toccata anche la gestione della pressione o dell’attrito. Le risposte restano mediamente abbastanza aderenti, ma con qualche allargamento o perdita di fuoco. Alcune fasi sono state chiuse per avanzamento forzato (2), segnale che non sempre il candidato ha portato evidenze sufficienti entro il budget disponibile. Nel runtime sono emersi segnali osservabili soprattutto sull’asse decisione, sintesi, gestione dell’attrito. La fragilità più ricorrente emersa nel colloquio è questa: Il contributo personale non emerge ancora con sufficiente chiarezza.",
         "metrics": {
           "Ruolo target": "Product Operations Manager",
           "Valutazione complessiva": "solid_fit",
-          "Score di aderenza": 70,
-          "Score qualità risposte": 41,
-          "Seniority percepita candidato": "mid",
-          "Seniority attesa dal ruolo": "mid"
+          "Score di aderenza": 80,
+          "Score qualità risposte": 48,
+          "Seniority percepita candidato": "senior",
+          "Seniority attesa dal ruolo": "senior"
         }
       },
       "scoreLayer": {
         "title": "Valutazione sintetica",
         "overallBand": "weak",
-        "fitScore": 70,
-        "answerScore": 41,
+        "fitScore": 80,
+        "answerScore": 48,
         "behavioralAxes": {
           "Decisione": {
-            "score": 46,
-            "band": "weak"
+            "score": 59,
+            "band": "medium"
           },
           "Sintesi": {
-            "score": 55,
+            "score": 61,
             "band": "medium"
           },
           "Attrito": {
-            "score": 46,
+            "score": 56,
+            "band": "medium"
+          },
+          "Posizionamento": {
+            "score": 42,
             "band": "weak"
           }
         }
@@ -3734,59 +4050,85 @@ switchPanel("prep");
         "recommendationBand": "solid_fit",
         "confidence": "medium",
         "strengths": [
-          "Competenze tecniche",
-          "Esperienza con strumenti di business intelligence"
+          "analisi dei dati",
+          "comunicazione",
+          "collaborazione"
         ],
         "risks": [
-          "Esperienza di leadership"
+          "mancanza di esperienza con SaaS"
         ],
         "clarificationsNeeded": [
-          "Proprietà della reportistica operativa"
+          "Esperienza con SaaS"
         ],
         "transferableStrengths": [
-          "Analisi dei dati",
-          "Reporting"
+          "comunicazione",
+          "collaborazione"
         ],
         "matchedSkills": [
           "SQL",
-          "Tableau"
+          "analisi aziendale"
         ],
         "missingSkills": [
-          "Power BI"
+          "SaaS"
         ]
       },
       "answerQuality": {
         "title": "Qualità delle risposte",
         "overallBand": "weak",
-        "overallScore": 41,
-        "totalAnswers": 7,
+        "overallScore": 48,
+        "totalAnswers": 6,
         "dimensionAverages": {
-          "concreteness": 59,
-          "specificity": 52,
-          "evidence": 35,
-          "ownership": 25,
-          "structure": 40,
-          "clarity": 55,
-          "reflection": 20
+          "concreteness": 62,
+          "specificity": 55,
+          "evidence": 52,
+          "ownership": 29,
+          "structure": 45,
+          "clarity": 58,
+          "reflection": 20,
+          "questionAlignment": 66,
+          "motivationForChange": 0
         },
         "recurringStrengths": [
           "La risposta è sufficientemente specifica su contesto, scope e azioni.",
-          "La risposta è abbastanza concreta da sembrare ancorata a un’esperienza reale."
+          "La risposta resta abbastanza centrata sulla domanda e non deraglia fuori asse.",
+          "La risposta è abbastanza concreta da sembrare ancorata a un’esperienza reale.",
+          "La risposta porta evidenze o risultati concreti a supporto di ciò che afferma.",
+          "La risposta arriva al punto con una buona chiarezza espositiva."
         ],
         "recurringWeaknesses": [
-          "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
           "La risposta non mostra ancora riflessione, apprendimento o adattamento.",
-          "La risposta offre evidenze limitate di impatto, risultato o outcome misurabile.",
+          "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
           "La risposta sarebbe più facile da seguire con una struttura più chiara.",
+          "La risposta offre evidenze limitate di impatto, risultato o outcome misurabile.",
           "La risposta resta troppo astratta e beneficerebbe di un esempio più concreto."
         ]
       },
+      "questionQuality": {
+        "title": "Aderenza alla domanda",
+        "alignment": {
+          "averageScore": 66,
+          "band": "medium",
+          "narrative": "L’aderenza alla domanda è complessivamente discreta, ma in alcuni passaggi la risposta tende ad allargarsi o a perdere un po’ di fuoco.",
+          "offTopicRiskCounts": {
+            "Fuori tema basso": 6,
+            "Fuori tema medio": 0,
+            "Fuori tema alto": 0
+          }
+        },
+        "motivationForChange": {
+          "detected": false,
+          "averageScore": 0,
+          "band": "weak",
+          "answeredCount": 0,
+          "narrative": "Nella sessione non è emersa una domanda esplicita sulla motivazione al cambiamento."
+        }
+      },
       "runtimeRead": {
         "title": "Lettura del colloquio",
-        "runtimeNarrative": "La sessione ha raccolto segnali utili ma con una copertura ancora parziale delle fasi chiave. È stato esplorato anche il livello decisionale. È stata toccata anche la gestione della pressione o dell’attrito. Alcune fasi sono state chiuse per avanzamento forzato (2), segnale che non sempre il candidato ha portato evidenze sufficienti entro il budget disponibile. Nel runtime sono emersi segnali osservabili soprattutto sull’asse decisione, sintesi, gestione dell’attrito. La fragilità più ricorrente emersa nel colloquio è questa: Gli esempi restano ancora troppo generici e poco dimostrativi.",
+        "runtimeNarrative": "La sessione ha coperto in modo abbastanza utile aderenza al ruolo e caso concreto, anche se non tutte le fasi sono passate da un walkthrough pieno. È stato esplorato anche il livello decisionale. È stata toccata anche la gestione della pressione o dell’attrito. Le risposte restano mediamente abbastanza aderenti, ma con qualche allargamento o perdita di fuoco. Alcune fasi sono state chiuse per avanzamento forzato (2), segnale che non sempre il candidato ha portato evidenze sufficienti entro il budget disponibile. Nel runtime sono emersi segnali osservabili soprattutto sull’asse decisione, sintesi, gestione dell’attrito. La fragilità più ricorrente emersa nel colloquio è questa: Il contributo personale non emerge ancora con sufficiente chiarezza.",
         "coverage": {
-          "walkthrough": true,
-          "roleContext": false,
+          "walkthrough": false,
+          "roleContext": true,
           "case1": true,
           "decision": true,
           "pressure": true,
@@ -3799,20 +4141,21 @@ switchPanel("prep");
           "conflict": true
         },
         "observedSignals": [
+          "Aderenza alla domanda",
+          "Coerenza del racconto",
           "Coinvolgimento nella risposta",
+          "Esempio concreto",
           "Gestione del conflitto",
           "Gestione stakeholder",
           "Presa di decisione",
-          "Specificità del racconto",
-          "Trade-off esplicitato"
+          "Presenza di evidenze"
         ],
         "deviationFlags": [
-          "Gli esempi restano ancora troppo generici e poco dimostrativi.",
           "Il contributo personale non emerge ancora con sufficiente chiarezza."
         ],
         "phaseCompletionStats": {
           "touchedPhases": 7,
-          "completedBySignal": 3,
+          "completedBySignal": 5,
           "completedByForcedExit": 2
         },
         "phaseLedgerSummary": [
@@ -3825,23 +4168,23 @@ switchPanel("prep");
           },
           {
             "phaseName": "WALKTHROUGH",
-            "status": "completed",
-            "attempts": 2,
-            "completedBy": "forced_exit",
-            "lastStepLabel": "Approfondimento Leadership"
-          },
-          {
-            "phaseName": "ROLE_CONTEXT",
             "status": "pending",
             "attempts": 0,
             "completedBy": "",
             "lastStepLabel": ""
           },
           {
+            "phaseName": "ROLE_CONTEXT",
+            "status": "completed",
+            "attempts": 2,
+            "completedBy": "forced_exit",
+            "lastStepLabel": "Aderenza al ruolo"
+          },
+          {
             "phaseName": "CASE_1",
             "status": "completed",
             "attempts": 1,
-            "completedBy": "",
+            "completedBy": "signal",
             "lastStepLabel": "Caso concreto"
           },
           {
@@ -3862,8 +4205,8 @@ switchPanel("prep");
             "phaseName": "DEPTH_CHECK",
             "status": "completed",
             "attempts": 1,
-            "completedBy": "",
-            "lastStepLabel": "Ampiezza della Leadership"
+            "completedBy": "signal",
+            "lastStepLabel": "Closing"
           },
           {
             "phaseName": "CLOSING",
@@ -3877,38 +4220,45 @@ switchPanel("prep");
       "strengths": {
         "title": "Punti forti",
         "roleStrengths": [
-          "Competenze tecniche",
-          "Esperienza con strumenti di business intelligence"
+          "analisi dei dati",
+          "comunicazione",
+          "collaborazione"
         ],
         "answerStrengths": [
           "La risposta è sufficientemente specifica su contesto, scope e azioni.",
-          "La risposta è abbastanza concreta da sembrare ancorata a un’esperienza reale."
+          "La risposta resta abbastanza centrata sulla domanda e non deraglia fuori asse.",
+          "La risposta è abbastanza concreta da sembrare ancorata a un’esperienza reale.",
+          "La risposta porta evidenze o risultati concreti a supporto di ciò che afferma.",
+          "La risposta arriva al punto con una buona chiarezza espositiva."
         ],
         "combinedHighlights": [
-          "Competenze tecniche",
-          "Esperienza con strumenti di business intelligence",
+          "analisi dei dati",
+          "comunicazione",
+          "collaborazione",
           "La risposta è sufficientemente specifica su contesto, scope e azioni.",
-          "La risposta è abbastanza concreta da sembrare ancorata a un’esperienza reale."
+          "La risposta resta abbastanza centrata sulla domanda e non deraglia fuori asse.",
+          "La risposta è abbastanza concreta da sembrare ancorata a un’esperienza reale.",
+          "La risposta porta evidenze o risultati concreti a supporto di ciò che afferma.",
+          "La risposta arriva al punto con una buona chiarezza espositiva."
         ]
       },
       "risks": {
         "title": "Aree critiche",
         "roleRisks": [
-          "Esperienza di leadership"
+          "mancanza di esperienza con SaaS"
         ],
         "answerWeaknesses": [
-          "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
           "La risposta non mostra ancora riflessione, apprendimento o adattamento.",
-          "La risposta offre evidenze limitate di impatto, risultato o outcome misurabile.",
+          "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
           "La risposta sarebbe più facile da seguire con una struttura più chiara.",
+          "La risposta offre evidenze limitate di impatto, risultato o outcome misurabile.",
           "La risposta resta troppo astratta e beneficerebbe di un esempio più concreto."
         ],
         "deviationFlags": [
-          "Gli esempi restano ancora troppo generici e poco dimostrativi.",
           "Il contributo personale non emerge ancora con sufficiente chiarezza."
         ],
         "clarificationsNeeded": [
-          "Proprietà della reportistica operativa"
+          "Esperienza con SaaS"
         ]
       },
       "improvements": {
@@ -3922,10 +4272,11 @@ switchPanel("prep");
         ],
         "recurringImprovementHints": [
           "Aggiungi una breve riflessione su ciò che hai imparato o su come ti sei adattato.",
-          "Aggiungi una situazione concreta con contesto, azione e risultato invece di restare sul generale.",
           "Esplicita meglio che cosa hai posseduto, deciso o consegnato personalmente.",
+          "Usa una sequenza semplice come situazione, azione, risultato.",
+          "Aggiungi una situazione concreta con contesto, azione e risultato invece di restare sul generale.",
           "Inserisci un outcome, una metrica o un effetto visibile del tuo lavoro.",
-          "Usa una sequenza semplice come situazione, azione, risultato."
+          "Resta più vicino alla domanda: prima chiarisci il punto centrale, poi aggiungi contesto."
         ]
       },
       "recruiterRecommendation": {
@@ -3936,28 +4287,29 @@ switchPanel("prep");
         "recruiterRead": {
           "strengths": [
             "La risposta è sufficientemente specifica su contesto, scope e azioni.",
-            "La risposta è abbastanza concreta da sembrare ancorata a un’esperienza reale."
+            "La risposta resta abbastanza centrata sulla domanda e non deraglia fuori asse.",
+            "La risposta è abbastanza concreta da sembrare ancorata a un’esperienza reale.",
+            "La risposta porta evidenze o risultati concreti a supporto di ciò che afferma."
           ],
           "risks": [
-            "Esperienza di leadership",
-            "Gli esempi restano ancora troppo generici e poco dimostrativi.",
+            "mancanza di esperienza con SaaS",
             "Il contributo personale non emerge ancora con sufficiente chiarezza."
           ],
           "notes": [
-            "La sessione ha raccolto segnali utili ma con una copertura ancora parziale delle fasi chiave. È stato esplorato anche il livello decisionale. È stata toccata anche la gestione della pressione o dell’attrito. Alcune fasi sono state chiuse per avanzamento forzato (2), segnale che non sempre il candidato ha portato evidenze sufficienti entro il budget disponibile. Nel runtime sono emersi segnali osservabili soprattutto sull’asse decisione, sintesi, gestione dell’attrito. La fragilità più ricorrente emersa nel colloquio è questa: Gli esempi restano ancora troppo generici e poco dimostrativi.",
-            "Il candidato ha una buona esperienza nel settore dei servizi digitali e del commercio elettronico, con competenze tecniche e strumenti pertinenti al ruolo di Product Operations Manager."
+            "La sessione ha coperto in modo abbastanza utile aderenza al ruolo e caso concreto, anche se non tutte le fasi sono passate da un walkthrough pieno. È stato esplorato anche il livello decisionale. È stata toccata anche la gestione della pressione o dell’attrito. Le risposte restano mediamente abbastanza aderenti, ma con qualche allargamento o perdita di fuoco. Alcune fasi sono state chiuse per avanzamento forzato (2), segnale che non sempre il candidato ha portato evidenze sufficienti entro il budget disponibile. Nel runtime sono emersi segnali osservabili soprattutto sull’asse decisione, sintesi, gestione dell’attrito. La fragilità più ricorrente emersa nel colloquio è questa: Il contributo personale non emerge ancora con sufficiente chiarezza.",
+            "L’aderenza alla domanda è complessivamente discreta, ma in alcuni passaggi la risposta tende ad allargarsi o a perdere un po’ di fuoco.",
+            "Nella sessione non è emersa una domanda esplicita sulla motivazione al cambiamento.",
+            "Il candidato ha una forte esperienza in analisi aziendale e coordinamento di progetti, con competenze tecniche rilevanti come SQL e strumenti BI."
           ]
         }
       },
       "cvAdvice": {
         "title": "Suggerimenti per il CV",
         "cvImprovementHints": [
-          "Aggiungere esperienza di leadership",
-          "Aggiungere competenze con Power BI"
+          "Aggiungere esperienze specifiche con SaaS e ambienti tecnologici in rapida evoluzione."
         ],
         "positioningHints": [
-          "Sottolineare l'esperienza nel settore dei servizi digitali",
-          "Sottolineare le competenze tecniche e strumenti pertinenti al ruolo"
+          "Sottolineare la capacità di lavorare in ambienti tecnologici in rapida evoluzione e di analizzare i dati per prendere decisioni informate."
         ]
       },
       "finalTakeaway": {
@@ -3977,7 +4329,7 @@ switchPanel("prep");
       "usedFallbackJobDescription": false,
       "completed": true,
       "answersProvided": 7,
-      "answersRecorded": 7,
+      "answersRecorded": 6,
       "sessionCompleted": true,
       "requestedInterviewLengthMode": "short",
       "requestedInterviewFocusMode": "pressure",
@@ -3997,15 +4349,16 @@ switchPanel("prep");
     const sessionResult = JSON.parse(document.getElementById("session-result-json").textContent || "{}");
     const shellOptions = JSON.parse(document.getElementById("shell-options-json").textContent || "{}");
 
-   const defaultIntakeState = {
+
+
+ const defaultIntakeState = {
   targetRole: "",
   cvText: "",
   jdText: "",
   uiLocale: "it",
   sessionLocale: "it",
   interviewLengthMode: "standard",
-  inputMode: "text",
-  selectedDemoKey: null
+  inputMode: "text"
 };
 
 
@@ -4101,6 +4454,8 @@ const flowHeaderText = document.getElementById("flowHeaderText");
 
 
 const fakeStartButton = document.getElementById("fakeStartButton");
+const resetSetupButton = document.getElementById("resetSetupButton");
+
 const demoButtons = Array.from(document.querySelectorAll(".demo-button[data-demo]"));
 const reportNavLink = document.querySelector('.nav-link.free[href="./fringe_interview_interactive_shell_report.html"]');
 const demoActiveBanner = document.getElementById("demoActiveBanner");
@@ -4108,11 +4463,31 @@ const demoActiveLabel = document.getElementById("demoActiveLabel");
 
 const flowBanner = document.getElementById("flowBanner");
 
+
 const STORAGE_KEY = "fringe_interview_setup_state_v1";
+const SESSION_STATE_KEY = "fringe_interview_setup_transient_v1";
+
 
 function loadPersistedState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+
+    return {
+      uiLocale: parsed.uiLocale,
+      sessionLocale: parsed.sessionLocale,
+      interviewLengthMode: parsed.interviewLengthMode,
+      inputMode: parsed.inputMode
+    };
+  } catch (error) {
+    return {};
+  }
+}
+
+function loadSessionState() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_STATE_KEY);
     if (!raw) return {};
     return JSON.parse(raw);
   } catch (error) {
@@ -4120,15 +4495,52 @@ function loadPersistedState() {
   }
 }
 
+function persistSessionState() {
+  try {
+    const safeSessionState = {
+      targetRole: intakeState.targetRole,
+      cvText: intakeState.cvText,
+      jdText: intakeState.jdText,
+      selectedDemoKey: intakeState.selectedDemoKey,
+      simulationVisited: intakeState.simulationVisited
+    };
+    sessionStorage.setItem(SESSION_STATE_KEY, JSON.stringify(safeSessionState));
+  } catch (error) {
+    // niente
+  }
+}
+
+function clearSessionState() {
+  try {
+    sessionStorage.removeItem(SESSION_STATE_KEY);
+  } catch (error) {
+    // niente
+  }
+}
+
+
 function persistState() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(intakeState));
+    const safeState = {
+      ...intakeState,
+      selectedDemoKey: "",
+      simulationVisited: isDemoSelected() ? false : intakeState.simulationVisited,
+      targetRole: isDemoSelected() ? "" : intakeState.targetRole,
+      cvText: isDemoSelected() ? "" : intakeState.cvText,
+      jdText: isDemoSelected() ? "" : intakeState.jdText
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(safeState));
   } catch (error) {
     // niente: in locale/file può anche non essere disponibile
   }
 }
 
 const persistedState = loadPersistedState();
+const sessionState = loadSessionState();
+
+if (persistedState && persistedState.selectedDemoKey) {
+  persistedState.selectedDemoKey = "";
+}
 
 if (!("selectedDemoKey" in intakeState)) {
   intakeState.selectedDemoKey = "";
@@ -4138,16 +4550,17 @@ if (!("simulationVisited" in intakeState)) {
 }
 
 Object.assign(intakeState, {
-  targetRole: persistedState.targetRole ?? defaultIntakeState.targetRole ?? "",
-  cvText: persistedState.cvText ?? defaultIntakeState.cvText ?? "",
-  jdText: persistedState.jdText ?? defaultIntakeState.jdText ?? "",
-  uiLocale: persistedState.uiLocale ?? defaultIntakeState.uiLocale ?? "it",
-  sessionLocale: persistedState.sessionLocale ?? defaultIntakeState.sessionLocale ?? "it",
-  interviewLengthMode: persistedState.interviewLengthMode ?? defaultIntakeState.interviewLengthMode ?? "standard",
-  inputMode: persistedState.inputMode ?? defaultIntakeState.inputMode ?? "text",
-  selectedDemoKey: persistedState.selectedDemoKey ?? "",
-  simulationVisited: persistedState.simulationVisited ?? false
+  targetRole: sessionState.targetRole ?? "",
+  cvText: sessionState.cvText ?? "",
+  jdText: sessionState.jdText ?? "",
+  uiLocale: persistedState.uiLocale ?? "it",
+  sessionLocale: persistedState.sessionLocale ?? "it",
+  interviewLengthMode: persistedState.interviewLengthMode ?? "standard",
+  inputMode: persistedState.inputMode ?? "text",
+  selectedDemoKey: sessionState.selectedDemoKey ?? "",
+  simulationVisited: sessionState.simulationVisited ?? false
 });
+
 
 const modeCopy = {
   short: {
@@ -4214,7 +4627,15 @@ function hideFlowBanner() {
   flowBanner.style.display = "none";
 }
 
+
 function showPreparationGateMessageForSimulation() {
+  if (flowHeader && flowHeaderText) {
+    flowHeader.classList.remove("ok", "demo");
+    flowHeader.classList.add("warn");
+    flowHeaderText.textContent =
+      "⚠️ Per aprire la simulazione completa prima la fase 1 · Preparazione oppure seleziona uno dei 4 esempi demo.";
+  }
+
   showFlowBanner(
     "Per aprire la simulazione completa prima la fase 1 · Preparazione oppure seleziona uno dei 4 esempi demo."
   );
@@ -4222,21 +4643,27 @@ function showPreparationGateMessageForSimulation() {
 }
 
 function showPreparationGateMessageForReport() {
+  let message = "Prima di aprire il report completa i passaggi necessari.";
+
   if (!hasMinimumPreparation() && !isDemoSelected()) {
-    showFlowBanner(
-      "Per aprire il report completa prima la fase 1 · Preparazione e poi la fase 2 · Simulazione. In alternativa puoi usare uno dei 4 esempi demo."
-    );
+    message =
+      "⚠️ Per aprire il report completa prima la fase 1 · Preparazione e poi la fase 2 · Simulazione. In alternativa puoi usare uno dei 4 esempi demo.";
   } else if (!isDemoSelected() && intakeState.simulationVisited !== true) {
-    showFlowBanner(
-      "La fase 1 · Preparazione è completa. Prima di aprire il report devi però passare dalla fase 2 · Simulazione."
-    );
-  } else {
-    showFlowBanner(
-      "Prima di aprire il report completa i passaggi necessari."
-    );
+    message =
+      "⚠️ La fase 1 · Preparazione è completa. Prima di aprire il report devi però passare dalla fase 2 · Simulazione.";
   }
+
+  if (flowHeader && flowHeaderText) {
+    flowHeader.classList.remove("ok", "demo");
+    flowHeader.classList.add("warn");
+    flowHeaderText.textContent = message;
+  }
+
+  showFlowBanner(message);
   switchPanel("prep");
 }
+
+
 
 
 function setCompleteState({ boxEl, stateEl, complete, okLabel = "Completo", missingLabel = "Da inserire" }) {
@@ -4367,8 +4794,10 @@ function updateUi() {
     hideFlowBanner();
   }
 
-  updateDemoBanner();
+
+   updateDemoBanner();
   persistState();
+  persistSessionState();
 
   // ===== FLOW HEADER LOGIC =====
 
@@ -4378,14 +4807,19 @@ const isDemo = !!intakeState.selectedDemoKey;
 
 if (isDemo) {
   flowHeader.classList.add("demo");
-  flowHeaderText.textContent = "🧪 Stai usando un profilo di esempio: risultati dimostrativi";
-} else if (!prepReady) {
-  flowHeader.classList.add("warn");
-  flowHeaderText.textContent = "⚠️ Step 1: inserisci almeno ruolo e CV per procedere";
-} else {
+  flowHeaderText.textContent =
+    "🧪 Profilo demo attivo — puoi usare simulazione e report in modalità dimostrativa.";
+} else if (prepReady) {
   flowHeader.classList.add("ok");
-  flowHeaderText.textContent = "✔️ Dati pronti — puoi passare alla simulazione";
+  flowHeaderText.textContent =
+    "✔️ Dati pronti — puoi passare alla simulazione.";
+} else {
+  flowHeader.classList.add("");
+  flowHeaderText.textContent =
+    "Compila ruolo e CV per sbloccare la simulazione. La job description migliora la qualità del risultato ma non è obbligatoria.";
 }
+
+
 
 // ===== END FLOW HEADER LOGIC =====
 }
@@ -4491,6 +4925,7 @@ document.querySelectorAll(".nav-btn[data-panel]").forEach((button) => {
 
 });
 
+
 if (reportNavLink) {
   reportNavLink.addEventListener("click", (event) => {
     if (!canOpenReport()) {
@@ -4501,6 +4936,24 @@ if (reportNavLink) {
     persistState();
   });
 }
+
+
+if (resetSetupButton) {
+  resetSetupButton.addEventListener("click", () => {
+    intakeState.selectedDemoKey = "";
+    intakeState.simulationVisited = false;
+
+    targetRoleInput.value = "";
+    cvTextInput.value = "";
+    jdTextInput.value = "";
+
+    clearSessionState();
+    hideFlowBanner();
+    updateUi();
+    switchPanel("prep");
+  });
+}
+
 
 updateUi();
 switchPanel("prep");
