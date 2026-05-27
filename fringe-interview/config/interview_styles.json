@@ -1,0 +1,96 @@
+{
+  "supportive_coach": {
+    "label": "Supportive Coach",
+
+    "description":
+      "Approccio collaborativo e orientato al miglioramento. Il recruiter aiuta il candidato a chiarire e rafforzare le risposte.",
+
+    "followupAggressiveness": "low",
+    "consistencyStrictness": "medium",
+    "verbosityTolerance": "high",
+    "pressureEscalation": "low",
+    "coachingStyle": "high",
+
+    "preferredFollowupTypes": [
+      "clarification",
+      "context_expansion",
+      "example_request"
+    ]
+  },
+
+  "hr_relational": {
+    "label": "HR Relational",
+
+    "description":
+      "Approccio relazionale e conversazionale. Valuta chiarezza, motivazione e coerenza generale.",
+
+    "followupAggressiveness": "low",
+    "consistencyStrictness": "medium",
+    "verbosityTolerance": "medium",
+    "pressureEscalation": "low",
+    "coachingStyle": "medium",
+
+    "preferredFollowupTypes": [
+      "motivation_probe",
+      "clarification",
+      "consistency_probe"
+    ]
+  },
+
+  "structured_corporate": {
+    "label": "Structured Corporate",
+
+    "description":
+      "Approccio strutturato orientato a responsabilità, ownership, decisioni e risultati concreti.",
+
+    "followupAggressiveness": "medium",
+    "consistencyStrictness": "high",
+    "verbosityTolerance": "low",
+    "pressureEscalation": "medium",
+    "coachingStyle": "low",
+
+    "preferredFollowupTypes": [
+      "decision_tradeoff_probe",
+      "ownership_probe",
+      "consistency_probe"
+    ]
+  },
+
+  "technical_analytical": {
+    "label": "Technical Analytical",
+
+    "description":
+      "Approccio focalizzato su processo decisionale, logica, causality e profondità tecnica.",
+
+    "followupAggressiveness": "medium",
+    "consistencyStrictness": "high",
+    "verbosityTolerance": "low",
+    "pressureEscalation": "medium",
+    "coachingStyle": "low",
+
+    "preferredFollowupTypes": [
+      "decision_tradeoff_probe",
+      "deep_dive_probe",
+      "consistency_probe"
+    ]
+  },
+
+  "pressure_interviewer": {
+    "label": "Pressure Interviewer",
+
+    "description":
+      "Approccio ad alta pressione che interrompe facilmente e verifica robustezza, sintesi e coerenza sotto stress.",
+
+    "followupAggressiveness": "high",
+    "consistencyStrictness": "very_high",
+    "verbosityTolerance": "very_low",
+    "pressureEscalation": "high",
+    "coachingStyle": "minimal",
+
+    "preferredFollowupTypes": [
+      "pressure_probe",
+      "consistency_probe",
+      "decision_tradeoff_probe"
+    ]
+  }
+}

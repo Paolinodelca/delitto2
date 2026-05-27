@@ -1,0 +1,37 @@
+{
+  "quick": {
+    "label": "Quick Check",
+
+    "targetCoverageAreas": 4,
+
+    "maxAdaptiveFollowups": 1,
+
+    "maxFollowupsPerArea": 1,
+
+    "estimatedDurationMinutes": 10
+  },
+
+  "standard": {
+    "label": "Standard Interview",
+
+    "targetCoverageAreas": 6,
+
+    "maxAdaptiveFollowups": 3,
+
+    "maxFollowupsPerArea": 1,
+
+    "estimatedDurationMinutes": 25
+  },
+
+  "deep": {
+    "label": "Deep Assessment",
+
+    "targetCoverageAreas": 9,
+
+    "maxAdaptiveFollowups": 6,
+
+    "maxFollowupsPerArea": 2,
+
+    "estimatedDurationMinutes": 50
+  }
+}
