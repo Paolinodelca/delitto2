@@ -1091,6 +1091,29 @@ function isCoveredByAnnotations(textValue, annotations = []) {
   });
 }
 
+function renderCapabilityBlock(
+  context = {},
+  capabilityKey = "",
+  renderFn = null
+) {
+  if (!isCapabilityEnabled(context, capabilityKey)) {
+    return "";
+  }
+
+  if (typeof renderFn !== "function") {
+    return "";
+  }
+
+  return renderFn();
+}
+
+
+function isCapabilityEnabled(context = {}, capabilityKey = "") {
+  return context?.productCapabilities?.[capabilityKey] === true;
+}
+
+
+
 function classifyCoachingTheme(value) {
   const clean = normalizeForCompare(value);
 
@@ -1449,7 +1472,7 @@ function renderCvSupportDetails(cvSupportRead = {}) {
   `;
 }
 
-function renderWorkspaceAnswerPanel(item, isActive = false) {
+function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
   const score = Number(item?.score ?? 0);
   const questionIndex = item?.answerIndex || 0;
   const scoreClass = score >= 75 ? "good" : score >= 50 ? "mid" : "weak";
@@ -1520,7 +1543,11 @@ function renderWorkspaceAnswerPanel(item, isActive = false) {
         ${renderQuestionAlignmentAlert(item)}
 
 
-        ${renderRecruiterPanel(item)}
+        ${renderCapabilityBlock(
+        context,
+         "showRecruiterPanel",
+         () => renderRecruiterPanel(item, context)
+        )}
 
 
 
@@ -1683,7 +1710,7 @@ function humanizeCvMissingSignal(value) {
   return `Elemento da chiarire: ${clean}`;
 }
 
-function renderRecruiterPanel(item = {}) {
+function renderRecruiterPanel(item = {}, context = {}) {
   const recoveryHtml = renderRecruiterRecoveryPrompt(item);
   const patternNote = item?.coachingPatternNote || "";
 
@@ -1703,7 +1730,7 @@ function renderRecruiterPanel(item = {}) {
 
       ${recoveryHtml}
 
-      ${patternNote ? `
+      ${patternNote && isCapabilityEnabled(context, "showPatternMemory") ? `
         <div class="fr-note fr-answer-pattern-note fr-recruiter-pattern-note">
           <div class="fr-answer-mini-title">
             Pattern che sta notando
@@ -3525,7 +3552,7 @@ function renderOperationalPrioritiesModule(module) {
   `;
 }
 
-function renderAnswersWorkspaceModule(module) {
+function renderAnswersWorkspaceModule(module, context = {}) {
   const answersWorkspace = module?.data || {};
   const workspaceItems = ensureArray(answersWorkspace?.items);
   const activeWorkspaceIndex =
@@ -3553,29 +3580,36 @@ function renderAnswersWorkspaceModule(module) {
         </div>
         </div>
       ${workspaceItems.length > 0
-        ? workspaceItems.map((item) => renderWorkspaceAnswerPanel(item, item.answerIndex === activeWorkspaceIndex)).join("\n")
+        ? workspaceItems.map((item) =>
+    renderWorkspaceAnswerPanel(
+      item,
+      item.answerIndex === activeWorkspaceIndex,
+      context
+        )
+       ).join("\n")
         : `<p class="muted">Non emergono ancora risposte operative.</p>`
       }
     </div>
   `;
 }
 
-function renderAnswersModule(module) {
+function renderAnswersModule(module, context = {}) {
   if (!module || typeof module !== "object") {
     return "";
   }
 
   switch (module.key) {
     case "answersWorkspace":
-      return renderAnswersWorkspaceModule(module);
+      return renderAnswersWorkspaceModule(module, context);
     default:
       return "";
   }
 }
 
-
 function buildReportDataFromProReport(proReportV2) {
   return {
+    productMode: proReportV2?.productMode || "pro",
+    productCapabilities: proReportV2?.productCapabilities || {},
     overview: proReportV2?.overview || {},
     answersWorkspace: proReportV2?.answersWorkspace || {}
   };
@@ -12706,7 +12740,16 @@ details > summary[class*="summary"] {
     </div>
 
     <div class="report-section" data-report-section="answers">
-      ${answersModules.map(renderAnswersModule).join("\n")}
+
+
+      ${answersModules.map((module) =>
+    renderAnswersModule(module, {
+    productMode: proReportV2?.productMode || "pro",
+    productCapabilities: proReportV2?.productCapabilities || {}
+    })
+  ).join("\n")}
+
+
     </div>
 
     <div class="report-section" data-report-section="criticalPoints">

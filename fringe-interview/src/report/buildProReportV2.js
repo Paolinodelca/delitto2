@@ -67,7 +67,9 @@ export default function buildProReportV2({
   runtimeAnswers = [],
   openingPositioning,
   localeKey,
-  rawInput = {}
+  rawInput = {},
+  productMode = "pro",
+  productCapabilities = {}
 }) {
   const featuredAnswers = buildFeaturedAnswers(runtimeAnswers);
 
@@ -85,6 +87,8 @@ export default function buildProReportV2({
     proReportV2: {
       version: "3.0",
       locale: localeKey,
+      productMode,
+      productCapabilities,
 
       overview: {
         openingPositioning: buildOpeningPositioningSection(openingPositioning),

@@ -82,6 +82,57 @@ addCheck("Product modes reference existing styles/depths", () => {
   });
 });
 
+addCheck("Product modes expose required capabilities", () => {
+  const modes = readJson("config/product_interview_modes.json");
+
+  const requiredCapabilities = [
+    "showRecruiterPanel",
+    "showPatternMemory",
+    "showDetailedAnswerWorkspace",
+    "showPremiumRewriteWorkspace",
+    "allowStyleSelection",
+    "allowDeepAssessment",
+    "showPrintableProOutput"
+  ];
+
+  Object.entries(modes).forEach(([modeKey, mode]) => {
+    const capabilities = mode?.capabilities || {};
+
+    requiredCapabilities.forEach((capabilityKey) => {
+      if (typeof capabilities[capabilityKey] !== "boolean") {
+        throw new Error(
+          `Missing boolean capability '${capabilityKey}' in mode '${modeKey}'`
+        );
+      }
+    });
+  });
+});
+
+
+addCheck("Product capability policy consistency", () => {
+  const modes = readJson("config/product_interview_modes.json");
+
+  const pro = modes?.pro?.capabilities || {};
+  const premium = modes?.premium?.capabilities || {};
+  const free = modes?.free?.capabilities || {};
+
+  if (free.showRecruiterPanel !== false) {
+    throw new Error("FREE should not expose showRecruiterPanel by default.");
+  }
+
+  if (pro.showRecruiterPanel !== true) {
+    throw new Error("PRO should expose showRecruiterPanel.");
+  }
+
+  if (pro.showPremiumRewriteWorkspace !== false) {
+    throw new Error("PRO should not expose showPremiumRewriteWorkspace.");
+  }
+
+  if (premium.showPremiumRewriteWorkspace !== true) {
+    throw new Error("PREMIUM should expose showPremiumRewriteWorkspace.");
+  }
+});
+
 addCheck("Followup packs contain required adaptive triggers", () => {
   const packsIt = readJson("config/followup_packs.it.json").packs || {};
 
