@@ -1,0 +1,53 @@
+{
+  "interviewDepthOptions": {
+    "quick": {
+      "label": "Quick Check",
+      "description": "Simulazione breve per individuare rapidamente i punti principali."
+    },
+    "standard": {
+      "label": "Standard Interview",
+      "description": "Simulazione realistica con affondi selettivi."
+    },
+    "deep": {
+      "label": "Deep Assessment",
+      "description": "Simulazione approfondita con maggiore pressione e verifica di coerenza."
+    }
+  },
+  "interviewStyleOptions": {
+    "supportive_coach": {
+      "label": "Supportive Coach",
+      
+      "description": "Tono collaborativo, utile per allenarsi e migliorare le risposte."
+    },
+    "hr_relational": {
+        "label": "HR Relational",
+        "description": "Tono relazionale e conversazionale, focalizzato su motivazione, chiarezza e coerenza generale."
+        },
+    "structured_corporate": {
+      "label": "Structured Corporate",
+      "description": "Tono realistico e strutturato, orientato a responsabilità, risultati e coerenza."
+    },
+    "technical_analytical": {
+      "label": "Technical Analytical",
+      "description": "Tono analitico, focalizzato su logica, processo decisionale e dettagli operativi."
+    },
+    "pressure_interviewer": {
+      "label": "Pressure Interviewer",
+      "description": "Tono più sfidante, utile per stress test e simulazioni avanzate."
+    }
+  },
+  "interviewIntentOptions": {
+    "training": {
+      "label": "Training",
+      "description": "Allenamento guidato e meno pressante."
+    },
+    "simulation": {
+      "label": "Simulation",
+      "description": "Simulazione realistica di colloquio."
+    },
+    "stress_test": {
+      "label": "Stress Test",
+      "description": "Verifica più severa di coerenza, sintesi e solidità."
+    }
+  }
+}

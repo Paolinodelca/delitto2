@@ -19,6 +19,7 @@ addCheck("Config JSON files", () => {
     "config/interview_styles.json",
     "config/interview_depth_profiles.json",
     "config/product_interview_modes.json",
+    "config/product_experience_options.json",
     "config/followup_packs.it.json",
     "config/followup_packs.json"
   ].forEach(readJson);
@@ -39,6 +40,58 @@ addCheck("Product modes", () => {
     });
   });
 });
+
+addCheck("Product experience options", () => {
+  const options = readJson("config/product_experience_options.json");
+  const styles = readJson("config/interview_styles.json");
+  const depths = readJson("config/interview_depth_profiles.json");
+
+  Object.keys(depths).forEach((depthKey) => {
+    if (!options?.interviewDepthOptions?.[depthKey]) {
+      throw new Error(`Missing experience depth option: ${depthKey}`);
+    }
+  });
+
+  Object.keys(styles).forEach((styleKey) => {
+    if (!options?.interviewStyleOptions?.[styleKey]) {
+      throw new Error(`Missing experience style option: ${styleKey}`);
+    }
+  });
+
+  ["training", "simulation", "stress_test"].forEach((intentKey) => {
+    if (!options?.interviewIntentOptions?.[intentKey]) {
+      throw new Error(`Missing experience intent option: ${intentKey}`);
+    }
+  });
+});
+
+addCheck("Product modes expose valid available experience options", () => {
+  const modes = readJson("config/product_interview_modes.json");
+  const options = readJson("config/product_experience_options.json");
+
+  Object.entries(modes).forEach(([modeKey, mode]) => {
+    const available = mode?.availableExperienceOptions || {};
+
+    ["interviewDepth", "interviewStyle", "interviewIntent"].forEach((groupKey) => {
+      if (!Array.isArray(available[groupKey])) {
+        throw new Error(
+          `Missing availableExperienceOptions.${groupKey} array in mode '${modeKey}'`
+        );
+      }
+
+      available[groupKey].forEach((optionKey) => {
+        const optionGroupKey = `${groupKey}Options`;
+
+        if (!options?.[optionGroupKey]?.[optionKey]) {
+          throw new Error(
+            `Mode '${modeKey}' references missing ${groupKey} option: ${optionKey}`
+          );
+        }
+      });
+    });
+  });
+});
+
 
 addCheck("Interview styles", () => {
   const styles = readJson("config/interview_styles.json");

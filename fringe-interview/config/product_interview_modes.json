@@ -21,6 +21,18 @@
       "allowRepeatedPressure": false
     },
 
+    "availableExperienceOptions": {
+    "interviewDepth": [
+    "quick"
+    ],
+    "interviewStyle": [
+    "supportive_coach"
+    ],
+    "interviewIntent": [
+    "training"
+    ]
+    },
+
     "capabilities": {
   "showRecruiterPanel": false,
   "showPatternMemory": false,
@@ -56,6 +68,24 @@
       "maxPressureLevel": 3,
       "allowRepeatedPressure": true
     },
+
+    "availableExperienceOptions": {
+  "interviewDepth": [
+    "quick",
+    "standard"
+  ],
+  "interviewStyle": [
+    "supportive_coach",
+    "hr_relational",
+    "structured_corporate",
+    "technical_analytical"
+  ],
+  "interviewIntent": [
+    "training",
+    "simulation"
+  ]
+    },
+
 
     "capabilities": {
   "showRecruiterPanel": true,
@@ -93,6 +123,28 @@
       "maxPressureLevel": 5,
       "allowRepeatedPressure": true
     },
+
+    "availableExperienceOptions": {
+  "interviewDepth": [
+    "quick",
+    "standard",
+    "deep"
+  ],
+  "interviewStyle": [
+    "supportive_coach",
+    "hr_relational",
+    "structured_corporate",
+    "technical_analytical",
+    "pressure_interviewer"
+  ],
+  "interviewIntent": [
+    "training",
+    "simulation",
+    "stress_test"
+  ]
+  },
+
+
 
     "capabilities": {
   "showRecruiterPanel": true,
