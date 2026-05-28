@@ -1,5 +1,6 @@
 import { loadProductInterviewModes } from "./loadProductInterviewModes.js";
 import { resolveProductCapabilities } from "./resolveProductCapabilities.js";
+import { resolveProductExperience } from "./resolveProductExperience.js";
 
 
 
@@ -617,20 +618,20 @@ export function createInterviewRuntime({
   const productCapabilities =
     resolvedProductPolicy?.capabilities || {};
 
-  const resolvedInterviewStyle =
-    normalizeString(interviewStyle) ||
-    normalizeString(productConfig?.defaultInterviewStyle) ||
-    "structured_corporate";
 
-  const resolvedInterviewDepth =
-    normalizeString(interviewDepth) ||
-    normalizeString(productConfig?.interviewDepth) ||
-    "standard";
 
-  const resolvedInterviewIntent =
-    normalizeString(interviewIntent) ||
-    normalizeString(productConfig?.interviewIntent) ||
-    "simulation";
+  const resolvedExperience = resolveProductExperience({
+  productMode: resolvedProductMode,
+  interviewDepth,
+  interviewStyle,
+  interviewIntent
+  });
+
+  const resolvedInterviewStyle = resolvedExperience.interviewStyle;
+  const resolvedInterviewDepth = resolvedExperience.interviewDepth;
+  const resolvedInterviewIntent = resolvedExperience.interviewIntent;
+
+
 
   const runtimeState = buildInitialState({
     interviewSession,

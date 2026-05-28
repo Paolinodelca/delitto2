@@ -3717,3 +3717,31 @@ REPORT_MODULES = {
     render: renderRecruiterPanel
   }
 }
+
+## Product experience guardrails — VERIFIED
+
+Creato `resolveProductExperience.js`.
+
+Il resolver prende:
+- productMode
+- requested interviewDepth
+- requested interviewStyle
+- requested interviewIntent
+
+e restituisce solo valori ammessi dal piano prodotto.
+
+Test verificato:
+
+FREE + richiesta forzata di:
+- deep
+- pressure_interviewer
+- stress_test
+
+viene risolto correttamente in:
+- quick
+- supportive_coach
+- training
+
+Questo impedisce combinazioni non consentite e prepara UI/setup sicuri e configurabili.
+
+
