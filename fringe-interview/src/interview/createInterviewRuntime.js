@@ -1,3 +1,8 @@
+import { loadProductInterviewModes } from "./loadProductInterviewModes.js";
+import { resolveProductCapabilities } from "./resolveProductCapabilities.js";
+
+
+
 function ensureArray(value) {
   return Array.isArray(value) ? value : [];
 }
@@ -428,7 +433,8 @@ function buildInitialState({
   sessionLocale = "it",
   interviewStyle = "structured_corporate",
   interviewDepth = "standard",
-  interviewIntent = "simulation"
+  interviewIntent = "simulation",
+  productCapabilities = {}
 }) {
 
 
@@ -465,6 +471,7 @@ const adaptiveFollowupBudget = getAdaptiveFollowupBudgetForMode(
         sessionLocale,
         interviewStyle,
         interviewDepth,
+        productCapabilities: clone(productCapabilities),
         interviewIntent
       },
       phaseName: firstPhaseName,
@@ -587,38 +594,58 @@ export function createInterviewRuntime({
   sessionLocale = "it",
   jobFitAnalysis = null,
   locale = { code: "it" },
-  interviewStyle = "structured_corporate",
-  interviewDepth = "standard",
-  interviewIntent = "simulation"
+  productMode = "pro",
+  interviewStyle = "",
+  interviewDepth = "",
+  interviewIntent = ""
 }) {
-
-
   if (!interviewSession || typeof interviewSession !== "object") {
     throw new Error("createInterviewRuntime: interviewSession is required.");
   }
 
+  const productModes = loadProductInterviewModes();
+
+  const resolvedProductMode =
+    normalizeString(productMode).toLowerCase() || "pro";
+
+  const productConfig =
+    productModes?.[resolvedProductMode] || productModes?.pro || {};
+
+  const resolvedProductPolicy =
+    resolveProductCapabilities(resolvedProductMode);
+
+  const productCapabilities =
+    resolvedProductPolicy?.capabilities || {};
+
   const resolvedInterviewStyle =
-  normalizeString(interviewStyle) || "structured_corporate";
+    normalizeString(interviewStyle) ||
+    normalizeString(productConfig?.defaultInterviewStyle) ||
+    "structured_corporate";
 
-const resolvedInterviewDepth =
-  normalizeString(interviewDepth) || "standard";
+  const resolvedInterviewDepth =
+    normalizeString(interviewDepth) ||
+    normalizeString(productConfig?.interviewDepth) ||
+    "standard";
 
-const resolvedInterviewIntent =
-  normalizeString(interviewIntent) || "simulation";
-
+  const resolvedInterviewIntent =
+    normalizeString(interviewIntent) ||
+    normalizeString(productConfig?.interviewIntent) ||
+    "simulation";
 
   const runtimeState = buildInitialState({
-  interviewSession,
-  scenarioType,
-  inputMode,
-  uiLocale,
-  sessionLocale,
-  interviewStyle: resolvedInterviewStyle,
-  interviewDepth: resolvedInterviewDepth,
-  interviewIntent: resolvedInterviewIntent
-});
+    interviewSession,
+    scenarioType,
+    inputMode,
+    uiLocale,
+    sessionLocale,
+    interviewStyle: resolvedInterviewStyle,
+    interviewDepth: resolvedInterviewDepth,
+    interviewIntent: resolvedInterviewIntent,
+    productCapabilities
+  });
 
   const adaptiveFollowupBlocks = [];
+
   const currentStepData = buildCurrentStepPayload(
     interviewSession,
     runtimeState,
@@ -627,26 +654,30 @@ const resolvedInterviewIntent =
 
   return {
     interviewRuntime: {
-
       sessionSummary: {
-    ...clone(interviewSession?.summary || {}),
-      interviewStyle: resolvedInterviewStyle,
-      interviewDepth: resolvedInterviewDepth,
-      interviewIntent: resolvedInterviewIntent
-    },
-
+        ...clone(interviewSession?.summary || {}),
+        productMode: resolvedProductMode,
+        interviewStyle: resolvedInterviewStyle,
+        interviewDepth: resolvedInterviewDepth,
+        interviewIntent: resolvedInterviewIntent,
+        productCapabilities: clone(productCapabilities)
+      },
 
       sessionFollowupBlocks: clone(interviewSession?.followupBlocks || []),
       runtimeState,
       adaptiveFollowupBlocks,
+
       meta: {
         inputMode,
+        productMode: resolvedProductMode,
         interviewStyle: resolvedInterviewStyle,
         interviewDepth: resolvedInterviewDepth,
         interviewIntent: resolvedInterviewIntent,
+        productCapabilities: clone(productCapabilities),
         locale: clone(locale || { code: sessionLocale || "it" }),
         jobFitAnalysis: clone(jobFitAnalysis || null)
       },
+
       ...currentStepData
     }
   };

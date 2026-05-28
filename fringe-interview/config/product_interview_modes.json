@@ -1,0 +1,108 @@
+ {
+  "free": {
+    "label": "FREE",
+
+    "description":
+      "Simulazione breve orientata a far emergere rapidamente punti forti e debolezze principali.",
+
+    "interviewDepth": "quick",
+
+    "defaultInterviewStyle": "supportive_coach",
+
+    "availableInterviewStyles": [
+      "supportive_coach"
+    ],
+
+    "interviewIntent": "training",
+
+    "adaptiveBehavior": {
+      "enabled": true,
+      "maxPressureLevel": 1,
+      "allowRepeatedPressure": false
+    },
+
+    "capabilities": {
+  "showRecruiterPanel": false,
+  "showPatternMemory": false,
+  "showDetailedAnswerWorkspace": false,
+  "showPremiumRewriteWorkspace": false,
+  "allowStyleSelection": false,
+  "allowDeepAssessment": false,
+  "showPrintableProOutput": false
+    }
+
+  },
+
+  "pro": {
+    "label": "PRO",
+
+    "description":
+      "Simulazione realistica con recruiter strutturato, affondi adattivi e valutazione operativa.",
+
+    "interviewDepth": "standard",
+
+    "defaultInterviewStyle": "structured_corporate",
+
+    "availableInterviewStyles": [
+      "supportive_coach",
+      "structured_corporate",
+      "technical_analytical"
+    ],
+
+    "interviewIntent": "simulation",
+
+    "adaptiveBehavior": {
+      "enabled": true,
+      "maxPressureLevel": 3,
+      "allowRepeatedPressure": true
+    },
+
+    "capabilities": {
+  "showRecruiterPanel": true,
+  "showPatternMemory": true,
+  "showDetailedAnswerWorkspace": true,
+  "showPremiumRewriteWorkspace": false,
+  "allowStyleSelection": true,
+  "allowDeepAssessment": false,
+  "showPrintableProOutput": true
+    }
+
+  },
+
+  "premium": {
+    "label": "PREMIUM",
+
+    "description":
+      "Assessment avanzato con maggiore profondità, stress consistency e stili recruiter selezionabili.",
+
+    "interviewDepth": "deep",
+
+    "defaultInterviewStyle": "pressure_interviewer",
+
+    "availableInterviewStyles": [
+      "supportive_coach",
+      "structured_corporate",
+      "technical_analytical",
+      "pressure_interviewer"
+    ],
+
+    "interviewIntent": "stress_test",
+
+    "adaptiveBehavior": {
+      "enabled": true,
+      "maxPressureLevel": 5,
+      "allowRepeatedPressure": true
+    },
+
+    "capabilities": {
+  "showRecruiterPanel": true,
+  "showPatternMemory": true,
+  "showDetailedAnswerWorkspace": true,
+  "showPremiumRewriteWorkspace": true,
+  "allowStyleSelection": true,
+  "allowDeepAssessment": true,
+  "showPrintableProOutput": true
+    }
+
+  }
+}
