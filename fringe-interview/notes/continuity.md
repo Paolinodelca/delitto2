@@ -3513,3 +3513,207 @@ oppure:
 
 if (capabilities.enableAdaptivePressure)
 
+## ProductMode → runtime mapping — VERIFIED
+
+### Stato
+
+È stato introdotto il mapping configurabile:
+
+```text
+productMode → interviewDepth + interviewStyle + interviewIntent
+File creati
+config/product_interview_modes.json
+src/interview/loadProductInterviewModes.js
+
+Loader verificato con:
+
+node -e "import('./src/interview/loadProductInterviewModes.js').then(m => console.log(Object.keys(m.loadProductInterviewModes())))"
+
+Output:
+
+[ 'free', 'pro', 'premium' ]
+File modificato
+
+src/interview/createInterviewRuntime.js
+
+Nuovo parametro runtime
+productMode = "pro"
+Comportamento
+
+Se non vengono passati manualmente:
+
+interviewStyle
+interviewDepth
+interviewIntent
+
+vengono derivati da product_interview_modes.json.
+
+Esempio concettuale:
+
+productMode: "free"
+→ depth: quick
+→ style: supportive_coach
+→ intent: training
+
+productMode: "pro"
+→ depth: standard
+→ style: structured_corporate
+→ intent: simulation
+
+productMode: "premium"
+→ depth: deep
+→ style: pressure_interviewer
+→ intent: stress_test
+Dati ora disponibili in runtime
+
+Aggiunti in:
+
+sessionSummary
+meta
+runtimeState.interviewState.context
+
+campi:
+
+productMode
+interviewDepth
+interviewStyle
+interviewIntent
+Test eseguito
+node -e "import('./src/interview/createInterviewRuntime.js').then(() => console.log('createInterviewRuntime import OK'))"
+
+Output:
+
+createInterviewRuntime import OK
+Principio architetturale fissato
+
+Il motore NON deve avere logiche tipo:
+
+if (premium)
+
+ma deve leggere capability/config:
+
+productMode
+capabilities
+interviewDepth
+interviewStyle
+interviewIntent
+
+Il motore deve produrre la massima analisi possibile; i piani prodotto devono governare:
+
+visibilità
+accesso
+intensità
+stili disponibili
+profondità
+rendering/feature enabled
+
+senza duplicare motore o renderer.
+
+Prossimo passo
+
+Creare capability policy vera, ad esempio:
+
+product capabilities → showRecruiterPanel / showPatternMemory / allowStyleSelection / allowDeepAssessment
+
+e poi collegarla progressivamente al renderer.
+
+## Capability-driven rendering — VERIFIED
+
+### Stato
+
+Dopo l’introduzione di `productCapabilities`, il renderer PRO ha iniziato a usare le capability per mostrare/nascondere moduli e sotto-moduli senza usare logiche hardcoded tipo `if premium`.
+
+### File coinvolti
+
+- `config/product_interview_modes.json`
+- `src/interview/createInterviewRuntime.js`
+- `src/interview/resolveProductCapabilities.js`
+- `src/report/buildProReportV2.js`
+- `src/app/renderProReportHtml.js`
+- `scripts/fringe_health_check.js`
+
+### Helper renderer introdotti
+
+In `renderProReportHtml.js`:
+
+```js
+isCapabilityEnabled(context, capabilityKey)
+renderCapabilityBlock(context, capabilityKey, renderFn)
+Capability già verificate nel renderer
+showRecruiterPanel
+
+Se true:
+
+compare il pannello recruiter
+
+Se false:
+
+sparisce tutto il pannello recruiter
+
+Verificato con test_render_pro_report_v2.js.
+
+showPatternMemory
+
+Se true:
+
+dentro il pannello recruiter compare il blocco pattern
+
+Se false:
+
+resta il pannello recruiter
+sparisce solo la memoria/pattern
+showDetailedAnswerWorkspace
+
+Se true:
+
+compare “Analisi dettagliata della risposta”
+
+Se false:
+
+resta la lettura sintetica
+sparisce tutto il blocco dettagliato
+Principio confermato
+
+I moduli devono essere controllati da capability:
+
+renderCapabilityBlock(
+  context,
+  "showDetailedAnswerWorkspace",
+  () => renderSomething()
+)
+
+e non da:
+
+if (premium)
+Significato prodotto
+
+Ora FRINGE può spostare moduli tra FREE / PRO / PREMIUM modificando la configurazione, senza duplicare renderer o motore.
+
+Questo abilita:
+
+promo temporanee
+A/B test
+piani intermedi
+versioni white-label
+progressive unlock
+teaser premium
+gestione commerciale configurabile
+Stato architettura
+
+Il modello validato è:
+
+productMode
+→ productCapabilities
+→ report model
+→ renderer capability blocks
+Nota importante
+
+Il renderer non è ancora completamente modulare.
+Il prossimo passo futuro sarà evolvere verso un registry di moduli:
+
+REPORT_MODULES = {
+  recruiterPanel: {
+    capability: "showRecruiterPanel",
+    render: renderRecruiterPanel
+  }
+}

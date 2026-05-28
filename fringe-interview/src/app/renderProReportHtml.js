@@ -1555,6 +1555,10 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
         ${renderCvSupportDetails(item?.cvSupportRead)}
       </section>
 
+      ${renderCapabilityBlock(
+  context,
+  "showDetailedAnswerWorkspace",
+  () => `
       <details
         class="workspace-analysis-details fr-situation-details fr-answer-analysis-details"
         ontoggle="
@@ -1643,6 +1647,11 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
           </div>
         </div>
       </details>
+    `
+    )}
+
+
+
 
     </div>
   `;
