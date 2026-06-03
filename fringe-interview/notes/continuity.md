@@ -3744,4 +3744,163 @@ viene risolto correttamente in:
 
 Questo impedisce combinazioni non consentite e prepara UI/setup sicuri e configurabili.
 
+# ROADMAP PRIORITARIA — PROFESSIONAL PERCEPTION LAYER
+
+## Osservazione strategica
+
+Durante la preparazione del beta è emersa una possibile evoluzione fondamentale del valore percepito di FRINGE.
+
+Oggi il sistema analizza molto bene:
+
+* singole risposte
+* punti deboli
+* punti forti
+* ownership
+* decision
+* synthesis
+* friction
+* positioning
+* motivation for change
+* transferability
+
+Tuttavia il report è ancora fortemente orientato al dettaglio.
+
+Il candidato potrebbe ancora chiedersi:
+
+> "Nel complesso, che impressione sto dando?"
+
+---
+
+## Intuizione chiave
+
+Il candidato non compra realmente:
+
+* una simulazione
+* un report
+* l'analisi di 20 risposte
+
+Compra invece:
+
+> una comprensione migliore di come viene percepito professionalmente.
+
+Il colloquio è il meccanismo.
+
+La percezione professionale è il beneficio.
+
+---
+
+# FUTURA SEZIONE AD ALTO VALORE
+
+## Professional Perception Summary
+
+Possibili nomi:
+
+* Percezione Professionale Emergente
+* Come stai venendo percepito
+* Professional Perception Summary
+
+---
+
+## 1. Immagine professionale emergente
+
+Sintesi narrativa:
+
+* che figura professionale emerge
+* quali segnali dominano
+* quali segnali sono poco visibili
+
+Esempio:
+
+> Emerge una figura credibile sul piano operativo e dell'affidabilità esecutiva. Emergono meno chiaramente leadership, influenza e gestione di decisioni complesse.
+
+---
+
+## 2. Percezione richiesta dal ruolo target
+
+Partendo dal ruolo desiderato:
+
+* quali segnali il ruolo tende a ricercare
+* quali comportamenti vengono normalmente associati a quel livello professionale
+
+Non come regole assolute.
+
+Ma come tendenze.
+
+---
+
+## 3. Gap di percezione
+
+NON:
+
+> ti manca la leadership
+
+MA:
+
+> la leadership potrebbe esistere, ma oggi non emerge con sufficiente evidenza nelle risposte fornite.
+
+Distinguere sempre:
+
+* assenza reale
+* assenza di evidenza
+
+---
+
+## 4. Piano di evoluzione della percezione
+
+Non migliorare la singola risposta.
+
+Ma:
+
+> Come essere percepito più vicino al ruolo target.
+
+Esempi:
+
+* mostrare più criteri decisionali
+* esplicitare maggiormente ownership e responsabilità
+* quantificare l'impatto
+* raccontare meglio trade-off e priorità
+* evidenziare coordinamento e influenza
+
+---
+
+## 5. Time To Impact percepito
+
+Recuperare il concetto storico di FRINGE:
+
+> Quanto rapidamente il selezionatore potrebbe immaginare che il candidato generi valore nel ruolo.
+
+Non basato sulle competenze assolute.
+
+Basato sui segnali emersi.
+
+---
+
+# POSIZIONAMENTO FUTURO
+
+Possibile evoluzione del messaggio di prodotto:
+
+Da:
+
+> Simulatore di colloquio
+
+Verso:
+
+> Sistema di analisi della percezione professionale.
+
+---
+
+# PRIORITÀ
+
+Questa evoluzione è considerata una delle future roadmap ad altissimo impatto sul valore percepito del report.
+
+Probabilmente più importante di molte ottimizzazioni tecniche aggiuntive.
+
+Da affrontare DOPO:
+
+* candidate experience
+* onboarding
+* beta test iniziale
+
+ma PRIMA di molte altre estensioni del report.
+
 

@@ -57,6 +57,273 @@ function humanizeSensitiveQuestionType(type) {
   return map[type] || type || "Tema sensibile";
 }
 
+function buildProfessionalPerceptionNarrative({
+  overall = {},
+  roleFit = {},
+  questionQuality = {},
+  cvAdvice = {},
+  runtimeRead = {}
+}) {
+  const roleTitle = normalizeString(overall?.roleTitle);
+  const candidateSummary = normalizeString(overall?.candidateSummary);
+  const runtimeNarrative = normalizeString(runtimeRead?.runtimeNarrative);
+  const alignmentNarrative = normalizeString(questionQuality?.alignment?.narrative);
+  const cvReadinessNarrative = normalizeString(cvAdvice?.cvReadinessNarrative);
+
+  const strengths = [
+    ...ensureArray(roleFit?.strengths),
+    ...ensureArray(roleFit?.transferableStrengths),
+    ...ensureArray(cvAdvice?.strengths)
+  ].map(normalizeString).filter(Boolean);
+
+  const risks = [
+    ...ensureArray(roleFit?.risks),
+    ...ensureArray(roleFit?.missingSkills),
+    ...ensureArray(cvAdvice?.risks),
+    ...ensureArray(cvAdvice?.missingSkills)
+  ].map(normalizeString).filter(Boolean);
+
+  const mainStrength = strengths[0] || "esperienza e metodo";
+  const mainRisk = risks[0] || "alcuni segnali non ancora abbastanza visibili";
+
+  return {
+    headline:
+      `Profilo con segnali utili, ma ancora da rendere più leggibile rispetto al ruolo target.`,
+
+    mainNarrative:
+      `Nel complesso emerge ${candidateSummary || "un profilo con elementi professionali utili"}. ` +
+      `La candidatura mostra segnali spendibili, soprattutto su ${mainStrength}, ` +
+      `ma durante il colloquio il valore non sempre arriva con la stessa forza con cui probabilmente esiste nel percorso. ` +
+      `Il punto non è necessariamente aggiungere competenze, ma rendere più chiaro cosa hai fatto, quale contributo personale hai portato e quale impatto puoi trasferire verso ${roleTitle || "il ruolo target"}.`,
+
+    interviewerPerception:
+      `Un selezionatore potrebbe riconoscere elementi interessanti nel profilo, ` +
+      `ma restare con alcuni dubbi su ${mainRisk}. ` +
+      `Il rischio principale è che la candidatura venga percepita come plausibile ma non ancora pienamente convincente, ` +
+      `perché alcune risposte restano più descrittive che dimostrative.`,
+
+    attitudeShift:
+      `Nel colloquio conviene spostare l’atteggiamento da “racconto il contesto” a “mostro il mio contributo”. ` +
+      `Meno premessa, più scelta. Meno elenco di attività, più impatto. ` +
+      `Quando una risposta è più breve ma più centrata, spesso comunica più decisione e maggiore seniority.`,
+
+    supportingSignals: [
+      runtimeNarrative,
+      alignmentNarrative,
+      cvReadinessNarrative
+    ].filter(Boolean)
+  };
+}
+
+
+function buildProfessionalPerceptionSummary({
+  runtimeAnswers = [],
+  finalCandidateReport = {},
+  rawInput = {}
+}) {
+  const overall = finalCandidateReport?.overall || {};
+  const roleFit = finalCandidateReport?.roleFit || {};
+  const questionQuality = finalCandidateReport?.questionQuality || {};
+  const cvAdvice = finalCandidateReport?.cvAdvice || {};
+
+  const metrics = overall?.metrics || {};
+
+  const candidateSummary = normalizeString(overall?.candidateSummary);
+  const roleTitle =
+    normalizeString(overall?.roleTitle) ||
+    normalizeString(metrics?.["Ruolo target"]);
+
+  const candidateSeniority =
+    normalizeString(metrics?.["Seniority percepita candidato"]);
+
+  const targetSeniority =
+    normalizeString(metrics?.["Seniority attesa dal ruolo"]);
+
+  const alignmentNarrative = normalizeString(
+    questionQuality?.alignment?.narrative
+  );
+
+  const cvReadinessNarrative = normalizeString(
+    cvAdvice?.cvReadinessNarrative
+  );
+
+  const strengths = [
+    ...ensureArray(roleFit?.strengths),
+    ...ensureArray(roleFit?.transferableStrengths),
+    ...ensureArray(cvAdvice?.strengths),
+    ...ensureArray(cvAdvice?.transferableStrengths)
+  ]
+    .map(normalizeString)
+    .filter(Boolean);
+
+  const matchedSkills = [
+    ...ensureArray(roleFit?.matchedSkills),
+    ...ensureArray(cvAdvice?.matchedSkills)
+  ]
+    .map(normalizeString)
+    .filter(Boolean);
+
+  const risks = [
+    ...ensureArray(roleFit?.risks),
+    ...ensureArray(cvAdvice?.risks),
+    ...ensureArray(roleFit?.missingSkills),
+    ...ensureArray(cvAdvice?.missingSkills)
+  ]
+    .map(normalizeString)
+    .filter(Boolean);
+
+  const clarifications = [
+    ...ensureArray(roleFit?.clarificationsNeeded),
+    ...ensureArray(cvAdvice?.clarificationsNeeded)
+  ]
+    .map(normalizeString)
+    .filter(Boolean);
+
+  const positioningHints = ensureArray(cvAdvice?.positioningHints)
+    .map(normalizeString)
+    .filter(Boolean);
+
+  const cvRewritePriorities = ensureArray(cvAdvice?.cvRewritePriorities)
+    .map(normalizeString)
+    .filter(Boolean);
+
+  const unique = (items) => [...new Set(items.filter(Boolean))];
+
+  const visibleSignals = unique([...strengths, ...matchedSkills]).slice(0, 8);
+  const underVisibleSignals = unique([...risks, ...clarifications]).slice(0, 8);
+
+  const perceptionGap = [];
+
+  
+
+  if (candidateSeniority && targetSeniority && candidateSeniority !== targetSeniority) {
+    perceptionGap.push({
+      area: "Seniorità percepita",
+      currentSignal: candidateSeniority,
+      targetSignal: targetSeniority,
+      narrative:
+        `Il profilo oggi viene letto più vicino a una seniority ${candidateSeniority}, ` +
+        `mentre il ruolo target richiede segnali più vicini a ${targetSeniority}.`
+    });
+  }
+
+  risks.slice(0, 4).forEach((risk) => {
+    perceptionGap.push({
+      area: risk,
+      currentSignal: "poco visibile",
+      targetSignal: "più evidente nel racconto e nel CV",
+      narrative:
+        `Questo elemento non va letto necessariamente come assente, ` +
+        `ma oggi non emerge con sufficiente forza rispetto al ruolo target.`
+    });
+  });
+
+  const evolutionPriorities = unique([
+    ...positioningHints,
+    ...cvRewritePriorities
+  ]).slice(0, 6);
+
+  const credibilityExperiences = unique(risks)
+  .slice(0, 4)
+  .map((risk) => ({
+    area: risk,
+    whyItMatters:
+      `Questo elemento oggi pesa sulla distanza percepita dal ruolo target: va trasformato in evidenza concreta, non solo dichiarato.`,
+    possibleEvidence:
+      `Progetti, responsabilità, risultati o contesti in cui il candidato abbia mostrato ${risk.toLowerCase()} in modo osservabile.`
+  }));
+
+  return {
+    emergingImage: {
+      title: "Percezione professionale emergente",
+      narrative:
+        candidateSummary ||
+        "Il profilo mostra alcuni segnali professionali utili, ma la percezione complessiva richiede ancora una lettura più strutturata.",
+      roleTarget: roleTitle || "",
+      perceivedSeniority: candidateSeniority || "",
+      targetSeniority: targetSeniority || ""
+    },
+
+    narrativeRead: buildProfessionalPerceptionNarrative({
+    overall,
+    roleFit,
+    questionQuality,
+    cvAdvice,
+    runtimeRead: finalCandidateReport?.runtimeRead || {}
+    }),
+
+    visibleSignals: visibleSignals.map((signal) => ({
+      label: signal,
+      narrative:
+        `Questo segnale contribuisce a rendere più credibile la candidatura verso il ruolo target.`
+    })),
+
+    underVisibleSignals: underVisibleSignals.map((signal) => ({
+      label: signal,
+      narrative:
+        `Questo aspetto oggi non emerge con sufficiente evidenza: potrebbe esistere, ma va reso più leggibile.`
+    })),
+
+    targetRoleSignals: unique([
+      roleTitle,
+      targetSeniority,
+      ...ensureArray(roleFit?.missingSkills),
+      ...ensureArray(roleFit?.clarificationsNeeded)
+    ])
+      .filter(Boolean)
+      .slice(0, 8)
+      .map((signal) => ({
+        label: signal,
+        narrative:
+          `Segnale rilevante per essere percepito come più vicino al ruolo target.`
+      })),
+
+    perceptionGap,
+
+    evolutionBridge: {
+      priorities: evolutionPriorities.map((item) => ({
+        label: item,
+        narrative:
+          `Lavorare su questo punto aiuta a spostare la percezione dal profilo attuale verso il ruolo desiderato.`
+      })),
+      actions: cvRewritePriorities.slice(0, 5).map((item) => ({
+        label: item,
+        narrative:
+          `Azione utile per rendere più evidente il valore professionale già presente nel percorso.`
+      }))
+    },
+
+    credibilityPath: {
+      currentPositioning:
+        candidateSummary ||
+        "Il profilo attuale mostra segnali professionali utili ma ancora da rendere più leggibili.",
+      targetPositioning:
+        roleTitle
+          ? `Per risultare più credibile come ${roleTitle}, il candidato deve rendere più visibili i segnali più richiesti dal ruolo.`
+          : "Per risultare più credibile verso il ruolo target, il candidato deve rendere più visibili i segnali più richiesti.",
+      recommendedExperiences: credibilityExperiences,
+      missingEvidenceAreas: underVisibleSignals.slice(0, 6).map((signal) => ({
+        label: signal,
+        narrative:
+          `Area in cui servono evidenze più concrete: esempi, risultati, responsabilità o contesto.`
+      }))
+    },
+
+    perceivedTimeToImpact: {
+      level:
+        overall?.metrics?.["Valutazione complessiva"] === "strong_fit"
+          ? "high"
+          : overall?.metrics?.["Valutazione complessiva"] === "plausible_fit"
+            ? "medium"
+            : "uncertain",
+      rationale:
+        alignmentNarrative ||
+        cvReadinessNarrative ||
+        "Il tempo di impatto percepito dipende da quanto rapidamente il candidato riesce a rendere evidenti responsabilità, impatto e trasferibilità verso il ruolo."
+    }
+  };
+}
+
 
 export default function buildProReportV2({
   candidate,
@@ -110,6 +377,13 @@ export default function buildProReportV2({
         cvSlim: buildCvSlimSection(finalCandidateReport, rawInput),
         finalChecklist: buildImprovementPlan(finalCandidateReport)
       },
+
+
+      professionalPerception: buildProfessionalPerceptionSummary({
+      runtimeAnswers,
+      finalCandidateReport,
+      rawInput
+      }),
 
       answersWorkspace: {
         patternSummary: aggregateAnswerCoachingPatterns(answersWorkspaceItems),
