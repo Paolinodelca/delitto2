@@ -63,11 +63,21 @@ function findFollowupBlockByLabel(blocks, label) {
   );
 }
 
+
 function resolveQuestionPrompt({
   answerRecord,
   interviewRuntime,
   interviewSession
 }) {
+  const storedQuestionText = normalizeString(
+    answerRecord?.questionContext?.questionText ||
+    answerRecord?.answerAnalysis?.answerShapeAnalysis?.questionContext?.questionText
+  );
+
+  if (storedQuestionText) {
+    return storedQuestionText;
+  }
+
   const stepType = normalizeString(answerRecord?.stepType);
   const label = normalizeString(answerRecord?.label);
 
@@ -103,11 +113,84 @@ function resolveQuestionPrompt({
   return "";
 }
 
+function extractRetryDelayMs(error, fallbackMs = 12000) {
+  const rawText = [
+    error?.message,
+    error?.body,
+    error?.response?.body,
+    typeof error === "string" ? error : ""
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const match = rawText.match(/try again in\s+([\d.]+)s/i);
+
+  if (match?.[1]) {
+    const seconds = Number(match[1]);
+    if (Number.isFinite(seconds) && seconds > 0) {
+      return Math.ceil(seconds * 1000) + 1500;
+    }
+  }
+
+  return fallbackMs;
+}
+
+async function runAnswerAnnotationWithRetry({
+  answerId,
+  questionLabel,
+  questionPrompt,
+  answerText,
+  reviewMode,
+  maxRetries = 3
+}) {
+  let attempt = 0;
+
+  while (attempt <= maxRetries) {
+    try {
+      return await runAnswerAnnotation({
+        answerId,
+        questionLabel,
+        questionPrompt,
+        answerText,
+        reviewMode
+      });
+    } catch (error) {
+      const errorText = [
+        error?.message,
+        error?.body,
+        error?.response?.body
+      ]
+        .filter(Boolean)
+        .join(" ");
+
+      const isRateLimit =
+        error?.status === 429 ||
+        errorText.includes("429") ||
+        errorText.toLowerCase().includes("rate limit");
+
+      if (!isRateLimit || attempt >= maxRetries) {
+        throw error;
+      }
+
+      const waitMs = extractRetryDelayMs(error, 12000);
+
+      console.warn(
+        `Rate limit on ${answerId}. Retry ${attempt + 1}/${maxRetries} in ${Math.round(waitMs / 1000)}s.`
+      );
+
+      await delay(waitMs);
+      attempt += 1;
+    }
+  }
+
+  throw new Error(`runAnswerAnnotationWithRetry: failed after ${maxRetries} retries.`);
+}
+
 export async function runAnswerAnnotationsForSession({
   interviewRuntime,
   interviewSession,
   reviewMode = "interview",
-  throttleMs = 9000
+  throttleMs = 12000
 }) {
   if (!interviewRuntime || typeof interviewRuntime !== "object") {
     throw new Error("runAnswerAnnotationsForSession: interviewRuntime is required.");
@@ -145,13 +228,15 @@ export async function runAnswerAnnotationsForSession({
       await delay(throttleMs);
     }
 
-    const annotationResult = await runAnswerAnnotation({
-      answerId,
-      questionLabel,
-      questionPrompt,
-      answerText,
-      reviewMode
+    const annotationResult = await runAnswerAnnotationWithRetry({
+    answerId,
+    questionLabel,
+    questionPrompt,
+    answerText,
+    reviewMode,
+    maxRetries: 3
     });
+
 
     results.push({
       answerId,

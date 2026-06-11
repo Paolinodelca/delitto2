@@ -580,6 +580,79 @@ export function renderInteractiveInterviewShellHtml({
     margin-top: 16px;
   }
 
+/* ===== SETUP COMPACT OPTIONS ===== */
+.compact-options-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.compact-option {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 10px 11px;
+}
+
+.compact-option-title {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 900;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.compact-option select {
+  width: 100%;
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  padding: 9px 10px;
+  font: inherit;
+  background: white;
+  color: #111827;
+}
+
+.demo-intro-note {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #fffaf2;
+  border: 2px solid #fdba74;
+  color: #7c2d12;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+@media (max-width: 1120px) {
+  .compact-options-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .compact-options-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .compact-option {
+    padding: 10px;
+  }
+
+  .compact-option-title {
+    font-size: 10px;
+  }
+
+  .demo-intro-note {
+    font-size: 12px;
+    padding: 10px;
+  }
+}
+/* ===== END SETUP COMPACT OPTIONS ===== */
+
   .mini-card {
     border: 2px solid var(--line);
     border-radius: 14px;
@@ -651,6 +724,42 @@ export function renderInteractiveInterviewShellHtml({
   color: #111827;
   line-height: 1.18;
 }
+
+/* ===== FLOW HEADER ===== */
+.flow-header {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.65);
+  border: 2px solid rgba(255,255,255,0.25);
+  color: white;
+  font-weight: 800;
+  font-size: 13px;
+  line-height: 1.3;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+}
+
+.flow-header.ok {
+  background: rgba(22,163,74,0.85);
+  border-color: rgba(255,255,255,0.4);
+}
+
+.flow-header.warn {
+  background: rgba(220,38,38,0.9);
+  border-color: rgba(255,255,255,0.4);
+}
+
+.flow-header.demo {
+  background: rgba(124,58,237,0.9);
+  border-color: rgba(255,255,255,0.4);
+}
+
+.flow-header-text {
+  display: block;
+}
+/* ===== END FLOW HEADER ===== */
+
+
 
   .demo-button-desc {
     margin-top: 3px;
@@ -1020,6 +1129,37 @@ export function renderInteractiveInterviewShellHtml({
       line-height: 1.4;
     }
 
+.flow-banner {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 2px solid #7c2d12;
+  background: linear-gradient(180deg, #3b0f05 0%, #6b210d 100%);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.4;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+}
+
+.demo-active-banner {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 2px solid #c4b5fd;
+  background: linear-gradient(180deg, #faf5ff 0%, #f5f3ff 100%);
+  color: #4c1d95;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.demo-active-banner strong {
+  color: #581c87;
+}
+
+
+
     .field-box,
     .mini-card,
     .sim-box,
@@ -1212,6 +1352,15 @@ export function renderInteractiveInterviewShellHtml({
             <div class="title-help">Seleziona dalla barra: 1) preparazione, 2) simulazione, 3) report. Le aree PRO e PREMIUM mostrano i livelli di supporto avanzato.</div>
           </div>
         </div>
+
+<!-- ===== FLOW HEADER (GUIDA + STATO) ===== -->
+<div id="flowHeader" class="flow-header">
+  <div id="flowHeaderText" class="flow-header-text">
+    Carica i dati per iniziare
+  </div>
+</div>
+<!-- ===== END FLOW HEADER ===== -->
+
         <div class="nav-strip-wrap">
           <div class="nav-scroll-hint left">‹</div>
           <div class="nav-scroll-hint right">›</div>
@@ -1289,11 +1438,20 @@ export function renderInteractiveInterviewShellHtml({
       <div class="card emphasis">
         <div class="kicker">Step 1 · Preparazione</div>
         <h2>Inserisci i dati per iniziare</h2>
+
         <div class="intro">
   Per partire davvero servono il CV e il ruolo target.<br>
   La job description non è obbligatoria, ma migliora la qualità della simulazione e rende il feedback più centrato.
 </div>
 
+
+<div class="flow-banner" id="flowBanner" style="display:none;"></div>
+<div class="demo-active-banner" id="demoActiveBanner" style="display:none;">
+  Set dati demo attivo: <strong id="demoActiveLabel">Profilo demo</strong>
+</div>
+
+
+  </div>
         <div class="field-grid">
           <div class="field-box" id="boxRole">
             <div class="field-head">
@@ -1326,39 +1484,35 @@ export function renderInteractiveInterviewShellHtml({
           </div>
         </div>
 
-        <div class="mini-grid">
-          <div class="mini-card">
-            <div class="mini-card-title">Lingua interfaccia</div>
+
+        <div class="compact-options-row">
+          <div class="compact-option">
+            <div class="compact-option-title">Lingua interfaccia</div>
             <select id="uiLocaleSelect">
               <option value="it">Italiano</option>
               <option value="en">English</option>
             </select>
           </div>
 
-          <div class="mini-card">
-            <div class="mini-card-title">Lingua colloquio</div>
+          <div class="compact-option">
+            <div class="compact-option-title">Lingua colloquio</div>
             <select id="sessionLocaleSelect">
               <option value="it">Italiano</option>
               <option value="en">English</option>
             </select>
           </div>
-        </div>
 
-        <div class="mini-grid">
-          <div class="mini-card">
-            <div class="mini-card-title">Formato colloquio</div>
+          <div class="compact-option">
+            <div class="compact-option-title">Formato</div>
             <select id="interviewLengthModeSelect">
-              <option value="short">Quick Interview · breve e incisiva</option>
-              <option value="standard" selected>Standard Interview · equilibrio</option>
-              <option value="deep">Deep Interview · più esplorazione</option>
+              <option value="short">Quick Interview</option>
+              <option value="standard" selected>Standard Interview</option>
+              <option value="deep">Deep Interview</option>
             </select>
-            <div class="help" id="interviewLengthModeHelp">
-              Versione rapida: poche domande ma con un affondo adattivo se emerge una debolezza forte.
-            </div>
           </div>
 
-          <div class="mini-card">
-            <div class="mini-card-title">Modalità risposta</div>
+          <div class="compact-option">
+            <div class="compact-option-title">Modalità risposta</div>
             <select id="inputModeSelect">
               <option value="text">Text</option>
               <option value="voice">Voice ready</option>
@@ -1366,28 +1520,11 @@ export function renderInteractiveInterviewShellHtml({
           </div>
         </div>
 
-        <div class="mini-grid">
-          <div class="mini-card">
-            <div class="mini-card-title">Stato preparazione</div>
-            <div class="mini-card-value" id="statusPrepValue">Da completare</div>
-            <div class="prep-next-hint" id="prepNextHint">Completa almeno CV e ruolo target</div>
-          </div>
-
-          <div class="mini-card">
-            <div class="mini-card-title">Formato selezionato</div>
-            <div class="mini-card-value" id="selectedModeValue">Standard Interview</div>
-            <div class="help" id="selectedModeSubtext">Equilibrio tra rapidità, copertura e approfondimento.</div>
-          </div>
+               <div class="demo-intro-note">
+          Non vuoi perdere tempo a caricare i dati? Prova uno dei profili demo qui sotto per vedere subito come funziona il flusso.
         </div>
+        <div class="demo-section-title">Profili demo</div>
 
-        <div class="mode-highlight">
-          <div class="mode-highlight-title">Suggerimento pratico</div>
-          <div class="mode-highlight-text" id="modeHighlightText">
-            Quick Interview è la scelta migliore per una prova veloce o una demo: resta breve, ma se trova una debolezza importante stringe comunque il punto con un approfondimento mirato.
-          </div>
-        </div>
-
-        <div class="demo-section-title">Carica dati essenziali di esempio</div>
         <div class="demo-grid">
           <button class="demo-button" type="button" data-demo="pom">
             <div class="demo-button-title">Product Operations Manager</div>
@@ -1406,6 +1543,11 @@ export function renderInteractiveInterviewShellHtml({
             <div class="demo-button-desc">Profilo basato su analisi, reporting, dashboard e lettura dati per decisioni.</div>
           </button>
         </div>
+
+                <div class="cta-row">
+          <button class="cta secondary" id="resetSetupButton" type="button">Reset campi</button>
+        </div>
+
       </div>
     </section>
 
@@ -1496,15 +1638,18 @@ export function renderInteractiveInterviewShellHtml({
     const sessionResult = JSON.parse(document.getElementById("session-result-json").textContent || "{}");
     const shellOptions = JSON.parse(document.getElementById("shell-options-json").textContent || "{}");
 
-    const defaultIntakeState = {
-      targetRole: sessionResult.targetRole || "",
-      cvText: sessionResult.cvText || "",
-      jdText: sessionResult.jobDescriptionText || "",
-      uiLocale: sessionResult.uiLocale || "it",
-      sessionLocale: sessionResult.sessionLocale || "it",
-      interviewLengthMode: sessionResult.interviewLengthMode || "standard",
-      inputMode: sessionResult.inputMode || "text"
-    };
+
+
+ const defaultIntakeState = {
+  targetRole: "",
+  cvText: "",
+  jdText: "",
+  uiLocale: "it",
+  sessionLocale: "it",
+  interviewLengthMode: "standard",
+  inputMode: "text"
+};
+
 
     const demoPresets = {
       pom: {
@@ -1591,8 +1736,120 @@ export function renderInteractiveInterviewShellHtml({
     const simInputModeValue = document.getElementById("simInputModeValue");
     const simulationReadinessText = document.getElementById("simulationReadinessText");
 
-    const fakeStartButton = document.getElementById("fakeStartButton");
+    // ===== FLOW HEADER ELEMENTS =====
+const flowHeader = document.getElementById("flowHeader");
+const flowHeaderText = document.getElementById("flowHeaderText");
+// ===== END FLOW HEADER ELEMENTS =====
+
+
+const fakeStartButton = document.getElementById("fakeStartButton");
+const resetSetupButton = document.getElementById("resetSetupButton");
+
 const demoButtons = Array.from(document.querySelectorAll(".demo-button[data-demo]"));
+const reportNavLink = document.querySelector('.nav-link.free[href="./fringe_interview_interactive_shell_report.html"]');
+const demoActiveBanner = document.getElementById("demoActiveBanner");
+const demoActiveLabel = document.getElementById("demoActiveLabel");
+
+const flowBanner = document.getElementById("flowBanner");
+
+
+const STORAGE_KEY = "fringe_interview_setup_state_v1";
+const SESSION_STATE_KEY = "fringe_interview_setup_transient_v1";
+
+
+function loadPersistedState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+
+    return {
+      uiLocale: parsed.uiLocale,
+      sessionLocale: parsed.sessionLocale,
+      interviewLengthMode: parsed.interviewLengthMode,
+      inputMode: parsed.inputMode
+    };
+  } catch (error) {
+    return {};
+  }
+}
+
+function loadSessionState() {
+  try {
+    const raw = sessionStorage.getItem(SESSION_STATE_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch (error) {
+    return {};
+  }
+}
+
+function persistSessionState() {
+  try {
+    const safeSessionState = {
+      targetRole: intakeState.targetRole,
+      cvText: intakeState.cvText,
+      jdText: intakeState.jdText,
+      selectedDemoKey: intakeState.selectedDemoKey,
+      simulationVisited: intakeState.simulationVisited
+    };
+    sessionStorage.setItem(SESSION_STATE_KEY, JSON.stringify(safeSessionState));
+  } catch (error) {
+    // niente
+  }
+}
+
+function clearSessionState() {
+  try {
+    sessionStorage.removeItem(SESSION_STATE_KEY);
+  } catch (error) {
+    // niente
+  }
+}
+
+
+function persistState() {
+  try {
+    const safeState = {
+      ...intakeState,
+      selectedDemoKey: "",
+      simulationVisited: isDemoSelected() ? false : intakeState.simulationVisited,
+      targetRole: isDemoSelected() ? "" : intakeState.targetRole,
+      cvText: isDemoSelected() ? "" : intakeState.cvText,
+      jdText: isDemoSelected() ? "" : intakeState.jdText
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(safeState));
+  } catch (error) {
+    // niente: in locale/file può anche non essere disponibile
+  }
+}
+
+const persistedState = loadPersistedState();
+const sessionState = loadSessionState();
+
+if (persistedState && persistedState.selectedDemoKey) {
+  persistedState.selectedDemoKey = "";
+}
+
+if (!("selectedDemoKey" in intakeState)) {
+  intakeState.selectedDemoKey = "";
+}
+if (!("simulationVisited" in intakeState)) {
+  intakeState.simulationVisited = false;
+}
+
+Object.assign(intakeState, {
+  targetRole: sessionState.targetRole ?? "",
+  cvText: sessionState.cvText ?? "",
+  jdText: sessionState.jdText ?? "",
+  uiLocale: persistedState.uiLocale ?? "it",
+  sessionLocale: persistedState.sessionLocale ?? "it",
+  interviewLengthMode: persistedState.interviewLengthMode ?? "standard",
+  inputMode: persistedState.inputMode ?? "text",
+  selectedDemoKey: sessionState.selectedDemoKey ?? "",
+  simulationVisited: sessionState.simulationVisited ?? false
+});
+
 
 const modeCopy = {
   short: {
@@ -1615,9 +1872,88 @@ const modeCopy = {
   }
 };
 
+const demoLabels = {
+  pom: "Product Operations Manager",
+  pm: "Project Manager",
+  ops: "Operations Manager",
+  ba: "Business Analyst"
+};
+
 function hasText(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
+
+function isDemoSelected() {
+  return typeof intakeState.selectedDemoKey === "string" && intakeState.selectedDemoKey.trim().length > 0;
+}
+
+function hasMinimumPreparation() {
+  const roleReady = hasText(targetRoleInput.value);
+  const cvReady = hasText(cvTextInput.value);
+  return roleReady && cvReady;
+}
+
+function canOpenSimulation() {
+  return hasMinimumPreparation() || isDemoSelected();
+}
+
+function canOpenReport() {
+  if (isDemoSelected()) {
+    return true;
+  }
+  return hasMinimumPreparation() && intakeState.simulationVisited === true;
+}
+
+function showFlowBanner(message) {
+  if (!flowBanner) return;
+  flowBanner.textContent = message;
+  flowBanner.style.display = "block";
+}
+
+function hideFlowBanner() {
+  if (!flowBanner) return;
+  flowBanner.textContent = "";
+  flowBanner.style.display = "none";
+}
+
+
+function showPreparationGateMessageForSimulation() {
+  if (flowHeader && flowHeaderText) {
+    flowHeader.classList.remove("ok", "demo");
+    flowHeader.classList.add("warn");
+    flowHeaderText.textContent =
+      "⚠️ Per aprire la simulazione completa prima la fase 1 · Preparazione oppure seleziona uno dei 4 esempi demo.";
+  }
+
+  showFlowBanner(
+    "Per aprire la simulazione completa prima la fase 1 · Preparazione oppure seleziona uno dei 4 esempi demo."
+  );
+  switchPanel("prep");
+}
+
+function showPreparationGateMessageForReport() {
+  let message = "Prima di aprire il report completa i passaggi necessari.";
+
+  if (!hasMinimumPreparation() && !isDemoSelected()) {
+    message =
+      "⚠️ Per aprire il report completa prima la fase 1 · Preparazione e poi la fase 2 · Simulazione. In alternativa puoi usare uno dei 4 esempi demo.";
+  } else if (!isDemoSelected() && intakeState.simulationVisited !== true) {
+    message =
+      "⚠️ La fase 1 · Preparazione è completa. Prima di aprire il report devi però passare dalla fase 2 · Simulazione.";
+  }
+
+  if (flowHeader && flowHeaderText) {
+    flowHeader.classList.remove("ok", "demo");
+    flowHeader.classList.add("warn");
+    flowHeaderText.textContent = message;
+  }
+
+  showFlowBanner(message);
+  switchPanel("prep");
+}
+
+
+
 
 function setCompleteState({ boxEl, stateEl, complete, okLabel = "Completo", missingLabel = "Da inserire" }) {
   boxEl.classList.toggle("complete", complete);
@@ -1640,6 +1976,20 @@ function switchPanel(panelKey) {
   });
 }
 
+function updateDemoBanner() {
+  if (!demoActiveBanner || !demoActiveLabel) return;
+
+  if (isDemoSelected()) {
+    demoActiveBanner.style.display = "block";
+    demoActiveLabel.textContent = demoLabels[intakeState.selectedDemoKey] || "Profilo demo";
+  } else {
+    demoActiveBanner.style.display = "none";
+    demoActiveLabel.textContent = "Profilo demo";
+  }
+}
+
+
+
 function updateUi() {
   intakeState.targetRole = targetRoleInput.value;
   intakeState.cvText = cvTextInput.value;
@@ -1653,6 +2003,9 @@ function updateUi() {
   const cvReady = hasText(intakeState.cvText);
   const jdReady = hasText(intakeState.jdText);
   const prepReady = roleReady && cvReady;
+  const demoReady = isDemoSelected();
+  const simulationReady = canOpenSimulation();
+  const reportReady = canOpenReport();
 
   setCompleteState({
     boxEl: boxRole,
@@ -1688,6 +2041,10 @@ function updateUi() {
       ? "Hai tutto il necessario per una simulazione ben centrata"
       : "Puoi partire già ora, ma con la job description il risultato migliora";
     prepNextHint.classList.add("ok");
+  } else if (demoReady) {
+    statusPrepValue.textContent = "Demo pronta";
+    prepNextHint.textContent = "Hai selezionato un esempio demo: puoi usare simulazione, report e preview dei piani superiori";
+    prepNextHint.classList.add("ok");
   } else {
     statusPrepValue.textContent = "Da completare";
     prepNextHint.textContent = "Completa almeno CV e ruolo target";
@@ -1707,12 +2064,55 @@ function updateUi() {
   simModeValue.textContent = selectedMode.label;
   simInputModeValue.textContent = intakeState.inputMode === "voice" ? "Voice ready" : "Text";
 
-  simulationReadinessText.textContent = prepReady
-    ? (jdReady
-        ? "La simulazione può partire con una base completa e più credibile."
-        : "La simulazione può partire. Aggiungere la job description renderebbe il contesto ancora più preciso.")
-    : "Per abilitare davvero la simulazione servono almeno CV e ruolo target.";
+  if (simulationReady) {
+    simulationReadinessText.textContent = prepReady
+      ? (jdReady
+          ? "La simulazione può partire con una base completa e più credibile."
+          : "La simulazione può partire. Aggiungere la job description renderebbe il contesto ancora più preciso.")
+      : "La simulazione può partire usando l'esempio demo selezionato.";
+  } else {
+    simulationReadinessText.textContent = "Per abilitare davvero la simulazione servono almeno CV e ruolo target, oppure uno dei 4 esempi demo.";
+  }
+
+  if (reportNavLink) {
+    reportNavLink.classList.toggle("active", false);
+    reportNavLink.style.opacity = reportReady ? "1" : "0.92";
+  }
+
+  if (isDemoSelected()) {
+    hideFlowBanner();
+  }
+
+
+   updateDemoBanner();
+  persistState();
+  persistSessionState();
+
+  // ===== FLOW HEADER LOGIC =====
+
+flowHeader.classList.remove("ok", "warn", "demo");
+
+const isDemo = !!intakeState.selectedDemoKey;
+
+if (isDemo) {
+  flowHeader.classList.add("demo");
+  flowHeaderText.textContent =
+    "🧪 Profilo demo attivo — puoi usare simulazione e report in modalità dimostrativa.";
+} else if (prepReady) {
+  flowHeader.classList.add("ok");
+  flowHeaderText.textContent =
+    "✔️ Dati pronti — puoi passare alla simulazione.";
+} else {
+  flowHeader.classList.add("");
+  flowHeaderText.textContent =
+    "Compila ruolo e CV per sbloccare la simulazione. La job description migliora la qualità del risultato ma non è obbligatoria.";
 }
+
+
+
+// ===== END FLOW HEADER LOGIC =====
+}
+
 
 [
   targetRoleInput,
@@ -1723,8 +2123,18 @@ function updateUi() {
   interviewLengthModeSelect,
   inputModeSelect
 ].forEach((el) => {
-  el.addEventListener("input", updateUi);
-  el.addEventListener("change", updateUi);
+  el.addEventListener("input", () => {
+    if (isDemoSelected()) {
+      intakeState.selectedDemoKey = "";
+    }
+    updateUi();
+  });
+  el.addEventListener("change", () => {
+    if (isDemoSelected()) {
+      intakeState.selectedDemoKey = "";
+    }
+    updateUi();
+  });
 });
 
 targetRoleInput.value = intakeState.targetRole;
@@ -1741,6 +2151,11 @@ demoButtons.forEach((button) => {
     const preset = demoPresets[presetKey];
     if (!preset) return;
 
+    intakeState.selectedDemoKey = presetKey;
+    intakeState.simulationVisited = false;
+    hideFlowBanner();
+
+
     targetRoleInput.value = preset.targetRole;
     cvTextInput.value = preset.cvText;
     jdTextInput.value = preset.jdText;
@@ -1748,25 +2163,91 @@ demoButtons.forEach((button) => {
     sessionLocaleSelect.value = preset.sessionLocale;
     interviewLengthModeSelect.value = preset.interviewLengthMode;
     inputModeSelect.value = preset.inputMode;
+
     updateUi();
   });
 });
 
 if (fakeStartButton) {
   fakeStartButton.addEventListener("click", () => {
+    if (!canOpenSimulation()) {
+      showPreparationGateMessageForSimulation();
+      return;
+    }
+
+    intakeState.simulationVisited = true;
+    persistState();
     switchPanel("simulation");
     updateUi();
   });
 }
 
 document.querySelectorAll(".nav-btn[data-panel]").forEach((button) => {
-  button.addEventListener("click", () => {
-    switchPanel(button.getAttribute("data-panel"));
-  });
+ button.addEventListener("click", () => {
+  const targetPanel = button.getAttribute("data-panel");
+
+  const roleReady = hasText(intakeState.targetRole);
+  const cvReady = hasText(intakeState.cvText);
+  const prepReady = roleReady && cvReady;
+
+  const isDemo = !!intakeState.selectedDemoKey;
+
+  if (targetPanel === "simulation" && !(prepReady || isDemo)) {
+    flowHeader.classList.remove("ok", "demo");
+    flowHeader.classList.add("warn");
+    flowHeaderText.textContent = "⚠️ Completa prima lo step 1 (Preparazione)";
+    return;
+  }
+
+  if (targetPanel === "pro" || targetPanel === "premium") {
+    if (!(prepReady || isDemo)) {
+      flowHeader.classList.remove("ok", "demo");
+      flowHeader.classList.add("warn");
+      flowHeaderText.textContent = "⚠️ Completa prima lo step 1";
+      return;
+    }
+  }
+
+  switchPanel(targetPanel);
 });
+
+
+});
+
+
+if (reportNavLink) {
+  reportNavLink.addEventListener("click", (event) => {
+    if (!canOpenReport()) {
+      event.preventDefault();
+      showPreparationGateMessageForReport();
+      return;
+    }
+    persistState();
+  });
+}
+
+
+if (resetSetupButton) {
+  resetSetupButton.addEventListener("click", () => {
+    intakeState.selectedDemoKey = "";
+    intakeState.simulationVisited = false;
+
+    targetRoleInput.value = "";
+    cvTextInput.value = "";
+    jdTextInput.value = "";
+
+    clearSessionState();
+    hideFlowBanner();
+    updateUi();
+    switchPanel("prep");
+  });
+}
+
 
 updateUi();
 switchPanel("prep");
+
+
   </script>
 </body>
 </html>

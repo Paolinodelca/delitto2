@@ -1,0 +1,23 @@
+{
+  "id": "test_junior_ops",
+  "candidateName": "Marco Rinaldi",
+  "targetRole": "Junior Product Operations Analyst",
+  "cvFile": "fixtures/test_junior_ops/cv_junior_ops.txt",
+  "roleFile": "fixtures/test_junior_ops/role_junior_product_ops.txt",
+  "answersFile": "fixtures/test_junior_ops/answers_junior_ops.json",
+  "expectedReading": {
+    "seniority": "junior",
+    "shouldAvoid": [
+      "pretendere leadership senior",
+      "pretendere stakeholder management avanzato",
+      "ripetere sempre gli stessi segnali CV"
+    ],
+    "shouldEmphasize": [
+      "concretezza degli esempi",
+      "responsabilità personale proporzionata al livello junior",
+      "contesto operativo",
+      "apprendimento",
+      "passaggio CV -> ruolo target"
+    ]
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "defaultScale": {
+    "high": 1,
+    "medium": 0.65,
+    "low": 0.3,
+    "off": 0
+  },
+  "families": {
+    "opening_positioning": {
+      "description": "Apertura del colloquio e posizionamento iniziale del profilo.",
+      "relevanceBySeniority": {
+        "junior": "high",
+        "mid": "high",
+        "senior": "high"
+      },
+      "relevanceByRoleTraits": {
+        "leadership": "medium",
+        "stakeholder_exposure": "medium",
+        "execution_intensity": "medium"
+      }
+    },
+    "career_walkthrough": {
+      "description": "Racconto sintetico del percorso e lettura della continuità del profilo.",
+      "relevanceBySeniority": {
+        "junior": "medium",
+        "mid": "high",
+        "senior": "high"
+      },
+      "relevanceByRoleTraits": {
+        "leadership": "medium",
+        "stakeholder_exposure": "low",
+        "execution_intensity": "low"
+      }
+    },
+    "role_fit": {
+      "description": "Trasferibilità del profilo e credibilità del passaggio verso il ruolo target.",
+      "relevanceBySeniority": {
+        "junior": "high",
+        "mid": "high",
+        "senior": "high"
+      },
+      "relevanceByRoleTraits": {
+        "leadership": "medium",
+        "stakeholder_exposure": "medium",
+        "execution_intensity": "medium"
+      }
+    },
+    "motivation_for_change": {
+      "description": "Motivazione al cambiamento e direzione cercata.",
+      "relevanceBySeniority": {
+        "junior": "medium",
+        "mid": "high",
+        "senior": "high"
+      },
+      "relevanceByRoleTraits": {
+        "leadership": "medium",
+        "stakeholder_exposure": "low",
+        "execution_intensity": "low"
+      },
+      "conditionalRules": [
+        {
+          "when": "candidate_currently_employed",
+          "effect": "raise"
+        },
+        {
+          "when": "candidate_not_currently_employed",
+          "effect": "variant_needed"
+        }
+      ]
+    },
+    "example_concreteness": {
+      "description": "Capacità di portare esempi reali e verificabili.",
+      "relevanceBySeniority": {
+        "junior": "high",
+        "mid": "high",
+        "senior": "high"
+      },
+      "relevanceByRoleTraits": {
+        "leadership": "medium",
+        "stakeholder_exposure": "medium",
+        "execution_intensity": "high"
+      }
+    },
+    "decision_tradeoff": {
+      "description": "Priorità, criterio di scelta e trade-off.",
+      "relevanceBySeniority": {
+        "junior": "low",
+        "mid": "high",
+        "senior": "high"
+      },
+      "relevanceByRoleTraits": {
+        "leadership": "high",
+        "stakeholder_exposure": "medium",
+        "execution_intensity": "medium"
+      }
+    },
+    "conflict_pressure": {
+      "description": "Gestione di attrito, pressione, pushback o situazioni tese.",
+      "relevanceBySeniority": {
+        "junior": "low",
+        "mid": "medium",
+        "senior": "high"
+      },
+      "relevanceByRoleTraits": {
+        "leadership": "high",
+        "stakeholder_exposure": "high",
+        "execution_intensity": "medium"
+      }
+    },
+    "ownership_scope": {
+      "description": "Confine tra contributo personale, team e contesto.",
+      "relevanceBySeniority": {
+        "junior": "medium",
+        "mid": "high",
+        "senior": "high"
+      },
+      "relevanceByRoleTraits": {
+        "leadership": "high",
+        "stakeholder_exposure": "medium",
+        "execution_intensity": "medium"
+      }
+    },
+    "learning_reflection": {
+      "description": "Capacità di apprendimento, adattamento e rilettura dell’esperienza.",
+      "relevanceBySeniority": {
+        "junior": "medium",
+        "mid": "medium",
+        "senior": "high"
+      },
+      "relevanceByRoleTraits": {
+        "leadership": "medium",
+        "stakeholder_exposure": "low",
+        "execution_intensity": "low"
+      }
+    },
+    "profile_gap_management": {
+      "description": "Gestione di gap del profilo, buchi, transizioni o mancanze rispetto al ruolo.",
+      "relevanceBySeniority": {
+        "junior": "medium",
+        "mid": "high",
+        "senior": "high"
+      },
+      "relevanceByRoleTraits": {
+        "leadership": "medium",
+        "stakeholder_exposure": "low",
+        "execution_intensity": "low"
+      }
+    }
+  }
+}

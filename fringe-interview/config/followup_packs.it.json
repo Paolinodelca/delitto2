@@ -100,6 +100,38 @@
         "Perché ritieni che la tua esperienza passata possa comunque avere valore qui?",
         "Puoi fare un esempio di quando hai avuto successo in un contesto inizialmente poco familiare?"
       ]
+    },
+    "decision_tradeoff_probe": {
+      "label": "Affondo su Decisione e Trade-off",
+      "triggerType": "decision_tradeoff_probe",
+      "goal": "Verificare se il candidato sa spiegare una decisione reale, il trade-off scelto e il criterio usato.",
+      "useWhen": [
+        "la domanda chiedeva una decisione o un trade-off",
+        "la risposta resta generica o parla di un tema vicino",
+        "non è chiaro che cosa sia stato scelto e che cosa sia stato lasciato fuori"
+      ],
+      "followups": [
+        "Ti fermo un attimo: qual era esattamente il trade-off tra due opzioni reali?",
+        "Che cosa hai scelto di prioritizzare e che cosa hai accettato di lasciare indietro?",
+        "Quale criterio hai usato per decidere in quella situazione?",
+        "Che conseguenza concreta ha avuto quella scelta?"
+      ]
+    },
+    "consistency_probe": {
+      "label": "Affondo su Coerenza e Chiarezza",
+      "triggerType": "consistency_probe",
+      "goal": "Verificare se il candidato riesce a correggere una risposta fuori fuoco o poco coerente dopo una riformulazione.",
+      "useWhen": [
+        "la risposta non centra davvero la domanda",
+        "il candidato sembra rispondere a un tema vicino ma diverso",
+        "serve capire se il problema è incomprensione occasionale o pattern ricorrente"
+      ],
+      "followups": [
+        "Ti riformulo la domanda: quello che vorrei capire è il punto specifico richiesto, non un tema vicino. Puoi rispondere restando su questo?",
+        "La risposta precedente era utile, ma non centrava del tutto la domanda. Qual è la risposta più diretta che daresti ora?",
+        "Se dovessi rispondere in una frase sola al punto che ti ho chiesto, quale sarebbe?",
+        "Quale parte della domanda pensi di non aver ancora affrontato davvero?"
+      ]
     }
   }
 }

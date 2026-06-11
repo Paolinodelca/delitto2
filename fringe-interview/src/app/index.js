@@ -1,5 +1,9 @@
 export { runFringeInterviewMVP } from "./runFringeInterviewMVP.js";
-export { runFringeInterviewMVPSession } from "./runFringeInterviewMVPSession.js";
-export { renderFringeInterviewReportHtml } from "./renderFringeInterviewReportHtml.js";
-export { renderInteractiveInterviewShellHtml } from "./renderInteractiveInterviewShellHtml.js";
+export { default as runFringeInterviewMVPSession } from "./runFringeInterviewMVPSession.js";
+
+
+export { default as renderFringeInterviewReportHtml } from "./renderFringeInterviewReportHtml.js";
+
+
+export { default as renderInteractiveInterviewShellHtml } from "./renderInteractiveInterviewShellHtml.js";
 export { buildInteractiveSessionPayload } from "./buildInteractiveSessionPayload.js";

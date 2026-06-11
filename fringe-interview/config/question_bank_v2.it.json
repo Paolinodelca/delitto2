@@ -844,6 +844,126 @@
   "extensions": {}
 },
 {
+  "key": "motivation_for_change",
+  "category": "person_perception",
+  "intent": "Detect whether the candidate can explain credibly why they want to change company or role now, without sounding generic, reactive, or purely escapist.",
+  "signals": [
+    "motivation",
+    "narrative_coherence",
+    "stability_risk"
+  ],
+  "senioritySuitability": [
+    "entry",
+    "junior",
+    "mid",
+    "senior",
+    "lead",
+    "executive"
+  ],
+  "companyContextSuitability": [
+    "corporate_structured",
+    "scaleup_dynamic",
+    "startup_pragmatic",
+    "small_business_operational",
+    "consultancy_client_facing"
+  ],
+  "toneSuitability": [
+    "standard",
+    "supportive",
+    "hr_relational",
+    "incisive",
+    "business_direct"
+  ],
+  "selectionWeight": "high",
+  "variants": {
+    "standard": {
+      "prompt": "Che cosa ti sta portando a voler cambiare azienda o ruolo in questo momento?"
+    },
+    "supportive": {
+      "prompt": "Ti va di spiegarmi che cosa ti spinge oggi a considerare un cambiamento di azienda o di ruolo?"
+    },
+    "hr_relational": {
+      "prompt": "Come racconteresti il motivo per cui senti che per te è il momento giusto per cambiare?"
+    },
+    "incisive": {
+      "prompt": "Sii concreto: perché vuoi cambiare adesso, e che cosa stai cercando di diverso rispetto a oggi?"
+    },
+    "business_direct": {
+      "prompt": "Perché stai cercando un cambiamento di azienda o di ruolo, concretamente?"
+    }
+  },
+  "tags": [
+    "person_perception",
+    "motivation_change",
+    "hr_screening",
+    "narrative_coherence"
+  ],
+  "metadata": {},
+  "extensions": {}
+},
+
+{
+  "key": "change_trajectory_logic",
+  "category": "role_fit",
+  "intent": "Detect whether the candidate can connect the desired change to a coherent professional trajectory, rather than framing it as a generic escape from the current situation.",
+  "signals": [
+    "transferability",
+    "narrative_coherence",
+    "role_interest"
+  ],
+  "senioritySuitability": [
+    "entry",
+    "junior",
+    "mid",
+    "senior",
+    "lead",
+    "executive"
+  ],
+  "companyContextSuitability": [
+    "corporate_structured",
+    "scaleup_dynamic",
+    "startup_pragmatic",
+    "small_business_operational",
+    "consultancy_client_facing"
+  ],
+  "toneSuitability": [
+    "standard",
+    "supportive",
+    "hr_relational",
+    "incisive",
+    "business_direct"
+  ],
+  "selectionWeight": "medium",
+  "variants": {
+    "standard": {
+      "prompt": "Perché questo cambiamento ha senso come passo del tuo percorso, e non solo come uscita dalla situazione attuale?"
+    },
+    "supportive": {
+      "prompt": "Come colleghi il cambiamento che stai cercando al percorso che vuoi costruire?"
+    },
+    "hr_relational": {
+      "prompt": "In che modo questo passaggio si inserisce in modo coerente nella tua traiettoria professionale?"
+    },
+    "incisive": {
+      "prompt": "Perché questa scelta è un passo coerente, e non soltanto un allontanamento da ciò che hai oggi?"
+    },
+    "business_direct": {
+      "prompt": "Che logica professionale c'è dietro questo cambio?"
+    }
+  },
+  "tags": [
+    "role_fit",
+    "change_logic",
+    "hr_screening",
+    "career_coherence"
+  ],
+  "metadata": {},
+  "extensions": {}
+},
+
+
+
+{
   "key": "priority_conflict_management",
   "category": "seniority_calibration",
   "intent": "Detect whether the candidate can manage conflicting priorities under delivery pressure without losing focus.",

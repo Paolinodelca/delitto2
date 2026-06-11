@@ -1,1241 +1,940 @@
-# Roadmap — Fringe Interview
+# ROADMAP — FRINGE INTERVIEW
 
-This document tracks the development progression of the Fringe Interview MVP.
+## 🎯 Fase attuale
 
-The roadmap is intentionally incremental: the system must become useful early, and then progressively smarter.
-
-A second design horizon is now active:
-the interview simulator should evolve toward a broader **training engine** driven by parser-specialized knowledge inputs.
+👉 PRODOTTO REALE / OTTIMIZZAZIONE QUALITÀ
 
 ---
 
-# V1 — Core Interview Simulator (MVP)
+# 🔥 PRIORITÀ IMMEDIATE
 
-Goal: create a working interview simulator capable of generating a useful feedback report.
+## 1. VARIAZIONE DOMANDE (CRITICO)
 
-## Architecture
-- manifest operativo
-- system architecture document
-- core config files structure
+### Obiettivo
 
-## Interview engine
-- question families configuration
-- follow-up packs configuration
-- report rubrics configuration
+Evitare ripetizione tra sessioni
 
-## Interview flow
-- basic interview session flow
-- question → answer → follow-up loop
-- textual simulation interface
+### Azioni
 
-## Basic reporting
-- final candidate report
-- high level feedback areas
-- basic improvement suggestions
-
-At this stage the interview is mostly **content-driven**, not yet strongly personalized by CV/JD analysis.
-
-### Status
-**Substantially completed as backend logic + preview / trainer prototype layer**
-
-Completed:
-- architecture documents
-- parser schema and prompt config
-- question family config
-- follow-up pack config
-- parser pipeline
-- interview planning
-- session composer
-- session runtime
-- answer-shape analysis
-- interview report collector
-- final candidate report builder
-- app entrypoint orchestration
-- first HTML report preview
-- adaptive runtime follow-up logic
-- dimension-based adaptive routing
-- first usable local interactive shell
-- first hierarchical final report UI
-- first trainer-style detailed answer review
-- first LLM-backed trainer-mode integration
-
-Still to complete inside V1:
-- restore consistently short sessions (4–5 answers)
-- eliminate repeated / near-duplicate prompts
-- align live quick feedback with the new LLM annotation layer
-- simplify trainer mode now that LLM review exists
-- reduce visual redundancy in the shell
+- rotazione per family
+- varianti linguistiche
+- tracking domande usate
+- riduzione riuso ravvicinato della stessa formulazione
+- mantenere coerenza di intent senza ripetere identiche parole
 
 ---
 
-# V1.5 — Profile-aware Interview
+## 2. QUALITÀ VALUTAZIONE RISPOSTE
 
-Goal: introduce CV and Job Description parsing so the interview can adapt to the candidate profile and target role.
+### Problemi attuali
 
-## Parser system
+- commenti ripetitivi
+- non riconosce bene il fuori tema
+- feedback troppo generico
+- a volte la lettura non valorizza correttamente ciò che nella risposta c’è davvero
 
-Implement structured parsing producing:
+### Obiettivo
 
-- CandidateProfile
-- RoleProfile
-- JobFitAnalysis
-
-Parser responsibilities:
-
-- detect seniority signals
-- detect skill clusters
-- detect responsibility signals
-- detect domain signals
-- evaluate evidence strength
-- identify ambiguities
-
-### Status
-**Completed first working version**
-
-Implemented:
-- controlled prompt builders
-- parser runners
-- model adapter architecture
-- Groq adapter
-- end-to-end parser pipeline
-- fixture-based testing
-- Groq real-run testing
-- locale-aware parser prompting
-- retry handling for transient provider failures
-
-Current operational note:
-- repeated runs are now constrained by Groq daily token budget on the current service tier
-
-## JobFitAnalysis engine
-
-Evaluate compatibility between candidate and role across dimensions:
-
-- technical fit
-- tools fit
-- domain fit
-- seniority fit
-- responsibility fit
-- evidence strength
-- growth potential
-
-Output must include:
-
-- matches
-- gaps
-- ambiguities
-- transferable strengths
-- interview focus priorities
-- follow-up triggers
-- CV improvement hints
-
-### Status
-**Completed first working version**
-
-## Interview personalization
-
-Use JobFitAnalysis to:
-
-- choose question focus areas
-- activate targeted follow-up packs
-- emphasize certain interview sections
-- adapt report generation
-
-## Context-aware interview profiling
-
-Goal: make the interview engine more realistic by adapting not only to role fit, but also to interview context.
-
-The system should increasingly infer from the job description and related signals:
-- role seniority
-- company size / structure when inferable
-- likely organizational style
-- expected degree of autonomy, ownership, collaboration, or resilience
-- whether the interview context is likely to be more HR-oriented, operational, business-driven, or pressure-oriented
-
-This context should influence:
-- selected question families
-- emphasis of follow-up questions
-- expected answer depth
-- what counts as a strong answer for that context
-
-### Status
-Concept now explicitly active, implementation not started
-
-Planned consequences:
-- broader question taxonomy
-- stronger distinction between junior / mid / senior interview paths
-- stronger distinction between structured-corporate and smaller / pragmatic contexts
-- more realistic interview behavior overall
-
-## Person-perception layer
-
-Goal: help the candidate understand what kind of person may be perceived through their answers.
-
-This layer should NOT classify the candidate rigidly.
-Instead, it should simulate the kind of impression a recruiter might form.
-
-Expected output style:
-- “a recruiter may perceive…”
-- “these answers may suggest…”
-- “for this role, it may help to make these aspects more visible…”
-
-Potential perceived signals:
-- initiative
-- autonomy
-- collaboration
-- discipline
-- resilience
-- curiosity
-- enthusiasm
-- coachability
-- comfort under pressure
-- execution focus
-
-This is especially relevant for:
-- low-seniority profiles
-- first-job candidates
-- young users with little interview experience
-
-### Status
-Concept now explicitly active, implementation not started
-
-Planned consequences:
-- new behavioral / person-perception question families
-- new report sections focused on perceived personal signals
-- better coaching on self-presentation during interviews
-
-## Interview tone simulation
-
-Goal: prepare the candidate not only for different questions, but for different interviewer styles.
-
-Real interviews vary in tone. Some are:
-- standard / neutral
-- supportive
-- incisive
-- pressure-oriented
-- HR-relational
-- business-direct
-- occasionally mildly hostile or stress-testing
-
-The system cannot know the real interviewer style in advance,
-but it can:
-- infer a plausible tone from role/context
-- allow explicit training against different tones
-
-This is especially useful for:
-- commercial roles
-- leadership roles
-- customer-facing roles
-- stressful or high-pressure environments
-
-### Status
-Concept now explicitly active, implementation not started
-
-Possible future user-facing selector:
-- short / standard / deep
-- standard / supportive / incisive / pressure / HR-relational / business-direct
-
-Important note:
-tone simulation should be used for realistic preparation, not for theatrical exaggeration.
-The goal is to train resilience, adaptability, and composure under different interview conditions.
-
-## Question bank expansion strategy
-
-Because the engine is becoming more context-aware, the question bank should eventually expand significantly.
-
-The correct future order is:
-1. define context dimensions
-2. define person-perception objectives
-3. define tone dimensions
-4. structure the question-family taxonomy
-5. only then scale the library of actual questions
-
-This avoids uncontrolled growth of question files and keeps selection logic coherent.
-
-### Status
-Not started as formal architecture work
-Concept now clearly active
-
-
-### Status
-**Completed first working version**
-
-Implemented:
-- interview plan derivation
-- question family selection
-- follow-up pack selection
-- session composition
-- runtime execution base
-- answer-shape analysis
-- report aggregation
-- final candidate report build
-- adaptive follow-up injection on weak core answers
-- dimension-aware adaptive routing
-
-Still to complete:
-- tighter question deduplication
-- stronger alignment between selected question and actual answer intent
-- more stable short-flow behavior
-- stronger consistency between session design and rendered shell
-
-## Comparative retry
-
-Allow a second interview attempt and highlight improvements.
-
-### Status
-Not started
-
-## Optional step-by-step feedback
-
-Allow the system to optionally provide feedback after certain questions.
-
-### Status
-**Started in prototype form**
-
-Implemented in shell:
-- lightweight quick feedback
-- score / top strength / focus area
-
-Still to refine:
-- align quick feedback with LLM review rather than old heuristic only
-- reduce repetitive patterns
-- possibly separate “fast feedback” from “deep trainer feedback”
-
-## Locale-aware system behavior
-
-The system should be externally switchable between languages without changing core business logic.
-
-### Status
-**Working first version**
-
-Implemented:
-- `app_locale.json` as source of truth
-- locale-aware interview config loading
-- localized question/follow-up content
-- localized report copy
-- locale-aware parser prompting
-- locale-aware answer annotation prompting
-
-Still to refine:
-- richer localized config coverage
-- stricter locale consistency checks in generated outputs
-- cleaner handling of internal keys versus user-facing labels
-
-## Preview and interaction layer
-
-A first preview and local interaction exploration exist.
-
-### Status
-**Working prototype with LLM trainer layer**
-
-Implemented:
-- HTML preview for final report
-- local payload generation
-- local interactive HTML shell
-- final report dashboard
-- collapsible detailed analysis
-- trainer mode
-- heuristic answer annotations
-- LLM answer annotations
-- completion state after session end
-- session annotation merge into shell rendering
-
-Still to refine:
-- simplify the shell now that it supports real LLM review
-- remove redundant visual constructs
-- make trainer mode visually more distinct and professional
-- possibly later move toward multi-view UX
+Feedback realistico da recruiter / coach
 
 ---
 
-Latest UI/product note:
-- the shell has moved from raw debug-style rendering toward a more product-like surface
-- however, the next UX step is simplification, not adding more sections
-- priority is now:
-  - reduce repetition
-  - strengthen hierarchy
-  - make final synthesis and advice visually dominant
-  - keep trainer mode as a deeper layer, not a duplicate of the main report
+## 3. TRAINER MODE
 
-  Interview Context Engine (design phase)
-- context profiling layer
-- tone simulation
-- person-perception signals
-- question selection strategy
-- question taxonomy redesign (next step)
+### Obiettivo
 
-# V2 — Training Engine Transition
+Far percepire valore reale
 
-Goal: generalize the interview engine into a broader content-driven training architecture.
+### Migliorare
 
-## Training engine abstraction
-
-Separate reusable engine parts from interview-specific parts.
-
-Target distinction:
-
-### Reusable
-- runtime orchestration
-- answer recording
-- adaptive follow-up logic
-- report shell
-- answer annotation contract
-- trainer mode concepts
-- annotation normalization
-- annotation-driven rendering
-
-### Interview-specific
-- CV parser
-- role parser
-- job fit analysis
-- interview question families
-- interview follow-up packs
-
-### Status
-**Concept active, first implementation signals now present**
-
-The new answer annotation layer is the first serious reusable piece pointing toward the broader training engine.
-
-## Structured annotation module
-
-Build a true post-session annotation system capable of marking:
-- strengths
-- weaknesses
-- evidence
-- genericity
-- ownership
-- improvement opportunities
-
-Target output:
-- span-based or position-based annotations
-- suitable for colored review in trainer mode
-
-### Status
-**Started and working first version**
-
-Implemented:
-- annotation schema note
-- annotation JSON schema
-- prompt builder
-- Groq answer annotation runner
-- single-answer annotation
-- session-wide annotation
-- normalization and guardrails
-- rendering in trainer mode
-
-Still to refine:
-- reduce generic coaching language
-- make annotations more answer-quality-focused
-- make improved drafts safer and more useful
-- improve visual clarity in UI
-
-## Domain-specific training parsers
-
-Future architecture should support:
-- interview parser
-- manual / procedural parser
-- sales training parser
-- leadership / management parser
-- future book/document parser
-
-The idea is that a training tool could ingest freer knowledge sources and self-configure training flows through parser specialization.
-
-### Status
-Concept defined, implementation not started
-
-## Content-driven training ingestion
-
-Long-term idea:
-- ingest semi-structured or freer training sources
-- identify concepts, processes, examples, rules, and checks
-- auto-generate question sets, scenarios, and coaching logic
-
-Possible sources:
-- manuals
-- guides
-- playbooks
-- books
-- internal documentation
-
-### Status
-Concept defined, implementation not started
+- cosa cercava la domanda
+- cosa è emerso
+- cosa manca
+- come migliorare
+- differenza chiara rispetto al feedback free
 
 ---
 
-# V3 — Platform Layer
+## 4. REPORT
 
-Goal: transform the simulator / trainer into a persistent platform.
+### Miglioramenti
 
-## User system
-- user accounts
-- authentication
-- session storage
-
-## Session history
-- previous interviews
-- comparison of attempts
-- improvement tracking
-
-## CV upload
-- PDF upload
-- automatic CV parsing
-- profile extraction
-
-## Recruiter mode
-- recruiter interview simulations
-- alternative evaluation perspective
-
-## Dashboard
-- user dashboard
-- interview progress tracking
-- training progress tracking
-
-## Audio layer (future)
-- voice input
-- speech analysis
-
-### Status
-Not started
+- punti forti più sintetici
+- separazione chiara tra:
+  - generale
+  - risposta per risposta
+- maggiore evidenza visiva
+- CV free più utile
+- contenuti Pro/Premium più chiari e più desiderabili
 
 ---
 
-## Latest product/UI update
+## 5. UI / UX
 
-A major shell simplification and hierarchy refactor has now been completed in the local interactive browser shell.
+### Setup
 
-### Newly integrated improvements
-- stronger top summary / coach dashboard structure
-- reduced duplication between summary and trainer details
-- compact interview map with collapsible answer cards
-- stronger visual separation of opened answer cards
-- stronger distinction between:
-  - positive answer signals
-  - critical answer signals
-- highlighted coach-tip area
-- highlighted improved-answer area
-- restored annotated text rendering in trainer review
-- restored metric tooltips in performance snapshot
+- rifinitura dello step Preparazione
+- migliore gestione stati compilato / non compilato
+- migliore compattezza verticale
+- aggancio più chiaro tra preparazione e simulazione
 
-### Current product conclusion
-The shell is now substantially closer to a coach dashboard and farther from a debug viewer.
+### Report
 
-The current UI is considered:
-- meaningfully improved
-- more usable for product validation
-- still not final
-
-### Still open in V1 preview layer
-- move the short “how to read this report” explanation nearer to the top of the page
-- make `Aderenza` wording explicit:
-  - e.g. `Aderenza profilo–ruolo`
-- close the remaining report localization leak where one recurring strength still appears in English
-- keep improving coaching quality so answer feedback stays answer-focused rather than drifting toward broad career advice
-
-### Current bug under active investigation
-A recurring-strength label is still leaking in English into the final shell.
-
-Observed example:
-- `The answer provides evidence or outcome-oriented support.`
-
-This was confirmed to already exist in the generated interview-report JSON, which means:
-- the bug is upstream of the renderer
-- the active investigation is inside report collection / relocalization logic
-
-Primary file under current investigation:
-- `src/interview/collectInterviewReport.js`
-
-Secondary file checked:
-- `src/interview/buildFinalCandidateReport.js`
-
-### Near-future product feature candidate
-A highly plausible future feature has been identified:
-- selectable interview length at session start
-
-Candidate options:
-- short
-- standard
-- deep
-
-This is considered valuable for usability and adoption, but not the immediate next task.
-The localization leak and dashboard explanation clarity remain higher priority.
+- allineamento definitivo con setup
+- family feeling coerente
+- migliore gerarchia visiva
+- maggiore evidenza contenuti premium
+- navigazione più chiara e definitiva
 
 ---
 
-## Latest technical milestone
+# 🚀 FASE SUCCESSIVA
 
-The remaining locale inconsistency in answer-shape analysis has been fixed.
+## GO-TO-MARKET
 
-### Closed issue
-A recurring-strength string was still leaking in English into the final shell.
-
-### Actual root cause
-The issue was traced to:
-- `src/interview/analyzeAnswerShape.js`
-
-The module was returning English answer-shape outputs despite the active locale being `it`.
-
-### Fix completed
-`analyzeAnswerShape.js` was fully replaced so that:
-- locale resolution is explicit and robust
-- answer-shape strings are pulled from the resolved locale copy directly
-- the analysis output is now aligned with the configured app locale
-
-### Current result
-The full shell now renders with much stronger Italian consistency.
-
-### Next likely UI refinements
-- clarify fit wording at top level:
-  - `Aderenza profilo–ruolo`
-- move brief reading guidance higher in the page hierarchy
-- later explore selectable interview length:
-  - short / standard / deep
-
- ---
-
-## Latest contextual engine implementation milestone
-
-A first implemented prototype of the context-aware interview engine has now been completed.
-
-### Newly implemented prototype flow
-The system can now run the following experimental flow:
-
-- derive interview context from parser outputs
-- load a structured pilot question bank
-- rank structured questions by contextual suitability
-- derive a question selection strategy
-- resolve tone-aware prompt variants
-- assemble a structured interview preview
-
-This means the following prototype modules now exist conceptually and in code:
-
-- `deriveInterviewContextProfile`
-- `loadStructuredQuestionBank`
-- `rankStructuredQuestions`
-- `deriveQuestionSelectionStrategy`
-- `selectQuestionToneVariant`
-- `buildStructuredInterviewPreview`
-
-### Current result
-A first end-to-end contextual preview can now be generated successfully.
-
-This preview is still parallel to the legacy interview engine and does not yet replace the active session composer,
-but it proves that the architectural direction is implementable.
-
-### What this milestone validates
-This milestone validates:
-
-- context-aware question ranking
-- tone-aware question resolution
-- structured question-object architecture
-- separation between context derivation, selection strategy, and final prompt resolution
-
-### Current limitation
-The current structured question bank is still only a pilot set.
-
-It is sufficient for architecture validation,
-but not yet sufficient for full realistic contextual coverage.
-
-The current gap is especially visible for:
-- lead / senior roles
-- leadership-oriented questioning
-- decision-tradeoff validation
-- ambiguity management
-- accountability under pressure
-
-### Next recommended step
-Before integrating the contextual engine into the real legacy runtime,
-the next best step is:
-
-- expand `question_bank_v2.json` with a small second wave of structured questions
-
-Suggested next additions:
-- `leadership_scope`
-- `decision_tradeoffs`
-- `ambiguity_management`
-- `accountability_examples`
-- `pressure_handling`
-
-### Strategic conclusion
-The project now has:
-
-- a working legacy MVP engine
-- a working contextual engine prototype path
-
-The next phase should focus on:
-1. strengthening the structured question bank
-2. refining contextual coverage
-3. only after that, planning controlled integration into the main interview composer
-
-## 🚀 Contextual Interview Engine – Next Steps
-
-### Fase completata
-
-✔ Prototipo v2 implementato  
-✔ Question bank strutturato (10 domande)  
-✔ Strategia di selezione contestuale  
-✔ Supporto multi-lingua  
-✔ Preview coerente per profili senior/lead  
+- definizione pricing
+- landing page
+- comunicazione valore
+- differenza chiara tra Free / Pro / Premium
 
 ---
 
-### Fase successiva (priorità alta)
+# 🚀 FASE FUTURA
 
-#### 1. Espansione Question Bank
+## NEGOTIATION
 
-Aggiungere nuove domande per coprire:
-
-- delegation & team leverage
-- stakeholder persuasion / influence
-- conflict escalation
-- ownership vs execution
-- prioritization trade-offs complessi
-
-Target: +5 / +10 domande
+- secondo scenario reale
+- validazione motore
+- confronto con Interview
 
 ---
 
-#### 2. Scenario comparison
+# 📌 REGOLA CHIAVE
 
-Testare il comportamento del motore su:
+NON aggiungere feature nuove finché:
 
-- profilo `junior + supportive`
-- profilo `lead + incisive`
-- profilo `consultancy_client_facing + pressure`
+- qualità domande non è alta
+- feedback non è credibile
+- UX non è chiara
+
+---
+
+## 🎯 NEXT STEP OPERATIVO
+
+1. rifinitura dettagliata setup
+2. rifinitura dettagliata report
+3. rotazione domande
+4. migliorare evaluation engine
+5. rafforzare trainer mode
+
+---
+
+## Update — 2026-03-26
+
+### ✅ Migliorata la shell di setup
+
+Completato un ulteriore step di rifinitura sulla pagina setup:
+
+- barra superiore più leggibile
+- descrizione iniziale più visibile
+- pulsanti/step con stato più chiaro
+- contorni e selezione resi più evidenti
+- coerenza grafica più vicina alla pagina report
+
+### Decisione UX confermata
+
+- setup:
+  - deve mostrare solo `Vai al report`
+- report:
+  - deve mostrare solo `Vai al setup`
+
+### Scelta prodotto confermata
+
+I pulsanti PRO e PREMIUM possono essere mostrati anche nello setup come parte della presentazione del valore del prodotto, purché non disturbino il flusso principale.
+
+### Prossimo micro-step operativo
+
+1. completare la navigazione reale tra setup e report
+2. riallineare definitivamente la barra del report alla barra migliorata dello setup
+3. rifinire ultimi dettagli di contrasto, bordi e selezione attiva
+
+## Update — 2026-03-27
+
+### ✅ Ripristinata la separazione corretta setup / report
+
+Completato un intervento importante di riallineamento:
+
+- `renderInteractiveInterviewShellHtml.js` torna a essere il renderer dello setup
+- `renderFringeInterviewReportHtml.js` torna a essere il renderer del report
+- `test_generate_interactive_shell_html.js` rigenera due file HTML distinti e corretti
+
+### ✅ Setup semplificato e reso più leggibile
+
+La pagina setup ora è basata su:
+
+- step `Preparazione`:
+  - ruolo
+  - CV
+  - JD
+  - lingua
+- step `Simulazione`
+- pannello `PRO`
+- pannello `PREMIUM`
+
+### ✅ Barra superiore migliorata
+
+La barra dello setup ora è:
+
+- fissa
+- compatta
+- su una sola riga
+- coerente con la logica del report
+
+### Scelta di metodo confermata
+
+Non rifare da zero il report.
+
+Usare invece la versione “quasi buona” come base stabile e procedere per rifiniture mirate.
+
+### Prossimo blocco operativo consigliato
+
+1. revisione fine della pagina setup
+2. revisione fine della pagina report
+3. allineamento definitivo tra le due
+4. poi ritorno alla sostanza:
+   - rotazione domande
+   - evaluation engine
+   - trainer mode
+
+   ## Update — 2026-03-30
+
+### ✅ Stabilizzazione renderer setup/report
+
+Completato un intervento di consolidamento:
+
+- setup e report sono di nuovo separati correttamente
+- il renderer del report è stato riportato a una struttura stabile
+- la barra del report è stata riportata su una sola riga
+- confermata una base grafica coerente tra setup e report
+
+### ✅ Scelta tecnica di robustezza per i test
+
+Per evitare errori inutili sugli export:
+
+- i test HTML non devono più passare da `src/app/index.js`
+- devono invece importare direttamente i file renderer
+
+Questo vale in particolare per:
+- `scripts/test_generate_interactive_shell_html.js`
+- `scripts/test_render_fringe_interview_report_html.js`
+
+### 🔄 Prossimo blocco operativo
+
+1. ultimissimi micro-fix su setup
+2. ultimissimi micro-fix su report
+3. congelare temporaneamente la UI
+4. tornare subito alle priorità sostanziali:
+   - rotazione domande
+   - qualità valutazione risposte
+   - trainer mode
+
+### Nota importante
+
+La futura pagina prezzi / upgrade:
+- NON va infilata ora dentro setup/report
+- va costruita come pagina dedicata
+- i pulsanti PRO/PREMIUM attuali potranno poi essere collegati lì senza rifare il rendering principale
+
+## Update — 2026-03-30 / Evaluation engine + question rotation refinement
+
+### ✅ Rotazione domande — prima versione riuscita
+
+Completato un primo blocco robusto di rotazione:
+
+- penalità sulle `questionKey` recenti
+- penalità leggere su categorie e segnali troppo ricorrenti
+- strategy che prova a evitare il riuso ravvicinato
+- piena compatibilità multilingua:
+  - la rotazione lavora su `key/category/signals`
+  - NON sui prompt
+
+### ✅ Nuovo asse di domanda: motivazione al cambiamento
+
+Aggiunti nei bank IT/EN:
+
+- `motivation_for_change`
+- `change_trajectory_logic`
+
+Effetto ottenuto:
+
+- il motore ora può introdurre davvero domande su:
+  - perché vuoi cambiare azienda / ruolo
+  - che cosa stai cercando di diverso
+  - se il passo è coerente o solo reattivo
+
+### ✅ Composizione primary questions migliorata
+
+Correzione semantica importante:
+
+- nelle sessioni brevi non viene più forzato `WALKTHROUGH`
+- struttura corta più corretta:
+  - `ROLE_CONTEXT`
+  - `CASE_1`
+  - `DECISION_PROBE`
+  - `PRESSURE_PROBE` / `DEPTH_CHECK`
+- il contextual ranking pesa davvero nella selezione finale
+
+### ✅ Answer analyzer contestuale
+
+`analyzeAnswerShape.js` ora legge anche il contesto della domanda:
+
+- `questionText`
+- `questionKey`
+- `narrativeRole`
+- `expectedSignals`
+
+Nuovi indicatori introdotti:
+
+- `questionAlignment`
+- `motivationForChange`
+- `offTopicRisk`
+
+### ✅ Runtime wiring completato
+
+`advanceInterviewRuntime.js` inoltra ora all’analyzer il contesto della domanda.
+
+Conseguenza:
+
+- l’analisi risposta non è più cieca
+- può distinguere meglio:
+  - risposta centrata
+  - risposta che si allarga
+  - risposta fuori asse
+  - motivazione al cambiamento credibile / fragile
+
+### ✅ Report e final report rafforzati
+
+`collectInterviewReport.js` e `buildFinalCandidateReport.js` ora espongono anche:
+
+- `questionQuality`
+- `alignment`
+- `motivationForChange`
+- nuovo asse `positioning`
+
+---
+
+## 🔄 Nuova priorità consigliata
+
+### 1. TRAINER MODE
 
 Obiettivo:
-→ verificare che il sistema cambi realmente “personalità”
+
+usare i nuovi segnali per spiegare meglio:
+
+- che cosa cercava la domanda
+- che cosa è emerso
+- che cosa manca
+- come migliorare
+
+### 2. Coerenza scoring
+
+Micro-fix successivo da prevedere:
+
+riallineare meglio:
+
+- fit score
+- answer score
+- assi comportamentali
+- overall band
+- recommendation band
 
 ---
 
-#### 3. Refinement strategy (facoltativo)
+## ⚠️ Nota tecnica separata
 
-Possibili miglioramenti:
+Resta ancora aperto, ma NON collegato a questo blocco:
 
-- weighting dinamico per category
-- variazione numero domande per seniority
-- inserimento “pattern di intervista” (es. stress interview)
+- errore export su `src/app/index.js`
+- test che fallisce:
+  - `test_run_fringe_interview_mvp_session.js`
 
----
+Da trattare come blocco distinto.S
 
-### Fase successiva (integrazione)
+## Update — nota da trasformare in blocco operativo
 
-#### 4. Integrazione nel motore principale
+### 🔄 Gating della domanda “motivation for change”
 
-Step graduali:
+Da introdurre un controllo logico a monte.
 
-1. usare `deriveInterviewContextProfile` nel flow reale
-2. affiancare selection strategy al sistema attuale
-3. introdurre progressive override del composer
+#### Nuovi input da prevedere nello setup
 
----
+- stato occupazionale attuale:
+  - occupato
+  - non occupato
 
-### Visione
+- se occupato:
+  - azienda attuale / altra azienda
+  - settore / mercato
+  - eventuale affinità con ruolo / azienda target
 
-Obiettivo finale:
+#### Effetto desiderato
 
-un motore che non genera solo domande, ma:
+La domanda sulla motivazione al cambiamento deve essere:
 
-- simula **stili di intervista diversi**
-- adatta tono e pressione
-- costruisce una percezione coerente del candidato
+- attivata solo quando coerente
+- sostituita da una variante diversa quando il candidato non lavora già in un’altra azienda
 
-In altre parole:
-non un questionario, ma un **intervistatore simulato**
+#### File / aree probabilmente da toccare in futuro
 
----
+- setup input
+- validazione input
+- deriveInterviewContextProfile
+- question selection / gating logic
 
-## Latest validation milestone — scenario comparison confirms behavioral differentiation
+## Fase corrente — Transition to Product
 
-A dedicated comparison of multiple interview scenarios has now been completed for the contextual engine prototype.
-
-### Scenarios compared
-The following scenarios were tested side by side:
-
-- junior / corporate_structured / supportive
-- lead / corporate_structured / incisive
-- senior / consultancy_client_facing / pressure
-
-### Validation outcome
-The comparison confirmed that the contextual engine is not only changing prompt wording.
-It is also changing:
-
-- question emphasis
-- interviewer pressure level
-- evaluation posture
-- perceived interview style
-
-This is a major validation milestone because it confirms that the system is starting to simulate distinct interviewer behaviors rather than only distinct prompt texts.
-
-### Most important observed outcome
-The system now produces meaningfully different previews such as:
-
-#### Junior / supportive
-- more potential-oriented
-- gentler
-- more learning / initiative focused
-
-#### Lead / incisive
-- more accountability-oriented
-- more decision-quality oriented
-- more scope-validating
-
-#### Consultancy / pressure
-- more skeptical
-- more stress-oriented
-- more pressure-testing
-
-### Technical milestone included in this phase
-A bug was identified and fixed in preview generation:
-
-- `buildStructuredInterviewPreview.js`
-
-Fix:
-- `seniorityQuestionKeys` are now correctly included in the final preview timeline
-
-This restored full strategy-to-preview coherence.
-
-### Current product conclusion
-The contextual engine prototype is now validated at three levels:
-
-1. architecture level
-2. pipeline level
-3. behavioral differentiation level
-
-This makes it a serious candidate for future integration into the main interview engine,
-but not yet the immediate next step.
-
-### New recommended priority order
-
-#### Priority 1
-Refine junior strategy behavior so that lower-seniority paths more strongly favor:
-- learning
-- initiative
-- potential
-- coachability
-
-#### Priority 2
-Expand the structured bank with:
-- more junior/potential questions
-- more pressure variants
-- more consultancy-sensitive prompts
-
-#### Priority 3
-Re-run scenario comparison after those additions
-
-#### Priority 4
-Only after that, plan controlled integration into the legacy composer
-
-### Strategic conclusion
-The system is now demonstrably moving from:
-
-- question selection logic
-
-toward:
-
-- simulated interviewer behavior
-
-That is a major product shift and one of the strongest signals so far that the contextual engine direction is worth continuing.
+### Stato
+- MVP online (landing + tool separati)
+- prima esperienza reale validata
+- identificato gap principale: percezione valore
 
 ---
 
-## Latest milestone — junior/potential question expansion completed
+### Priorità immediate (ordine rigido)
 
-The structured contextual engine has now been expanded with a second wave of junior/potential-oriented questions.
-
-### New question objects added
-The following structured questions were added to the v2 bank:
-
-- `motivation_for_role`
-- `feedback_application`
-- `team_contribution_examples`
-- `adaptability_examples`
-
-These additions improve coverage for:
-- junior / entry candidates
-- supportive interview styles
-- HR-relational evaluation
-- potential / growth / coachability signals
-
-### Strategy refinement completed
-The selection strategy was also refined so that junior-like paths now:
-- use fewer mandatory role-fit questions
-- avoid over-emphasizing accountability too early
-- more easily surface learning and motivation signals
-
-### Result of rerun scenario comparison
-After this update, the contextual engine now shows a stronger behavioral split across:
-
-#### Junior / Supportive
-More focused on:
-- transferability
-- learning
-- motivation
-- future potential
-
-#### Lead / Incisive
-Still focused on:
-- accountability
-- stakeholder conflict
-- decision trade-offs
-- leadership scope
-- pressure handling
-
-#### Consultancy / Pressure
-Now more clearly focused on:
-- stakeholder tension
-- decision trade-offs under pressure
-- adaptability
-- pressure handling
-
-### Product significance
-This milestone improves the contextual engine in an important way:
-
-it reduces the risk that junior interviews sound like weakened senior interviews.
-
-Instead, junior flows now begin to feel like:
-- real potential-oriented interviews
-- with more realistic expectations and signals
-
-### New open design question
-A new product decision is now visible:
-
-Should junior/supportive paths be:
-- intentionally shorter
-or
-- equal-length but filled with more junior-specific question types?
-
-This is not urgent, but it is now a meaningful design choice rather than an accidental consequence.
-
-### Recommended next step
-Before integrating the contextual engine into the legacy composer, the next best options are:
-
-1. expand the bank further with:
-   - more pressure variants
-   - more consultancy-specific prompts
-   - more junior-specific prompts
-2. or explicitly define:
-   - short / standard / deep interview modes
-
-Both directions are now product-relevant.
+1. Landing — rewrite completo (micro-shock)
+2. Demo WOW above-the-fold
+3. Riduzione attrito ingresso (Quick Interview)
+4. Primo ciclo di test utenti
 
 ---
 
-## Latest milestone — consultancy / pressure branch strengthened
+### NON priorità (temporaneamente bloccate)
 
-A new wave of structured questions has now been added to strengthen consultancy / pressure-oriented interview behavior.
-
-### New question objects added
-The following structured questions were introduced:
-
-- `client_pushback_handling`
-- `clarity_under_challenge`
-- `priority_conflict_management`
-- `expectation_reset`
-
-These additions improve coverage for:
-- client pushback
-- skeptical challenge
-- explanation under scrutiny
-- expectation management
-- pressure-sensitive communication
-
-### Validation result
-After this addition, the scenario comparison was rerun and confirmed a meaningful improvement in the consultancy/pressure branch.
-
-#### Consultancy / Pressure now feels more like:
-- skeptical
-- demanding
-- client-facing
-- pressure-testing
-
-This is a strong product improvement because the contextual engine now better simulates an interviewer who is:
-- harder to convince
-- more stress-oriented
-- more focused on credibility under challenge
-
-### Important side effect discovered
-One new consultancy-sensitive question:
-- `client_pushback_handling`
-
-now tends to rise strongly even in some generic `corporate_structured` lead scenarios.
-
-This is not a structural problem, but it reveals a useful refinement need:
-- stronger company-context weighting
-- or milder behavior of consultancy-sensitive prompts outside explicit consultancy contexts
-
-### Current priority after this milestone
-The next likely refinement is:
-
-- adjust ranking sensitivity so that consultancy-specific prompts remain highly visible in consultancy contexts,
-  but do not dominate too easily in generic corporate scenarios
-
-### Product significance
-The contextual engine is now becoming more recognizable not only across:
-- junior vs senior
-
-but also across:
-- normal evaluation vs pressure-oriented evaluation
-
-This moves the project further toward:
-- simulated interviewer behavior
-rather than:
-- prompt selection only
+- miglioramenti grafici avanzati
+- pricing / monetizzazione
+- refactoring engine
+- nuove feature
 
 ---
 
-## Latest milestone — contextual engine calibration stabilized
+### Obiettivo della fase
 
-A final calibration pass on the contextual ranking logic has now been completed successfully.
+Passare da:
+→ tool funzionante
 
-### What was achieved
-The system now separates much more cleanly between:
+a:
+→ esperienza che aggancia in pochi secondi
 
-- junior / supportive interviews
-- lead / incisive interviews
-- consultancy / pressure interviews
-
-### Key technical refinement
-`rankStructuredQuestions.js` was refined so that highly consultancy-specific prompts now behave more appropriately:
-
-- strong boost inside `consultancy_client_facing`
-- stronger penalty outside consultancy contexts
-
-This solved the previous issue where:
-- `client_pushback_handling`
-could rise too aggressively even in more generic corporate lead scenarios
-
-### Final validated scenario behavior
-
-#### Junior / Supportive
-Now behaves like:
-- growth-oriented
-- lower-pressure
-- team / learning / motivation focused
-
-#### Lead / Incisive
-Now behaves like:
-- scope-validating
-- accountability-oriented
-- demanding but not overly consultancy-shaped
-
-#### Consultancy / Pressure
-Now behaves like:
-- skeptical
-- relationally difficult
-- pressure-testing
-- client-facing
-- clarity / pushback / expectation management focused
-
-### Current product conclusion
-This milestone confirms that the contextual engine can now generate:
-- differentiated interviewer posture
-- differentiated pressure style
-- differentiated question logic
-
-This is a major step toward:
-- simulated interviewer behavior
-rather than:
-- prompt variation only
-
-### New stable status
-The contextual engine prototype can now be considered:
-
-- behaviorally differentiated
-- structurally coherent
-- suitable for gradual future integration
-
-### Recommended next product choices
-The next branch should now be chosen explicitly among:
-
-#### Option A — gradual integration
-Start using the contextual engine outputs inside the legacy interview composer.
-
-#### Option B — user-facing interview modes
-Introduce:
-- short
-- standard
-- deep
-
-and connect them to contextual selection logic.
-
-#### Option C — further specialization
-Expand the structured bank by:
-- sector
-- function
-- role family
-- interviewer style
-
-All three directions are now realistic.
 ---
 
-## Latest milestone — interview length modes added
+### KPI qualitativo
 
-A new product-facing control layer has now been implemented for interview depth:
+Utente deve pensare entro 5 secondi:
 
-- `short`
-- `standard`
-- `deep`
+"ok… questo è diverso"
 
-### New capability
-The contextual engine now supports not only:
-- different scenarios
-- different tones
-- different company contexts
-- different seniority paths
+Se non succede:
+→ problema landing, non prodotto
 
-but also:
-- different interview lengths
+## Update — 2026-04-01 / UX polish prioritario
 
-### Technical implementation
-Implemented:
-- `config/interview_length_modes.json`
-- `loadInterviewLengthModes.js`
-- integration into `deriveQuestionSelectionStrategy.js`
-- validation script:
-  - `test_compare_interview_lengths.js`
+### Nuova micro-priorità immediata
+Pulizia definitiva della top navigation di setup/report:
 
-### Validation outcome
-The length modes were validated successfully on a `lead / corporate_structured / incisive` scenario.
+1. uniformità pulsanti desktop
+2. leggibilità mobile
+3. stato attivo evidente ma non invasivo
+4. piena coerenza setup ↔ report
 
-Observed behavior:
+### Regola
+Prima chiudere la barra.
+Poi intervenire sulla landing e sul report.
 
-#### Short
-A clearly reduced flow:
-- faster
-- sharper
-- suitable for quick simulation
+## Update — 2026-04-02 / UX polish barra setup
 
-#### Standard
-The current default:
-- balanced
-- coherent
-- aligned with the previously stabilized selection logic
+### Micro-priorità immediata
 
-#### Deep
-A genuinely extended flow:
-- more exploration
-- more secondary probing
-- richer simulation
+Chiudere bene la top navigation dello setup prima di passare oltre.
 
-### Important stability result
-The introduction of interview length modes did not break the contextual engine.
+### Dettagli da rifinire
+- badge FREE / PRO / PREMIUM più leggibili
+- lucchetti più visibili
+- pallini numerati più leggibili
+- allineamento verticale numeri ↔ testi
+- stato attivo molto più evidente e persistente
+- leggibilità mobile dei micro-label dei led
 
-The standard scenario comparison remains coherent across:
-- junior / supportive
-- lead / incisive
-- consultancy / pressure
+### Regola di lavoro
+Non rifare la barra.
+Solo ritocchi mirati su:
+- dimensioni
+- peso font
+- contrasto
+- bordo attivo
+- allineamenti
 
-### Product significance
-This is a major product improvement because users can now control both:
-- the type of interviewer
-and
-- the depth of the session
+### Dopo questo
+1. riportare lo stesso intervento al report
+2. riprendere landing page
+3. poi rientrare su esperienza completa setup → report
 
-This makes the engine feel more like a configurable simulation product rather than a fixed pipeline.
+## Roadmap aggiornata — 2026-04-08
 
-### New design choice emerging
-A new explicit product decision is now visible:
+### Stato attuale del prodotto
+MVP in fase avanzata lato:
+- setup (configurazione simulazione)
+- report (output finale)
 
-Should junior users in `standard` mode receive:
-- a naturally shorter interview
-or
-- a standard-length interview with one more junior-specific question?
+Architettura stabile, UX in fase di rifinitura.
 
-This is not yet an issue to fix.
-It is now a product behavior choice to decide explicitly later.
+Focus attuale:
+👉 trasformare un prototipo funzionante in un prodotto percepito come solido e credibile
 
-### Recommended next step
-The next branch should now be chosen between:
-
-#### Option A
-Integrate contextual engine outputs gradually into the legacy composer.
-
-#### Option B
-Refine the behavior of `standard` mode for junior profiles.
-
-At this stage, both are realistic next steps.
 ---
 
-## Latest milestone — contextual engine integrated into real MVP session flow
+## PRIORITÀ IMMEDIATE (blocco attuale)
 
-A major milestone has now been reached:
+### 1. Setup — rifinitura finale
 
-the contextual interview engine is no longer only generating selection metadata.
+Obiettivo:
+rendere la pagina:
+- più chiara
+- più leggera
+- più guidata
 
-It is now actively driving the real MVP interview flow.
+Interventi da completare:
 
-### What is now contextual in the real session
-The following parts of the final interview session now come from the contextual engine:
+#### Fascia alta (critico)
+- separare:
+  - riga 1 → brand / identità
+  - riga 2 → guida dinamica + stato + messaggi
+- rendere il testo:
+  - più operativo (“cosa devi fare ora”)
+  - meno descrittivo
 
-- core question blocks
-- closing prompt
-- interview length mode control
+#### Pulizia contenuti
+- rimuovere ridondanze:
+  - stato preparazione (già visibile nei led)
+  - formato selezionato
+  - suggerimento pratico
+- semplificare blocchi input secondari:
+  - lingua
+  - formato
+  - modalità risposta
 
-### Integration completed
-The contextual pipeline now runs through the real MVP flow as follows:
+#### Demo UX
+- migliorare introduzione demo:
+  - copy più diretto (“non vuoi perdere tempo?”)
+- evidenziare chiaramente quando è attiva una demo
+- NON persistere i dati demo tra sessioni
 
-- parser
-- job fit analysis
-- legacy interview plan
-- contextual context profiling
-- structured question ranking
-- contextual selection strategy
-- tone variant resolution
-- real session composition using contextual questions
+#### Azioni utente
+- aggiungere:
+  - reset / nuova preparazione
 
-### Important technical fix completed
-A structural issue in contextual question resolution was fixed:
+#### Bug aperti
+- numerelli lunetta su mobile (verticale/orizzontale)
 
-Resolved questions now preserve:
-- stage
-- stage order
-- tone used
-- source
+---
 
-This allowed the composer to:
-- separate core questions from contextual closing correctly
-- avoid treating all contextual questions as generic undifferentiated blocks
+### 2. Gating — esperienza utente
 
-### Session test updated
-The full session test was recalibrated to the new contextual flow by:
-- explicitly using `interviewLengthMode: "short"`
-- updating the answer sequence to better match the contextual prompts
+Obiettivo:
+rendere il flusso evidente e naturale
 
-### Validation result
-The end-to-end full session test now passes again with:
-- requested mode: `short`
-- resolved mode: `short`
-- `sessionCompleted: true`
+Da migliorare:
+- messaggi di blocco più visibili
+- integrazione nella fascia alta (non messaggi isolati)
+- chiarezza sequenza:
+  - 1 → preparazione
+  - 2 → simulazione
+  - 3 → report
 
-### Product significance
-This milestone is a major transition point.
+---
 
-The project has now moved from:
-- contextual engine alongside the MVP
+### 3. Report — rifinitura UX
 
-toward:
-- contextual engine inside the MVP
+Obiettivo:
+allineare il report al livello percepito dello setup
 
-This means FRINGE is now closer to:
-- real contextual interview simulation
-rather than:
-- legacy interview flow with experimental side modules
+Interventi:
 
-### New likely next priorities
-The next branch should now be chosen between:
+#### Header / fascia alta
+- introdurre struttura coerente con setup:
+  - brand
+  - guida
+  - stato
+- evitare header troppo “neutro”
 
-#### Option A — stabilize and clean presentation
-- improve local shell labels for contextual stages
-- reduce remaining legacy summary artifacts
-- improve readability of contextual question categories
+#### Barra navigazione
+- mantenere:
+  - orizzontale su desktop
+  - compatta su mobile
+- comportamento:
+  - fissa su verticale
+  - più flessibile su orizzontale
 
-#### Option B — adaptive contextual intelligence
-- make adaptive follow-up selection aware of:
-  - contextual stage
-  - tone
-  - interview length mode
+#### Contenuti
+- rifinire:
+  - sintesi iniziale (hero)
+  - distinzione free / pro / premium
+- evitare ridondanze tra sezioni
 
-#### Option C — further product controls
-- expose interview length more explicitly in future UI
-- later expose tone selection as a user-facing control
+---
 
-At this stage, the contextual engine can be considered part of the real working MVP.
+## DOPO (solo dopo chiusura setup + report)
+
+### 4. Landing page (CRITICO prodotto)
+Obiettivo:
+- creare percezione valore immediata
+- guidare utente verso:
+  - demo
+  - simulazione reale
+
+---
+
+### 5. Modalità “solo CV”
+Idea:
+- utente vuole migliorare il CV senza simulazione
+- flusso dedicato (più corto)
+
+Nota:
+NON sviluppare ora → tornare dopo MVP pulito
+
+---
+
+### 6. Persistenza utente (feature PRO/PREMIUM)
+
+Funzionalità futura:
+- salvare più:
+  - CV
+  - job description
+  - ruoli target
+- richiamare sessioni precedenti
+
+Uso:
+- utenti paganti
+- training continuo
+
+---
+
+### 7. Evoluzione prodotto (livello avanzato)
+
+Direzioni già identificate:
+- simulazione più realistica (pressione, deviazioni)
+- lettura recruiter più profonda
+- miglioramento CV guidato automatico
+
+---
+
+## Principi guida confermati
+
+- NON rifare da zero → solo micro-rifiniture
+- aumentare:
+  - leggibilità
+  - chiarezza
+  - percezione prodotto
+- ridurre:
+  - ridondanza
+  - densità inutile
+  - rumore visivo
+
+---
+
+## Sequenza corretta di lavoro
+
+1. chiusura setup (UX + pulizia)
+2. chiusura report (coerenza + leggibilità)
+3. landing page (percezione prodotto)
+4. solo dopo → nuove feature
+
+---
+
+## Nota strategica importante
+
+Il prodotto NON è:
+👉 “un simulatore di colloqui”
+
+Il prodotto è:
+👉 un **motore di lettura e miglioramento del profilo candidato**
+
+La simulazione è solo uno dei modi per far emergere segnali.
+
+## Update — 2026-04-09 / cambio di priorità operativo
+
+### Nuova priorità immediata
+Sospendere le micro-rifiniture della setup.
+
+### Motivo
+Il costo tempo/UI sta diventando superiore al valore immediato.
+
+### Nuovo focus
+1. testare il comportamento reale del motore
+2. verificare la qualità percepita del report
+3. costruire una demo credibile da mostrare a un profilo HR
+4. solo dopo decidere eventuali ulteriori rifiniture UI
+
+## Update — 2026-04-10 / priorità immediata corretta
+
+### Nuova priorità operativa
+Prima di continuare con:
+- qualità dei commenti
+- severità scoring
+- wording domande
+- UX report
+
+serve verificare e correggere il flusso che alimenta il report HTML demo.
+
+### Motivo
+È emerso che il report aperto localmente / pubblicato sembra non riflettere davvero le ultime modifiche al motore.
+
+Probabile causa:
+- `scripts/test_generate_interactive_shell_html.js` legge un JSON sessione già esistente
+- non rigenera la sessione end-to-end
+- quindi il report HTML può risultare stale
+
+### Ordine corretto di lavoro
+1. correggere / rifare `scripts/test_generate_interactive_shell_html.js`
+2. assicurarsi che il report HTML usi una sessione aggiornata davvero
+3. rieseguire verifica qualitativa su:
+   - prima risposta pseudo-introduttiva
+   - differenziazione commenti
+   - aderenza risposta → commento
+4. solo dopo tornare a:
+   - pulizia wording domande
+   - raffinazione UX del report
+   - micro-rifiniture visuali
+
+### Regola
+NON sprecare altro tempo in micro-fix del renderer se l’HTML non è alimentato dal payload corretto.
+
+## Priorità attuale — Demo Reference Case
+
+### Blocco corrente
+Prima di continuare con miglioramenti qualitativi del report:
+
+→ creare un demo reference case stabile
+
+### Motivazione
+Il sistema attuale non garantisce che:
+
+- il report HTML rifletta davvero il motore aggiornato
+- le modifiche siano verificabili in modo affidabile
+
+### Prossimo step (obbligatorio)
+Implementare:
+
+scripts/demo_reference_case.js
+
+### Solo dopo questo step:
+riprendere:
+
+- miglioramento commenti
+- miglioramento domande
+- UX report
+- monetizzazione (Free / Pro / Premium)
+
+### Regola
+Nessuna ottimizzazione “di superficie” finché il flusso demo non è sotto controllo.
+
+- introdotta architettura modulare report (plan config + module registry + layout assembler)
+- da integrare nei renderer
+
+Principio da fissare
+
+Questo:
+
+The engine should always generate the richest possible analysis.
+
+Product plans (FREE / PRO / PREMIUM) should NOT change the engine logic.
+
+They should only control:
+- visibility
+- enabled behaviors
+- accessible recruiter styles
+- rendering capabilities
+- adaptive intensity
+- coaching depth
+
+through configuration-driven capability policies.
+
+Questo è il cuore.
+
+3. Regola CRITICA
+
+Mai fare:
+
+if (premium)
+
+nel runtime o renderer.
+
+Ma:
+
+if (capabilities.showRecruiterPanel)
+
+oppure:
+
+if (capabilities.enableAdaptivePressure)
+
+Professional Perception Roadmap
+
+V1 (fatta)
+
+modello dati
+pagina report
+narrative placeholder
+
+V2
+
+definizione dei blocchi narrativi
+definizione tono FRINGE
+definizione "carezza narrativa"
+
+V3
+
+integrazione LLM
+generazione narrativa guidata
+
+V4
+
+evidenze collegate alle singole risposte
+
+## CONTINUITY UPDATE — 03/06/2026
+
+### Professional Perception (nuova direzione strategica)
+
+È stata introdotta una nuova sezione report:
+
+* Percezione professionale
+* Narrative Layer
+* Credibility Path
+* Perception Gap
+* Evolution Bridge
+
+La sezione è già renderizzata nel report PRO come pagina dedicata "Percezione".
+
+Stato attuale:
+
+* modello dati presente
+* rendering HTML presente
+* contenuti ancora V1 (deterministici)
+* nessuna integrazione LLM ancora effettuata
+
+Decisione presa:
+
+NON procedere ancora con adapter Groq dedicato.
+
+Prima definire con precisione:
+
+* tono FRINGE
+* struttura narrativa
+* blocchi concettuali della percezione professionale
+
+L'integrazione LLM verrà affrontata successivamente.
+
+---
+
+### Intuizione strategica emersa
+
+Possibile spostamento del valore percepito di FRINGE:
+
+da:
+
+"simulatore di colloquio"
+
+verso:
+
+"strumento per capire come vieni percepito durante un colloquio"
+
+Ipotesi da validare durante il beta.
+
+---
+
+### Candidate Experience
+
+Principio guida:
+
+Il candidato non deve mai chiedersi:
+
+* Dove sono?
+* Cosa devo fare adesso?
+
+Flusso ideale:
+
+Landing
+↓
+Preparazione
+↓
+Input CV / ruolo
+↓
+Simulazione
+↓
+Report
+↓
+Feedback
+
+La simulazione rimane guidata.
+
+Il report rimane esplorativo.
+
+---
+
+### Ruolo delle sezioni report
+
+Come vieni percepito
+→ capire
+
+Risposte
+→ dimostrare
+
+CV
+→ posizionare
+
+Checklist
+→ agire
+
+Ridurre progressivamente le ripetizioni tra le sezioni.
+
+---
+
+### Frasi candidate per la landing
+
+Versione attualmente più promettente:
+
+"Forse pensi che ti serva qualcosa che ti alleni a rispondere al tuo prossimo colloquio di lavoro.
+
+Forse quello che ti serve è altro.
+
+Ogni colloquio racconta due storie.
+
+La prima è quella che pensi di raccontare.
+La seconda è quella che l'intervistatore percepisce.
+
+Le due storie non sempre coincidono.
+
+E spesso è proprio in quella distanza che si nasconde la risposta al perché un colloquio che sembrava andato bene non abbia portato al risultato sperato.
+
+FRINGE è nato proprio per esplorare questa distanza."
+
+---
+
+### Priorità prossima sessione
+
+1. Raffinare il contenuto della sezione Percezione.
+2. Definire la Candidate Journey completa.
+3. Definire landing orientata al dolore.
+4. Definire beta test e raccolta feedback.
+5. Solo successivamente:
+
+   * revisione colori semantici
+   * integrazione LLM narrativa
+   * raffinamento estetico.
+
+Osservazione emersa dal Beta Test Giulia:
+
+Le narrative CV Discovery devono restare universali.
+
+Le narrative specifiche di settore devono essere delegate alle future Role Family Narrative.
+
+

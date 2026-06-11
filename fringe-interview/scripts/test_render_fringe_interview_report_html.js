@@ -1,7 +1,7 @@
 import { readFile, writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
-import { renderFringeInterviewReportHtml } from "../src/app/index.js";
+import renderFringeInterviewReportHtml from "../src/app/renderFringeInterviewReportHtml.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,7 +11,7 @@ function resolveProjectPath(...segments) {
 }
 
 async function readJsonFile(filePath) {
-  const raw = await readFile(filePath, "utf8");
+ const raw = await readFile(filePath, "utf8");
   return JSON.parse(raw);
 }
 

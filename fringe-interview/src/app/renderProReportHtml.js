@@ -3620,28 +3620,124 @@ function buildReportDataFromProReport(proReportV2) {
     productMode: proReportV2?.productMode || "pro",
     productCapabilities: proReportV2?.productCapabilities || {},
     overview: proReportV2?.overview || {},
+    professionalPerception: proReportV2?.professionalPerception || {},
     answersWorkspace: proReportV2?.answersWorkspace || {}
   };
 }
 
-function renderTopNavigation() {
+function renderProfessionalPerceptionSection(proReportV2) {
+  const perception = proReportV2?.professionalPerception || {};
+  const v2 = perception?.perceptionV2 || {};
+  const fallbackNarrative = perception?.narrativeRead || {};
+  const fallbackEmerging = perception?.emergingImage || {};
+
+  const whoEmerges = v2?.whoEmerges || {};
+  const credibilityAssets = v2?.credibilityAssets || {};
+  const cvInterviewPerceptionGap = v2?.cvInterviewPerceptionGap || {};
+  const targetDistance = v2?.targetDistance || {};
+  const recruiterMemory = v2?.recruiterMemory || {};
+  const blindSpots = v2?.blindSpots || {};
+  const attitudeShift = v2?.attitudeShift || {};
+
   return `
-    <div class="top-nav">
-      ${sections
-        .map(
-          (s) => `
-        <div class="top-nav-item ${
-          activeSection === s.key ? "active" : ""
-        }">
-          ${s.label}
+    <div class="section-shell">
+      <div class="overview-card">
+        <div class="overview-card-title">Come vieni percepito</div>
+
+        <p><strong>${escapeHtml(
+          whoEmerges?.title ||
+            fallbackNarrative?.headline ||
+            fallbackEmerging?.title ||
+            "Percezione professionale emergente"
+        )}</strong></p>
+
+        <p>${escapeHtml(
+          whoEmerges?.narrative ||
+            fallbackNarrative?.mainNarrative ||
+            fallbackEmerging?.narrative ||
+            ""
+        )}</p>
+
+        <div class="answer-subcard">
+          <div class="answer-subcard-title">${escapeHtml(
+            credibilityAssets?.title || "Il tuo bagaglio di credibilità"
+          )}</div>
+          
+          
+          
+
+
+
+          <p>${escapeHtml(
+            credibilityAssets?.narrative ||
+              "Nel percorso sono presenti elementi utili che possono sostenere la candidatura, ma devono essere resi più visibili durante il colloquio."
+          )}</p>
         </div>
-      `
-        )
-        .join("")}
+
+          <div class="answer-subcard">
+          <div class="answer-subcard-title">${escapeHtml(
+            cvInterviewPerceptionGap?.title ||
+              "CV e colloquio raccontano la stessa storia?"
+          )}</div>
+
+          <p><strong>Cosa suggerisce il CV</strong></p>
+          <p>${escapeHtml(cvInterviewPerceptionGap?.cvImage || "")}</p>
+
+          <p><strong>Cosa emerge nel colloquio</strong></p>
+          <p>${escapeHtml(cvInterviewPerceptionGap?.interviewImage || "")}</p>
+
+          <p><strong>Possibile lettura</strong></p>
+          <p>${escapeHtml(cvInterviewPerceptionGap?.narrative || "")}</p>
+        </div>
+
+
+        <div class="answer-subcard">
+          <div class="answer-subcard-title">${escapeHtml(
+            targetDistance?.title || "Dove nasce la distanza dal ruolo target"
+          )}</div>
+
+          <p><strong>Ciò che emerge oggi</strong></p>
+          <p>${escapeHtml(targetDistance?.currentSignals || "")}</p>
+
+          <p><strong>Ciò che cerca il ruolo</strong></p>
+          <p>${escapeHtml(targetDistance?.targetSignals || "")}</p>
+
+          <p><strong>Il ponte che manca</strong></p>
+          <p>${escapeHtml(targetDistance?.bridgeNarrative || "")}</p>
+        </div>
+
+        <div class="answer-subcard">
+          <div class="answer-subcard-title">${escapeHtml(
+            recruiterMemory?.title || "Cosa potrebbe restare in mente a un recruiter"
+          )}</div>
+          <p>${escapeHtml(
+            recruiterMemory?.narrative ||
+              fallbackNarrative?.interviewerPerception ||
+              ""
+          )}</p>
+        </div>
+
+        <div class="answer-subcard">
+          <div class="answer-subcard-title">${escapeHtml(
+            blindSpots?.title || "Cosa probabilmente non stai vedendo"
+          )}</div>
+          <p>${escapeHtml(blindSpots?.narrative || "")}</p>
+        </div>
+
+        <div class="answer-subcard">
+          <div class="answer-subcard-title">${escapeHtml(
+            attitudeShift?.title || "Cambio di atteggiamento consigliato"
+          )}</div>
+          <p>${escapeHtml(
+            attitudeShift?.narrative ||
+              fallbackNarrative?.attitudeShift ||
+              ""
+          )}</p>
+        </div>
+      </div>
     </div>
   `;
 }
-
 
 export function renderProReportHtml({ proReportV2, activeSection = "overview" }) {
   if (!proReportV2 || typeof proReportV2 !== "object") {
@@ -3684,11 +3780,12 @@ if (
 
   const sections = [
   { key: "overview", label: "Situazione" },
+  { key: "perception", label: "Percezione" },
   { key: "answers", label: "Risposte" },
   { key: "criticalPoints", label: "Punti delicati" },
   { key: "cv", label: "CV" },
   { key: "final", label: "Checklist" }
-   ];
+];
 
    const answersModules = ensureArray(answersLayout.enabled);
 
@@ -12736,6 +12833,9 @@ details > summary[class*="summary"] {
   <div class="top-nav">
 
       <button class="top-nav-item active" data-report-nav="overview" type="button">Situazione</button>
+
+      <button class="top-nav-item" data-report-nav="perception" type="button">Percezione</button>
+
       <button class="top-nav-item" data-report-nav="answers" type="button">Risposte</button>
       <button class="top-nav-item" data-report-nav="criticalPoints" type="button">Domande delicate</button>
       <button class="top-nav-item" data-report-nav="cv" type="button">CV</button>
@@ -12747,6 +12847,11 @@ details > summary[class*="summary"] {
         <div class="report-section is-active" data-report-section="overview">
      ${renderOverviewSituationSection(overviewModules, proReportV2)}
     </div>
+
+    <div class="report-section" data-report-section="perception">
+  ${renderProfessionalPerceptionSection(proReportV2)}
+  </div>
+    
 
     <div class="report-section" data-report-section="answers">
 

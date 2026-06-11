@@ -1,0 +1,36 @@
+{
+  "candidateName": "Marco Rinaldi",
+  "targetRole": "Junior Product Operations Analyst",
+  "answers": [
+    {
+      "answerIndex": 1,
+      "question": "Raccontami il tuo percorso professionale e perché pensi che sia coerente con questo ruolo.",
+      "answer": "Ho fatto economia e poi ho avuto alcune esperienze in ambito operations e reporting. Mi sono occupato di dati, report e supporto ai team interni. Penso che questo ruolo sia coerente perché mi interessa lavorare sui processi e usare i dati per migliorare il modo in cui lavora il team."
+    },
+    {
+      "answerIndex": 2,
+      "question": "Fammi un esempio concreto di un problema operativo che hai contribuito a risolvere.",
+      "answer": "Durante lo stage c'erano diversi file con dati non sempre allineati. Io aiutavo ad aggiornarli e a controllare che fossero corretti. Questo ha reso il lavoro più ordinato e ha aiutato il responsabile ad avere informazioni più chiare."
+    },
+    {
+      "answerIndex": 3,
+      "question": "Parlami di una situazione in cui hai dovuto collaborare con persone di team diversi.",
+      "answer": "Mi è capitato di parlare con customer service e logistica quando alcuni dati non tornavano. Cercavo di capire dove fosse il problema e poi aggiornavo il file. Non avevo un ruolo di coordinamento, però cercavo di facilitare il passaggio di informazioni."
+    },
+    {
+      "answerIndex": 4,
+      "question": "Parlami di una decisione in cui non c’era una risposta chiaramente giusta. Quale trade-off hai scelto e perché?",
+      "answer": "In generale penso che bisogna scegliere in base ai dati disponibili e alle priorità del momento. Nel mio caso, quando c'erano anomalie nei report, cercavo prima di sistemare quelle più evidenti e poi eventualmente passavo al resto. Credo sia importante essere pragmatici."
+    },
+    {
+      "answerIndex": 5,
+      "question": "Qual è oggi il tuo limite principale rispetto a questo ruolo?",
+      "answer": "Sicuramente ho ancora poca esperienza e non ho gestito direttamente progetti grandi. Però sono motivato, imparo velocemente e penso di poter crescere molto se inserito in un team strutturato."
+    },
+    {
+      "answerIndex": 6,
+      "question": "Quale messaggio vuoi lasciare al selezionatore prima di chiudere?",
+      "answer": "Vorrei dire che sono una persona precisa, motivata e interessata a crescere in ambito operations. Mi piace lavorare con i dati e aiutare i team a capire meglio i problemi. Credo che questo ruolo sia una buona occasione per sviluppare queste capacità."
+    }
+  ]
+}

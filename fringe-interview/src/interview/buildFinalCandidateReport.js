@@ -635,13 +635,103 @@ function buildRecruiterRecommendationSection({ fit, report, copy, localeKey }) {
 }
 
 function buildCvAdviceSection({ fit, copy, localeKey }) {
+  const strengths = humanizeFitList(fit?.reportHighlights?.strengths, localeKey);
+  const risks = humanizeFitList(fit?.reportHighlights?.risks, localeKey);
+  const clarificationsNeeded = humanizeFitList(
+    fit?.reportHighlights?.clarificationsNeeded,
+    localeKey
+  );
+  const missingSkills = humanizeFitList(fit?.missingSkills, localeKey);
+  const transferableStrengths = humanizeFitList(fit?.transferableStrengths, localeKey);
+  const matchedSkills = humanizeFitList(fit?.matchedSkills, localeKey);
+  const positioningHints = humanizeFitList(
+    fit?.reportHighlights?.positioningHints,
+    localeKey
+  );
+  const cvImprovementHints = humanizeFitList(fit?.cvImprovementHints, localeKey);
+
+  const cvReadiness =
+    strengths.length >= 2 && risks.length === 0 && missingSkills.length <= 1
+      ? "good"
+      : strengths.length >= 1 && (risks.length <= 2 || missingSkills.length <= 2)
+        ? "partial"
+        : "weak";
+
+  const cvReadinessNarrative =
+    localeKey === "it"
+      ? cvReadiness === "good"
+        ? "Il CV sembra già offrire una base abbastanza solida per il ruolo target: il lavoro principale è rendere più evidenti le esperienze più pertinenti."
+        : cvReadiness === "partial"
+          ? "Il CV contiene elementi utili per il ruolo target, ma non comunica ancora in modo abbastanza diretto perché il profilo dovrebbe risultare forte per questa candidatura."
+          : "Il CV oggi rischia di non sostenere abbastanza la candidatura: servono chiarimenti, esempi e una migliore selezione delle esperienze più rilevanti."
+      : cvReadiness === "good"
+        ? "The CV already provides a fairly solid base for the target role: the main task is to make the most relevant experiences more visible."
+        : cvReadiness === "partial"
+          ? "The CV contains useful elements for the target role, but it does not yet communicate strongly enough why the profile should feel compelling for this application."
+          : "The CV currently risks not supporting the application strongly enough: clarifications, examples and better selection of relevant experiences are needed.";
+
+  const structuralRisks =
+    localeKey === "it"
+      ? [
+          clarificationsNeeded.length > 0
+            ? "Alcuni passaggi del CV richiedono chiarimento: non basta elencarli, bisogna spiegare perché sono coerenti con il ruolo target."
+            : "",
+          missingSkills.length > 0
+            ? "Alcune competenze o esperienze attese dal ruolo non emergono con sufficiente forza dal CV."
+            : "",
+          "Il sistema non sta ancora leggendo in modo completo eventuali buchi temporali o progressioni di responsabilità: questa parte va considerata come area da approfondire."
+        ].filter(Boolean)
+      : [
+          clarificationsNeeded.length > 0
+            ? "Some CV transitions require clarification: they should not just be listed, but explained in relation to the target role."
+            : "",
+          missingSkills.length > 0
+            ? "Some skills or experiences expected for the role do not yet emerge strongly enough from the CV."
+            : "",
+          "The system is not yet fully reading possible timeline gaps or responsibility progression: this should be treated as an area for further review."
+        ].filter(Boolean);
+
+  const cvRewritePriorities =
+    localeKey === "it"
+      ? [
+          transferableStrengths.length > 0
+            ? "Porta più in alto nel CV le esperienze più trasferibili rispetto al ruolo target."
+            : "",
+          matchedSkills.length > 0
+            ? "Rendi più visibili le competenze già allineate alla posizione."
+            : "",
+          missingSkills.length > 0
+            ? "Dove manca un requisito, compensa con esperienze equivalenti, apprendimento già avviato o risultati collegabili."
+            : "",
+          "Evita un CV solo descrittivo: ogni esperienza importante dovrebbe far capire responsabilità, contesto e impatto."
+        ].filter(Boolean)
+      : [
+          transferableStrengths.length > 0
+            ? "Move the most transferable experiences higher in the CV."
+            : "",
+          matchedSkills.length > 0
+            ? "Make the skills already aligned with the role more visible."
+            : "",
+          missingSkills.length > 0
+            ? "Where a requirement is missing, compensate with equivalent experience, learning already started, or related results."
+            : "",
+          "Avoid a purely descriptive CV: each important experience should show responsibility, context and impact."
+        ].filter(Boolean);
+
   return {
     title: copy.titles.cvAdvice,
-    cvImprovementHints: humanizeFitList(fit?.cvImprovementHints, localeKey),
-    positioningHints: humanizeFitList(
-      fit?.reportHighlights?.positioningHints,
-      localeKey
-    )
+    cvReadiness,
+    cvReadinessNarrative,
+    strengths,
+    risks,
+    clarificationsNeeded,
+    missingSkills,
+    transferableStrengths,
+    matchedSkills,
+    structuralRisks,
+    cvRewritePriorities,
+    cvImprovementHints,
+    positioningHints
   };
 }
 
@@ -755,6 +845,151 @@ function buildCoachSnapshotSection({ report, copy, localeKey }) {
   };
 }
 
+
+function buildOpeningPositioningSection({ candidate, role, fit, copy, localeKey }) {
+  const candidateSummary = normalizeString(candidate?.summary || "");
+  const roleTitle = normalizeString(role?.title || "");
+  const shortRationale = normalizeString(fit?.fitSummary?.shortRationale || "");
+
+  const transferableStrengths = humanizeFitList(fit?.transferableStrengths, localeKey);
+  const missingSkills = humanizeFitList(fit?.missingSkills, localeKey);
+  const matchedSkills = humanizeFitList(fit?.matchedSkills, localeKey);
+
+  let positioningCoherence = "medium";
+  let perceivedLevel =
+    localeKey === "it"
+      ? "operativo / professionale"
+      : "professional / operational";
+  let narrativeStyle =
+    localeKey === "it" ? "descrittivo" : "descriptive";
+  let continuityRead =
+    localeKey === "it" ? "parzialmente lineare" : "partially linear";
+
+  if (
+    transferableStrengths.length >= 2 &&
+    matchedSkills.length >= 2 &&
+    missingSkills.length <= 1
+  ) {
+    positioningCoherence = "high";
+  } else if (
+    transferableStrengths.length === 0 &&
+    matchedSkills.length === 0
+  ) {
+    positioningCoherence = "low";
+  }
+
+  const strengths =
+    localeKey === "it"
+      ? [
+          candidateSummary
+            ? "Il profilo di partenza è leggibile e fornisce una base narrativa utilizzabile."
+            : "",
+          transferableStrengths.length > 0
+            ? "Esistono elementi di trasferibilità che possono essere valorizzati già nell’apertura."
+            : "",
+          roleTitle
+            ? `Il posizionamento può essere orientato in modo abbastanza chiaro verso il ruolo di ${roleTitle}.`
+            : ""
+        ].filter(Boolean)
+      : [
+          candidateSummary
+            ? "The starting profile is readable and provides a usable narrative base."
+            : "",
+          transferableStrengths.length > 0
+            ? "There are transferable elements that can already be highlighted in the opening."
+            : "",
+          roleTitle
+            ? `The positioning can be oriented fairly clearly toward the ${roleTitle} role.`
+            : ""
+        ].filter(Boolean);
+
+
+        const risks =
+  localeKey === "it"
+    ? [
+        "Il racconto può risultare ordinato ma ancora troppo generico: senza esempi concreti, ruoli, contesti, responsabilità e risultati verificabili, non costruisce ancora una vera credibilità.",
+        missingSkills.length > 0
+          ? "Il collegamento con il ruolo target rischia di apparire incompleto se non vengono evidenziate bene le parti più trasferibili."
+          : "",
+        shortRationale
+          ? `Resta un punto delicato da spiegare bene: ${shortRationale}`
+          : "",
+        "Se l’apertura resta troppo introduttiva, il colloquio parte con un posizionamento debole anche quando il profilo ha elementi utili."
+      ].filter(Boolean)
+
+
+      : [
+          missingSkills.length > 0
+            ? "The link to the target role may feel incomplete if the most transferable parts are not highlighted clearly."
+            : "",
+          shortRationale
+            ? `One delicate point still needs to be explained well: ${shortRationale}`
+            : "",
+          "If the opening stays too introductory, the interview starts from a weaker positioning even when the profile contains usable elements."
+        ].filter(Boolean);
+
+  const gapsDetected =
+    localeKey === "it"
+      ? [
+          missingSkills.length > 0
+            ? "Alcuni gap o passaggi di ruolo potrebbero generare domande se non vengono incorniciati bene all’inizio."
+            : "",
+          "Il sistema oggi non distingue ancora automaticamente tutti i possibili buchi temporali del CV: questa parte resta da evolvere."
+        ].filter(Boolean)
+      : [
+          missingSkills.length > 0
+            ? "Some gaps or role transitions may trigger follow-up questions if they are not framed well from the start."
+            : "",
+          "The system does not yet automatically distinguish all possible CV timeline gaps: this still needs to evolve."
+        ].filter(Boolean);
+
+  const improvementHints =
+    localeKey === "it"
+      ? [
+          "Apri con una sintesi chiara del tuo posizionamento attuale.",
+          "Porta subito le esperienze più rilevanti per il ruolo target.",
+          "Riduci il dettaglio sulle esperienze meno utili in questa candidatura.",
+          "Chiudi l’introduzione spiegando perché il passaggio verso questo ruolo è coerente adesso."
+        ]
+      : [
+          "Open with a clear summary of your current positioning.",
+          "Bring the most relevant experiences for the target role upfront.",
+          "Reduce detail on experiences that are less useful for this application.",
+          "Close the introduction by explaining why this role is the coherent next step now."
+        ];
+
+  const shortPitchExample =
+    localeKey === "it"
+      ? `Negli ultimi anni mi sono occupato principalmente di ${transferableStrengths[0] || "attività trasversali tra analisi, processi e coordinamento"}, costruendo una base utile per ruoli come ${roleTitle || "questo ruolo"}. Oggi il punto chiave che porto è la capacità di collegare esperienza già maturata e contributo operativo concreto, rendendo credibile il passaggio verso ${roleTitle || "la posizione target"}.`
+      : `In recent years I have mainly worked on ${transferableStrengths[0] || "cross-functional work across analysis, process and coordination"}, building a foundation that is relevant for roles such as ${roleTitle || "this one"}. The key point I bring today is the ability to connect prior experience with concrete operational contribution, making the move toward ${roleTitle || "the target role"} feel credible.`;
+
+
+        const openingAssessment =
+  localeKey === "it"
+    ? "Il racconto iniziale può essere ordinato e orientato al ruolo, ma non basta: per costruire credibilità deve contenere riferimenti concreti a esperienze, responsabilità, contesti e risultati. Se questi elementi non emergono nell’apertura, le risposte successive dovranno compensare con esempi molto più specifici."
+    : "The opening narrative may be structured and role-oriented, but that is not enough: to build credibility it needs concrete references to experience, responsibilities, contexts and results. If these elements do not emerge in the opening, later answers will need to compensate with much more specific examples.";
+
+  return {
+    title:
+      localeKey === "it"
+        ? "Posizionamento iniziale"
+        : "Opening Positioning",
+    openingAssessment,
+    positioningCoherence,
+    perceivedLevel,
+    focusDetected: transferableStrengths.slice(0, 4),
+    focusMissing: missingSkills.slice(0, 4),
+    narrativeStyle,
+    continuityRead,
+    strengths,
+    risks,
+    gapsDetected,
+    improvementHints,
+    shortPitchExample
+  };
+}
+
+
 function buildRecruiterSnapshotSection({ fit, report, copy, localeKey }) {
   const recruiterRecommendation = buildRecruiterRecommendationSection({
     fit,
@@ -810,6 +1045,7 @@ export function buildFinalCandidateReport({
       locale: localeKey,
       generatedSections: [
         "overall",
+        "opening_positioning",
         "score_layer",
         "role_fit",
         "answer_quality",
@@ -827,6 +1063,13 @@ export function buildFinalCandidateReport({
         "recruiter_snapshot"
       ],
       overall: buildOverallSection({ candidate, role, fit, report, copy }),
+      openingPositioning: buildOpeningPositioningSection({
+      candidate,
+       role,
+       fit,
+       copy,
+       localeKey
+      }),
       scoreLayer: buildScoreLayerSection({ fit, report, copy }),
       roleFit: buildRoleFitSection({ fit, copy, localeKey }),
       answerQuality: buildAnswerQualitySection({ report, copy }),

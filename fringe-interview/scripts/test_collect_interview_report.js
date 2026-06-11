@@ -30,6 +30,16 @@ function printSection(title) {
   console.log(`\n=== ${title} ===`);
 }
 
+function assertInterviewRuntimeEnvelope(runtimeResult, stepName) {
+  if (!runtimeResult || typeof runtimeResult !== "object") {
+    throw new Error(`${stepName}: runtime result is missing or invalid.`);
+  }
+
+  if (!runtimeResult.interviewRuntime || typeof runtimeResult.interviewRuntime !== "object") {
+    throw new Error(`${stepName}: interviewRuntime is missing in returned result.`);
+  }
+}
+
 async function main() {
   const pipelinePath = resolveProjectPath(
     "tmp",
@@ -57,29 +67,43 @@ async function main() {
     interviewQuestionSet: questionSetResult.interviewQuestionSet
   });
 
-  let runtimeResult = createInterviewRuntime({
+  let runtimeResult = await createInterviewRuntime({
     interviewSession: sessionResult.interviewSession
   });
 
-  const sampleAnswers = [
-    "I am interested in this role because it connects analytical work, reporting, and cross-functional coordination, which are all things I have done in previous roles.",
-    "I worked in e-commerce rather than SaaS, but I built weekly dashboards, coordinated reporting needs across product, sales, and operations, and reduced manual reconciliation time by 25 percent.",
-    "In one role I owned the weekly KPI reporting flow, decided which metrics mattered for managers, and adjusted the dashboard when bottlenecks became visible.",
-    "That work improved discussion quality because teams focused faster on the real operational issues instead of reviewing too much irrelevant data.",
-    "What I learned is that reporting is only useful when it drives decisions, so I now pay more attention to clarity, ownership, and actionability."
+  assertInterviewRuntimeEnvelope(runtimeResult, "createInterviewRuntime");
+
+  const testAnswers = [
+    "Volentieri. Ti racconto il mio percorso mettendo a fuoco le esperienze più rilevanti per questo ruolo e dove penso di poter trasferire valore rapidamente.",
+    "I worked in e-commerce rather than SaaS, but I built weekly dashboards, coordinated reporting needs across product, sales, and operations, and reduced manual reconciliation time by 25 percent. That experience taught me how to transfer analytical structure into fast-changing cross-functional environments.",
+    "In one role I owned the weekly KPI reporting flow, decided which metrics mattered for department managers, and adapted the dashboard when recurring bottlenecks became visible. As a result, discussions became more focused and the team reacted faster.",
+    "When I was under pressure, I prioritised the metrics that directly affected operational decisions and left secondary exploratory views for a later iteration. I explained that choice clearly, accepted some temporary incompleteness, and protected the part of the reporting that was actually driving decisions."
   ];
 
-  for (const answerText of sampleAnswers) {
-    runtimeResult = advanceInterviewRuntime({
+  for (let index = 0; index < testAnswers.length; index += 1) {
+    runtimeResult = await advanceInterviewRuntime({
       interviewSession: sessionResult.interviewSession,
       interviewRuntime: runtimeResult.interviewRuntime,
-      answerText
+      answerText: testAnswers[index]
     });
+
+    assertInterviewRuntimeEnvelope(
+      runtimeResult,
+      `advanceInterviewRuntime #${index + 1}`
+    );
   }
 
   const reportResult = collectInterviewReport({
     interviewRuntime: runtimeResult.interviewRuntime
   });
+
+  if (!reportResult || typeof reportResult !== "object") {
+    throw new Error("collectInterviewReport: report result is missing or invalid.");
+  }
+
+  if (!reportResult.interviewReport || typeof reportResult.interviewReport !== "object") {
+    throw new Error("collectInterviewReport: interviewReport is missing in returned result.");
+  }
 
   await writePrettyJson(
     path.join(outputDir, "runtime_result.json"),
@@ -91,26 +115,33 @@ async function main() {
     reportResult
   );
 
+  const interviewReport = reportResult.interviewReport || {};
+
   printSection("Summary");
+  console.log("Recorded answers:", interviewReport?.sessionStats?.totalAnswers ?? "(missing)");
+  console.log("Overall score:", interviewReport?.sessionStats?.overallScore ?? "(missing)");
+  console.log("Overall band:", interviewReport?.sessionStats?.overallBand || "(missing)");
   console.log(
-    "Total answers:",
-    reportResult?.interviewReport?.sessionStats?.totalAnswers ?? "(missing)"
+    "Question alignment average:",
+    interviewReport?.questionQuality?.alignment?.averageScore ?? "(missing)"
   );
   console.log(
-    "Overall score:",
-    reportResult?.interviewReport?.sessionStats?.overallScore ?? "(missing)"
+    "Top recurring strengths:",
+    ensureArray(interviewReport?.recurringStrengths)
+      .map((item) => item?.label || "")
+      .filter(Boolean)
+      .join(" | ") || "(none)"
   );
   console.log(
-    "Overall band:",
-    reportResult?.interviewReport?.sessionStats?.overallBand || "(missing)"
-  );
-  console.log(
-    "Narrative summary:",
-    reportResult?.interviewReport?.narrativeSummary || "(missing)"
+    "Top recurring weaknesses:",
+    ensureArray(interviewReport?.recurringWeaknesses)
+      .map((item) => item?.label || "")
+      .filter(Boolean)
+      .join(" | ") || "(none)"
   );
   console.log(
     "Final advice:",
-    (reportResult?.interviewReport?.finalAdvice || []).join(" | ") || "(none)"
+    ensureArray(interviewReport?.finalAdvice).join(" | ") || "(none)"
   );
 
   printSection("Output files");
@@ -119,6 +150,10 @@ async function main() {
 
   printSection("Done");
   console.log("Interview report collector test completed successfully.");
+}
+
+function ensureArray(value) {
+  return Array.isArray(value) ? value : [];
 }
 
 main().catch((error) => {

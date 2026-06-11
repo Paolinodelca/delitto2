@@ -1,0 +1,87 @@
+{
+  "type": "object",
+  "required": [
+    "targetMode",
+    "whoEmerges",
+    "credibilityAssets",
+    "recruiterMemory",
+    "blindSpots",
+    "attitudeShift"
+  ],
+  "properties": {
+    "targetMode": {
+      "type": "string",
+      "enum": ["target_role", "open_direction"]
+    },
+    "whoEmerges": {
+      "type": "object",
+      "required": ["title", "narrative"],
+      "properties": {
+        "title": { "type": "string" },
+        "narrative": { "type": "string" }
+      }
+    },
+    "credibilityAssets": {
+      "type": "object",
+      "required": ["title", "narrative"],
+      "properties": {
+        "title": { "type": "string" },
+        "narrative": { "type": "string" }
+      }
+    },
+    "targetDistance": {
+      "type": "object",
+      "required": ["title", "currentSignals", "targetSignals", "bridgeNarrative"],
+      "properties": {
+        "title": { "type": "string" },
+        "currentSignals": { "type": "string" },
+        "targetSignals": { "type": "string" },
+        "bridgeNarrative": { "type": "string" }
+      }
+    },
+    "professionalDirections": {
+      "type": "object",
+      "required": ["title", "narrative", "directions"],
+      "properties": {
+        "title": { "type": "string" },
+        "narrative": { "type": "string" },
+        "directions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["roleArea", "whyItFits", "whatToStrengthen"],
+            "properties": {
+              "roleArea": { "type": "string" },
+              "whyItFits": { "type": "string" },
+              "whatToStrengthen": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "recruiterMemory": {
+      "type": "object",
+      "required": ["title", "narrative"],
+      "properties": {
+        "title": { "type": "string" },
+        "narrative": { "type": "string" }
+      }
+    },
+    "blindSpots": {
+      "type": "object",
+      "required": ["title", "narrative"],
+      "properties": {
+        "title": { "type": "string" },
+        "narrative": { "type": "string" }
+      }
+    },
+    "attitudeShift": {
+      "type": "object",
+      "required": ["title", "narrative"],
+      "properties": {
+        "title": { "type": "string" },
+        "narrative": { "type": "string" }
+      }
+    }
+  }
+}

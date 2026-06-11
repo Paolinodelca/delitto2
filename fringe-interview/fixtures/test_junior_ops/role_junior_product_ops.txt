@@ -1,0 +1,19 @@
+Ruolo target: Junior Product Operations Analyst
+
+Descrizione sintetica
+La persona supporterà il team Product Operations nel monitoraggio dei processi interni, nella preparazione di report operativi, nell'identificazione di problemi ricorrenti e nel coordinamento con team prodotto, customer care e operations.
+
+Responsabilità principali
+- Monitorare KPI operativi e segnalare anomalie.
+- Preparare report periodici per il team Product e Operations.
+- Supportare analisi su ticket, reclami, tempi di gestione e qualità dati.
+- Collaborare con stakeholder interni per chiarire problemi operativi.
+- Proporre piccoli miglioramenti di processo basati su evidenze.
+- Documentare problemi, decisioni e follow-up.
+
+Requisiti
+- 0-2 anni di esperienza in operations, data analysis, business analysis o ruoli simili.
+- Buona capacità di lavorare con dati e report.
+- Excel buono, SQL base gradito.
+- Capacità di comunicare in modo chiaro con team diversi.
+- Attitudine analitica, precisione e voglia di apprendere.

@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
+import { mergeSessionAnnotationsIntoResult } from "../src/app/mergeSessionAnnotationsIntoResult.js";
 
 import { runAnswerAnnotationsForSession } from "../src/interview/runAnswerAnnotationsForSession.js";
 
@@ -63,6 +64,16 @@ async function main() {
   );
 
   await writeFile(outputPath, JSON.stringify(result, null, 2), "utf8");
+
+  const enrichedSessionResult = mergeSessionAnnotationsIntoResult({
+  sessionResult: source,
+  sessionAnnotations: result
+});
+
+await writeFile(inputPath, JSON.stringify(enrichedSessionResult, null, 2), "utf8");
+
+console.log("Merged annotations back into:");
+console.log(`- ${inputPath}`);
 
   const annotatedAnswers = result?.sessionAnswerAnnotations?.annotatedAnswers || [];
   const completedCount = annotatedAnswers.filter((item) => !item?.skipped).length;

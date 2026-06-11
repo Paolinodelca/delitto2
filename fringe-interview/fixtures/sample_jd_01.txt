@@ -1,34 +1,30 @@
-Job Title: Product Operations Manager
+Job Description — Product Operations Manager
 
-We are looking for a Product Operations Manager to support alignment between product, operations, and commercial teams in a fast-paced B2B SaaS environment.
+We are looking for a Product Operations Manager to support the scalability, consistency and execution quality of our product organization.
 
-The role will help improve operational visibility, drive KPI reporting, and support execution of cross-functional initiatives. You will work closely with product managers and business stakeholders to identify friction points, improve processes, and help teams make better data-informed decisions.
+This role sits at the intersection of Product, Operations, Customer Success and Data. The ideal candidate will help improve decision-making, prioritization, process clarity and cross-functional execution across the product lifecycle.
 
-Key responsibilities:
-- Own recurring operational and product performance reporting
-- Build and improve dashboards for internal stakeholders
-- Partner with Product, Sales, and Customer Success to improve execution
-- Translate business needs into reporting and workflow improvements
-- Support prioritization by identifying operational inefficiencies and recurring issues
-- Present insights and updates to senior stakeholders
-- Help drive accountability across teams for key initiatives
+The Product Operations Manager will work closely with Product Managers, Business Analysts, Operations stakeholders and leadership to make product work more measurable, more aligned and easier to execute at scale.
 
-Requirements:
-- 4+ years of experience in operations, business analysis, product operations, or a similar role
-- Strong SQL skills
-- Experience with BI tools such as Power BI or Tableau
-- Strong stakeholder management and cross-functional collaboration
-- Ability to work in fast-paced environments with changing priorities
-- Strong communication and structured problem-solving skills
+Key responsibilities
+Build and improve product operating processes across planning, prioritization and execution.
+Support the product team in defining workflows, decision frameworks and consistent ways of working.
+Partner with Product Managers to improve visibility on roadmap progress, dependencies and delivery risks.
+Translate recurring operational issues and stakeholder friction into structured improvement initiatives.
+Coordinate cross-functional initiatives involving Product, Operations, Support, Customer Success and Data teams.
+Help define and monitor core product and operational KPIs.
+Drive cadence around reporting, action tracking and follow-up on critical product initiatives.
+Improve communication quality between product and non-product stakeholders.
+Contribute to product reviews, leadership updates and decision support materials.
+Requirements
+5+ years of experience in Product Operations, Business Operations, Program Management, Business Analysis or similar cross-functional roles.
+Strong ability to work across teams and align stakeholders with different priorities.
+Solid analytical mindset and comfort working with KPIs, dashboards and structured reporting.
+Experience improving processes, workflows or governance in complex environments.
+Ability to move between strategic discussions and operational follow-through.
+Clear communication skills, including the ability to synthesize complexity into actionable decisions.
+Experience in SaaS, digital products or tech-enabled environments is preferred.
+Familiarity with SQL, BI tools or structured analytical tooling is a plus.
+What good looks like in this role
 
-Preferred:
-- Experience in SaaS or B2B software environments
-- Experience working closely with Product teams
-- Experience owning processes or initiatives end-to-end
-- Familiarity with customer lifecycle or success operations
-
-Nice to have:
-- Experience mentoring junior team members
-- Experience with workflow design or operational playbooks
-
-This role is ideal for someone who combines analytical discipline with operational judgment and can create clarity across multiple teams.
+A strong candidate is not just good at analysis. They are able to create order across ambiguity, make collaboration smoother, improve execution discipline and help product teams operate with more consistency and impact.

@@ -12,8 +12,14 @@ export async function runFringeInterviewMVP({
   userNotes = "",
   roleNotes = "",
   modelAdapter,
-  interviewLengthMode = ""
+  interviewLengthMode = "",
+  interviewFocusMode = "balanced",
+  scenarioType = "interview",
+  inputMode = "text",
+  uiLocale = "it",
+  sessionLocale = "it"
 }) {
+
   if (typeof cvText !== "string" || !cvText.trim()) {
     throw new Error("runFringeInterviewMVP: cvText is required.");
   }
@@ -45,7 +51,8 @@ export async function runFringeInterviewMVP({
     candidateProfile: parserResult.candidateProfile,
     roleProfile: parserResult.roleProfile,
     jobFitAnalysis: parserResult.jobFitAnalysis,
-    interviewLengthMode
+    interviewLengthMode,
+    interviewFocusMode
   });
 
   const interviewSessionResult = composeInterviewSession({
@@ -54,10 +61,22 @@ export async function runFringeInterviewMVP({
   });
 
   const runtimeResult = createInterviewRuntime({
-    interviewSession: interviewSessionResult.interviewSession
-  });
+  interviewSession: interviewSessionResult.interviewSession,
+  scenarioType,
+  inputMode,
+  uiLocale,
+  sessionLocale
+});
 
   const runtime = runtimeResult.interviewRuntime;
+
+  runtime.meta = {
+  scenarioType,
+  inputMode,
+  uiLocale,
+  sessionLocale
+};
+
   runtime.sessionFollowupBlocks =
     questionSetResult.interviewQuestionSet?.selectedFollowupPacks || [];
 
@@ -80,7 +99,8 @@ export async function runFringeInterviewMVP({
         requestedInterviewLengthMode: interviewLengthMode || "",
         resolvedInterviewLengthMode:
           questionSetResult.interviewQuestionSet?.contextualSelection?.questionSelectionStrategy?.interviewLengthMode ||
-          ""
+          "",
+        requestedInterviewFocusMode: interviewFocusMode || "balanced"
       }
     }
   };

@@ -1,0 +1,36 @@
+{
+  "candidateName": "Alessandro Ferri",
+  "targetRole": "Senior Product Operations Manager",
+  "answers": [
+    {
+      "answerIndex": 1,
+      "question": "Puoi raccontarmi il tuo percorso professionale e perché oggi questo ruolo rappresenta un passaggio coerente?",
+      "answer": "Negli ultimi 12 anni ho lavorato tra business analysis, operations program management e product operations. Ho iniziato con ruoli analitici su KPI e reporting, poi per circa 5 anni ho coordinato programmi di miglioramento processi in ambito customer operations. Negli ultimi 4 anni, come Senior Product Operations Manager, ho lavorato tra Product, Customer Operations e Analytics, con responsabilità su KPI, priorità operative, stakeholder alignment e miglioramento dei workflow. Un risultato concreto è stata la riduzione del 18% dei tempi di gestione ticket attraverso revisione KPI, dashboard operative e nuovi criteri di prioritizzazione."
+    },
+    {
+      "answerIndex": 2,
+      "question": "Raccontami una decisione difficile in cui non esisteva una soluzione chiaramente giusta.",
+      "answer": "Questo ruolo è coerente perché negli ultimi anni il mio lavoro si è spostato proprio verso l’incrocio tra prodotto, operations e decisioni basate sui dati. Ho iniziato con una base analitica, ma oggi il mio valore principale è aiutare team diversi a leggere priorità, colli di bottiglia e trade-off operativi. Il passo successivo naturale è un ruolo senior Product Operations in cui posso usare questa esperienza non solo per produrre report, ma per guidare decisioni, allineare stakeholder e rendere più scalabili i processi."
+    },
+    {
+      "answerIndex": 3,
+      "question": "Parlami di una situazione in cui hai dovuto gestire stakeholder con priorità diverse.",
+      "answer": "Durante una fase di scaling internazionale avevamo pressione commerciale per velocizzare onboarding e gestione ticket, ma il rischio era ridurre troppo i controlli e peggiorare la qualità dati. Il trade-off era tra velocità immediata e affidabilità operativa. Ho scelto di rallentare una parte del rollout mantenendo controlli minimi obbligatori sui casi più critici. La scelta ha creato attrito iniziale con il team commerciale, ma ha evitato un aumento di errori ricorrenti e ci ha permesso di scalare con un processo più stabile."
+    },
+    {
+      "answerIndex": 4,
+      "question": "Qual è oggi il tuo rischio principale entrando in un nuovo contesto?",
+      "answer": "Il rischio principale è voler entrare troppo rapidamente nel merito operativo senza prima capire cultura e vincoli del team."
+    },
+    {
+      "answerIndex": 5,
+      "question": "Qual è il tipo di leadership che cerchi di esercitare?",
+      "answer": "Cerco una leadership orientata a chiarezza e responsabilità. Non credo nel controllo eccessivo ma nella trasparenza dei criteri decisionali."
+    },
+    {
+      "answerIndex": 6,
+      "question": "Quale impressione vuoi lasciare a chi dovrebbe assumerti?",
+      "answer": "Vorrei lasciare l’impressione di una persona capace di collegare analisi, operations e decisione in contesti complessi."
+    }
+  ]
+}

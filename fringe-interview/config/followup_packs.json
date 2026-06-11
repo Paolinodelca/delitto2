@@ -101,6 +101,41 @@
         "Why do you think your past experience would still be valuable here?",
         "Can you give an example of succeeding in a context that was initially unfamiliar to you?"
       ]
+    },
+
+    
+   "decision_tradeoff_probe": {
+    "label": "Decision and Trade-off Probe",
+    "triggerType": "decision_tradeoff_probe",
+    "goal": "Check whether the candidate can explain a real decision, the trade-off they chose, and the criterion behind it.",
+    "useWhen": [
+      "the question asked for a decision or trade-off",
+      "the answer remains generic or shifts to a nearby topic",
+      "it is unclear what was chosen and what was left behind"
+    ],
+    "followups": [
+      "Let me stop you for a moment: what exactly was the trade-off between two real options?",
+      "What did you choose to prioritize, and what did you accept leaving behind?",
+      "What criterion did you use to make that decision?",
+      "What concrete consequence did that choice have?"
+    ]
+   },
+    "consistency_probe": {
+    "label": "Consistency and Clarity Probe",
+    "triggerType": "consistency_probe",
+    "goal": "Check whether the candidate can recover from a misaligned or unclear answer after the question is reframed.",
+    "useWhen": [
+      "the answer does not really address the question",
+      "the candidate seems to answer a nearby but different topic",
+      "it is useful to understand whether the issue is occasional misunderstanding or a recurring pattern"
+    ],
+    "followups": [
+      "Let me rephrase the question: I want to understand the specific point I asked about, not a nearby topic. Can you answer staying on that point?",
+      "Your previous answer was useful, but it did not fully address the question. What is the most direct answer you would give now?",
+      "If you had to answer the point I asked in one sentence, what would it be?",
+      "Which part of the question do you think you have not really addressed yet?"
+      ]
     }
   }
-}
+} 
+

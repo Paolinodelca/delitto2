@@ -62,6 +62,8 @@ function countNewWords(baseText, candidateText) {
   return newCount;
 }
 
+
+
 function containsSuspiciousUnsupportedOutcome(answerText, improvedText) {
   const answerLower = normalizeString(answerText).toLowerCase();
   const improvedLower = normalizeString(improvedText).toLowerCase();
@@ -73,18 +75,39 @@ function containsSuspiciousUnsupportedOutcome(answerText, improvedText) {
     "margine",
     "performance",
     "efficienza",
+    "efficiente",
+    "efficace",
     "aument",
     "increment",
     "kpi",
     "strategia",
     "roadmap",
-    "stakeholder"
+    "stakeholder",
+    "risorse",
+    "allocare",
+    "allocato",
+    "allocazione",
+    "promettenti",
+    "più promettenti",
+    "piu promettenti",
+    "ottim",
+    "ottimizzato",
+    "ottimizzare",
+    "more efficient",
+    "efficiently",
+    "allocate resources",
+    "allocation",
+    "promising projects",
+    "identify more quickly",
+    "identified more quickly"
   ];
 
   return suspiciousTerms.some((term) => {
     return improvedLower.includes(term) && !answerLower.includes(term);
   });
 }
+
+
 
 function isImprovedDraftSafe(answerText, improvedText) {
   const cleanAnswer = normalizeString(answerText);
@@ -98,9 +121,12 @@ function isImprovedDraftSafe(answerText, improvedText) {
     return true;
   }
 
+  const answerLower = cleanAnswer.toLowerCase();
+  const improvedLower = cleanImproved.toLowerCase();
+
   const newWordCount = countNewWords(cleanAnswer, cleanImproved);
 
-  if (newWordCount > 12) {
+  if (newWordCount > 10) {
     return false;
   }
 
@@ -108,7 +134,120 @@ function isImprovedDraftSafe(answerText, improvedText) {
     return false;
   }
 
+  const suspiciousExpansionPatterns = [
+    "ad esempio",
+    "per esempio",
+    "in particolare",
+    "questo ci ha permesso di",
+    "questo ha permesso di",
+    "abbiamo potuto",
+    "ha consentito di",
+    "ha permesso di",
+    "for example",
+    "in particular",
+    "this allowed us to",
+    "this enabled us to",
+    "we were able to"
+  ];
+
+  const introducedSuspiciousExpansion = suspiciousExpansionPatterns.some((pattern) => {
+    return improvedLower.includes(pattern) && !answerLower.includes(pattern);
+  });
+
+  if (introducedSuspiciousExpansion) {
+    return false;
+  }
+
+  const answerSentenceCount = cleanAnswer.split(/[.!?]+/).filter(Boolean).length;
+  const improvedSentenceCount = cleanImproved.split(/[.!?]+/).filter(Boolean).length;
+
+  if (improvedSentenceCount > answerSentenceCount + 1) {
+    return false;
+  }
+
   return true;
+}
+
+
+
+
+
+function cleanItalianHybridText(text) {
+  let clean = normalizeString(text);
+
+  if (!clean) {
+    return "";
+  }
+
+  const replacements = [
+    [/^l['’]answer\b/iu, "La risposta"],
+    [/^the answer\b/iu, "La risposta"],
+    [/^l['’]output\b/iu, "L'output"],
+    [/^the output\b/iu, "L'output"],
+    [/\banswer\b/giu, "risposta"],
+    [/\bcoach tip\b/giu, "suggerimento guida"],
+    [/\bupgrade suggestion\b/giu, "suggerimento di miglioramento"],
+    [/\btop improvement area\b/giu, "area prioritaria di miglioramento"],
+    [/\btop strength\b/giu, "punto forte principale"]
+  ];
+
+  for (const [pattern, replacement] of replacements) {
+    clean = clean.replace(pattern, replacement);
+  }
+
+  clean = clean.replace(/\s+/g, " ").trim();
+
+  if (!/[.!?…]$/.test(clean)) {
+    clean = `${clean}.`;
+  }
+
+  return clean;
+}
+
+function looksItalianText(text) {
+  const clean = normalizeString(text).toLowerCase();
+
+  if (!clean) {
+    return false;
+  }
+
+  return (
+    clean.includes(" la ") ||
+    clean.includes(" il ") ||
+    clean.includes(" risposta") ||
+    clean.includes(" esempio") ||
+    clean.includes(" concreto") ||
+    clean.startsWith("la ") ||
+    clean.startsWith("il ")
+  );
+}
+
+function polishText(text) {
+  const clean = normalizeString(text);
+
+  if (!clean) {
+    return "";
+  }
+
+  if (looksItalianText(clean) || clean.includes("L'answer") || clean.includes("The answer")) {
+    return cleanItalianHybridText(clean);
+  }
+
+  return clean;
+}
+
+function polishShortLabel(text) {
+  let clean = normalizeString(text);
+
+  if (!clean) {
+    return "";
+  }
+
+  clean = clean.replace(/^l['’]answer\b/iu, "Risposta");
+  clean = clean.replace(/^the answer\b/iu, "Risposta");
+  clean = clean.replace(/\.$/, "");
+
+  return clean;
 }
 
 function normalizeTags(tags) {
@@ -119,7 +258,7 @@ function normalizeTags(tags) {
 
         return {
           type: normalizeString(obj.type),
-          label: normalizeString(obj.label),
+          label: polishShortLabel(obj.label),
           weight: normalizeString(obj.weight)
         };
       })
@@ -138,21 +277,152 @@ function findExcerptPosition(answerText, excerpt) {
   return answerText.indexOf(cleanExcerpt);
 }
 
+function isAnnotationTooWide(answerText, start, end) {
+  const spanLength = end - start;
+  const answerLength = normalizeString(answerText).length;
+
+  if (spanLength <= 0 || answerLength <= 0) {
+    return true;
+  }
+
+  if (spanLength > 220) {
+    return true;
+  }
+
+  if (spanLength / answerLength > 0.8) {
+    return true;
+  }
+
+  return false;
+}
+
+function isWeakPseudoStrength(annotation) {
+  const excerpt = normalizeString(annotation?.excerpt).toLowerCase();
+  const label = normalizeString(annotation?.label).toLowerCase();
+  const reason = normalizeString(annotation?.reason).toLowerCase();
+
+  const weakCourtesyExcerpts = [
+    "volentieri",
+    "certo",
+    "sì",
+    "si",
+    "assolutamente",
+    "con piacere",
+    "sure",
+    "of course",
+    "yes"
+  ];
+
+  if (
+    annotation?.type === "strength" &&
+    weakCourtesyExcerpts.includes(excerpt)
+  ) {
+    return true;
+  }
+
+  if (
+    annotation?.type === "strength" &&
+    excerpt.length < 12 &&
+    (
+      label.includes("disponibilità") ||
+      label.includes("availability") ||
+      reason.includes("disponibilità") ||
+      reason.includes("availability")
+    )
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+
+function buildAnnotationPriorityScore(annotation) {
+  let score = 0;
+
+  if (annotation.type === "strength") score += 2;
+  if (annotation.type === "weakness") score += 2;
+  if (annotation.dimension === "ownership") score += 2;
+  if (annotation.dimension === "evidence") score += 2;
+  if (annotation.dimension === "specificity") score += 1;
+  if (annotation.dimension === "structure") score += 1;
+  if (annotation.reason.length >= 30) score += 1;
+
+  return score;
+}
+
+
+function spansOverlap(a, b) {
+  if (!a || !b) return false;
+  return Math.max(a.start, b.start) < Math.min(a.end, b.end);
+}
+
+function annotationTypeRank(type) {
+  const clean = normalizeString(type).toLowerCase();
+
+  if (clean === "weakness") return 4;
+  if (clean === "opportunity") return 3;
+  if (clean === "strength") return 2;
+  if (clean === "evidence") return 1;
+
+  return 0;
+}
+
+function removeOverlappingAnnotations(items) {
+  const sorted = [...ensureArray(items)].sort((a, b) => {
+    const rankDiff = annotationTypeRank(b.type) - annotationTypeRank(a.type);
+    if (rankDiff !== 0) return rankDiff;
+
+    const priorityDiff =
+      buildAnnotationPriorityScore(b) - buildAnnotationPriorityScore(a);
+    if (priorityDiff !== 0) return priorityDiff;
+
+    return a.start - b.start;
+  });
+
+  const kept = [];
+
+  for (const candidate of sorted) {
+    const overlapsExisting = kept.some((existing) => spansOverlap(candidate, existing));
+
+    if (overlapsExisting) {
+      continue;
+    }
+
+    kept.push(candidate);
+  }
+
+  return kept.sort((a, b) => a.start - b.start);
+}
+
 function normalizeAnnotations(answerText, annotations) {
   const cleanAnswerText = normalizeString(answerText);
 
-  return uniqueBy(
+  const weakCourtesyExcerpts = new Set([
+    "volentieri",
+    "certo",
+    "sì",
+    "si",
+    "assolutamente",
+    "con piacere",
+    "sure",
+    "of course",
+    "yes"
+  ]);
+
+  const normalized = uniqueBy(
     ensureArray(annotations)
       .map((item, index) => {
         const obj = safeObject(item);
 
         const annotationId =
-          normalizeString(obj.annotationId) || `annotation_${String(index + 1).padStart(2, "0")}`;
+          normalizeString(obj.annotationId) ||
+          `annotation_${String(index + 1).padStart(2, "0")}`;
 
         const type = normalizeString(obj.type);
         const dimension = normalizeString(obj.dimension);
-        const label = normalizeString(obj.label);
-        const reason = normalizeString(obj.reason);
+        const label = polishShortLabel(obj.label);
+        const reason = polishText(obj.reason);
         let start = Number.isFinite(obj.start) ? obj.start : -1;
         let end = Number.isFinite(obj.end) ? obj.end : -1;
         let excerpt = normalizeString(obj.excerpt);
@@ -182,6 +452,33 @@ function normalizeAnnotations(answerText, annotations) {
           return null;
         }
 
+        if (isAnnotationTooWide(cleanAnswerText, start, end)) {
+          return null;
+        }
+
+        const excerptLower = excerpt.toLowerCase();
+        const labelLower = label.toLowerCase();
+        const reasonLower = reason.toLowerCase();
+
+        const isWeakPseudoStrength =
+          type === "strength" &&
+          (
+            weakCourtesyExcerpts.has(excerptLower) ||
+            (
+              excerpt.length < 12 &&
+              (
+                labelLower.includes("disponibilità") ||
+                labelLower.includes("availability") ||
+                reasonLower.includes("disponibilità") ||
+                reasonLower.includes("availability")
+              )
+            )
+          );
+
+        if (isWeakPseudoStrength) {
+          return null;
+        }
+
         return {
           annotationId,
           type,
@@ -208,7 +505,24 @@ function normalizeAnnotations(answerText, annotations) {
       }),
     (item) => `${item.type}::${item.dimension}::${item.start}::${item.end}`
   );
+
+
+
+    const withoutOverlaps = removeOverlappingAnnotations(normalized);
+
+  const ordered = [...withoutOverlaps].sort((a, b) => {
+    const priorityDiff = buildAnnotationPriorityScore(b) - buildAnnotationPriorityScore(a);
+    if (priorityDiff !== 0) {
+      return priorityDiff;
+    }
+
+    return a.start - b.start;
+  });
+
+  return ordered.slice(0, 6);
 }
+
+
 
 function normalizeStrengths(items) {
   return uniqueBy(
@@ -217,13 +531,13 @@ function normalizeStrengths(items) {
         const obj = safeObject(item);
 
         return {
-          title: normalizeString(obj.title),
-          explanation: normalizeString(obj.explanation)
+          title: polishShortLabel(obj.title),
+          explanation: polishText(obj.explanation)
         };
       })
       .filter((item) => item.title && item.explanation),
     (item) => `${item.title}::${item.explanation}`
-  );
+  ).slice(0, 4);
 }
 
 function normalizeWeaknesses(items) {
@@ -233,13 +547,120 @@ function normalizeWeaknesses(items) {
         const obj = safeObject(item);
 
         return {
-          title: normalizeString(obj.title),
-          explanation: normalizeString(obj.explanation)
+          title: polishShortLabel(obj.title),
+          explanation: polishText(obj.explanation)
         };
       })
       .filter((item) => item.title && item.explanation),
     (item) => `${item.title}::${item.explanation}`
+  ).slice(0, 4);
+}
+
+function fallbackStrengthFromAnnotations(annotations) {
+  const candidate = ensureArray(annotations).find((item) =>
+    item.type === "strength" || item.type === "evidence"
   );
+
+  if (!candidate) {
+    return [];
+  }
+
+  return [
+    {
+      title: candidate.label || "Punto forte leggibile",
+      explanation: candidate.reason || "La risposta contiene un passaggio utile e credibile."
+    }
+  ];
+}
+
+function fallbackWeaknessFromAnnotations(annotations) {
+  const candidate = ensureArray(annotations).find((item) =>
+    item.type === "weakness" || item.type === "opportunity"
+  );
+
+  if (!candidate) {
+    return [];
+  }
+
+  return [
+    {
+      title: candidate.label || "Area da migliorare",
+      explanation: candidate.reason || "La risposta contiene un passaggio migliorabile."
+    }
+  ];
+}
+
+function buildFallbackCoachTip(weaknesses, strengths) {
+  const topWeakness = ensureArray(weaknesses)[0];
+  const topStrength = ensureArray(strengths)[0];
+
+  if (topWeakness?.title) {
+    return {
+      title: "Mossa successiva",
+      message: polishText(
+        `Nel prossimo tentativo, lavora soprattutto su questo punto: ${topWeakness.title}. Rendi la risposta più concreta, più centrata e più facile da dimostrare.`
+      )
+    };
+  }
+
+  if (topStrength?.title) {
+    return {
+      title: "Rafforza ciò che funziona",
+      message: polishText(
+        `La base è buona su ${topStrength.title}. Nel prossimo tentativo mantieni questo punto forte e aggiungi più dettaglio concreto.`
+      )
+    };
+  }
+
+  return {
+    title: "Mossa successiva",
+    message: "Nel prossimo tentativo punta a una risposta più concreta, più specifica e meglio focalizzata sulla domanda."
+  };
+}
+
+function buildFallbackUpgradeSuggestion(weaknesses) {
+  const topWeakness = ensureArray(weaknesses)[0];
+
+  if (topWeakness?.title) {
+    return {
+      goal: polishShortLabel(topWeakness.title),
+      instruction: polishText(
+        "Rispondi di nuovo usando una struttura semplice: contesto, azione personale, risultato o impatto, e chiudi tornando al punto della domanda."
+      )
+    };
+  }
+
+  return {
+    goal: "Rendere la risposta più forte",
+    instruction: "Riscrivi la risposta in modo più concreto, con più ownership personale e con un collegamento finale più chiaro alla domanda."
+  };
+}
+
+function buildFallbackSummary({
+  strengths,
+  weaknesses,
+  overallBand
+}) {
+  const topStrength = ensureArray(strengths)[0]?.title || "";
+  const topWeakness = ensureArray(weaknesses)[0]?.title || "";
+
+  let oneLineDiagnosis =
+    "La risposta è utilizzabile, ma può essere resa più convincente e più concreta.";
+
+  if (overallBand === "strong") {
+    oneLineDiagnosis =
+      "La risposta è credibile e ben leggibile, anche se può ancora essere raffinata.";
+  } else if (overallBand === "weak") {
+    oneLineDiagnosis =
+      "La risposta mostra potenziale, ma al momento resta troppo fragile o troppo generica.";
+  }
+
+  return {
+    overallBand,
+    oneLineDiagnosis: polishText(oneLineDiagnosis),
+    topStrength: topStrength || "Messaggio leggibile",
+    topImprovementArea: topWeakness || "Maggiore concretezza"
+  };
 }
 
 export function normalizeAnswerAnnotation(rawAnnotation) {
@@ -256,6 +677,33 @@ export function normalizeAnswerAnnotation(rawAnnotation) {
   const improvedText = normalizeString(improvedInput.text);
   const improvedIsSafe = isImprovedDraftSafe(answerText, improvedText);
 
+  const annotations = normalizeAnnotations(answerText, input.annotations);
+
+  const strengths = normalizeStrengths(input.strengths);
+  const weaknesses = normalizeWeaknesses(input.weaknesses);
+
+  const finalStrengths =
+    strengths.length > 0 ? strengths : fallbackStrengthFromAnnotations(annotations);
+
+  const finalWeaknesses =
+    weaknesses.length > 0 ? weaknesses : fallbackWeaknessFromAnnotations(annotations);
+
+  const overallBand = normalizeString(summaryInput.overallBand) || "medium";
+  const summary = buildFallbackSummary({
+    strengths: finalStrengths,
+    weaknesses: finalWeaknesses,
+    overallBand
+  });
+
+  const coachTipTitle = polishShortLabel(coachTipInput.title);
+  const coachTipMessage = polishText(coachTipInput.message);
+
+  const upgradeGoal = polishShortLabel(upgradeInput.goal);
+  const upgradeInstruction = polishText(upgradeInput.instruction);
+
+  const fallbackCoachTip = buildFallbackCoachTip(finalWeaknesses, finalStrengths);
+  const fallbackUpgradeSuggestion = buildFallbackUpgradeSuggestion(finalWeaknesses);
+
   return {
     answerAnnotation: {
       answerId: normalizeString(input.answerId),
@@ -264,22 +712,23 @@ export function normalizeAnswerAnnotation(rawAnnotation) {
       answerText,
       reviewMode: normalizeString(input.reviewMode) || "interview",
       summary: {
-        overallBand: normalizeString(summaryInput.overallBand) || "medium",
-        oneLineDiagnosis: normalizeString(summaryInput.oneLineDiagnosis),
-        topStrength: normalizeString(summaryInput.topStrength),
-        topImprovementArea: normalizeString(summaryInput.topImprovementArea)
+        overallBand: summary.overallBand,
+        oneLineDiagnosis: polishText(summaryInput.oneLineDiagnosis) || summary.oneLineDiagnosis,
+        topStrength: polishShortLabel(summaryInput.topStrength) || summary.topStrength,
+        topImprovementArea:
+          polishShortLabel(summaryInput.topImprovementArea) || summary.topImprovementArea
       },
       tags: normalizeTags(input.tags),
-      annotations: normalizeAnnotations(answerText, input.annotations),
-      strengths: normalizeStrengths(input.strengths),
-      weaknesses: normalizeWeaknesses(input.weaknesses),
+      annotations,
+      strengths: finalStrengths,
+      weaknesses: finalWeaknesses,
       coachTip: {
-        title: normalizeString(coachTipInput.title),
-        message: normalizeString(coachTipInput.message)
+        title: coachTipTitle || fallbackCoachTip.title,
+        message: coachTipMessage || fallbackCoachTip.message
       },
       upgradeSuggestion: {
-        goal: normalizeString(upgradeInput.goal),
-        instruction: normalizeString(upgradeInput.instruction)
+        goal: upgradeGoal || fallbackUpgradeSuggestion.goal,
+        instruction: upgradeInstruction || fallbackUpgradeSuggestion.instruction
       },
       improvedAnswerDraft: {
         isProvided: improvedIsSafe,

@@ -1,3 +1,5 @@
+import getRoleFamilyReadingProfile from "../interview/getRoleFamilyReadingProfile.js";
+
 function escapeHtml(value) {
   return String(value ?? "")
     .replace(/&/g, "&amp;")
@@ -19,6 +21,10 @@ function text(value, fallback = "—") {
   if (typeof value === "number") return String(value);
   return fallback;
 }
+
+
+
+
 
 function humanizeRecommendationBand(value) {
   const map = {
@@ -246,6 +252,55 @@ function buildAnswerTabs(answers) {
   }));
 }
 
+function getRoleAwareQuestionIntent(questionText, flags, readingProfile) {
+  const q = String(questionText || "").toLowerCase();
+
+  if (flags?.isOpening) {
+    return (
+      readingProfile?.prompts?.opening ||
+      "Questa domanda serviva a capire come il candidato prova a posizionarsi rispetto al ruolo."
+    );
+  }
+
+  if (flags?.isRoleFit) {
+    return (
+      readingProfile?.prompts?.roleFit ||
+      "Questa domanda cercava il collegamento tra esperienza e ruolo target."
+    );
+  }
+
+  if (q.includes("contesto") || q.includes("ambiente")) {
+    return (
+      readingProfile?.prompts?.context ||
+      "Questa domanda cercava di capire in quale contesto il candidato rende meglio."
+    );
+  }
+
+  if (q.includes("responsabile") || q.includes("dipendeva")) {
+    return (
+      readingProfile?.prompts?.ownership ||
+      "Questa domanda cercava ownership personale."
+    );
+  }
+
+  if (
+    q.includes("pressione") ||
+    q.includes("resistenza") ||
+    q.includes("disaccordo") ||
+    q.includes("pushback")
+  ) {
+    return (
+      readingProfile?.prompts?.pressure ||
+      "Questa domanda cercava segnali di tenuta sotto pressione."
+    );
+  }
+
+  return (
+    readingProfile?.prompts?.roleFit ||
+    "Questa domanda cercava il collegamento tra esperienza e ruolo."
+  );
+}
+
 function getQuestionTextForAnswer(answer, interviewSession, timelineEntry) {
   const stepType = text(answer?.stepType || timelineEntry?.stepType, "");
   const blockIndex = Number.isFinite(answer?.blockIndex)
@@ -284,10 +339,117 @@ function getQuestionTextForAnswer(answer, interviewSession, timelineEntry) {
   return "Domanda non disponibile.";
 }
 
-function buildQuestionIntentText(answer) {
+
+
+
+function buildQuestionIntentText(answer, questionText = "") {
   const expectedSignals = ensureArray(answer?.expectedSignals).filter(Boolean);
   const narrativeRole = text(answer?.narrativeRole, "");
   const questionKey = text(answer?.questionKey, "");
+  const flags = answer?.answerAnalysis?.answerShapeAnalysis?.questionContext?.questionTypeFlags || {};
+
+  const q = String(questionText || "").toLowerCase();
+
+  if (
+    q.includes("apri il colloquio") ||
+    q.includes("inizia il colloquio") ||
+    q.includes("open the interview")
+  ) {
+    return "Questa domanda serviva a vedere se il candidato sapeva posizionarsi subito rispetto al ruolo, senza fermarsi a una semplice apertura introduttiva.";
+  }
+
+  if (
+    q.includes("quali parti della tua esperienza") ||
+    q.includes("rilevanti per questa posizione") ||
+    q.includes("esperienza ritieni più rilevanti") ||
+    q.includes("transferable") ||
+    q.includes("rilevanti per questo ruolo")
+  ) {
+    return "Questa domanda cercava il collegamento reale tra esperienza pregressa e ruolo target: non solo esperienza, ma trasferibilità credibile.";
+  }
+
+  if (
+    q.includes("in quale tipo di contesto lavori meglio") ||
+    q.includes("tipo di contesto") ||
+    q.includes("contesto lavori meglio")
+  ) {
+    return "Questa domanda cercava di capire in quale ambiente operativo il candidato rende meglio: livello di autonomia, struttura, ambiguità e tipo di collaborazione.";
+  }
+
+  if (
+    q.includes("esempio concreto") ||
+    q.includes("raccontami un caso") ||
+    q.includes("parlami di una situazione") ||
+    q.includes("tell me about a time") ||
+    q.includes("give me an example")
+  ) {
+    return "Questa domanda cercava un episodio reale, per capire se il candidato sa trasformare un racconto generico in un caso verificabile.";
+  }
+
+  if (
+    q.includes("prioritizzare") ||
+    q.includes("prioritizzato") ||
+    q.includes("prioritize") ||
+    q.includes("trade-off") ||
+    q.includes("tradeoff") ||
+    q.includes("lasciare indietro")
+  ) {
+    return "Questa domanda cercava una decisione vera: priorità, trade-off e criterio usato per scegliere sotto vincolo.";
+  }
+
+
+  if (
+    q.includes("di cosa eri esattamente responsabile") ||
+    q.includes("esattamente responsabile") ||
+    q.includes("responsabilità diretta") ||
+    q.includes("responsabilita diretta") ||
+    q.includes("direttamente responsabile tu") ||
+    q.includes("dipendeva dal team") ||
+    q.includes("dipendeva dal contesto")
+  ) {
+    return "Questa domanda cercava ownership personale: che cosa dipendeva davvero dal candidato e che cosa invece apparteneva al team o al contesto.";
+  }
+
+  if (
+    q.includes("pressione") ||
+    q.includes("pushback") ||
+    q.includes("resistenza") ||
+    q.includes("disaccordo") ||
+    q.includes("attrito")
+  ) {
+    return "Questa domanda cercava segnali di tenuta sotto pressione: attrito, resistenza, vincoli e posizione presa dal candidato.";
+  }
+
+
+  if (
+    q.includes("cosa hai imparato") ||
+    q.includes("cosa rifaresti") ||
+    q.includes("cosa faresti diversamente") ||
+    q.includes("what did you learn") ||
+    q.includes("what would you do differently")
+  ) {
+    return "Questa domanda cercava profondità: non solo cosa è successo, ma che cosa il candidato ha imparato e come ragiona a posteriori.";
+  }
+
+  if (flags.isOpening) {
+    return "Questa domanda serviva a capire subito come il candidato prova a posizionarsi rispetto al ruolo.";
+  }
+
+  if (flags.isRoleFit) {
+    return "Questa domanda serviva a capire se il candidato sa collegare davvero il proprio profilo al ruolo target.";
+  }
+
+  if (flags.isExample || flags.isWalkthrough) {
+    return "Questa domanda cercava un episodio o un passaggio reale, per verificare se il racconto fosse concreto e leggibile.";
+  }
+
+  if (flags.isDecision) {
+    return "Questa domanda cercava una decisione vera: priorità, trade-off e criterio usato per scegliere.";
+  }
+
+  if (flags.isPressure) {
+    return "Questa domanda cercava segnali di tenuta sotto pressione: attrito, disaccordo, vincoli e posizione presa dal candidato.";
+  }
 
   if (expectedSignals.length > 0) {
     return `Il sistema cercava soprattutto segnali di ${expectedSignals.slice(0, 3).join(", ")}.`;
@@ -304,61 +466,423 @@ function buildQuestionIntentText(answer) {
   return "Questa domanda serviva a raccogliere elementi più chiari e verificabili sul profilo.";
 }
 
-function extractQuickReading(answer, index) {
+
+
+
+function extractQuickReading(
+  answer,
+  index,
+  questionText = "",
+  roleFamilyProfile = null,
+  openingPositioning = {}
+)
+
+{
+
+
+
   const analysis = answer?.answerAnalysis?.answerShapeAnalysis || {};
+ 
+  const problematicAnswerType =
+  answer?.problematicAnswerType ||
+  analysis?.problematicAnswerType ||
+  "none";
   const weaknesses = ensureArray(analysis?.weaknesses);
   const strengths = ensureArray(analysis?.strengths);
   const hints = ensureArray(analysis?.improvementHints);
   const score = Number(analysis?.overallScore ?? 0);
   const answerText = text(answer?.answerText, "");
+    const readingProfile =
+    roleFamilyProfile && typeof roleFamilyProfile === "object"
+      ? roleFamilyProfile
+      : getRoleFamilyReadingProfile("generic_professional");
 
-  const wordCount = answerText.split(/\s+/).filter(Boolean).length;
-  const isVeryShort = wordCount < 16;
-  const hasNumbers = /\b\d+\b/.test(answerText);
-  const hasFirstPerson = /\b(io|ho|mia|mio|mie|miei|mio ruolo|mi sono|ho deciso|ho fatto)\b/i.test(answerText);
-  const hasConcreteMarkers = /\b(caso|progetto|situazione|cliente|stakeholder|team|risultato|metriche|dashboard|analisi|processo|decisione)\b/i.test(answerText);
+  const answerLower = String(answerText || "").toLowerCase().trim();
+  const answerCompact = answerLower
+    .replace(/[.,!?;:()[\]"]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const showsClearOwnership =
+    answerLower.includes("ero direttamente responsabile") ||
+    answerLower.includes("dipendevano da me") ||
+    answerLower.includes("dipendeva da me") ||
+    answerLower.includes("la scelta finale") ||
+    answerLower.includes("preparare l output finale") ||
+    answerLower.includes("preparare l'output finale") ||
+    answerLower.includes("decidere che cosa tenere prioritario");
+
+  if (problematicAnswerType === "hostile") {
+    return {
+      usefulSignal:
+        "La risposta non collabora con la domanda: il tono è respingente o ostile e non porta elementi utili alla valutazione.",
+      strengthen:
+        "Per rafforzarla serve prima di tutto rispondere nel merito, anche in modo sintetico, senza liquidare o svalutare la domanda.",
+      followupReason:
+        "Il sistema approfondirebbe ancora perché qui il problema non è solo la qualità del contenuto, ma la disponibilità stessa a stare nella domanda."
+    };
+  }
+
+  if (problematicAnswerType === "non_answer") {
+    return {
+      usefulSignal:
+        "Questa è di fatto una quasi non-risposta: troppo breve per far capire esperienza, posizione o criterio.",
+      strengthen:
+        "Per rafforzarla serve almeno una risposta minima completa: punto centrale, un dettaglio concreto e il tuo ruolo personale.",
+      followupReason:
+        "Il sistema approfondirebbe ancora perché con una risposta così breve non ci sono elementi sufficienti per leggere davvero il profilo."
+    };
+  }
+
+  if (problematicAnswerType === "evasive") {
+    return {
+      usefulSignal:
+        "La risposta evita di prendere posizione sulla domanda e non aggiunge contenuto utile alla valutazione.",
+      strengthen:
+        "Per rafforzarla serve rispondere in modo diretto a questa domanda specifica, aggiungendo un elemento nuovo e verificabile.",
+      followupReason:
+        "Il sistema approfondirebbe ancora perché qui manca una risposta reale alla domanda, non solo un dettaglio in più."
+    };
+  }
+
+  if (problematicAnswerType === "duplicate") {
+    return {
+      usefulSignal:
+        "La risposta ripete contenuti già espressi e non aggiunge elementi nuovi rispetto a quanto era già emerso.",
+      strengthen:
+        "Per rafforzarla serve affrontare davvero questo passaggio, aggiungendo un dettaglio nuovo, specifico e pertinente alla domanda.",
+      followupReason:
+        "Il sistema approfondirebbe ancora perché il follow-up non è stato realmente sviluppato: la risposta ricicla contenuti già dati."
+    };
+  }
+
+  if (problematicAnswerType === "off_topic") {
+    return {
+      usefulSignal:
+        "La risposta non entra davvero nel punto chiesto: porta materiale generico o laterale, ma resta fuori asse rispetto alla domanda.",
+      strengthen:
+        "Per rafforzarla serve rispondere prima al punto preciso richiesto, e solo dopo aggiungere contesto o dettaglio.",
+      followupReason:
+        "Il sistema approfondirebbe ancora perché qui manca aderenza reale alla domanda: il contenuto non è abbastanza sul punto."
+    };
+  }
+
+  if (problematicAnswerType === "nonsense") {
+    return {
+      usefulSignal:
+        "La risposta ha una forma linguistica, ma non costruisce un contenuto davvero leggibile o valutabile.",
+      strengthen:
+        "Per rafforzarla serve una linea più chiara: un punto preciso, un contenuto verificabile e un minimo di struttura.",
+      followupReason:
+        "Il sistema approfondirebbe ancora perché qui non basta aggiungere dettaglio: serve prima rendere la risposta comprensibile e consistente."
+    };
+  }
+
+  const isMonosyllabicAnswer =
+    answerCompact === "sì" ||
+    answerCompact === "si" ||
+    answerCompact === "no" ||
+    answerCompact === "ok" ||
+    answerCompact === "boh" ||
+    answerCompact === "mah";
+
+  const isEvasiveAnswer =
+    answerCompact.includes("come ho già detto prima") ||
+    answerCompact.includes("come ho gia detto prima") ||
+    answerCompact.includes("lho già spiegato") ||
+    answerCompact.includes("lho gia spiegato") ||
+    answerCompact.includes("l'ho già spiegato") ||
+    answerCompact.includes("l'ho gia spiegato") ||
+    answerCompact.includes("dipende dai casi") ||
+    answerCompact.includes("mah dipende") ||
+    answerCompact === "dipende" ||
+    answerCompact.includes("non saprei") ||
+    answerCompact.includes("non lo so");
+
+  const isHostileAnswer =
+    answerCompact.includes("che domanda inutile") ||
+    answerCompact.includes("domanda inutile") ||
+    answerCompact.includes("che domanda stupida") ||
+    answerCompact.includes("non ha senso") ||
+    answerCompact.includes("che cavolo di domanda");
+
+  if (isHostileAnswer) {
+    return {
+      usefulSignal:
+        "La risposta non collabora con la domanda: il tono è respingente o ostile e non porta elementi utili alla valutazione.",
+      strengthen:
+        "Per rafforzarla serve prima di tutto rispondere nel merito, anche in modo sintetico, senza liquidare o svalutare la domanda.",
+      followupReason:
+        "Il sistema approfondirebbe ancora perché qui il problema non è solo la qualità del contenuto, ma la disponibilità stessa a stare nella domanda."
+    };
+  }
+
+  if (isMonosyllabicAnswer) {
+    return {
+      usefulSignal:
+        "Questa è di fatto una quasi non-risposta: troppo breve per far capire esperienza, posizione o criterio.",
+      strengthen:
+        "Per rafforzarla serve almeno una risposta minima completa: punto centrale, un dettaglio concreto e il tuo ruolo personale.",
+      followupReason:
+        "Il sistema approfondirebbe ancora perché con una risposta così breve non ci sono elementi sufficienti per leggere davvero il profilo."
+    };
+  }
+
+  if (isEvasiveAnswer) {
+    return {
+      usefulSignal:
+        "La risposta evita di prendere posizione sulla domanda e non aggiunge contenuto utile alla valutazione.",
+      strengthen:
+        "Per rafforzarla serve rispondere in modo diretto a questa domanda specifica, aggiungendo un elemento nuovo e verificabile.",
+      followupReason:
+        "Il sistema approfondirebbe ancora perché qui manca una risposta reale alla domanda, non solo un dettaglio in più."
+    };
+  }
+
+
+
+
+
+
+  const dimensionScores = analysis?.dimensionScores || {};
+  const detectedSignals = analysis?.detectedSignals || {};
+ 
+ 
+  const questionContext = analysis?.questionContext || {};
+  const flags = questionContext?.questionTypeFlags || {};
+  const q = String(questionText || "").toLowerCase();
+
+  if (
+    q.includes("contesto lavori meglio") ||
+    q.includes("tipo di contesto") ||
+    q.includes("ambiente lavori meglio") ||
+    q.includes("ambiente ti aiuta a rendere")
+  ) {
+    return {
+      usefulSignal:
+        readingProfile?.readings?.contextGood ||
+        "La risposta è chiara e coerente: emerge un contesto di lavoro preferito con buon livello di autonomia e struttura.",
+      strengthen:
+        readingProfile?.readings?.contextImprove ||
+        "Puoi rafforzarla aggiungendo un esempio concreto di contesto reale in cui hai lavorato in questo modo.",
+      followupReason:
+        "Il sistema approfondirebbe ancora per capire se questa preferenza emerge da esperienza concreta e non solo da una descrizione generale del contesto ideale."
+    };
+  }
+
+
+  const asksPriority =
+    q.includes("priorit") ||
+    q.includes("trade-off") ||
+    q.includes("tradeoff") ||
+    q.includes("lasciare indietro");
+
+  const asksPressure =
+    !(
+      q.includes("di cosa eri esattamente responsabile") ||
+      q.includes("responsabilità diretta") ||
+      q.includes("responsabilita diretta") ||
+      q.includes("direttamente responsabile tu") ||
+      q.includes("dipendeva dal team") ||
+      q.includes("dipendeva dal contesto") ||
+      q.includes("di cosa eri direttamente responsabile")
+    ) &&
+    (
+      q.includes("pressione") ||
+      q.includes("pushback") ||
+      q.includes("resistenza") ||
+      q.includes("disaccordo") ||
+      q.includes("attrito")
+    );
+
+  const asksLearning =
+    q.includes("cosa hai imparato") ||
+    q.includes("cosa rifaresti") ||
+    q.includes("cosa faresti diversamente") ||
+    q.includes("what did you learn") ||
+    q.includes("what would you do differently");
+
+  const asksOwnership =
+    q.includes("di cosa eri esattamente responsabile") ||
+    q.includes("responsabilità diretta") ||
+    q.includes("responsabilita diretta") ||
+    q.includes("direttamente responsabile tu") ||
+    q.includes("dipendeva dal team") ||
+    q.includes("dipendeva dal contesto") ||
+    q.includes("di cosa eri direttamente responsabile");
+
+  const hasExample =
+    (detectedSignals?.exampleMarkers ?? 0) > 0 ||
+    (detectedSignals?.exampleBodyMarkers ?? 0) > 0;
+
+  const hasTradeoff = (detectedSignals?.tradeoffMarkers ?? 0) > 0;
+  const hasPressure = (detectedSignals?.pressureMarkers ?? 0) > 0;
+  const hasRoleFit =
+    (detectedSignals?.roleFitMarkers ?? 0) > 0 ||
+    (detectedSignals?.fitBodyMarkers ?? 0) > 0;
+  const hasPlaceholderIntro =
+    (detectedSignals?.placeholderIntroMarkers ?? 0) > 0;
 
   let usefulSignal = "";
   let strengthen = "";
 
-  if (index === 0 && isVeryShort) {
-    usefulSignal =
-      "Questa apertura introduce la disponibilità a raccontarsi, ma non porta ancora elementi sufficienti per sostenere davvero il profilo.";
+  if ((flags.isOpening || flags.isRoleFit) && hasPlaceholderIntro && !hasRoleFit && score < 35) {
+    
+  usefulSignal =
+   "Questa è ancora un’apertura: introduce il racconto, ma non porta elementi concreti che colleghino il profilo al ruolo in termini di attività, responsabilità o risultati.";
+
     strengthen =
-      "Nell’apertura conviene dire subito in 2–3 frasi quali esperienze ti rendono credibile per il ruolo, invece di restare solo su una disponibilità generica.";
+      "Dopo l’apertura entra subito nel merito: spiega quali esperienze ti rendono credibile per questo ruolo e perché il passaggio ha senso.";
     return { usefulSignal, strengthen };
   }
 
-  if (!hasConcreteMarkers && score < 45) {
+  if ((flags.isExample || flags.isWalkthrough) && !hasExample && score < 50) {
     usefulSignal =
-      "La risposta resta ancora troppo generale e non aiuta a capire bene situazione, azione e valore portato.";
+      "La risposta descrive il tipo di situazione affrontata, ma resta su un livello troppo generale: senza un episodio preciso non è possibile valutare davvero come hai gestito priorità, vincoli o decisioni.";
     strengthen =
-      "Conviene agganciare la risposta a un episodio preciso: contesto, cosa hai fatto tu, risultato ottenuto.";
+      "Aggancia la risposta a un caso concreto: contesto, tua azione, scelta fatta e risultato.";
     return { usefulSignal, strengthen };
   }
 
-  if (hasConcreteMarkers && !hasNumbers && !hasFirstPerson) {
+  if (asksOwnership && showsClearOwnership) {
     usefulSignal =
-      "La risposta porta almeno un contesto abbastanza concreto, ma lascia ancora poco visibile il tuo contributo personale.";
+      readingProfile?.readings?.ownershipGood ||
+      "La risposta distingue abbastanza bene ciò che dipendeva direttamente dal candidato da ciò che apparteneva al team o al contesto.";
     strengthen =
-      "Rendi più esplicito che cosa dipendeva da te e, se possibile, chiudi con un risultato concreto o un effetto visibile.";
-    return { usefulSignal, strengthen };
-    }
+      readingProfile?.readings?.ownershipImprove ||
+      "Puoi rafforzarla ancora rendendo più netto il confine tra responsabilità personale, scelta diretta ed esito finale.";
+    return {
+      usefulSignal,
+      strengthen,
+      followupReason:
+        readingProfile?.readings?.ownershipFollowup ||
+        "Il sistema approfondirebbe ancora per verificare quanto questa responsabilità personale si traducesse davvero in decisioni, priorità ed effetti concreti."
+    };
+  }
 
-  if (hasConcreteMarkers && hasFirstPerson && !hasNumbers) {
+  if (asksOwnership) {
     usefulSignal =
-      "La risposta inizia a mostrare esperienza reale e una discreta presenza personale nel racconto.";
+      "La risposta affronta il tema della responsabilità personale, ma non separa ancora con sufficiente precisione ciò che dipendeva davvero dal candidato da ciò che apparteneva al team o al contesto.";
     strengthen =
-      "Per renderla più forte manca soprattutto un risultato misurabile o comunque un effetto finale più chiaro.";
+      readingProfile?.readings?.ownershipImprove ||
+      "Rafforzala distinguendo in modo più netto responsabilità personale, decisioni prese direttamente e parti condivise con altri.";
+    return {
+      usefulSignal,
+      strengthen,
+      followupReason:
+        "Il sistema approfondirebbe ancora perché su questo punto serve un confine più leggibile tra ownership personale e contesto."
+    };
+  }
+
+
+
+  if ((flags.isDecision || asksPriority) && !hasTradeoff) {
+    usefulSignal =
+      "La risposta porta un ragionamento plausibile, ma non rende ancora abbastanza chiaro quale priorità sia stata scelta e quale trade-off sia stato accettato.";
+    strengthen =
+      "Rendi esplicita la scelta: che cosa hai deciso di proteggere, che cosa hai lasciato indietro e con quale criterio.";
+    return { usefulSignal, strengthen };
+  }
+
+  if ((flags.isPressure || asksPressure) && !hasPressure) {
+    usefulSignal =
+      "La risposta prova a mostrare tenuta, ma il punto di pressione, resistenza o disaccordo resta ancora troppo sfumato.";
+    strengthen =
+      "Fai emergere meglio il momento di attrito: chi spingeva in un’altra direzione, quale vincolo c’era e che posizione hai preso.";
+    return { usefulSignal, strengthen };
+  }
+
+  if (asksLearning) {
+    usefulSignal =
+      "La risposta è utilizzabile, ma il livello di apprendimento ricavato dall’esperienza non emerge ancora in modo davvero nitido.";
+    strengthen =
+      "Rafforzala chiarendo che cosa hai imparato, che cosa terresti uguale e che cosa faresti diversamente in un caso simile.";
+    return { usefulSignal, strengthen };
+  }
+
+  if (
+    (flags.isExample || flags.isWalkthrough) &&
+    hasExample &&
+    !hasTradeoff &&
+    score >= 50 &&
+    score < 75
+  ) {
+    usefulSignal =
+      "La risposta si appoggia a un caso reale e questo la rende più credibile rispetto a una formula solo generica.";
+    strengthen =
+      "Per renderla più forte, chiudi il caso con un effetto concreto o con una conseguenza leggibile della tua scelta.";
+    return { usefulSignal, strengthen };
+  }
+
+  if (flags.isDecision && hasTradeoff && score >= 55) {
+    usefulSignal =
+      "Qui emerge meglio una decisione reale: si percepisce una priorità scelta e non solo un racconto genericamente operativo.";
+    strengthen =
+      "Puoi rafforzarla ancora spiegando con più precisione il criterio usato e l’effetto pratico della scelta.";
+    return { usefulSignal, strengthen };
+  }
+
+  if (flags.isPressure && hasPressure && score >= 55) {
+    usefulSignal =
+      "Qui la risposta mostra più chiaramente una situazione di pressione o di disaccordo, e questo rende il racconto più credibile.";
+    strengthen =
+      "Puoi rafforzarla ancora rendendo più espliciti il contrasto, la scelta difesa e l’esito finale della situazione.";
+    return { usefulSignal, strengthen };
+  }
+
+  if (dimensionScores?.questionAlignment < 45) {
+    usefulSignal =
+      "La risposta contiene materiale potenzialmente utile, ma non è ancora centrata fino in fondo sul punto preciso che la domanda cercava di verificare.";
+    strengthen =
+      "Resta più vicino al punto chiesto: prima rispondi in modo diretto, poi aggiungi contesto o dettaglio.";
+    return { usefulSignal, strengthen };
+  }
+
+  if (flags.isDecision || asksPriority) {
+    usefulSignal =
+      "La risposta è utilizzabile e fa intravedere una logica decisionale, ma il criterio di scelta può ancora essere reso più netto e più verificabile.";
+    strengthen =
+      "Rafforzala chiarendo meglio il criterio usato, il trade-off accettato e la conseguenza pratica della decisione.";
+    return { usefulSignal, strengthen };
+  }
+
+  if (flags.isPressure || asksPressure) {
+
+   usefulSignal =
+    "La risposta mostra una certa tenuta nella gestione della situazione, ma il momento di attrito e la posizione presa non emergono ancora con sufficiente chiarezza operativa.";
+    strengthen =
+      "Rafforzala rendendo più espliciti il contrasto, la scelta difesa e l’esito della situazione.";
+    return { usefulSignal, strengthen };
+  }
+
+  if (asksLearning) {
+    usefulSignal =
+      "La risposta è utilizzabile e mostra una logica coerente, ma il passaggio dall’esperienza all’apprendimento resta ancora poco sviluppato.";
+    strengthen =
+      "Rafforzala esplicitando la lezione appresa e come influenzerebbe una scelta futura.";
+    return { usefulSignal, strengthen };
+  }
+
+  if ((flags.isExample || flags.isWalkthrough) && score >= 50) {
+    usefulSignal =
+      "La risposta è utilizzabile e contiene materiale credibile, ma il caso raccontato può ancora essere reso più specifico e più dimostrativo.";
+    strengthen =
+      "Rafforzala aggiungendo un passaggio più nitido su contesto, azione personale e risultato finale.";
+    return { usefulSignal, strengthen };
+  }
+
+  if ((flags.isOpening || flags.isRoleFit) && score >= 50) {
+    usefulSignal =
+      "La risposta è utilizzabile e prova a posizionare il profilo, ma può ancora collegare meglio esperienza e ruolo in modo più netto e meno astratto.";
+    strengthen =
+      "Rafforzala spiegando con più precisione quali esperienze rendono credibile il passaggio verso questo ruolo.";
     return { usefulSignal, strengthen };
   }
 
   usefulSignal =
-    strengths[0] ||
-    analysis?.summary ||
-    weaknesses[0] ||
-    "La risposta offre alcuni elementi utili, ma non ancora abbastanza forti da sostenere da sola il posizionamento.";
-
+  strengths[0] ||
+  weaknesses[0] ||
+  "La risposta introduce alcuni elementi, ma non ancora in modo sufficientemente concreto o leggibile per sostenere il posizionamento.";
   strengthen =
     hints[0] ||
     "Serve una risposta più concreta, più centrata e più facile da attribuire al tuo contributo personale.";
@@ -366,34 +890,64 @@ function extractQuickReading(answer, index) {
   return { usefulSignal, strengthen };
 }
 
-function buildFollowupReason(answer, questionText) {
-  const analysis = answer?.answerAnalysis?.answerShapeAnalysis || {};
-  const weaknesses = ensureArray(analysis?.weaknesses);
-  const improvementHints = ensureArray(analysis?.improvementHints);
-  const alignmentScore = analysis?.questionAlignment?.score ?? analysis?.questionAlignment ?? null;
-  const offTopicRisk = text(analysis?.offTopicRisk, "").toLowerCase();
-  const isFollowup =
-    answer?.stepType === "adaptive_followup_pack" ||
-    /contributo|esempio|più concreto|spiegami meglio|direttamente/i.test(questionText || "");
 
-  if (isFollowup && weaknesses.length > 0) {
-    return `Il sistema ha insistito perché nella risposta precedente non era ancora abbastanza chiaro questo punto: ${weaknesses[0]}`;
+
+
+function buildFollowupReason(answer, questionText, openingPositioning = {}) {
+const analysis = answer?.answerAnalysis?.answerShapeAnalysis || {};
+
+
+const weaknesses = ensureArray(analysis?.weaknesses);
+const questionContext = analysis?.questionContext || {};
+ 
+  const detectedSignals = analysis?.detectedSignals || {};
+  const flags = questionContext?.questionTypeFlags || {};
+  const alignmentScore = analysis?.dimensionScores?.questionAlignment ?? null;
+  const offTopicRisk = text(questionContext?.offTopicRisk, "").toLowerCase();
+
+  const hasExample =
+    (detectedSignals?.exampleMarkers ?? 0) > 0 ||
+    (detectedSignals?.exampleBodyMarkers ?? 0) > 0;
+
+  const hasTradeoff = (detectedSignals?.tradeoffMarkers ?? 0) > 0;
+  const hasPressure = (detectedSignals?.pressureMarkers ?? 0) > 0;
+  const hasRoleFit = (detectedSignals?.roleFitMarkers ?? 0) > 0 || (detectedSignals?.fitBodyMarkers ?? 0) > 0;
+  const hasPlaceholderIntro = (detectedSignals?.placeholderIntroMarkers ?? 0) > 0;
+
+
+
+
+  if ((flags.isOpening || flags.isRoleFit) && hasPlaceholderIntro && !hasRoleFit) {
+    return "Il sistema approfondirebbe ancora perché qui non è ancora chiaro il collegamento reale tra profilo del candidato e ruolo target.";
+  }
+
+  if ((flags.isExample || flags.isWalkthrough) && !hasExample) {
+    return "Il sistema approfondirebbe ancora perché manca un episodio preciso con cui verificare se il racconto è davvero ancorato a un’esperienza reale.";
+  }
+
+  if (flags.isDecision && !hasTradeoff) {
+    return "Il sistema approfondirebbe ancora perché non emerge ancora abbastanza chiaramente quale decisione sia stata presa e quale trade-off sia stato accettato.";
+  }
+
+  if (flags.isPressure && !hasPressure) {
+    return "Il sistema approfondirebbe ancora perché il punto di pressione, resistenza o disaccordo non è ancora abbastanza visibile.";
   }
 
   if (offTopicRisk === "high") {
-    return "Qui il sistema avrebbe motivo di insistere perché la risposta rischia di allargarsi troppo rispetto alla domanda.";
+    return "Il sistema approfondirebbe ancora perché la risposta tende ad allargarsi o a spostarsi fuori asse rispetto al punto richiesto.";
   }
 
   if (typeof alignmentScore === "number" && alignmentScore < 45) {
-    return "Qui il sistema avrebbe motivo di insistere perché la risposta resta poco aderente al punto che stava cercando di verificare.";
+    return "Il sistema approfondirebbe ancora perché la risposta non resta ancora abbastanza aderente al punto preciso che la domanda cercava di verificare.";
   }
 
-  if (improvementHints.length > 0) {
-    return `Il punto da forzare di più sarebbe questo: ${improvementHints[0]}`;
+  if (weaknesses.length > 0) {
+    return `Il sistema approfondirebbe ancora perché qui manca un passaggio chiave: ${weaknesses[0]}`;
   }
 
-  return "Qui il sistema cerca soprattutto conferme più chiare, concrete e attribuibili direttamente al candidato.";
+  return "Il sistema approfondirebbe ancora per trasformare una risposta plausibile in una risposta davvero verificabile, concreta e ben attribuibile al candidato.";
 }
+
 
 function renderLockedSection({
   title,
@@ -423,7 +977,212 @@ function renderLockedSection({
   `;
 }
 
-function renderTopNavigation(activeTab, currentPlan) {
+function uniqueNonEmpty(values) {
+  return [...new Set(ensureArray(values).map((item) => text(item, "")).filter(Boolean))];
+}
+
+function buildTopBlockingIssues(report) {
+  const answerQuality = report?.answerQuality || {};
+  const improvements = report?.improvements || {};
+  const runtimeRead = report?.runtimeRead || {};
+  const roleFit = report?.roleFit || {};
+
+  const rawItems = [
+    ...ensureArray(answerQuality?.recurringWeaknesses),
+    ...ensureArray(improvements?.finalAdvice),
+    ...ensureArray(runtimeRead?.deviationFlags),
+    ...ensureArray(roleFit?.clarificationsNeeded)
+  ];
+
+  const normalized = uniqueNonEmpty(
+    rawItems.map((item) => {
+      const clean = text(item, "")
+        .replace(/^Dalle risposte emerge che /i, "")
+        .replace(/^Dalle risposte si osserva che /i, "")
+        .replace(/^La risposta /i, "")
+        .replace(/^Serve /i, "")
+        .replace(/^Occorre /i, "")
+        .trim()
+        .toLowerCase();
+
+      if (clean.includes("riflessione") || clean.includes("apprendimento") || clean.includes("adattamento")) {
+        return "Non emerge ancora abbastanza bene come impari, correggi il tiro o fai evolvere il tuo modo di lavorare.";
+      }
+
+      if (clean.includes("contributo personale") || clean.includes("team")) {
+        return "Non sempre si capisce con precisione che cosa dipendeva davvero da te e che cosa invece apparteneva al team o al contesto.";
+      }
+
+      if (clean.includes("impatto") || clean.includes("risultato") || clean.includes("outcome")) {
+        return "Le risposte restano spesso plausibili, ma portano ancora poche prove visibili di risultato, impatto o valore generato.";
+      }
+
+      return text(item, "");
+    })
+  );
+
+  return normalized.slice(0, 3).length > 0
+    ? normalized.slice(0, 3)
+    : [
+        "Non emerge ancora abbastanza bene come impari, correggi il tiro o fai evolvere il tuo modo di lavorare.",
+        "Non sempre si capisce con precisione che cosa dipendeva davvero da te e che cosa invece apparteneva al team o al contesto.",
+        "Le risposte restano spesso plausibili, ma portano ancora poche prove visibili di risultato, impatto o valore generato."
+      ];
+}
+
+
+
+
+function buildPerceivedProfile(report) {
+  const roleFit = report?.roleFit || {};
+  const answerQuality = report?.answerQuality || {};
+  const executiveRead = report?.executiveRead || {};
+  const recruiterSnapshot = report?.recruiterSnapshot || {};
+
+  const recommendationBand = String(roleFit?.recommendationBand || "").toLowerCase();
+  const answerBand = String(answerQuality?.overallBand || "").toLowerCase();
+
+  let headline =
+    text(executiveRead?.headline, "") ||
+    text(recruiterSnapshot?.bestContext, "") ||
+    "Profilo leggibile ma ancora da consolidare";
+
+  let shortRead = "Il profilo appare ordinato, ma non ancora abbastanza forte in tutti i passaggi chiave.";
+  let recruiterAngle = "Un recruiter oggi vedrebbe elementi interessanti, ma chiederebbe ancora prove più concrete e più attribuibili al candidato.";
+
+  if (recommendationBand.includes("strong") || recommendationBand.includes("solid")) {
+    shortRead = "Il profilo appare credibile rispetto al ruolo, ma la forza complessiva dipende ancora da quanto le risposte lo sostengono bene.";
+  } else if (recommendationBand.includes("plausible")) {
+    shortRead = "Il profilo appare plausibile rispetto al ruolo, ma non ancora del tutto stabile o convincente.";
+  } else if (recommendationBand.includes("stretch") || recommendationBand.includes("borderline")) {
+    shortRead = "Il profilo appare interessante ma ancora fragile rispetto al ruolo scelto.";
+  }
+
+  if (answerBand === "strong") {
+    recruiterAngle = "Le risposte aiutano davvero il profilo: il candidato appare più credibile, leggibile e difendibile.";
+  } else if (answerBand === "medium") {
+    recruiterAngle = "Le risposte sostengono il profilo solo in parte: il potenziale si vede, ma non sempre viene trasformato in credibilità piena.";
+  } else if (answerBand === "weak") {
+    recruiterAngle = "Le risposte oggi limitano il profilo più di quanto lo aiutino: il potenziale non viene ancora trasformato bene in credibilità.";
+  }
+
+  return {
+    headline,
+    shortRead,
+    recruiterAngle
+  };
+}
+
+function renderTopIssuesList(items) {
+  const values = ensureArray(items).slice(0, 3);
+
+  return `
+    <div class="signal-grid">
+      ${values
+        .map(
+          (item, index) => `
+            <div class="signal-card signal-card-risk">
+              <div class="signal-card-title">Errore ${index + 1}</div>
+              <div class="signal-card-text">${escapeHtml(item)}</div>
+            </div>
+          `
+        )
+        .join("\n")}
+    </div>
+  `;
+}
+
+function scoreToneFromLabel(value) {
+  const lower = String(value || "").toLowerCase();
+
+  if (
+    lower.includes("forte") ||
+    lower.includes("solido") ||
+    lower.includes("buona") ||
+    lower.includes("ok")
+  ) {
+    return "good";
+  }
+
+  if (
+    lower.includes("plausibile") ||
+    lower.includes("rafforzare") ||
+    lower.includes("medio") ||
+    lower.includes("parziale")
+  ) {
+    return "warm";
+  }
+
+  if (
+    lower.includes("debole") ||
+    lower.includes("borderline") ||
+    lower.includes("gap") ||
+    lower.includes("molto debole")
+  ) {
+    return "risk";
+  }
+
+  return "neutral";
+}
+
+function renderHeroMetricCard({ label, value, tone = "neutral" }) {
+  return `
+    <div class="hero-metric-card hero-metric-card-${escapeHtml(tone)}">
+      <div class="hero-metric-label">${escapeHtml(label)}</div>
+      <div class="hero-metric-value">${escapeHtml(value)}</div>
+    </div>
+  `;
+}
+
+function renderTopBlockingList(items) {
+  const values = ensureArray(items).slice(0, 3);
+  const labels = ["Apprendimento", "Responsabilità", "Impatto"];
+
+  return `
+    <div class="blocking-list">
+      ${values
+        .map(
+          (item, index) => `
+            <div class="blocking-item">
+              <div class="blocking-index">${index + 1}</div>
+              <div class="blocking-body">
+                <div class="blocking-title">${labels[index] || `Focus ${index + 1}`}</div>
+                <div class="blocking-text">${escapeHtml(item)}</div>
+              </div>
+            </div>
+          `
+        )
+        .join("\n")}
+    </div>
+  `;
+}
+
+
+
+function renderBandSection({
+  tone = "neutral",
+  label = "",
+  title = "",
+  subtitle = "",
+  content = ""
+}) {
+  return `
+    <section class="band-section band-section-${escapeHtml(tone)}">
+      <div class="band-section-rail">
+        <span class="band-section-label">${escapeHtml(label)}</span>
+      </div>
+      <div class="band-section-main">
+        ${title ? `<div class="band-section-title">${escapeHtml(title)}</div>` : ""}
+        ${subtitle ? `<div class="band-section-subtitle">${escapeHtml(subtitle)}</div>` : ""}
+        <div class="band-section-content">
+          ${content}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderTopNavigation(activeTab, currentPlan, candidateLabel = "te") { 
   const tabs = [
     {
       key: "overview",
@@ -464,14 +1223,23 @@ function renderTopNavigation(activeTab, currentPlan) {
 
   return `
     <section class="report-shell-header">
-      <div class="report-shell-top">
-        <div>
-          <div class="report-shell-title">FRINGE INTERVIEW — REPORT DELLA SIMULAZIONE</div>
-          <div class="report-shell-subtitle">
-            Qui non vedi solo un punteggio: vedi quanto il profilo regge davvero sotto domanda, dove il sistema ha insistito e che impressione lascia oggi a livello candidato e selezione.
+
+           <div class="report-shell-top">
+        <div class="report-shell-left">
+          <div class="report-shell-title">
+            <span class="report-shell-brand">FRINGE Interview</span>
+                       <span class="report-shell-user">per ${escapeHtml(candidateLabel)}</span>
           </div>
         </div>
-        <a class="switch-link" href="./fringe_interview_interactive_shell_setup.html">← Vai al setup</a>
+
+        <div class="report-shell-center">
+          <div class="report-shell-mode">Report & Coaching</div>
+          <div class="report-shell-banner" id="reportSectionBanner">Lettura generale del posizionamento</div>
+        </div>
+
+        <div class="report-shell-right">
+          <a class="switch-link" href="./fringe_interview_interactive_shell_setup.html">← Setup</a>
+        </div>
       </div>
 
       <div class="single-line-nav single-line-nav-5">
@@ -522,15 +1290,24 @@ function renderTopNavigation(activeTab, currentPlan) {
   `;
 }
 
+
+
 function renderFringeInterviewReportHtml({ sessionResult }) {
   if (!sessionResult || typeof sessionResult !== "object") {
     throw new Error("renderFringeInterviewReportHtml: sessionResult is required.");
   }
 
+  
+
   const mvp = sessionResult?.fringeInterviewMVPSession || {};
-  const report = mvp?.finalCandidateReport || {};
-  const session = mvp?.interviewSession || {};
-  const meta = mvp?.meta || {};
+const report = mvp?.finalCandidateReport || {};
+const openingPositioning = report?.openingPositioning || {};
+const session = mvp?.interviewSession || {};
+const meta = mvp?.meta || {};
+
+  const roleFamily = meta?.roleFamily || "generic_professional";
+  const roleFamilyProfile = getRoleFamilyReadingProfile(roleFamily);
+
   const runtime = mvp?.interviewRuntime || {};
   const runtimeState = runtime?.runtimeState || {};
   const answers = ensureArray(runtimeState?.answers);
@@ -564,147 +1341,170 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
 
   const answerTabs = buildAnswerTabs(answers);
 
-  const overviewHtml = `
-    <div class="section-shell">
-      <div class="section-shell-header">
-        <div class="section-shell-title">Risultato della simulazione</div>
-        <div class="section-shell-subtitle">
-          Una lettura sintetica di come il profilo del CV e il modo di rispondere risultano oggi rispetto al ruolo scelto.
-        </div>
-      </div>
 
-      <div class="hero-outcome-card">
-        <div class="hero-outcome-label">Messaggio principale</div>
-        <div class="hero-outcome-headline">${escapeHtml(executiveRead?.headline || finalTakeaway?.message || "Al momento non è disponibile un messaggio finale sintetico.")}</div>
-        <div class="hero-outcome-subheadline">${escapeHtml(executiveRead?.subheadline || runtimeRead?.runtimeNarrative || "Il report sintetizza come il profilo si presenta oggi e quali aree meritano più attenzione.")}</div>
 
-        <div class="hero-metrics-grid">
-          ${renderMiniMetric({
+
+      const topBlockingIssues = buildTopBlockingIssues(report);
+  const perceivedProfile = buildPerceivedProfile(report);
+
+
+      const cvSignalLabel =
+    ensureArray(cvAdvice?.cvImprovementHints).length >= 3
+      ? "CV da rafforzare"
+      : ensureArray(cvAdvice?.cvImprovementHints).length > 0
+        ? "CV plausibile"
+        : "CV solido";
+
+
+
+  const overviewGeneralText =
+    perceivedProfile.shortRead ||
+    "Il profilo appare leggibile, ma non ancora abbastanza stabile o convincente rispetto al ruolo scelto.";
+
+
+
+    const overviewHtml = `
+    <div class="section-shell overview-shell">
+      <div class="overview-stage-shell">
+        <div class="hero-metrics-row">
+          ${renderHeroMetricCard({
             label: "Ruolo target",
             value: hero.targetRole,
             tone: "neutral"
           })}
-          ${renderMiniMetric({
+          ${renderHeroMetricCard({
+            label: "CV per questo ruolo",
+            value: cvSignalLabel,
+            tone: scoreToneFromLabel(cvSignalLabel)
+          })}
+          ${renderHeroMetricCard({
             label: "Aderenza al ruolo",
             value: hero.recommendationBand,
-            tone: "good"
+            tone: scoreToneFromLabel(hero.recommendationBand)
           })}
-          ${renderMiniMetric({
+          ${renderHeroMetricCard({
             label: "Qualità delle risposte",
             value: hero.answerBand,
-            tone: "warm"
-          })}
-          ${renderMiniMetric({
-            label: "Aderenza alla domanda",
-            value: hero.alignmentBand,
-            tone: "neutral"
+            tone: scoreToneFromLabel(hero.answerBand)
           })}
         </div>
-      </div>
 
-      <div class="summary-grid">
-        <div class="summary-panel">
-          <div class="summary-panel-title">Numeri di supporto</div>
-          <div class="summary-score-grid">
-            ${renderScoreSummaryCard({
-              title: "Compatibilità con il ruolo",
-              score: hero.fitScore,
-              subtitle: "Quanto il profilo ricavato soprattutto da CV e job fit analysis appare coerente con la posizione scelta."
-            })}
-            ${renderScoreSummaryCard({
-              title: "Qualità delle risposte",
-              score: hero.answerScore,
-              subtitle: "Quanto le risposte date in simulazione risultano convincenti, chiare e concrete."
-            })}
+
+        <div class="overview-reading-block">
+             <div class="overview-reading-title">La lettura generale emersa dal tuo CV e da come hai risposto</div>
+       
+        <div class="overview-verdict-headline">${escapeHtml(
+          executiveRead?.headline ||
+            finalTakeaway?.message ||
+            "Il profilo è plausibile per il ruolo, ma oggi non riesce ancora a trasformare bene il proprio potenziale in credibilità piena."
+        )}</div>
+
+
+          <div class="overview-verdict-text">${escapeHtml(
+            perceivedProfile.shortRead ||
+              "Il profilo appare leggibile, ma non ancora abbastanza stabile o convincente rispetto al ruolo scelto."
+          )}</div>
+        </div>
+
+        <div class="overview-editorial-card overview-editorial-card-strength" style="margin-bottom:18px;">
+        <div class="overview-editorial-kicker">Posizionamento iniziale</div>
+        <div class="overview-editorial-title">Come ti sei presentato all’inizio del colloquio</div>
+        <div class="band-list-content">
+        <p><strong>Coerenza del posizionamento:</strong> ${escapeHtml(text(openingPositioning?.positioningCoherence, "—"))}</p>
+        <p><strong>Livello percepito:</strong> ${escapeHtml(text(openingPositioning?.perceivedLevel, "—"))}</p>
+        <p><strong>Focus emerso:</strong></p>
+        ${renderList(
+          ensureArray(openingPositioning?.focusDetected).slice(0, 3),
+        "Non emerge ancora un focus iniziale abbastanza chiaro."
+         )}
+        <p><strong>Che cosa conviene correggere subito:</strong></p>
+         ${renderList(
+         ensureArray(openingPositioning?.improvementHints).slice(0, 3),
+         "Conviene rafforzare meglio il posizionamento iniziale."
+           )}
           </div>
         </div>
 
-        <div class="summary-panel summary-panel-main">
-          <div class="summary-panel-title">Perché il sistema ha insistito</div>
-          <div class="summary-main-text">${escapeHtml(executiveRead?.whySystemInsisted || "Il sistema ha insistito nei punti in cui ownership, concretezza o aderenza alla domanda non risultavano ancora abbastanza visibili.")}</div>
-          <div class="summary-helper-text">
-            ${escapeHtml(
-              questionQuality?.alignment?.narrative ||
-                runtimeRead?.runtimeNarrative ||
-                "Il valore del sistema emerge soprattutto quando la prima risposta non basta e serve andare più a fondo."
-            )}
+        <div class="overview-errors-shell">
+          <div class="overview-errors-title">I 3 errori che oggi ti bloccano di più</div>
+          <div class="overview-errors-subtitle">
+            Questi sono i punti che oggi riducono più degli altri la forza del profilo nel colloquio.
+          </div>
+          ${renderTopBlockingList(topBlockingIssues)}
+        </div>
+
+        <div class="overview-bottom-grid">
+          <div class="overview-editorial-card overview-editorial-card-strength">
+            <div class="overview-editorial-kicker">Punto forte</div>
+            <div class="overview-editorial-title">Che cosa sostiene oggi il profilo</div>
+            <div class="band-list-content">
+              ${renderList(
+                overviewStrengths.slice(0, 4),
+                "Non si sono ancora evidenziati elementi che sostengano con forza il posizionamento del profilo."
+              )}
+            </div>
+          </div>
+
+          <div class="overview-editorial-card overview-editorial-card-actions">
+            <div class="overview-editorial-kicker">Prossima mossa</div>
+            <div class="overview-editorial-title">Come migliorare già dal prossimo tentativo</div>
+            <div class="band-list-content">
+                           ${renderList(
+                ensureArray(improvements?.finalAdvice).length > 0
+                  ? ensureArray(improvements?.finalAdvice).slice(0, 3)
+                  : normalizedWeaknesses.slice(0, 3),
+                "Serve consolidare meglio qualità, concretezza e leggibilità delle risposte."
+              )}
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="signal-grid">
-        ${renderSignalCard({
-          title: "Che cosa sostiene oggi il profilo",
-          body:
-            executiveRead?.mainStrength ||
-            overviewStrengths[0] ||
-            "Non si sono ancora evidenziati elementi forti e stabili da usare come leva principale nel posizionamento.",
-          tone: "good"
-        })}
-
-        ${renderSignalCard({
-          title: "Che cosa lo limita di più",
-          body:
-            executiveRead?.mainConstraint ||
-            normalizedWeaknesses[0] ||
-            "Oggi il limite principale non è tanto il potenziale del profilo, quanto il modo in cui viene sostenuto dalle risposte.",
-          tone: "risk"
-        })}
-
-        ${renderSignalCard({
-          title: "Momento da tenere d’occhio",
-          body:
-            ensureArray(pressureMoments?.items)[0] ||
-            "Non emerge ancora un passaggio dominante, ma il sistema segnala aree da rafforzare sotto domanda.",
-          tone: "neutral"
-        })}
-      </div>
-
-      <div class="grid-2 equal-grid">
-        ${renderSection(
-          "Che cosa sostiene oggi il profilo",
-          renderList(
-            overviewStrengths,
-            "Non si sono ancora evidenziati elementi che sostengano con forza il posizionamento del profilo."
-          ),
-          "positive-card"
-        )}
-
-        ${renderSection(
-          "Aree da rafforzare",
-          renderList(
-            ensureArray(improvements?.finalAdvice).length > 0
-              ? ensureArray(improvements?.finalAdvice).slice(0, 5)
-              : normalizedWeaknesses.slice(0, 5),
-            "Non emergono aree critiche dominanti, ma serve consolidare meglio la qualità delle risposte."
-          ),
-          "risk-card"
-        )}
       </div>
     </div>
   `;
 
-  const answersHtml = `
-    <div class="section-shell">
-      <div class="section-shell-header">
-        <div class="section-shell-title">Profilo e risposte</div>
-        <div class="section-shell-subtitle">
-          Qui vedi il filo della simulazione e il modo in cui le singole risposte hanno sostenuto o indebolito il profilo.
-        </div>
-      </div>
 
-      <div class="subtab-row">
-        ${answerTabs.length > 0
-          ? answerTabs
-              .map(
-                (tab) => `
-                  <button class="subtab-button ${tab.index === 0 ? "is-active" : ""}" data-answer-tab="${tab.index}" type="button">
-                    ${escapeHtml(tab.label)}
-                  </button>
-                `
-              )
-              .join("\n")
-          : `<div class="muted">Nessuna risposta disponibile.</div>`}
+
+
+   const answersHtml = `
+    <div class="section-shell answers-shell">
+
+      <div class="answers-top-shell">
+        <div class="answers-top-title">
+          Profilo e risposte di ${escapeHtml(text(meta?.candidateName || meta?.candidateDisplayName || "Paolo"))}
+          per il ruolo di <span class="answers-top-role">${escapeHtml(text(meta?.targetRole || hero.targetRole || "—"))}</span>
+        </div>
+
+        <div class="answers-subnav-shell">
+          <div class="subtab-row">
+            ${answerTabs.length > 0
+              ? answerTabs
+                  .map((tab) => {
+                    const answer = answers[tab.index] || {};
+                    const score =
+                      answer?.answerAnalysis?.answerShapeAnalysis?.overallScore ?? "—";
+                    const frame = scoreStatus(score);
+
+                    return `
+                      <button class="subtab-button ${tab.index === 0 ? "is-active" : ""}" data-answer-tab="${tab.index}" type="button">
+                        <span class="subtab-button-top">
+                          <span class="subtab-dot ${frame.dotClass}"></span>
+                          <span class="subtab-label">${escapeHtml(tab.label)}</span>
+                        </span>
+                        <span class="subtab-score">
+                          <span class="subtab-score-value ${frame.className}">${escapeHtml(String(score))}</span>
+                          <span class="subtab-score-scale">/100</span>
+                        </span>
+                      </button>
+                    `;
+                  })
+                  .join("\n")
+              : `<div class="muted">Nessuna risposta disponibile.</div>`}
+          </div>
+
+          <div class="answers-top-instruction">
+            Seleziona qui sopra le risposte per vedere l’analisi e i consigli elaborati per te.
+          </div>
+        </div>
       </div>
 
       ${
@@ -714,60 +1514,90 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
                 const answer = answers[tab.index] || {};
                 const timelineEntry = timeline[tab.index] || {};
                 const questionText = getQuestionTextForAnswer(answer, session, timelineEntry);
-                const reading = extractQuickReading(answer, tab.index);
-                const score = answer?.answerAnalysis?.answerShapeAnalysis?.overallScore ?? "—";
+
+                const reading = extractQuickReading(
+            answer,
+             tab.index,
+            questionText,
+            roleFamilyProfile,
+            openingPositioning
+            );
+
+                const followupReason =
+                reading.followupReason || buildFollowupReason(answer, questionText, openingPositioning);
+                const score =
+                  answer?.answerAnalysis?.answerShapeAnalysis?.overallScore ?? "—";
                 const frame = scoreStatus(score);
                 const stageLabel = text(answer?.label, tab.stageLabel || "Passaggio");
-                const answerText = text(answer?.answerText, "Risposta non disponibile.");
-                const questionIntent = buildQuestionIntentText(answer);
-                const followupReason = buildFollowupReason(answer, questionText);
+                const answerText = text(answer?.answerText, "Risposta non disponibile");
+
+                const analysis =
+                  answer?.answerAnalysis?.answerShapeAnalysis || {};
+
+                const flags =
+                  analysis?.questionContext?.questionTypeFlags || {};
+
+                const questionIntent = getRoleAwareQuestionIntent(
+                  questionText,
+                  flags,
+                  roleFamilyProfile
+                );
 
                 return `
                   <div class="answer-tab-panel ${tab.index === 0 ? "is-active" : ""}" data-answer-panel="${tab.index}">
-                    <div class="answer-header-row">
-                      <div class="answer-stage-pill">${escapeHtml(stageLabel)}</div>
-                      <div class="answer-score-card ${frame.frameClass}">
-                        <span class="score-dot ${frame.dotClass}"></span>
-                        <span class="answer-score-number">${escapeHtml(`${score} / 100`)}</span>
-                        <span class="answer-score-band ${frame.className}">${escapeHtml(frame.label)}</span>
+
+                    <div class="question-intent-card">
+                      <div class="question-title-row">
+                         <div class="question-badge">
+                            <span class="question-badge-main">${escapeHtml(`Domanda ${tab.index + 1}`)}</span>
+                            <span class="question-badge-stage">${escapeHtml(stageLabel)}</span>
+                          </div>
+                        </div>
+
+                      <div class="stack-card-text question-main-text">${escapeHtml(questionText)}</div>
+
+                      <div class="question-intent-inline">
+                        <div class="question-intent-inline-title question-intent-inline-title-strong">Che cosa cercava davvero questa domanda</div>
+                        <div class="question-intent-inline-text">${escapeHtml(questionIntent)}</div>
                       </div>
                     </div>
 
-                    <div class="stack-grid">
-                      <div class="stack-card">
-                        <div class="stack-card-title">Domanda</div>
-                        <div class="stack-card-text">${escapeHtml(questionText)}</div>
+                    <div class="stack-card answer-response-card ${frame.frameClass}">
+                      <div class="answer-response-top">
+                       <div class="stack-card-title answer-response-title">Risposta di ${escapeHtml(text(meta?.candidateName || meta?.candidateDisplayName || "Paolo"))}</div>
+                        <div class="answer-inline-score ${frame.frameClass}">
+                          <span class="score-dot ${frame.dotClass}"></span>
+                          <span class="answer-inline-score-label">Valutazione</span>
+                          <span class="answer-inline-score-value">${escapeHtml(String(score))}</span>
+                          <span class="answer-inline-score-scale">/100</span>
+                        </div>
+                      </div>
+                      <div class="stack-card-text answer-main-text">${escapeHtml(answerText)}</div>
+                    </div>
+
+                    <div class="analysis-emerged-hero">
+                      <div class="analysis-emerged-title">Che cosa è emerso dalla tua risposta</div>
+                      <div class="analysis-emerged-text">${escapeHtml(reading.usefulSignal)}</div>
+                    </div>
+
+                    <div class="overview-bottom-grid answers-bottom-grid">
+                      <div class="overview-editorial-card overview-editorial-card-strength">
+                        <div class="overview-editorial-kicker">Approfondimento</div>
+                        <div class="overview-editorial-title">Perché il sistema approfondirebbe ancora</div>
+                        <div class="band-list-content">
+                          <p class="answers-bottom-text">${escapeHtml(followupReason)}</p>
+                        </div>
                       </div>
 
-                      <div class="stack-card">
-                        <div class="stack-card-title">Risposta</div>
-                        <div class="stack-card-text">${escapeHtml(answerText)}</div>
+                      <div class="overview-editorial-card overview-editorial-card-actions">
+                        <div class="overview-editorial-kicker">Miglioramento</div>
+                        <div class="overview-editorial-title">Come migliorarla subito</div>
+                        <div class="band-list-content">
+                          <p class="answers-bottom-text">${escapeHtml(reading.strengthen)}</p>
+                        </div>
                       </div>
                     </div>
 
-                    <div class="analysis-grid analysis-grid-3">
-                      <div class="analysis-card analysis-card-intent">
-                        <div class="analysis-card-title">Che cosa cercava la domanda</div>
-                        <div class="analysis-card-text">${escapeHtml(questionIntent)}</div>
-                      </div>
-
-                      <div class="analysis-card analysis-card-reading">
-                        <div class="analysis-card-title">Che cosa è emerso</div>
-                        <div class="analysis-card-text">${escapeHtml(reading.usefulSignal)}</div>
-                      </div>
-
-                      <div class="analysis-card analysis-card-action">
-                        <div class="analysis-card-title">Perché il sistema spingerebbe ancora</div>
-                        <div class="analysis-card-text">${escapeHtml(followupReason)}</div>
-                      </div>
-                    </div>
-
-                    <div class="analysis-grid">
-                      <div class="analysis-card analysis-card-action">
-                        <div class="analysis-card-title">Come rafforzarla</div>
-                        <div class="analysis-card-text">${escapeHtml(reading.strengthen)}</div>
-                      </div>
-                    </div>
                   </div>
                 `;
               })
@@ -987,32 +1817,115 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
       margin-bottom: 8px;
     }
 
-    .report-shell-header {
+            .report-shell-header {
       position: sticky;
       top: 0;
       z-index: 50;
-      background: linear-gradient(180deg, var(--green-shell-a) 0%, var(--green-shell-b) 100%);
+      background: linear-gradient(180deg, #07110d 0%, #0a231b 20%, #0b3a2c 52%, #0f5a45 78%, #178a68 100%);
       color: white;
-      border-radius: 16px;
-      padding: 12px 14px 14px 14px;
+      border-radius: 18px;
+      padding: 12px 14px 16px 14px;
       margin-bottom: 18px;
-      box-shadow: 0 10px 24px rgba(10,77,60,0.22);
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow:
+        0 22px 40px rgba(4, 28, 21, 0.30),
+        0 10px 18px rgba(4, 28, 21, 0.22),
+        inset 0 1px 0 rgba(255,255,255,0.08);
     }
 
-    .report-shell-top {
+
+
+
+          .report-shell-top {
+      position: relative;
       display: flex;
-      justify-content: space-between;
       align-items: flex-start;
+      justify-content: space-between;
       gap: 16px;
       margin-bottom: 10px;
+      min-height: 72px;
     }
 
-    .report-shell-title {
+    .report-shell-left {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: flex-start;
+      max-width: 38%;
+    }
+
+    .report-shell-center {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 8px;
+      text-align: center;
+      width: 52%;
+      pointer-events: none;
+    }
+
+    .report-shell-right {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      max-width: 24%;
+      margin-left: auto;
+    }
+
+
+    .report-shell-user {
+      font-size: 16px;
+      font-weight: 700;
+      color: #d1fae5;
+    }
+
+
+             .report-shell-title {
       font-size: 18px;
       font-weight: 800;
       letter-spacing: 0.02em;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      flex-wrap: wrap;
     }
+
+    .report-shell-brand {
+      font-size: 22px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .report-shell-mode {
+      font-size: 20px;
+      font-weight: 800;
+      color: #b7f7d8;
+    }
+
+    .report-shell-banner {
+      display: inline-flex;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.16) 100%);
+      border: 1px solid rgba(255,255,255,0.34);
+      color: rgba(255,255,255,0.98);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 900;
+      line-height: 1.3;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
+
 
     .report-shell-subtitle {
       font-size: 14px;
@@ -1036,47 +1949,69 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
       font-weight: 800;
     }
 
-    .single-line-nav {
+
+          .single-line-nav {
       display: grid;
-      gap: 8px;
+      gap: 10px;
       align-items: stretch;
+      padding: 8px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 8px 18px rgba(0,0,0,0.14);
     }
 
     .single-line-nav-5 {
-      grid-template-columns: 1fr 1.2fr 1fr 1fr 1fr;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
     }
 
-    .top-tab {
+        .top-tab {
       position: relative;
-      min-height: 88px;
-      border-radius: 14px;
-      border: 2px solid transparent;
+      min-height: 92px;
+      border-radius: 16px;
+      border: 2px solid rgba(255,255,255,0.14);
       padding: 12px 12px 10px 12px;
       cursor: pointer;
       text-align: left;
+      background-clip: padding-box;
       box-shadow:
-        0 10px 18px rgba(15, 23, 42, 0.10),
-        inset 0 1px 0 rgba(255,255,255,0.85);
-      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+        0 14px 22px rgba(2, 10, 8, 0.22),
+        0 4px 8px rgba(2, 10, 8, 0.12),
+        inset 0 1px 0 rgba(255,255,255,0.88);
+      transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        border-color 0.16s ease,
+        background 0.16s ease;
+      overflow: hidden;
     }
 
     .top-tab:hover {
       transform: translateY(-1px);
+      box-shadow:
+        0 12px 18px rgba(2, 10, 8, 0.22),
+        inset 0 1px 0 rgba(255,255,255,0.92);
+    }
+
+    .top-tab:active {
+      transform: translateY(0);
     }
 
     .top-tab.is-active {
-      border-width: 3px;
+      border-width: 4px;
       box-shadow:
-        0 14px 24px rgba(15, 23, 42, 0.20),
-        inset 0 0 0 1px rgba(255,255,255,0.6);
+        0 14px 22px rgba(2, 10, 8, 0.26),
+        0 0 0 3px rgba(255,255,255,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.95);
     }
 
     .top-tab-free {
-      background: linear-gradient(180deg, #ffffff 0%, #ecfdf5 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #f2fbf6 100%);
     }
 
     .top-tab-paid {
-      background: linear-gradient(180deg, #ffffff 0%, #f5f3ff 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #f7f5ff 100%);
     }
 
     .top-tab-index {
@@ -1092,19 +2027,21 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
       font-size: 12px;
       font-weight: 900;
       color: white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+      box-shadow:
+        0 4px 10px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.18);
     }
 
     .top-tab-index-free {
-      background: #16a34a;
+      background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
     }
 
     .top-tab-index-pro {
-      background: #7c3aed;
+      background: linear-gradient(180deg, #7c3aed 0%, #6d28d9 100%);
     }
 
     .top-tab-index-premium {
-      background: #9333ea;
+      background: linear-gradient(180deg, #9333ea 0%, #7e22ce 100%);
     }
 
     .plan-chip {
@@ -1119,18 +2056,19 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
       font-weight: 900;
       letter-spacing: 0.04em;
       color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.12);
     }
 
     .plan-chip-free {
-      background: #16a34a;
+      background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
     }
 
     .plan-chip-pro {
-      background: #7c3aed;
+      background: linear-gradient(180deg, #7c3aed 0%, #6d28d9 100%);
     }
 
     .plan-chip-premium {
-      background: #9333ea;
+      background: linear-gradient(180deg, #9333ea 0%, #7e22ce 100%);
     }
 
     .top-tab-lock {
@@ -1139,6 +2077,7 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
       right: 12px;
       font-size: 20px;
       line-height: 1;
+      filter: drop-shadow(0 1px 2px rgba(0,0,0,0.22));
     }
 
     .top-tab-main {
@@ -1148,28 +2087,60 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
       padding-top: 2px;
     }
 
-    .top-tab-label {
+        .top-tab-label {
       display: block;
       font-size: 15px;
-      font-weight: 800;
-      color: #111827;
+      font-weight: 900;
+      color: #0f172a;
+      line-height: 1.08;
+      min-height: 32px;
     }
 
     .top-tab-note {
       display: block;
-      font-size: 13px;
-      color: #475467;
-      margin-top: 4px;
-      line-height: 1.35;
+      font-size: 12px;
+      color: #334155;
+      margin-top: 5px;
+      line-height: 1.24;
+      font-weight: 700;
+      min-height: 30px;
     }
 
-    .top-tab-free.is-active {
-      border-color: #16a34a;
+       .top-tab-free.is-active {
+      border-color: #f59e0b;
+      background: linear-gradient(180deg, #ffffff 0%, #fde68a 100%);
+      box-shadow:
+        0 16px 24px rgba(2, 10, 8, 0.26),
+        0 0 0 3px rgba(245,158,11,0.34),
+        inset 0 1px 0 rgba(255,255,255,0.95);
     }
 
     .top-tab-paid.is-active {
-      border-color: #7c3aed;
+      border-color: #f59e0b;
+      background: linear-gradient(180deg, #ffffff 0%, #ddd6fe 100%);
+      box-shadow:
+        0 16px 24px rgba(2, 10, 8, 0.26),
+        0 0 0 3px rgba(245,158,11,0.34),
+        inset 0 1px 0 rgba(255,255,255,0.95);
     }
+
+
+
+    .top-tab.is-locked {
+      opacity: 0.96;
+    }
+
+    .top-tab.is-unlocked::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.22);
+    }
+        
+
+
 
     .section-shell {
       background: white;
@@ -1177,6 +2148,277 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
       padding: 18px;
       margin-bottom: 18px;
       box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+    }
+
+
+
+
+           .overview-shell {
+      padding-top: 8px;
+      background: #ffffff;
+    }
+
+          .answers-shell {
+      background: linear-gradient(180deg, #eef4fb 0%, #dbe3f0 34%, #94a3b8 68%, #475569 100%);
+      padding-top: 10px;
+    }
+
+    .overview-stage-shell {
+      border-radius: 20px;
+      padding: 14px;
+      background: linear-gradient(180deg, #eef4fb 0%, #dfe8f3 38%, #6b7280 78%, #2b2f36 100%);
+    }
+
+    .hero-metrics-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+        .hero-metric-card {
+      border-radius: 16px;
+      padding: 12px 14px;
+      border: 3px solid #dbe3f0;
+      background: #ffffff;
+      box-shadow:
+        0 14px 24px rgba(15,23,42,0.16),
+        0 4px 10px rgba(15,23,42,0.10);
+      min-height: 96px;
+    }
+
+    .hero-metric-card-good {
+      background: linear-gradient(180deg, #dcfce7 0%, #bbf7d0 100%);
+      border-color: #16a34a;
+    }
+
+    .hero-metric-card-warm {
+      background: linear-gradient(180deg, #ffedd5 0%, #fed7aa 100%);
+      border-color: #f59e0b;
+    }
+
+    .hero-metric-card-risk {
+      background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%);
+      border-color: #dc2626;
+    }
+
+    .hero-metric-card-neutral {
+      background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+      border-color: #94a3b8;
+    }
+
+    .hero-metric-label {
+      display: inline-block;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      color: #1f2937;
+      margin-bottom: 8px;
+      background: rgba(255,255,255,0.8);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    .hero-metric-value {
+      font-size: 22px;
+      line-height: 1.25;
+      font-weight: 900;
+      color: #111827;
+    }
+
+        .overview-reading-block {
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 18px;
+      background: linear-gradient(180deg, #132235 0%, #1c3552 100%);
+      border: 2px solid rgba(255,255,255,0.10);
+      box-shadow: 0 10px 22px rgba(10,20,35,0.26);
+    }
+
+    .overview-reading-title {
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #c7dcff;
+      margin-bottom: 10px;
+    }
+
+    .overview-verdict-headline {
+      font-size: 30px;
+      line-height: 1.35;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .overview-verdict-text {
+      font-size: 18px;
+      line-height: 1.72;
+      color: #e5edf8;
+    }
+
+
+
+    .overview-errors-shell {
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 18px;
+      background: linear-gradient(180deg, #362019 0%, #221714 100%);
+      border: 2px solid rgba(255,255,255,0.10);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+    }
+
+    .overview-errors-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+        .overview-errors-subtitle {
+      font-size: 16px;
+      color: rgba(255,255,255,0.86);
+      line-height: 1.6;
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .blocking-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .blocking-item {
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 14px;
+      align-items: stretch;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.96);
+      border: 2px solid rgba(255,255,255,0.16);
+      padding: 14px;
+    }
+
+    .blocking-index {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%);
+      color: white;
+      font-size: 26px;
+      font-weight: 900;
+      min-height: 72px;
+    }
+
+    .blocking-title {
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: #9a3412;
+      margin-bottom: 6px;
+    }
+
+    .blocking-text {
+      font-size: 18px;
+      line-height: 1.6;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .overview-bottom-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 2px;
+    }
+
+           .overview-editorial-card {
+      border-radius: 18px;
+      padding: 18px 18px 18px 20px;
+      border: 2px solid transparent;
+      background: #ffffff;
+      box-shadow:
+        0 16px 28px rgba(15,23,42,0.18),
+        0 5px 12px rgba(15,23,42,0.10);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .overview-editorial-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 10px;
+      height: 100%;
+    }
+
+    .overview-editorial-card-strength {
+      background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%);
+      border-color: #86efac;
+    }
+
+    .overview-editorial-card-strength::before {
+      background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+    }
+
+    .overview-editorial-card-actions {
+      background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%);
+      border-color: #fdba74;
+    }
+
+    .overview-editorial-card-actions::before {
+      background: linear-gradient(180deg, #f59e0b 0%, #c2410c 100%);
+    }
+
+        .overview-editorial-kicker {
+      display: inline-flex;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+      margin-left: 6px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: white;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.14);
+    }
+
+    .overview-editorial-card-strength .overview-editorial-kicker {
+      background: linear-gradient(180deg, #16a34a 0%, #15803d 100%);
+    }
+
+    .overview-editorial-card-actions .overview-editorial-kicker {
+      background: linear-gradient(180deg, #f59e0b 0%, #c2410c 100%);
+    }
+
+        .overview-editorial-title {
+      font-size: 23px;
+      font-weight: 900;
+      color: #111827;
+      margin-bottom: 12px;
+      padding-left: 6px;
+      line-height: 1.3;
+    }
+
+    .band-list-content {
+      padding-left: 6px;
+    }
+
+    .band-list-content ul {
+      margin-top: 4px;
+    }
+
+    .band-list-content li {
+      font-size: 18px;
+      line-height: 1.72;
+      font-weight: 700;
     }
 
     .section-shell-header {
@@ -1480,7 +2722,7 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
     }
 
     .dot-mid {
-      background: #d97706;
+      background: #facc15;
     }
 
     .dot-weak {
@@ -1538,7 +2780,7 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
     }
 
     .status-mid {
-      color: #92400e;
+      color: #a16207;
       font-weight: 800;
     }
 
@@ -1552,48 +2794,434 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
       font-weight: 800;
     }
 
+
+          .answers-top-shell {
+      position: sticky;
+      top: 112px;
+      z-index: 22;
+      margin-top: -8px;
+      margin-bottom: 4px;
+      padding: 8px 14px 8px 14px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #17352b 0%, #0f5a45 52%, #1a8d6a 100%);
+      box-shadow:
+        0 14px 28px rgba(15,23,42,0.18),
+        0 6px 12px rgba(15,23,42,0.10);
+    }
+
+    .answers-top-title {
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.28;
+      color: #ffffff;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .answers-top-role {
+      color: #fde68a;
+    }
+
+    .answers-subnav-shell {
+      position: relative;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding: 8px 36px 6px 36px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(7,17,13,0.28) 0%, rgba(7,17,13,0.52) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        0 8px 18px rgba(15,23,42,0.18);
+    }
+
+    .answers-subnav-shell::before {
+      content: "‹";
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 22px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.82);
+      pointer-events: none;
+    }
+
+    .answers-subnav-shell::after {
+      content: "›";
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 22px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.82);
+      pointer-events: none;
+    }
+
+    .answers-top-instruction {
+      margin-top: 6px;
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.4;
+      color: #ecfdf5;
+      text-align: center;
+    }
+
     .subtab-row {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(120px, 1fr));
       gap: 8px;
-      margin-top: 12px;
-      margin-bottom: 16px;
+      align-items: stretch;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 2px;
+    }
+
+    .subtab-row::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .subtab-row::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.28);
+      border-radius: 999px;
     }
 
     .subtab-button {
-      border: 2px solid #cbd5e1;
-      background: #eef2ff;
+      border: 3px solid rgba(255,255,255,0.16);
+      background: linear-gradient(180deg, #ffffff 0%, #eef2ff 100%);
       color: #312e81;
-      border-radius: 10px;
-      padding: 9px 13px;
+      border-radius: 999px;
+      padding: 8px 8px 8px 8px;
       font-weight: 800;
       font-size: 14px;
       cursor: pointer;
+      min-height: 74px;
+      box-shadow:
+        0 10px 16px rgba(2,10,8,0.20),
+        inset 0 1px 0 rgba(255,255,255,0.94);
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+      text-align: center;
     }
 
     .subtab-button.is-active {
-      background: #312e81;
-      color: white;
-      border-color: #312e81;
-      box-shadow: 0 8px 16px rgba(49,46,129,0.20);
+      background: linear-gradient(180deg, #ffffff 0%, #ddd6fe 100%);
+      color: #1e1b4b;
+      border-color: #f59e0b;
+      box-shadow:
+        0 14px 24px rgba(2,10,8,0.24),
+        0 0 0 4px rgba(245,158,11,0.30),
+        inset 0 1px 0 rgba(255,255,255,0.96);
+      transform: translateY(-1px);
     }
+
+    .subtab-button-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .subtab-dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      display: inline-block;
+      flex: 0 0 auto;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+    }
+
+      
+
+    
+
+    .answers-top-role {
+      color: #fde68a;
+    }
+
+   
+    
+    
+
+    .subtab-button:hover {
+      transform: translateY(-1px);
+    }
+
+    
+
+    .subtab-label {
+      font-size: 14px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .subtab-score {
+      display: block;
+      font-size: 12px;
+      font-weight: 900;
+      color: #334155;
+      line-height: 1.15;
+    }
+
+    .subtab-score-value {
+      font-size: 22px;
+      font-weight: 900;
+      margin-right: 2px;
+    }
+
+    .subtab-score-scale {
+      font-size: 12px;
+      font-weight: 800;
+      color: #64748b;
+    }
+
+    
+
 
     .answer-tab-panel {
       display: none;
     }
 
-    .answer-tab-panel.is-active {
+     .answer-tab-panel.is-active {
       display: block;
+      margin-top: 2px;
     }
 
-    .answer-header-row {
+    .answer-meta-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+    }
+
+    .answer-meta-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 999px;
+      background: #ecfeff;
+      border: 2px solid #a5f3fc;
+      padding: 8px 12px;
+      box-shadow: 0 6px 12px rgba(15,23,42,0.08);
+    }
+
+    .answer-meta-label {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #155e75;
+    }
+
+    .answer-meta-value {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+
+
+         .answer-header-row {
+      display: none;
+    }
+
+    .question-intent-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      border: 2px solid #dbe3f0;
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+      box-shadow: 0 10px 20px rgba(15,23,42,0.10);
+    }
+
+    .question-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    
+        .question-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #1d4ed8 0%, #1e40af 100%);
+      color: white;
+      font-size: 14px;
+      font-weight: 900;
+      padding: 7px 14px;
+      box-shadow: 0 6px 12px rgba(29,78,216,0.20);
+    }
+
+    .question-badge-main {
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .question-badge-stage {
+      font-size: 13px;
+      font-style: italic;
+      font-weight: 700;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .question-stage-inline {
+      display: none;
+    }
+
+
+    .question-main-text {
+      font-size: 19px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.72;
+    }
+
+    .question-intent-inline {
+      margin-top: 12px;
+      background: linear-gradient(180deg, #2b1f45 0%, #1f1734 100%);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .question-intent-inline-title {
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #ddd6fe;
+      margin-bottom: 6px;
+    }
+
+    .question-intent-inline-title-strong {
+      color: #fca5a5;
+      font-size: 14px;
+    }
+
+    .question-intent-inline-text {
+      font-size: 16px;
+      line-height: 1.65;
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .answer-response-card {
+      margin-bottom: 14px;
+      box-shadow: 0 12px 22px rgba(15,23,42,0.10);
+      border-width: 3px;
+    }
+
+          .answer-response-title {
+      color: #dc2626 !important;
+      font-size: 14px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .answer-response-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 8px;
       flex-wrap: wrap;
     }
+
+    .answer-inline-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 13px;
+      font-weight: 900;
+      color: #334155;
+      box-shadow: 0 6px 14px rgba(15,23,42,0.10);
+    }
+
+    .answer-inline-score.frame-ok {
+      background: #ecfdf3;
+    }
+
+    .answer-inline-score.frame-mid {
+      background: #fff7ed;
+    }
+
+    .answer-inline-score.frame-weak {
+      background: #fef2f2;
+    }
+
+    .answer-inline-score-label {
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #475467;
+    }
+
+    .answer-inline-score-value {
+      font-size: 24px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .answer-inline-score-scale {
+      font-size: 13px;
+      font-weight: 800;
+      color: #64748b;
+    }
+
+    .answer-main-text {
+      font-size: 19px;
+      line-height: 1.76;
+      color: #111827;
+      font-weight: 700;
+    }
+
+    .analysis-emerged-hero {
+      border-radius: 18px;
+      padding: 18px;
+      margin-top: 4px;
+      margin-bottom: 14px;
+      background: linear-gradient(180deg, #132235 0%, #1c3552 58%, #2f5b84 100%);
+      border: 2px solid rgba(255,255,255,0.10);
+      box-shadow: 0 10px 22px rgba(10,20,35,0.24);
+    }
+
+    .analysis-emerged-title {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #c7dcff;
+      margin-bottom: 10px;
+    }
+
+    .analysis-emerged-text {
+      font-size: 20px;
+      line-height: 1.7;
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .answers-bottom-grid {
+      margin-top: 2px;
+    }
+
+    .answers-bottom-text {
+      font-size: 18px;
+      line-height: 1.72;
+      font-weight: 700;
+      color: #111827;
+      margin: 0;
+    } 
 
     .answer-stage-pill {
       display: inline-flex;
@@ -1810,9 +3438,10 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
     }
 
     @media (max-width: 1180px) {
-      .single-line-nav-5 {
-        grid-template-columns: 1fr 1.15fr 1fr 1fr 1fr;
-      }
+     
+     .single-line-nav-5 {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
 
       .top-tab-note {
         font-size: 12px;
@@ -1979,7 +3608,11 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
 </head>
 <body>
   <div class="page">
-    ${renderTopNavigation("overview", currentPlan)}
+       ${renderTopNavigation(
+      "overview",
+      currentPlan,
+      text(meta?.candidateName || meta?.candidateDisplayName || "te")
+    )}
 
     <div id="reportPanel_overview" class="report-main-panel">
       ${overviewHtml}
@@ -2004,9 +3637,18 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
 
   <script>
     (function () {
-      function switchMainTab(tabKey) {
+            function switchMainTab(tabKey) {
         var allButtons = document.querySelectorAll("[data-report-tab]");
         var allPanels = document.querySelectorAll(".report-main-panel");
+        var banner = document.getElementById("reportSectionBanner");
+
+        var bannerMap = {
+          overview: "Lettura generale del posizionamento",
+          answers: "Analisi domanda per domanda delle risposte",
+          cv: "Lettura del CV rispetto al ruolo scelto",
+          training: "Coach mode e indicazioni di miglioramento",
+          selection: "Lettura recruiter e rischio di inserimento"
+        };
 
         allButtons.forEach(function (button) {
           button.classList.toggle("is-active", button.getAttribute("data-report-tab") === tabKey);
@@ -2015,7 +3657,12 @@ function renderFringeInterviewReportHtml({ sessionResult }) {
         allPanels.forEach(function (panel) {
           panel.style.display = panel.id === ("reportPanel_" + tabKey) ? "" : "none";
         });
+
+        if (banner && bannerMap[tabKey]) {
+          banner.textContent = bannerMap[tabKey];
+        }
       }
+
 
       function switchAnswerTab(index) {
         document.querySelectorAll("[data-answer-tab]").forEach(function (button) {

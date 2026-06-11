@@ -9,6 +9,33 @@ function normalizeString(value) {
   return value.trim();
 }
 
+function humanizeSignalList(signals = []) {
+  const cleanSignals = ensureArray(signals)
+    .map(normalizeString)
+    .filter(Boolean);
+
+  if (cleanSignals.length === 0) {
+    return "";
+  }
+
+  const normalized = cleanSignals.map((signal) =>
+    signal.charAt(0).toLowerCase() + signal.slice(1)
+  );
+
+  if (normalized.length === 1) {
+    return normalized[0];
+  }
+
+  if (normalized.length === 2) {
+    return `${normalized[0]} e ${normalized[1]}`;
+  }
+
+  return `${normalized.slice(0, -1).join(", ")} e ${
+    normalized[normalized.length - 1]
+  }`;
+}
+
+
 function text(value, fallback = "—") {
   if (value === undefined || value === null) return fallback;
   if (typeof value === "string") {
@@ -115,12 +142,488 @@ function buildProfessionalPerceptionNarrative({
   };
 }
 
+function describeVisibleProfessionalSignals(professionalSignals = {}) {
+  const signals = professionalSignals?.visible || professionalSignals;
+  const descriptions = [];
+
+  if (signals.analyticalDepth) {
+    descriptions.push("capacità di leggere dati, informazioni e contesti complessi");
+  }
+
+  if (signals.communicationClarity) {
+    descriptions.push("buona capacità di comunicare e rendere leggibile il lavoro");
+  }
+
+  if (signals.stakeholderExposure) {
+    descriptions.push("collaborazione con interlocutori diversi");
+  }
+
+  if (signals.executionOwnership) {
+    descriptions.push("attenzione all’esecuzione e al miglioramento del lavoro");
+  }
+
+  if (signals.decisionMaking) {
+    descriptions.push("orientamento a scelte e priorità");
+  }
+
+  if (signals.leadershipVisibility) {
+    descriptions.push("segnali di coordinamento o guida");
+  }
+
+  if (signals.adaptability) {
+    descriptions.push("adattamento a contesti nuovi");
+  }
+
+  if (signals.internationalExposure) {
+    descriptions.push("familiarità con contesti internazionali o multiculturali");
+  }
+
+  if (signals.learningVelocity) {
+    descriptions.push("capacità di apprendere e trasformare l’esperienza");
+  }
+
+  return humanizeSignalList(descriptions.slice(0, 3));
+}
+
+
+function describeTargetSignalsGap(professionalSignals = {}) {
+  const signals = professionalSignals?.lessVisible || professionalSignals;
+
+  const descriptions = [];
+
+  if (signals.leadershipVisibility) {
+    descriptions.push("maggiore evidenza di leadership, coordinamento o influenza");
+  }
+
+  if (signals.stakeholderExposure) {
+    descriptions.push("capacità di gestire interlocutori diversi e influenzare decisioni");
+  }
+
+  if (signals.decisionMaking) {
+    descriptions.push("maggiore visibilità del criterio decisionale utilizzato");
+  }
+
+  if (signals.executionOwnership) {
+    descriptions.push("responsabilità diretta sui risultati e sull’esecuzione");
+  }
+
+  if (signals.analyticalDepth) {
+    descriptions.push("capacità di trasformare analisi e informazioni in azioni concrete");
+  }
+
+  if (signals.communicationClarity) {
+    descriptions.push("maggiore chiarezza nel rendere visibile il proprio contributo");
+  }
+
+  if (signals.adaptability) {
+    descriptions.push("capacità di adattarsi rapidamente a contesti nuovi");
+  }
+
+  if (signals.internationalExposure) {
+    descriptions.push("esperienze o contesti con esposizione internazionale");
+  }
+
+  if (signals.learningVelocity) {
+    descriptions.push("evidenze di crescita e apprendimento rapido");
+  }
+
+  return humanizeSignalList(descriptions.slice(0, 3));
+}
+
+
+function describeLessVisibleProfessionalSignals(professionalSignals = {}) {
+  const signals = professionalSignals?.lessVisible || professionalSignals;
+  const descriptions = [];
+
+  if (signals.leadershipVisibility) {
+    descriptions.push("il peso della leadership o del coordinamento");
+  }
+
+  if (signals.stakeholderExposure) {
+    descriptions.push("la capacità di influenzare interlocutori diversi");
+  }
+
+  if (signals.decisionMaking) {
+    descriptions.push("il criterio con cui prendi decisioni");
+  }
+
+  if (signals.executionOwnership) {
+    descriptions.push("la responsabilità diretta sull’esecuzione");
+  }
+
+  if (signals.analyticalDepth) {
+    descriptions.push("quanto la capacità analitica influenzi decisioni, priorità o risultati");
+  }
+
+  if (signals.communicationClarity) {
+    descriptions.push("la chiarezza con cui rendi leggibile il tuo contributo");
+  }
+
+  if (signals.adaptability) {
+    descriptions.push("la capacità di adattarti a contesti nuovi");
+  }
+
+  if (signals.internationalExposure) {
+    descriptions.push("il valore della tua esposizione internazionale");
+  }
+
+  if (signals.learningVelocity) {
+    descriptions.push("la velocità con cui apprendi e trasformi l’esperienza");
+  }
+
+  return humanizeSignalList(descriptions.slice(0, 3));
+}
+
+
+function buildProfessionalTraits(professionalSignals = {}) {
+  const visible = professionalSignals?.visible || {};
+  const lessVisible = professionalSignals?.lessVisible || {};
+
+  return {
+    method:
+      visible.analyticalDepth ||
+      visible.executionOwnership,
+
+    analysis:
+      visible.analyticalDepth,
+
+    collaboration:
+      visible.stakeholderExposure ||
+      visible.communicationClarity,
+
+    influence:
+      visible.leadershipVisibility ||
+      visible.stakeholderExposure,
+
+    ownership:
+      visible.executionOwnership ||
+      visible.decisionMaking,
+
+    adaptability:
+      visible.adaptability,
+
+    internationalMindset:
+      visible.internationalExposure,
+
+    learningOrientation:
+      visible.learningVelocity,
+
+    underexpressedInfluence:
+      lessVisible.leadershipVisibility ||
+      lessVisible.stakeholderExposure,
+
+    underexpressedOwnership:
+      lessVisible.executionOwnership ||
+      lessVisible.decisionMaking
+  };
+}
+
+
+function buildProfessionalSignals({ visibleSignals = [], underVisibleSignals = [] } = {}) {
+  const visibleText = ensureArray(visibleSignals)
+    .map(normalizeString)
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  const underVisibleText = ensureArray(underVisibleSignals)
+    .map(normalizeString)
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  const hasAny = (text, patterns) =>
+    patterns.some((pattern) => text.includes(pattern));
+
+  const buildSet = (text) => ({
+    analyticalDepth: hasAny(text, ["analisi", "data", "dati", "report", "reporting", "sql", "power bi", "tableau", "metriche", "kpi"]),
+    stakeholderExposure: hasAny(text, ["stakeholder", "cliente", "clienti", "interlocutori", "cross functional", "cross-funzionale"]),
+    leadershipVisibility: hasAny(text, ["leadership", "guidare", "coordinamento", "coordinare", "team", "responsabilità"]),
+    decisionMaking: hasAny(text, ["decision", "scelta", "priorità", "priorita", "trade-off", "criterio"]),
+    executionOwnership: hasAny(text, ["ownership", "responsabilità", "esecuzione", "delivery", "processi", "miglioramento"]),
+    communicationClarity: hasAny(text, ["comunicazione", "presentazione", "sintesi", "chiarezza"]),
+    adaptability: hasAny(text, ["adattamento", "cambiamento", "transizione", "nuovi contesti"]),
+    internationalExposure: hasAny(text, ["estero", "internazionale", "multinazionale", "inglese", "lingue", "global", "abroad"]),
+    learningVelocity: hasAny(text, ["apprendimento", "imparare", "crescita", "formazione"])
+  });
+
+  const visible = buildSet(visibleText);
+  const lessVisible = buildSet(underVisibleText);
+
+  return {
+    ...buildSet(`${visibleText} ${underVisibleText}`),
+    visible,
+    lessVisible
+  };
+}
+
+function buildCvInterviewPerceptionGap({
+  candidateSummary = "",
+  visibleSignals = [],
+  underVisibleSignals = [],
+  candidateSeniority = "",
+  targetSeniority = "",
+  alignmentNarrative = "",
+  professionalSignals = {},
+  cvReadinessNarrative = ""
+}) {
+  const mainVisibleSignals = ensureArray(visibleSignals).slice(0, 3);
+  const mainUnderVisibleSignals = ensureArray(underVisibleSignals).slice(0, 3);
+
+  const cvImage =
+    candidateSummary ||
+    "Il CV suggerisce un profilo con elementi professionali utili, ma ancora da leggere in modo più strutturato.";
+
+  const interviewImage =
+    mainUnderVisibleSignals.length > 0
+     
+    ? `Nel colloquio emergono segnali coerenti con il percorso, ma restano meno visibili alcuni aspetti importanti: ${
+    describeLessVisibleProfessionalSignals(professionalSignals) ||
+    humanizeSignalList(mainUnderVisibleSignals)
+   }.`
+
+      : mainVisibleSignals.length > 0
+        ? `Nel colloquio emergono segnali coerenti con il percorso, soprattutto su ${mainVisibleSignals.join(", ")}.`
+        : alignmentNarrative ||
+          "Nel colloquio emergono segnali utili, ma non sempre il contributo personale risulta immediatamente visibile.";
+
+  const hasSeniorityGap =
+    candidateSeniority && targetSeniority && candidateSeniority !== targetSeniority;
+
+  const hasUnderVisibleSignals = mainUnderVisibleSignals.length > 0;
+
+  const consistency =
+    hasSeniorityGap || hasUnderVisibleSignals ? "partial" : "good";
+
+  const narrative =
+    consistency === "good"
+      ? "CV e colloquio sembrano raccontare una storia abbastanza coerente. Gli elementi presenti nel percorso trovano riscontro nel modo in cui il candidato si presenta, anche se alcuni segnali potrebbero essere resi più concreti e memorabili."
+      : "CV e colloquio raccontano una storia complessivamente plausibile, ma non perfettamente allineata. Alcuni elementi che il CV lascia intuire — esperienza, responsabilità, seniority o impatto — nel colloquio emergono con meno forza. Questo non significa che manchino, ma che potrebbero non essere ancora abbastanza visibili per chi ascolta.";
+
+  return {
+    title: "CV e colloquio raccontano la stessa storia?",
+    consistency,
+    cvImage,
+    interviewImage,
+    narrative,
+    signalsToWatch: mainUnderVisibleSignals,
+    cvReadinessNarrative
+  };
+}
+
+
+function buildProfessionalArchetype(professionalSignals = {}, professionalTraits = {}) {
+  const traits = professionalTraits || {};
+
+  if (
+    traits.method &&
+    traits.analysis &&
+    traits.collaboration &&
+    traits.underexpressedInfluence
+  ) {
+    return {
+      key: "methodical_analytical_profile_with_underexpressed_influence",
+      label: "profilo metodico-analitico con influenza ancora poco visibile",
+      narrative:
+        "una persona che porta metodo, capacità di analisi e collaborazione, ma che nel colloquio rende ancora meno visibile il proprio peso su interlocutori, decisioni o coordinamento"
+    };
+  }
+
+  if (
+    traits.method &&
+    traits.analysis &&
+    traits.collaboration
+  ) {
+    return {
+      key: "methodical_analytical_collaborator",
+      label: "profilo metodico-analitico collaborativo",
+      narrative:
+        "una persona che porta metodo, capacità di analisi e collaborazione tra interlocutori diversi"
+    };
+  }
+
+  if (
+    traits.ownership &&
+    traits.influence
+  ) {
+    return {
+      key: "ownership_and_influence_profile",
+      label: "profilo orientato a ownership e influenza",
+      narrative:
+        "una persona che tende a rendere visibili responsabilità, decisioni e capacità di influenzare il lavoro degli altri"
+    };
+  }
+
+  if (
+    traits.collaboration &&
+    traits.influence
+  ) {
+    return {
+      key: "relationship_and_influence_profile",
+      label: "profilo relazionale e di influenza",
+      narrative:
+        "una persona che tende a creare allineamento tra persone, esigenze e obiettivi"
+    };
+  }
+
+  if (
+    traits.method &&
+    traits.ownership
+  ) {
+    return {
+      key: "methodical_execution_profile",
+      label: "profilo metodico orientato all’esecuzione",
+      narrative:
+        "una persona che tende a trasformare metodo, priorità e responsabilità in avanzamento concreto del lavoro"
+    };
+  }
+
+  return {
+    key: "professional_contributor",
+    label: "professionista collaborativo",
+    narrative:
+      "una persona che sembra contribuire in modo costruttivo e affidabile al lavoro svolto"
+  };
+}
+
+function detectInternationalExposure(candidateProfile = {}) {
+  const text = [
+    candidateProfile?.summary,
+    candidateProfile?.currentPositioning
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return {
+    internationalExperience:
+      text.includes("estero") ||
+      text.includes("internazionale") ||
+      text.includes("multinazionale"),
+
+    multiculturalExposure:
+      text.includes("multicultur") ||
+      text.includes("international"),
+
+    languageExposure:
+      ensureArray(candidateProfile?.skills?.languages).length > 1
+  };
+}
+
+function buildCareerTrajectorySignals(candidateProfile = {}) {
+  const experiences = ensureArray(candidateProfile?.experiences);
+  const experienceSignals = candidateProfile?.experienceSignals || {};
+  const yearsDetected = Number(experienceSignals?.yearsDetected || 0);
+  const safeYearsDetected = Number.isFinite(yearsDetected) ? yearsDetected : 0;
+
+  const totalExperiences = experiences.length;
+
+  const internationalSignals =
+    detectInternationalExposure(candidateProfile);
+
+  return {
+    totalExperiences,
+    yearsDetected: safeYearsDetected,
+
+    stabilitySignal:
+      totalExperiences > 0
+        ? totalExperiences <= 2
+          ? "high"
+          : totalExperiences <= 4
+          ? "medium"
+          : "low"
+        : safeYearsDetected >= 6
+        ? "medium"
+        : "unknown",
+
+    mobilitySignal:
+      totalExperiences >= 5
+        ? "high"
+        : totalExperiences >= 3
+        ? "medium"
+        : "low",
+
+    progressionSignal: "unknown",
+
+    internationalExposure:
+      Boolean(internationalSignals?.internationalExperience),
+
+    internationalSignals,
+
+    narrative:
+      safeYearsDetected >= 6 && totalExperiences === 0
+        ? `Il percorso mostra una continuità professionale significativa, con circa ${safeYearsDetected} anni di esperienza rilevata. Mancano però dettagli sufficienti per leggere con precisione progressione, cambi di ruolo o ampiezza delle responsabilità.`
+        : totalExperiences > 0
+        ? `Il percorso contiene ${totalExperiences} esperienze rilevate. Questa informazione può aiutare a leggere stabilità, mobilità e progressione professionale, ma richiede ancora una valutazione più approfondita.`
+        : "La traiettoria professionale non contiene ancora abbastanza informazioni strutturate per essere letta con affidabilità."
+  };
+}
+
+
+function buildCredibilityAssetsNarrative({
+  professionalTraits = {},
+  professionalArchetype = {},
+  visibleSignals = []
+} = {}) {
+  const signals = ensureArray(visibleSignals)
+    .map(normalizeString)
+    .filter(Boolean)
+    .slice(0, 4);
+
+  if (
+    professionalTraits.method &&
+    professionalTraits.analysis &&
+    professionalTraits.collaboration
+  ) {
+    return (
+     `Nel percorso emergono segnali che costruiscono credibilità: metodo, capacità di analisi e collaborazione. ` +
+
+
+      `Non sono solo competenze isolate: raccontano una persona che sembra abituata a dare ordine alle informazioni, lavorare con altri interlocutori e contribuire a rendere più leggibile il lavoro. ` +
+      `Questo è un patrimonio professionale importante, perché suggerisce affidabilità, continuità e capacità di portare valore anche quando il contesto richiede precisione e coordinamento.`
+    );
+  }
+
+  if (professionalTraits.method && professionalTraits.ownership) {
+    return (
+      `Il percorso lascia emergere una credibilità legata soprattutto al metodo e alla responsabilità nel portare avanti il lavoro. ` +
+      `Questi segnali non indicano solo attività svolte, ma una modalità professionale: presidiare ciò che va fatto, dare continuità e trasformare priorità in avanzamento concreto.`
+    );
+  }
+
+  if (professionalTraits.collaboration && professionalTraits.influence) {
+    return (
+      `Una parte importante della credibilità del profilo nasce dalla capacità di lavorare con altre persone, creare allineamento e muoversi tra esigenze diverse. ` +
+      `Questo tipo di esperienza può comunicare maturità relazionale e capacità di contribuire non solo con competenze tecniche, ma anche con presenza professionale nei contesti condivisi.`
+    );
+  }
+
+  if (signals.length > 0) {
+    return (
+      `Nel percorso sono presenti segnali utili, tra cui ${humanizeSignalList(signals)}. ` +
+      `Presi singolarmente possono sembrare semplici attività o competenze, ma letti insieme iniziano a raccontare una base professionale su cui costruire maggiore credibilità. ` +
+      `Il punto è renderli più visibili come evidenze di contributo, responsabilità e valore trasferibile.`
+    );
+  }
+
+  return (
+    `Nel percorso sono presenti elementi utili, ma devono ancora essere trasformati in una storia professionale più leggibile. ` +
+    `La credibilità non nasce solo da ciò che è stato fatto, ma dal modo in cui il candidato riesce a mostrare responsabilità, continuità, contributo e impatto.`
+  );
+}
+
+
 
 function buildProfessionalPerceptionSummary({
   runtimeAnswers = [],
   finalCandidateReport = {},
-  rawInput = {}
+  rawInput = {},
+  candidateProfile = {},
+  roleFamily = "generic_professional",
+  roleFamilyConfidence = 0
 }) {
+
+
   const overall = finalCandidateReport?.overall || {};
   const roleFit = finalCandidateReport?.roleFit || {};
   const questionQuality = finalCandidateReport?.questionQuality || {};
@@ -192,6 +695,34 @@ function buildProfessionalPerceptionSummary({
   const visibleSignals = unique([...strengths, ...matchedSkills]).slice(0, 8);
   const underVisibleSignals = unique([...risks, ...clarifications]).slice(0, 8);
 
+  const professionalSignals = buildProfessionalSignals({
+  visibleSignals,
+  underVisibleSignals
+  });
+
+  const professionalTraits =
+  buildProfessionalTraits(
+    professionalSignals
+  );
+
+    const careerTrajectorySignals =
+  buildCareerTrajectorySignals(
+    candidateProfile
+  );
+
+
+
+
+  
+
+  const professionalArchetype =
+  buildProfessionalArchetype(professionalSignals, professionalTraits);
+
+  const credibilityAssetsNarrative = buildCredibilityAssetsNarrative({
+  professionalTraits,
+  professionalArchetype,
+  visibleSignals
+  });
   const perceptionGap = [];
 
   
@@ -232,8 +763,30 @@ function buildProfessionalPerceptionSummary({
     possibleEvidence:
       `Progetti, responsabilità, risultati o contesti in cui il candidato abbia mostrato ${risk.toLowerCase()} in modo osservabile.`
   }));
+    const cvInterviewPerceptionGap = buildCvInterviewPerceptionGap({
+    candidateSummary,
+    visibleSignals,
+    underVisibleSignals,
+    professionalSignals,
+    candidateSeniority,
+    targetSeniority,
+    alignmentNarrative,
+    cvReadinessNarrative,
+    runtimeNarrative: normalizeString(
+      finalCandidateReport?.runtimeRead?.runtimeNarrative
+    )
+  });
+
+  
 
   return {
+    roleFamily,
+    roleFamilyConfidence,
+    professionalSignals,
+    professionalArchetype,
+    professionalTraits,
+    careerTrajectorySignals,
+
     emergingImage: {
       title: "Percezione professionale emergente",
       narrative:
@@ -251,6 +804,76 @@ function buildProfessionalPerceptionSummary({
     cvAdvice,
     runtimeRead: finalCandidateReport?.runtimeRead || {}
     }),
+
+    perceptionV2: {
+
+
+  whoEmerges: {
+  title: "Chi emerge",
+  narrative:
+    professionalArchetype?.narrative
+      ? `Emerge soprattutto ${professionalArchetype.narrative}. Il profilo non viene letto solo come somma di competenze o attività svolte: ciò che conta è il modo in cui questi segnali costruiscono una certa immagine professionale. Nel colloquio questa immagine inizia a emergere, anche se alcuni aspetti devono ancora essere sostenuti da esempi più concreti e riconoscibili.`
+      : `Emerge un profilo con elementi professionali utili, ma ancora da rendere più leggibili attraverso esempi concreti, responsabilità e impatto.`,
+    },
+
+    credibilityAssets: {
+  title: "Il tuo bagaglio di credibilità",
+  narrative: credibilityAssetsNarrative
+  },
+  
+
+
+
+    cvInterviewPerceptionGap,
+
+  targetDistance: {
+    title: "Dove nasce la distanza dal ruolo target",
+
+        currentSignals:
+       professionalArchetype?.narrative
+      ? `Oggi emerge soprattutto ${professionalArchetype.narrative}. Questa combinazione costruisce una percezione di credibilità professionale e aiuta a capire sia i punti di forza già visibili sia gli aspetti che potrebbero essere resi più evidenti durante il colloquio.`
+      : "Emergono alcuni segnali professionali utili, ma ancora poco strutturati.",
+
+
+
+          targetSignals:
+      describeTargetSignalsGap(professionalSignals)
+        ? `Il ruolo target cerca soprattutto ${describeTargetSignalsGap(
+            professionalSignals
+          )}, oltre a una maggiore evidenza di responsabilità, impatto e capacità di guidare risultati.`
+        : `Il ruolo target richiede soprattutto evidenze di responsabilità, impatto, autonomia decisionale e capacità di guidare risultati.`,
+
+
+    bridgeNarrative:
+      perceptionGap.length > 0
+        ? `${perceptionGap[0].narrative} In altre parole, il colloquio racconta bene cosa hai fatto, ma meno chiaramente quale peso abbiano avuto le tue scelte sul risultato finale.`
+        : `La distanza principale non sembra nascere dalla mancanza di competenze, ma dalla difficoltà nel rendere immediatamente visibili contributo personale, decisioni e impatto.`
+  },
+
+  recruiterMemory: {
+    title: "Cosa potrebbe restare in mente a un recruiter",
+    narrative:
+      `Un recruiter potrebbe uscire dal colloquio con l'impressione di aver incontrato una persona preparata e probabilmente efficace nel proprio contesto operativo. ` +
+      `Potrebbe però non riuscire ancora a capire con chiarezza quale sia stato il peso delle decisioni prese direttamente dal candidato e quanto queste abbiano influenzato i risultati ottenuti.`
+  },
+
+  blindSpots: {
+    title: "Cosa probabilmente non stai vedendo",
+    narrative:
+      `È possibile che tu stia concentrando molta energia nel raccontare il contesto, i progetti e le attività svolte. ` +
+      `Chi ascolta però non vede il contesto: vede te. ` +
+      `Più spazio occupano gli eventi e meno spazio rimane per capire quale sia stato il tuo contributo personale. ` +
+      `Paradossalmente, cercando di spiegare tutto, rischi di rendere meno visibile proprio la parte più importante.`
+  },
+
+  attitudeShift: {
+    title: "Cambio di atteggiamento consigliato",
+    narrative:
+      `Nelle prossime risposte prova a fare un piccolo esperimento. ` +
+      `Quando racconti una situazione, chiediti: "Qual è stata la mia scelta?", "Quale decisione ho preso?", "Cosa sarebbe andato diversamente se io non ci fossi stato?". ` +
+      `Spesso è proprio lì che emerge la differenza tra una persona che ha partecipato a un progetto e una persona che ha contribuito a determinarne il risultato.`
+  }
+},
 
     visibleSignals: visibleSignals.map((signal) => ({
       label: signal,
@@ -335,9 +958,13 @@ export default function buildProReportV2({
   openingPositioning,
   localeKey,
   rawInput = {},
+  roleFamily = "generic_professional",
+  roleFamilyConfidence = 0,
   productMode = "pro",
   productCapabilities = {}
 }) {
+
+
   const featuredAnswers = buildFeaturedAnswers(runtimeAnswers);
 
   
@@ -380,9 +1007,15 @@ export default function buildProReportV2({
 
 
       professionalPerception: buildProfessionalPerceptionSummary({
-      runtimeAnswers,
-      finalCandidateReport,
-      rawInput
+     runtimeAnswers,
+     finalCandidateReport,
+     rawInput,
+      candidateProfile:
+       candidate?.candidateProfile ||
+       candidate ||
+      {},
+      roleFamily,
+     roleFamilyConfidence
       }),
 
       answersWorkspace: {

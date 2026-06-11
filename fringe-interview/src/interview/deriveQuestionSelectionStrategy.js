@@ -1,4 +1,6 @@
 import { loadInterviewLengthModes } from "./loadInterviewLengthModes.js";
+import loadQuestionRelevanceMatrix from "./loadQuestionRelevanceMatrix.js";
+import evaluateQuestionFamilyRelevance from "./evaluateQuestionFamilyRelevance.js";
 
 function ensureArray(value) {
   return Array.isArray(value) ? value : [];
@@ -34,59 +36,182 @@ function uniqueStrings(items) {
   return result;
 }
 
-function pickTopByCategory(rankedQuestions, category, limit = 1) {
-  return ensureArray(rankedQuestions)
-    .filter((item) => normalizeString(item?.category) === category)
-    .slice(0, limit);
+function buildLowercaseSet(items) {
+  return new Set(uniqueStrings(items).map((item) => item.toLowerCase()));
 }
 
-function pickFirstAvailableByCategory(rankedQuestions, category, excludedKeys = []) {
-  const excluded = new Set(
-    uniqueStrings(excludedKeys).map((item) => item.toLowerCase())
-  );
+function buildRoleTraits(interviewContextProfile) {
+  const companyContext = normalizeString(interviewContextProfile?.companyContext).toLowerCase();
+  const seniorityContext = normalizeString(interviewContextProfile?.seniorityContext).toLowerCase();
+  const defaultTone = normalizeString(interviewContextProfile?.defaultTone).toLowerCase();
 
-  return (
-    ensureArray(rankedQuestions).find((item) => {
-      const key = normalizeString(item?.key).toLowerCase();
-      return (
-        normalizeString(item?.category) === category &&
-        key &&
-        !excluded.has(key)
-      );
-    }) || null
-  );
+  return {
+    leadership: ["senior", "lead", "executive"].includes(seniorityContext),
+    stakeholder_exposure:
+      companyContext === "consultancy_client_facing" ||
+      companyContext === "client_facing" ||
+      companyContext === "cross_functional",
+    execution_intensity:
+      seniorityContext === "junior" ||
+      seniorityContext === "entry" ||
+      defaultTone === "pressure"
+  };
 }
 
-function pickTopExcludingKeys(rankedQuestions, excludedKeys, limit = 1) {
-  const excluded = new Set(
-    uniqueStrings(excludedKeys).map((item) => item.toLowerCase())
+function getFamilyRelevanceBand({
+  matrix,
+  familyKey,
+  interviewContextProfile
+}) {
+  const result = evaluateQuestionFamilyRelevance({
+    matrix,
+    familyKey,
+    seniority: normalizeString(interviewContextProfile?.seniorityContext),
+    roleTraits: buildRoleTraits(interviewContextProfile)
+  });
+
+  return normalizeString(result?.band).toLowerCase() || "medium";
+}
+
+
+function pickTopByCategory(
+  rankedQuestions,
+  category,
+  limit = 1,
+  excludedKeys = [],
+  recentQuestionKeys = []
+) {
+  const excluded = buildLowercaseSet(excludedKeys);
+  const recent = buildLowercaseSet(recentQuestionKeys);
+
+  const matching = ensureArray(rankedQuestions).filter((item) => {
+    const key = normalizeString(item?.key).toLowerCase();
+
+    return (
+      normalizeString(item?.category) === category &&
+      key &&
+      !excluded.has(key)
+    );
+  });
+
+  const preferred = matching.filter((item) => {
+    const key = normalizeString(item?.key).toLowerCase();
+    return !recent.has(key);
+  });
+
+  if (preferred.length >= limit) {
+    return preferred.slice(0, limit);
+  }
+
+  return matching.slice(0, limit);
+}
+
+function pickFirstAvailableByCategory(
+  rankedQuestions,
+  category,
+  excludedKeys = [],
+  recentQuestionKeys = []
+) {
+  const picks = pickTopByCategory(
+    rankedQuestions,
+    category,
+    1,
+    excludedKeys,
+    recentQuestionKeys
   );
 
-  return ensureArray(rankedQuestions)
-    .filter((item) => !excluded.has(normalizeString(item?.key).toLowerCase()))
-    .slice(0, limit);
+  return picks[0] || null;
 }
+
+function extractReasonValue(reasons, prefix) {
+  for (const reason of ensureArray(reasons)) {
+    const clean = normalizeString(reason);
+    if (clean.startsWith(prefix)) {
+      return clean.slice(prefix.length);
+    }
+  }
+
+  return "";
+}
+
+function getQuestionRelevanceBand(question) {
+  return normalizeString(
+    extractReasonValue(question?.reasons, "relevanceBand:")
+  ).toLowerCase();
+}
+
+function preferNonLowRelevanceQuestions(items, limit = 1) {
+  const questions = ensureArray(items);
+  const preferred = questions.filter((item) => {
+    const band = getQuestionRelevanceBand(item);
+    return band !== "low" && band !== "off";
+  });
+
+  if (preferred.length >= limit) {
+    return preferred.slice(0, limit);
+  }
+
+  return questions.slice(0, limit);
+}
+
+
+
+function pickTopExcludingKeys(
+  rankedQuestions,
+  excludedKeys,
+  limit = 1,
+  recentQuestionKeys = []
+) {
+  const excluded = buildLowercaseSet(excludedKeys);
+  const recent = buildLowercaseSet(recentQuestionKeys);
+
+  const matching = ensureArray(rankedQuestions).filter((item) => {
+    const key = normalizeString(item?.key).toLowerCase();
+    return key && !excluded.has(key);
+  });
+
+  const preferred = matching.filter((item) => {
+    const key = normalizeString(item?.key).toLowerCase();
+    return !recent.has(key);
+  });
+
+  if (preferred.length >= limit) {
+    return preferNonLowRelevanceQuestions(preferred, limit);
+  }
+
+  return preferNonLowRelevanceQuestions(matching, limit);
+}
+
 
 function pickTopExcludingKeysByCategory(
   rankedQuestions,
   excludedKeys,
   category,
-  limit = 1
+  limit = 1,
+  recentQuestionKeys = []
 ) {
-  const excluded = new Set(
-    uniqueStrings(excludedKeys).map((item) => item.toLowerCase())
-  );
+  const excluded = buildLowercaseSet(excludedKeys);
+  const recent = buildLowercaseSet(recentQuestionKeys);
 
-  return ensureArray(rankedQuestions)
-    .filter((item) => {
-      const key = normalizeString(item?.key).toLowerCase();
-      return (
-        normalizeString(item?.category) === category &&
-        key &&
-        !excluded.has(key)
-      );
-    })
-    .slice(0, limit);
+  const matching = ensureArray(rankedQuestions).filter((item) => {
+    const key = normalizeString(item?.key).toLowerCase();
+    return (
+      normalizeString(item?.category) === category &&
+      key &&
+      !excluded.has(key)
+    );
+  });
+
+  const preferred = matching.filter((item) => {
+    const key = normalizeString(item?.key).toLowerCase();
+    return !recent.has(key);
+  });
+
+  if (preferred.length >= limit) {
+    return preferNonLowRelevanceQuestions(preferred, limit);
+  }
+
+  return preferNonLowRelevanceQuestions(matching, limit);
 }
 
 function shouldForceSeniorityCalibration(interviewContextProfile) {
@@ -97,13 +222,19 @@ function shouldForceSeniorityCalibration(interviewContextProfile) {
   return ["senior", "lead", "executive"].includes(seniorityContext);
 }
 
-function shouldForcePressureSignal(interviewContextProfile) {
+function shouldForcePressureSignal(interviewContextProfile, pressureRelevanceBand) {
   const companyContext = normalizeString(interviewContextProfile?.companyContext);
   const toneMode = normalizeString(interviewContextProfile?.defaultTone);
+  const relevanceBand = normalizeString(pressureRelevanceBand).toLowerCase();
+
+  if (relevanceBand === "low" || relevanceBand === "off") {
+    return false;
+  }
 
   return (
     companyContext === "consultancy_client_facing" ||
-    toneMode === "pressure"
+    toneMode === "pressure" ||
+    relevanceBand === "high"
   );
 }
 
@@ -139,7 +270,8 @@ function buildSelectionRationale({
   seniorityQuestions,
   secondaryQuestions,
   personPerceptionQuestions,
-  closingQuestions
+  closingQuestions,
+  recentQuestionKeys
 }) {
   const rationale = [];
 
@@ -161,6 +293,10 @@ function buildSelectionRationale({
 
   if (interviewLengthMode) {
     rationale.push(`interview_length_mode:${interviewLengthMode}`);
+  }
+
+  if (ensureArray(recentQuestionKeys).length > 0) {
+    rationale.push(`recent_key_avoidance:${uniqueStrings(recentQuestionKeys).join(",")}`);
   }
 
   if (mandatoryQuestions.length > 0) {
@@ -199,7 +335,8 @@ function buildSelectionRationale({
 export function deriveQuestionSelectionStrategy({
   interviewContextProfile,
   rankedStructuredQuestions,
-  interviewLengthMode
+  interviewLengthMode,
+  recentQuestionKeys = []
 }) {
   if (!interviewContextProfile || typeof interviewContextProfile !== "object") {
     throw new Error(
@@ -213,8 +350,37 @@ export function deriveQuestionSelectionStrategy({
     );
   }
 
-  const rankedQuestions = ensureArray(rankedStructuredQuestions?.rankedQuestions);
+
+
+    const rankedQuestions = ensureArray(rankedStructuredQuestions?.rankedQuestions);
   const juniorMode = isJuniorLike(interviewContextProfile);
+  const normalizedRecentQuestionKeys = uniqueStrings(recentQuestionKeys);
+  const questionRelevanceMatrix = loadQuestionRelevanceMatrix();
+
+  const roleFitRelevanceBand = getFamilyRelevanceBand({
+    matrix: questionRelevanceMatrix,
+    familyKey: "role_fit",
+    interviewContextProfile
+  });
+
+  const motivationRelevanceBand = getFamilyRelevanceBand({
+    matrix: questionRelevanceMatrix,
+    familyKey: "motivation_for_change",
+    interviewContextProfile
+  });
+
+  const pressureRelevanceBand = getFamilyRelevanceBand({
+    matrix: questionRelevanceMatrix,
+    familyKey: "conflict_pressure",
+    interviewContextProfile
+  });
+
+  const decisionRelevanceBand = getFamilyRelevanceBand({
+    matrix: questionRelevanceMatrix,
+    familyKey: "decision_tradeoff",
+    interviewContextProfile
+  });
+
 
   const {
     modeKey,
@@ -229,21 +395,27 @@ export function deriveQuestionSelectionStrategy({
   const mandatoryQuestions = pickTopByCategory(
     rankedQuestions,
     "role_fit",
-    mandatoryRoleFitCount
+    mandatoryRoleFitCount,
+    [],
+    normalizedRecentQuestionKeys
   );
   const mandatoryQuestionKeys = mandatoryQuestions.map((item) => item.key);
 
   const closingQuestions = pickTopByCategory(
     rankedQuestions,
     "closing",
-    modeConfig.closingQuestionCount
+    modeConfig.closingQuestionCount,
+    [],
+    normalizedRecentQuestionKeys
   );
   const closingQuestionKeys = closingQuestions.map((item) => item.key);
 
   const personPerceptionQuestions = pickTopByCategory(
     rankedQuestions,
     "person_perception",
-    modeConfig.personPerceptionQuestionCount
+    modeConfig.personPerceptionQuestionCount,
+    [],
+    normalizedRecentQuestionKeys
   );
   const personPerceptionQuestionKeys = personPerceptionQuestions.map(
     (item) => item.key
@@ -264,7 +436,8 @@ export function deriveQuestionSelectionStrategy({
     const seniorityPick = pickFirstAvailableByCategory(
       rankedQuestions,
       "seniority_calibration",
-      baseExcludedKeys
+      baseExcludedKeys,
+      normalizedRecentQuestionKeys
     );
 
     if (seniorityPick) {
@@ -293,7 +466,8 @@ export function deriveQuestionSelectionStrategy({
           rankedQuestions,
           excludedKeys,
           "seniority_calibration",
-          1
+          1,
+          normalizedRecentQuestionKeys
         )
       );
 
@@ -309,7 +483,8 @@ export function deriveQuestionSelectionStrategy({
           rankedQuestions,
           excludedKeys,
           "role_fit",
-          remaining
+          remaining,
+          normalizedRecentQuestionKeys
         );
 
         juniorSecondary.push(...extraRoleFit);
@@ -320,11 +495,12 @@ export function deriveQuestionSelectionStrategy({
       }
 
       secondaryQuestions.push(...juniorSecondary);
-    } else if (shouldForcePressureSignal(interviewContextProfile)) {
+    } else if (shouldForcePressureSignal(interviewContextProfile, pressureRelevanceBand)) {
       const pressureSecondary = pickTopExcludingKeys(
         rankedQuestions,
         excludedKeys,
-        secondaryQuestionCount
+        secondaryQuestionCount,
+        normalizedRecentQuestionKeys
       );
 
       secondaryQuestions.push(...pressureSecondary);
@@ -336,7 +512,8 @@ export function deriveQuestionSelectionStrategy({
       const genericSecondary = pickTopExcludingKeys(
         rankedQuestions,
         excludedKeys,
-        secondaryQuestionCount
+        secondaryQuestionCount,
+        normalizedRecentQuestionKeys
       );
 
       secondaryQuestions.push(...genericSecondary);
@@ -353,6 +530,7 @@ export function deriveQuestionSelectionStrategy({
     questionSelectionStrategy: {
       toneMode: normalizeString(interviewContextProfile?.defaultTone) || "standard",
       interviewLengthMode: modeKey,
+      recentQuestionKeys: normalizedRecentQuestionKeys,
       mandatoryQuestionKeys,
       seniorityQuestionKeys,
       secondaryQuestionKeys,
@@ -372,20 +550,24 @@ export function deriveQuestionSelectionStrategy({
         seniorityQuestions,
         secondaryQuestions,
         personPerceptionQuestions,
-        closingQuestions
+        closingQuestions,
+        recentQuestionKeys: normalizedRecentQuestionKeys
       }),
       metadata: {
         totalRankedCandidates: rankedQuestions.length,
         forcedSeniorityCalibration: shouldForceSeniorityCalibration(
           interviewContextProfile
         ),
-        forcedPressureSignal: shouldForcePressureSignal(
-          interviewContextProfile
-        ),
+        forcedPressureSignal: shouldForcePressureSignal(interviewContextProfile, pressureRelevanceBand),
         juniorMode,
+        roleFitRelevanceBand,
+        motivationRelevanceBand,
+        pressureRelevanceBand,
+        decisionRelevanceBand,
         requestedInterviewLengthMode: normalizeString(interviewLengthMode) || "",
         resolvedInterviewLengthMode: modeKey,
-        defaultInterviewLengthMode: defaultMode
+        defaultInterviewLengthMode: defaultMode,
+        recentQuestionKeyCount: normalizedRecentQuestionKeys.length
       }
     }
   };

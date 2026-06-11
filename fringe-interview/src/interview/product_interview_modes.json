@@ -1,0 +1,75 @@
+{
+  "free": {
+    "label": "FREE",
+
+    "description":
+      "Simulazione breve orientata a far emergere rapidamente punti forti e debolezze principali.",
+
+    "interviewDepth": "quick",
+
+    "defaultInterviewStyle": "supportive_coach",
+
+    "availableInterviewStyles": [
+      "supportive_coach"
+    ],
+
+    "interviewIntent": "training",
+
+    "adaptiveBehavior": {
+      "enabled": true,
+      "maxPressureLevel": 1,
+      "allowRepeatedPressure": false
+    }
+  },
+
+  "pro": {
+    "label": "PRO",
+
+    "description":
+      "Simulazione realistica con recruiter strutturato, affondi adattivi e valutazione operativa.",
+
+    "interviewDepth": "standard",
+
+    "defaultInterviewStyle": "structured_corporate",
+
+    "availableInterviewStyles": [
+      "supportive_coach",
+      "structured_corporate",
+      "technical_analytical"
+    ],
+
+    "interviewIntent": "simulation",
+
+    "adaptiveBehavior": {
+      "enabled": true,
+      "maxPressureLevel": 3,
+      "allowRepeatedPressure": true
+    }
+  },
+
+  "premium": {
+    "label": "PREMIUM",
+
+    "description":
+      "Assessment avanzato con maggiore profondità, stress consistency e stili recruiter selezionabili.",
+
+    "interviewDepth": "deep",
+
+    "defaultInterviewStyle": "pressure_interviewer",
+
+    "availableInterviewStyles": [
+      "supportive_coach",
+      "structured_corporate",
+      "technical_analytical",
+      "pressure_interviewer"
+    ],
+
+    "interviewIntent": "stress_test",
+
+    "adaptiveBehavior": {
+      "enabled": true,
+      "maxPressureLevel": 5,
+      "allowRepeatedPressure": true
+    }
+  }
+}

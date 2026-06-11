@@ -892,6 +892,127 @@
   "metadata": {},
   "extensions": {}
 },
+
+{
+  "key": "motivation_for_change",
+  "category": "person_perception",
+  "intent": "Detect whether the candidate can explain credibly why they want to change company or role now, without sounding generic, reactive, or purely escapist.",
+  "signals": [
+    "motivation",
+    "narrative_coherence",
+    "stability_risk"
+  ],
+  "senioritySuitability": [
+    "entry",
+    "junior",
+    "mid",
+    "senior",
+    "lead",
+    "executive"
+  ],
+  "companyContextSuitability": [
+    "corporate_structured",
+    "scaleup_dynamic",
+    "startup_pragmatic",
+    "small_business_operational",
+    "consultancy_client_facing"
+  ],
+  "toneSuitability": [
+    "standard",
+    "supportive",
+    "hr_relational",
+    "incisive",
+    "business_direct"
+  ],
+  "selectionWeight": "high",
+  "variants": {
+    "standard": {
+      "prompt": "What is leading you to want a change of company or role at this point?"
+    },
+    "supportive": {
+      "prompt": "Would you like to walk me through what is pushing you to consider a change of company or role right now?"
+    },
+    "hr_relational": {
+      "prompt": "How would you describe why this feels like the right moment for you to make a change?"
+    },
+    "incisive": {
+      "prompt": "Be concrete: why do you want to change now, and what are you looking for that is meaningfully different from your current situation?"
+    },
+    "business_direct": {
+      "prompt": "Why are you actively looking for a change of company or role, concretely?"
+    }
+  },
+  "tags": [
+    "person_perception",
+    "motivation_change",
+    "hr_screening",
+    "narrative_coherence"
+  ],
+  "metadata": {},
+  "extensions": {}
+},
+
+{
+  "key": "change_trajectory_logic",
+  "category": "role_fit",
+  "intent": "Detect whether the candidate can connect the desired change to a coherent professional trajectory, rather than framing it as a generic escape from the current situation.",
+  "signals": [
+    "transferability",
+    "narrative_coherence",
+    "role_interest"
+  ],
+  "senioritySuitability": [
+    "entry",
+    "junior",
+    "mid",
+    "senior",
+    "lead",
+    "executive"
+  ],
+  "companyContextSuitability": [
+    "corporate_structured",
+    "scaleup_dynamic",
+    "startup_pragmatic",
+    "small_business_operational",
+    "consultancy_client_facing"
+  ],
+  "toneSuitability": [
+    "standard",
+    "supportive",
+    "hr_relational",
+    "incisive",
+    "business_direct"
+  ],
+  "selectionWeight": "medium",
+  "variants": {
+    "standard": {
+      "prompt": "Why does this move make sense as the next step in your path, rather than simply as a way out of your current situation?"
+    },
+    "supportive": {
+      "prompt": "How do you connect the change you are looking for to the path you want to build?"
+    },
+    "hr_relational": {
+      "prompt": "How does this move fit coherently into the professional trajectory you want for yourself?"
+    },
+    "incisive": {
+      "prompt": "Why is this a coherent next step, rather than just a move away from what you have today?"
+    },
+    "business_direct": {
+      "prompt": "What is the professional logic behind this move?"
+    }
+  },
+  "tags": [
+    "role_fit",
+    "change_logic",
+    "hr_screening",
+    "career_coherence"
+  ],
+  "metadata": {},
+  "extensions": {}
+},
+
+
+
 {
   "key": "expectation_reset",
   "category": "role_fit",

@@ -29,6 +29,16 @@ function printSection(title) {
   console.log(`\n=== ${title} ===`);
 }
 
+function assertInterviewRuntimeEnvelope(runtimeResult, stepName) {
+  if (!runtimeResult || typeof runtimeResult !== "object") {
+    throw new Error(`${stepName}: runtime result is missing or invalid.`);
+  }
+
+  if (!runtimeResult.interviewRuntime || typeof runtimeResult.interviewRuntime !== "object") {
+    throw new Error(`${stepName}: interviewRuntime is missing in returned result.`);
+  }
+}
+
 async function main() {
   const pipelinePath = resolveProjectPath(
     "tmp",
@@ -56,23 +66,29 @@ async function main() {
     interviewQuestionSet: questionSetResult.interviewQuestionSet
   });
 
-  let runtimeResult = createInterviewRuntime({
+  let runtimeResult = await createInterviewRuntime({
     interviewSession: sessionResult.interviewSession
   });
 
-  runtimeResult = advanceInterviewRuntime({
+  assertInterviewRuntimeEnvelope(runtimeResult, "createInterviewRuntime");
+
+  runtimeResult = await advanceInterviewRuntime({
     interviewSession: sessionResult.interviewSession,
     interviewRuntime: runtimeResult.interviewRuntime,
     answerText:
       "I worked in e-commerce rather than SaaS, but I built weekly dashboards, coordinated reporting needs across product, sales, and operations, and reduced manual reconciliation time by 25 percent. That experience taught me how to transfer analytical structure into fast-changing cross-functional environments."
   });
 
-  runtimeResult = advanceInterviewRuntime({
+  assertInterviewRuntimeEnvelope(runtimeResult, "advanceInterviewRuntime #1");
+
+  runtimeResult = await advanceInterviewRuntime({
     interviewSession: sessionResult.interviewSession,
     interviewRuntime: runtimeResult.interviewRuntime,
     answerText:
       "In one role I owned the weekly KPI reporting flow, decided which metrics mattered for department managers, and adapted the dashboard when recurring bottlenecks became visible. As a result, discussions became more focused and the team reacted faster."
   });
+
+  assertInterviewRuntimeEnvelope(runtimeResult, "advanceInterviewRuntime #2");
 
   await writePrettyJson(
     path.join(outputDir, "runtime_with_answer_analysis.json"),
@@ -95,6 +111,10 @@ async function main() {
   console.log(
     "Last answer strengths:",
     (lastAnswer?.answerAnalysis?.answerShapeAnalysis?.strengths || []).join(" | ") || "(none)"
+  );
+  console.log(
+    "Last answer weaknesses:",
+    (lastAnswer?.answerAnalysis?.answerShapeAnalysis?.weaknesses || []).join(" | ") || "(none)"
   );
   console.log(
     "Last answer improvement hints:",

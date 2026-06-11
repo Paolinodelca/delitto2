@@ -139,7 +139,7 @@ export const INTERVIEW_LOCALES = {
         evidence:
           "Inserisci un outcome, una metrica o un effetto visibile del tuo lavoro.",
         ownership:
-          "Esplicita meglio che cosa hai posseduto, deciso o consegnato personalmente.",
+          "Rendi più chiaro che cosa dipendeva davvero da te, quali decisioni hai preso e quale contributo hai portato in prima persona.",
         structure:
           "Usa una sequenza semplice come situazione, azione, risultato.",
         reflection:

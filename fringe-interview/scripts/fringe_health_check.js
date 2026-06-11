@@ -135,6 +135,32 @@ addCheck("Product modes reference existing styles/depths", () => {
   });
 });
 
+addCheck("Product experience guardrails", async () => {
+  const { resolveProductExperience } = await import(
+    "../src/interview/resolveProductExperience.js"
+  );
+
+  const resolved = resolveProductExperience({
+    productMode: "free",
+    interviewDepth: "deep",
+    interviewStyle: "pressure_interviewer",
+    interviewIntent: "stress_test"
+  });
+
+  if (resolved.interviewDepth !== "quick") {
+    throw new Error("FREE must not allow deep interview depth.");
+  }
+
+  if (resolved.interviewStyle !== "supportive_coach") {
+    throw new Error("FREE must not allow pressure interviewer style.");
+  }
+
+  if (resolved.interviewIntent !== "training") {
+    throw new Error("FREE must not allow stress_test intent.");
+  }
+});
+
+
 addCheck("Product modes expose required capabilities", () => {
   const modes = readJson("config/product_interview_modes.json");
 
@@ -203,13 +229,615 @@ addCheck("Followup packs contain required adaptive triggers", () => {
   });
 });
 
+
+
+addCheck("Professional Perception V2 model and rendering", async () => {
+  const buildProReportV2Module = await import("../src/report/buildProReportV2.js");
+  const renderModule = await import("../src/app/renderProReportHtml.js");
+
+  const buildProReportV2 = buildProReportV2Module.default;
+  const { renderProReportHtml } = renderModule;
+
+  const result = buildProReportV2({
+    candidate: {},
+    role: {},
+    fit: {},
+    report: {},
+    runtimeAnswers: [],
+    openingPositioning: {},
+    localeKey: "it",
+    finalCandidateReport: {
+      locale: "it",
+      overall: {
+        candidateSummary:
+          "Professionista cross-funzionale con esperienza in analisi, reporting e miglioramento processi.",
+        roleTitle: "Product Operations Manager",
+        metrics: {
+          "Ruolo target": "Product Operations Manager",
+          "Valutazione complessiva": "plausible_fit",
+          "Seniority percepita candidato": "mid",
+          "Seniority attesa dal ruolo": "senior"
+        }
+      },
+      roleFit: {
+        strengths: ["analisi dei dati", "coordinamento"],
+        transferableStrengths: ["reporting"],
+        matchedSkills: ["SQL"],
+        risks: ["leadership poco visibile"],
+        missingSkills: ["Product Operations"]
+      },
+      questionQuality: {
+        alignment: {
+          narrative:
+            "Le risposte tendono a restare descrittive e poco dimostrative."
+        }
+      },
+      cvAdvice: {
+        strengths: ["analisi dei dati"],
+        matchedSkills: ["SQL"],
+        risks: ["leadership poco visibile"],
+        missingSkills: ["Product Operations"],
+        cvReadinessNarrative:
+          "Il CV contiene elementi utili ma non ancora pienamente valorizzati."
+      },
+      runtimeRead: {
+        runtimeNarrative:
+          "Nel colloquio emergono segnali utili, ma il contributo personale resta poco visibile."
+      }
+    }
+  });
+
+  const perception =
+    result?.proReportV2?.professionalPerception?.perceptionV2;
+
+      const professionalSignals =
+    result?.proReportV2?.professionalPerception?.professionalSignals;
+
+  const professionalTraits =
+    result?.proReportV2?.professionalPerception?.professionalTraits;
+
+  const professionalArchetype =
+    result?.proReportV2?.professionalPerception?.professionalArchetype;
+
+    const careerTrajectorySignals =
+    result?.proReportV2?.professionalPerception?.careerTrajectorySignals;
+
+  if (!careerTrajectorySignals) {
+    throw new Error("Missing careerTrajectorySignals.");
+  }
+
+  if (
+    typeof careerTrajectorySignals.stabilitySignal !== "string"
+  ) {
+    throw new Error(
+      "Missing careerTrajectorySignals.stabilitySignal."
+    );
+  }
+
+  if (
+    typeof careerTrajectorySignals.mobilitySignal !== "string"
+  ) {
+    throw new Error(
+      "Missing careerTrajectorySignals.mobilitySignal."
+    );
+  }
+
+  if (
+    typeof careerTrajectorySignals.narrative !== "string"
+  ) {
+    throw new Error(
+      "Missing careerTrajectorySignals.narrative."
+    );
+  }
+
+
+  if (!professionalSignals) {
+    throw new Error("Missing professionalSignals.");
+  }
+
+  if (!professionalTraits) {
+    throw new Error("Missing professionalTraits.");
+  }
+
+  if (!professionalTraits.method) {
+    throw new Error("Missing professionalTraits.method.");
+  }
+
+  if (!professionalTraits.analysis) {
+    throw new Error("Missing professionalTraits.analysis.");
+  }
+
+  if (!professionalArchetype?.key) {
+    throw new Error("Missing professionalArchetype.key.");
+  }
+
+  if (!professionalArchetype?.narrative) {
+    throw new Error("Missing professionalArchetype.narrative.");
+  }
+
+  const requiredBlocks = [
+    "whoEmerges",
+    "credibilityAssets",
+    "targetDistance",
+    "recruiterMemory",
+    "blindSpots",
+    "attitudeShift"
+  ];
+
+  requiredBlocks.forEach((key) => {
+    if (!perception?.[key]) {
+      throw new Error(`Missing professionalPerception.perceptionV2.${key}`);
+    }
+  });
+
+  if (!perception?.credibilityAssets?.narrative) {
+    throw new Error("Missing credibilityAssets narrative.");
+  }
+
+  if (!perception?.targetDistance?.currentSignals) {
+    throw new Error("Missing targetDistance.currentSignals.");
+  }
+
+  if (!perception?.targetDistance?.targetSignals) {
+    throw new Error("Missing targetDistance.targetSignals.");
+  }
+
+  if (!perception?.targetDistance?.bridgeNarrative) {
+    throw new Error("Missing targetDistance.bridgeNarrative.");
+  }
+
+  const html = renderProReportHtml({
+    proReportV2: result.proReportV2,
+    activeSection: "overview"
+  });
+
+  if (!html.includes('data-report-section="perception"')) {
+    throw new Error("Rendered report is missing perception section.");
+  }
+
+  if (!html.includes("Come vieni percepito")) {
+    throw new Error("Rendered report is missing perception page title.");
+  }
+});
+
+
+addCheck("Professional Perception LLM Alpha", async () => {
+  const schemaModule = await import(
+    "../src/interview/loadProfessionalPerceptionSchema.js"
+  );
+  const promptModule = await import(
+    "../src/interview/buildProfessionalPerceptionPrompt.js"
+  );
+
+  const { loadProfessionalPerceptionSchema } = schemaModule;
+  const { buildProfessionalPerceptionPrompt } = promptModule;
+
+  const schema = await loadProfessionalPerceptionSchema();
+
+  const requiredSchemaBlocks = [
+    "whoEmerges",
+    "credibilityAssets",
+    "targetDistance",
+    "professionalDirections",
+    "recruiterMemory",
+    "blindSpots",
+    "attitudeShift"
+  ];
+
+  requiredSchemaBlocks.forEach((key) => {
+    if (!schema?.properties?.[key]) {
+      throw new Error(`Professional Perception schema missing ${key}.`);
+    }
+  });
+
+  const promptResult = await buildProfessionalPerceptionPrompt({
+    localeKey: "it",
+    roleFamily: "operations_industrial",
+    roleFamilyConfidence: 0.84,
+    candidateProfile: {
+      summary:
+        "Professionista cross-funzionale con 7 anni di esperienza in analisi aziendale, coordinamento di progetti, reporting e miglioramento dei processi.",
+      currentPositioning: "Senior Business Analyst",
+      senioritySignal: "mid",
+      experienceSignals: {
+        yearsDetected: "7",
+        leadershipExposure: "limited",
+        ownershipLevel: "medium",
+        autonomyLevel: "medium",
+        scopeLevel: "moderate"
+      },
+      skills: {
+        technical: ["SQL", "Tableau", "Power BI"],
+        soft: ["analisi dei dati", "collaborazione", "problem solving"]
+      }
+    },
+    finalCandidateReport: {
+      locale: "it",
+      overall: {
+        candidateSummary:
+          "Professionista cross-funzionale con esperienza in analisi, reporting e miglioramento processi.",
+        roleTitle: "Product Operations Manager",
+        metrics: {
+          "Ruolo target": "Product Operations Manager",
+          "Seniority percepita candidato": "mid",
+          "Seniority attesa dal ruolo": "senior"
+        }
+      },
+      roleFit: {
+        strengths: ["analisi dei dati", "coordinamento"],
+        transferableStrengths: ["reporting"],
+        matchedSkills: ["SQL", "Tableau", "Power BI"],
+        risks: ["leadership poco visibile"],
+        missingSkills: ["Product Operations"]
+      },
+      questionQuality: {
+        alignment: {
+          narrative:
+            "Le risposte tendono a restare descrittive e poco dimostrative."
+        }
+      },
+      cvAdvice: {
+        strengths: ["analisi dei dati"],
+        matchedSkills: ["SQL"],
+        risks: ["leadership poco visibile"],
+        missingSkills: ["Product Operations"],
+        cvReadinessNarrative:
+          "Il CV contiene elementi utili ma non ancora pienamente valorizzati."
+      },
+      runtimeRead: {
+        runtimeNarrative:
+          "Nel colloquio emergono segnali utili, ma il contributo personale resta poco visibile."
+      }
+    },
+    runtimeAnswers: [
+      {
+        label: "Opening",
+        answerText:
+          "Ho lavorato su analisi, reporting e coordinamento con stakeholder interni per rendere più leggibili dati e priorità operative."
+      }
+    ],
+    rawInput: {
+      targetRole: "Product Operations Manager",
+      jobDescription:
+        "Ruolo orientato a coordinamento operativo, processi, dati, stakeholder e miglioramento continuo."
+    }
+  });
+
+  const prompt = promptResult?.professionalPerceptionPrompt;
+
+  if (!prompt) {
+    throw new Error("Professional Perception prompt missing.");
+  }
+
+  if (prompt.task !== "professionalPerception") {
+    throw new Error("Professional Perception prompt task mismatch.");
+  }
+
+  if (prompt.targetMode !== "target_role") {
+    throw new Error("Professional Perception prompt targetMode mismatch.");
+  }
+
+  if (prompt.roleFamily !== "operations_industrial") {
+    throw new Error("Professional Perception prompt roleFamily mismatch.");
+  }
+
+  if (!prompt.systemPrompt?.includes("evidence -> interpretation -> professional meaning")) {
+    throw new Error("Professional Perception prompt missing professional meaning rule.");
+  }
+
+  if (!prompt.systemPrompt?.includes("A blind spot is a communication/perception dynamic")) {
+    throw new Error("Professional Perception prompt missing blind spot rule.");
+  }
+
+  if (!prompt.userPrompt?.includes("concrete evidence")) {
+    throw new Error("Professional Perception prompt missing credibilityAssets product rule.");
+  }
+});
+
+addCheck("CV Review Report V1", async () => {
+  const module = await import("../src/report/buildCvReviewReportV1.js");
+  const buildCvReviewReportV1 = module.default;
+
+  const result = buildCvReviewReportV1({
+    candidateProfile: {
+      summary: "Professionista con esperienza in analisi e coordinamento.",
+      currentPositioning: "Business Analyst",
+      senioritySignal: "mid",
+      experienceSignals: {
+        yearsDetected: "7"
+      },
+      skills: {
+        technical: ["SQL", "Power BI"],
+        soft: ["comunicazione", "collaborazione"],
+        languages: ["Italiano", "Inglese"]
+      }
+    },
+    roleFamily: "analytical_business",
+    targetRole: "Product Operations Manager"
+  });
+
+  if (result?.mode !== "cv_review") {
+    throw new Error("CV Review V1 mode mismatch.");
+  }
+
+  if (!result?.profileRead?.summary) {
+    throw new Error("CV Review V1 missing profileRead.summary.");
+  }
+
+  if (!result?.credibilityAssets?.narrative) {
+    throw new Error("CV Review V1 missing credibilityAssets.narrative.");
+  }
+
+  if (!result?.possibleDirections?.narrative) {
+    throw new Error("CV Review V1 missing possibleDirections.narrative.");
+  }
+
+    if (!result?.readingRisk?.narrative) {
+    throw new Error("CV Review V1 missing readingRisk.narrative.");
+  }
+
+  if (!result?.improvementHint?.narrative) {
+    throw new Error("CV Review V1 missing improvementHint.narrative.");
+  }
+
+    if (!result?.targetFocus?.narrative) {
+    throw new Error("CV Review V1 missing targetFocus.narrative.");
+  }
+
+    if (!result?.cvTransformationPlan?.keyMessage) {
+    throw new Error("CV Review V1 missing cvTransformationPlan.keyMessage.");
+  }
+
+  if (!Array.isArray(result?.cvTransformationPlan?.highlightMore)) {
+    throw new Error("CV Review V1 missing cvTransformationPlan.highlightMore.");
+  }
+
+  if (!Array.isArray(result?.cvTransformationPlan?.compress)) {
+    throw new Error("CV Review V1 missing cvTransformationPlan.compress.");
+  }
+
+  if (!Array.isArray(result?.cvTransformationPlan?.explainBetter)) {
+    throw new Error("CV Review V1 missing cvTransformationPlan.explainBetter.");
+  }
+
+  if (!result?.cvTransformationPlan?.summaryNarrative) {
+  throw new Error("CV Review V1 missing cvTransformationPlan.summaryNarrative.");
+}
+  if (!result?.narrativeRepositioning?.professionalTitle) {
+  throw new Error("CV Review V1 missing narrativeRepositioning.professionalTitle.");
+}
+
+if (!result?.narrativeRepositioning?.professionalSummary) {
+  throw new Error("CV Review V1 missing narrativeRepositioning.professionalSummary.");
+}
+
+if (!result?.cvOpeningDraft?.professionalTitle) {
+  throw new Error("CV Review V1 missing cvOpeningDraft.professionalTitle.");
+}
+
+if (!result?.cvOpeningDraft?.openingParagraph) {
+  throw new Error("CV Review V1 missing cvOpeningDraft.openingParagraph.");
+}
+
+if (!Array.isArray(result?.cvKeySkillsDraft?.items)) {
+  throw new Error("CV Review V1 missing cvKeySkillsDraft.items.");
+}
+
+if (!Array.isArray(result?.cvStructureDraft?.sections)) {
+  throw new Error("CV Review V1 missing cvStructureDraft.sections.");
+}
+
+if (!Array.isArray(result?.cvRewriteInstructions?.moveUp)) {
+  throw new Error("CV Review V1 missing cvRewriteInstructions.moveUp.");
+}
+
+if (!Array.isArray(result?.cvRewriteInstructions?.compress)) {
+  throw new Error("CV Review V1 missing cvRewriteInstructions.compress.");
+}
+
+if (!Array.isArray(result?.cvRewriteInstructions?.addNarrative)) {
+  throw new Error("CV Review V1 missing cvRewriteInstructions.addNarrative.");
+}
+
+if (!result?.cvSectionRewritePlan?.professionalProfile) {
+  throw new Error(
+    "CV Review V1 missing cvSectionRewritePlan.professionalProfile."
+  );
+}
+
+if (!result?.cvSectionDrafts?.professionalProfileDraft) {
+  throw new Error(
+    "CV Review V1 missing cvSectionDrafts.professionalProfileDraft."
+  );
+}
+
+if (!Array.isArray(result?.cvSectionDrafts?.keySkillsDraft)) {
+  throw new Error(
+    "CV Review V1 missing cvSectionDrafts.keySkillsDraft."
+  );
+}
+
+if (!result?.cvRewriteOutput?.professionalProfile) {
+  throw new Error(
+    "CV Review V1 missing cvRewriteOutput.professionalProfile."
+  );
+}
+
+if (!Array.isArray(result?.cvRewriteOutput?.keySkills)) {
+  throw new Error(
+    "CV Review V1 missing cvRewriteOutput.keySkills."
+  );
+}
+
+
+
+});
+
+
+addCheck("Role family narrative profiles", async () => {
+  const module = await import("../src/report/roleFamilyNarrativeProfiles.js");
+  const getRoleFamilyNarrativeProfile = module.default;
+
+  const families = [
+    "generic_professional",
+    "operations_logistics_industrial",
+    "administration_finance_backoffice",
+    "analytical_business",
+    "sales_commercial_retail",
+    "customer_service_success",
+    "care_helping_professions",
+    "education_training",
+    "technical_engineering_it",
+    "creative_design_marketing"
+  ];
+
+  families.forEach((family) => {
+    const it = getRoleFamilyNarrativeProfile(family, "it");
+    const en = getRoleFamilyNarrativeProfile(family, "en");
+
+    if (!it?.label || !Array.isArray(it?.vocabulary)) {
+      throw new Error(`Missing IT role family narrative profile for ${family}.`);
+    }
+
+    if (!it?.credibilityNarrativeTemplates) {
+  throw new Error(
+    `Missing IT credibilityNarrativeTemplates for ${family}.`
+  );
+  }
+
+    if (!en?.label || !Array.isArray(en?.vocabulary)) {
+      throw new Error(`Missing EN role family narrative profile for ${family}.`);
+    }
+    if (!en?.credibilityNarrativeTemplates) {
+  throw new Error(
+    `Missing EN credibilityNarrativeTemplates for ${family}.`
+  );
+  }
+
+  });
+});
+
+addCheck("Role target narrative profiles", async () => {
+  const module = await import("../src/report/roleTargetNarrativeProfiles.js");
+
+  const getRoleTargetNarrativeProfile =
+    module.default;
+
+  const requiredTargets = {
+    care_helping_professions: [
+      "family_support",
+      "youth_prevention",
+      "disability_support"
+    ],
+    administration_finance_backoffice: [
+      "accounting_bookkeeping",
+      "administrative_assistant",
+      "payroll_hr_admin"
+    ],
+    sales_commercial_retail: [
+      "retail_sales",
+      "b2b_sales",
+      "insurance_financial_sales"
+    ],
+    technical_engineering_it: [
+      "software_development",
+      "it_support_systems",
+      "industrial_engineering"
+    ],
+    analytical_business: [
+      "business_analysis",
+      "data_reporting",
+      "project_operations"
+    ]
+  };
+
+  for (const [family, targets] of Object.entries(requiredTargets)) {
+    targets.forEach((target) => {
+      const it = getRoleTargetNarrativeProfile({
+        roleFamily: family,
+        roleTarget: target,
+        locale: "it"
+      });
+
+      const en = getRoleTargetNarrativeProfile({
+        roleFamily: family,
+        roleTarget: target,
+        locale: "en"
+      });
+
+      if (!it?.label || !Array.isArray(it?.focus)) {
+        throw new Error(
+          `Missing IT role target narrative profile: ${family}.${target}`
+        );
+      }
+
+      if (!en?.label || !Array.isArray(en?.focus)) {
+        throw new Error(
+          `Missing EN role target narrative profile: ${family}.${target}`
+        );
+      }
+
+      if (it?.skillLabels && !Array.isArray(it.skillLabels)) {
+  throw new Error(
+    `Invalid IT role target skillLabels: ${family}.${target}`
+  );
+}
+
+if (en?.skillLabels && !Array.isArray(en.skillLabels)) {
+  throw new Error(
+    `Invalid EN role target skillLabels: ${family}.${target}`
+  );
+}
+
+
+    });
+  }
+});
+
+addCheck("Role target detection", async () => {
+  const module = await import("../src/report/detectRoleTarget.js");
+  const detectRoleTarget = module.default;
+
+  const cases = [
+    {
+      roleFamily: "care_helping_professions",
+      targetRole: "servizi educativi per infanzia e famiglie",
+      expected: "family_support"
+    },
+    {
+      roleFamily: "care_helping_professions",
+      targetRole: "sportelli di ascolto e prevenzione per giovani",
+      expected: "youth_prevention"
+    },
+    {
+      roleFamily: "care_helping_professions",
+      targetRole:
+        "servizi educativi individuali e di gruppo per persone con disabilità",
+      expected: "disability_support"
+    }
+  ];
+
+  cases.forEach((item) => {
+    const result = detectRoleTarget({
+      roleFamily: item.roleFamily,
+      targetRole: item.targetRole
+    });
+
+    if (result !== item.expected) {
+      throw new Error(
+        `Role target detection failed for ${item.targetRole}. Expected ${item.expected}, got ${result}.`
+      );
+    }
+  });
+});
+
 let failed = 0;
 
 console.log("\nFRINGE Health Check\n");
 
 for (const check of checks) {
   try {
-    check.fn();
+    await check.fn();
     console.log(`✅ ${check.name}`);
   } catch (error) {
     failed += 1;

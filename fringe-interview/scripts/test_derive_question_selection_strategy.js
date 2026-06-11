@@ -57,6 +57,13 @@ async function loadParserBasedInput() {
   }
 }
 
+function buildScenarioProfile(baseProfile, overrides = {}) {
+  return {
+    ...baseProfile,
+    ...overrides
+  };
+}
+
 async function main() {
   const input = await loadParserBasedInput();
 
@@ -66,24 +73,57 @@ async function main() {
     jobFitAnalysis: input.jobFitAnalysis
   });
 
+  const baseProfile = contextResult?.interviewContextProfile || {};
   const bankResult = loadStructuredQuestionBank();
 
-  const rankingResult = rankStructuredQuestions({
-    structuredQuestionBank: bankResult?.structuredQuestionBank,
-    interviewContextProfile: contextResult?.interviewContextProfile
-  });
+  const scenarios = [
+    {
+      label: "JUNIOR",
+      profile: buildScenarioProfile(baseProfile, {
+        seniorityContext: "junior",
+        companyContext: "corporate_structured",
+        defaultTone: "hr_relational",
+        personPerceptionFocus: ["curiosity", "coachability", "collaboration"],
+        questionStrategyBias: ["potential", "validation"]
+      })
+    },
+    {
+      label: "SENIOR",
+      profile: buildScenarioProfile(baseProfile, {
+        seniorityContext: "senior",
+        companyContext: "consultancy_client_facing",
+        defaultTone: "pressure",
+        personPerceptionFocus: ["ownership", "decision", "impact"],
+        questionStrategyBias: ["pressure", "tradeoff", "accountability"]
+      })
+    }
+  ];
 
-  const strategyResult = deriveQuestionSelectionStrategy({
-    interviewContextProfile: contextResult?.interviewContextProfile,
-    rankedStructuredQuestions: rankingResult?.rankedStructuredQuestions
-  });
+  const scenarioOutputs = [];
+
+  for (const scenario of scenarios) {
+    const rankingResult = rankStructuredQuestions({
+      structuredQuestionBank: bankResult?.structuredQuestionBank,
+      interviewContextProfile: scenario.profile
+    });
+
+    const strategyResult = deriveQuestionSelectionStrategy({
+      interviewContextProfile: scenario.profile,
+      rankedStructuredQuestions: rankingResult?.rankedStructuredQuestions
+    });
+
+    scenarioOutputs.push({
+      label: scenario.label,
+      interviewContextProfile: scenario.profile,
+      questionSelectionStrategy: strategyResult?.questionSelectionStrategy
+    });
+  }
 
   const output = {
     source: {
       parserInputPath: input.sourcePath
     },
-    interviewContextProfile: contextResult?.interviewContextProfile,
-    questionSelectionStrategy: strategyResult?.questionSelectionStrategy
+    scenarios: scenarioOutputs
   };
 
   const outputDir = resolveProjectPath("tmp", "question-selection-strategy");
@@ -92,18 +132,32 @@ async function main() {
   const outputPath = resolveProjectPath(
     "tmp",
     "question-selection-strategy",
-    "question_selection_strategy.json"
+    "question_selection_strategy_comparison.json"
   );
 
   await writeFile(outputPath, JSON.stringify(output, null, 2), "utf8");
 
-  console.log("");
-  console.log("=== Context profile ===");
-  console.log(JSON.stringify(output.interviewContextProfile, null, 2));
+  for (const scenario of scenarioOutputs) {
+    console.log("");
+    console.log(`=== ${scenario.label} / Context profile ===`);
+    console.log(JSON.stringify(scenario.interviewContextProfile, null, 2));
 
-  console.log("");
-  console.log("=== Question selection strategy ===");
-  console.log(JSON.stringify(output.questionSelectionStrategy, null, 2));
+    console.log("");
+    console.log(`=== ${scenario.label} / Metadata ===`);
+    console.log(
+      JSON.stringify(scenario?.questionSelectionStrategy?.metadata || {}, null, 2)
+    );
+
+    console.log("");
+    console.log(`=== ${scenario.label} / Selected question keys ===`);
+    console.log(
+      JSON.stringify(
+        scenario?.questionSelectionStrategy?.selectedQuestionKeys || [],
+        null,
+        2
+      )
+    );
+  }
 
   console.log("");
   console.log("=== Output file ===");
@@ -111,7 +165,7 @@ async function main() {
 
   console.log("");
   console.log("=== Done ===");
-  console.log("Question selection strategy derived successfully.");
+  console.log("Question selection strategy comparison derived successfully.");
   console.log("");
 }
 

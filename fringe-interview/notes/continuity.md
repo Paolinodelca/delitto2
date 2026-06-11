@@ -3903,4 +3903,263 @@ Da affrontare DOPO:
 
 ma PRIMA di molte altre estensioni del report.
 
+Professional Perception Roadmap
 
+V1 (fatta)
+
+modello dati
+pagina report
+narrative placeholder
+
+V2
+
+definizione dei blocchi narrativi
+definizione tono FRINGE
+definizione "carezza narrativa"
+
+V3
+
+integrazione LLM
+generazione narrativa guidata
+
+V4
+
+evidenze collegate alle singole risposte
+
+## CONTINUITY UPDATE — 03/06/2026
+
+### Professional Perception (nuova direzione strategica)
+
+È stata introdotta una nuova sezione report:
+
+* Percezione professionale
+* Narrative Layer
+* Credibility Path
+* Perception Gap
+* Evolution Bridge
+
+La sezione è già renderizzata nel report PRO come pagina dedicata "Percezione".
+
+Stato attuale:
+
+* modello dati presente
+* rendering HTML presente
+* contenuti ancora V1 (deterministici)
+* nessuna integrazione LLM ancora effettuata
+
+Decisione presa:
+
+NON procedere ancora con adapter Groq dedicato.
+
+Prima definire con precisione:
+
+* tono FRINGE
+* struttura narrativa
+* blocchi concettuali della percezione professionale
+
+L'integrazione LLM verrà affrontata successivamente.
+
+---
+
+### Intuizione strategica emersa
+
+Possibile spostamento del valore percepito di FRINGE:
+
+da:
+
+"simulatore di colloquio"
+
+verso:
+
+"strumento per capire come vieni percepito durante un colloquio"
+
+Ipotesi da validare durante il beta.
+
+---
+
+### Candidate Experience
+
+Principio guida:
+
+Il candidato non deve mai chiedersi:
+
+* Dove sono?
+* Cosa devo fare adesso?
+
+Flusso ideale:
+
+Landing
+↓
+Preparazione
+↓
+Input CV / ruolo
+↓
+Simulazione
+↓
+Report
+↓
+Feedback
+
+La simulazione rimane guidata.
+
+Il report rimane esplorativo.
+
+---
+
+### Ruolo delle sezioni report
+
+Come vieni percepito
+→ capire
+
+Risposte
+→ dimostrare
+
+CV
+→ posizionare
+
+Checklist
+→ agire
+
+Ridurre progressivamente le ripetizioni tra le sezioni.
+
+---
+
+### Frasi candidate per la landing
+
+Versione attualmente più promettente:
+
+"Forse pensi che ti serva qualcosa che ti alleni a rispondere al tuo prossimo colloquio di lavoro.
+
+Forse quello che ti serve è altro.
+
+Ogni colloquio racconta due storie.
+
+La prima è quella che pensi di raccontare.
+La seconda è quella che l'intervistatore percepisce.
+
+Le due storie non sempre coincidono.
+
+E spesso è proprio in quella distanza che si nasconde la risposta al perché un colloquio che sembrava andato bene non abbia portato al risultato sperato.
+
+FRINGE è nato proprio per esplorare questa distanza."
+
+---
+
+### Priorità prossima sessione
+
+1. Raffinare il contenuto della sezione Percezione.
+2. Definire la Candidate Journey completa.
+3. Definire landing orientata al dolore.
+4. Definire beta test e raccolta feedback.
+5. Solo successivamente:
+
+   * revisione colori semantici
+   * integrazione LLM narrativa
+   * raffinamento estetico.
+
+PREMIUM EVOLUTION LOOP (ALTA PRIORITÀ)
+1. Storico delle simulazioni
+
+Il candidato non deve vedere solo:
+
+simulazione attuale
+
+ma:
+
+simulazione 1
+↓
+simulazione 2
+↓
+simulazione 3
+
+con confronto.
+
+Valore percepito
+
+L'utente deve poter vedere:
+
+come è cambiata la percezione;
+come è cambiata la qualità delle risposte;
+come è cambiata la credibilità;
+come è cambiata la distanza dal ruolo.
+Effetto psicologico
+
+Molto importante.
+
+Passiamo da:
+
+ti valuto
+
+a
+
+ti aiuto a migliorare
+2. Evoluzione percepita
+
+Esempio.
+
+Prima simulazione:
+
+Seniority percepita: Mid
+
+Dopo due iterazioni:
+
+Seniority percepita: Mid+
+
+oppure
+
+Gap leadership ridotto
+
+oppure
+
+Maggiore evidenza di ownership
+
+Questo genera soddisfazione.
+
+3. CV Workspace
+
+Secondo me è fortissimo.
+
+Non:
+
+scarica il report
+e arrangiati
+
+ma:
+
+analisi
+↓
+suggerimenti
+↓
+modifica CV
+↓
+salva nuova versione
+Modalità ideale
+
+Nel report:
+
+Esperienza XYZ
+
+FRINGE suggerisce:
+
+Versione attuale
+
+Versione consigliata
+
+con pulsante:
+
+Applica
+4. Nuovo ciclo di simulazione
+
+Questa secondo me è la vera chiusura del cerchio.
+
+CV attuale
+↓
+Simulazione
+↓
+Analisi
+↓
+Modifica CV
+↓
+Nuova simulazione
+↓
+Confronto risultati
