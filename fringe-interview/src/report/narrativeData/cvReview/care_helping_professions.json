@@ -43,6 +43,95 @@
         "summaryDefault": "Il CV deve essere riorganizzato per rendere più immediata la coerenza con il target. Le esperienze più pertinenti devono essere portate in primo piano, mentre le informazioni meno decisive devono essere compresse o spostate in secondo piano."
       },
 
+      "rewriteInstructions": {
+  "title": "Istruzioni operative per la riscrittura",
+  "moveUpCare": [
+    "formazione psicologica e relazionale",
+    "counseling",
+    "tirocini e attività osservate in contesti educativi o di sostegno"
+  ],
+  "moveUpLearning": [
+    "formazione continua e percorsi di specializzazione"
+  ],
+  "compress": [
+    "esperienze lavorative non direttamente collegate al target",
+    "dettagli operativi che non aiutano a leggere la direzione attuale del profilo"
+  ],
+  "keepAsCredibility": [
+    "continuità lavorativa",
+    "affidabilità maturata nel tempo",
+    "capacità organizzativa"
+  ],
+  "addNarrativeCareerTransition": [
+    "spiegare il filo conduttore della transizione professionale",
+    "collegare esperienze precedenti, formazione recente e direzione futura"
+  ],
+  "addNarrativeCare": [
+    "rendere più concreto l’uso delle competenze relazionali",
+    "mostrare in quali contesti sono state osservate o applicate le competenze di ascolto e sostegno"
+  ]
+},
+        "structureDraft": {
+  "title": "Struttura consigliata del CV",
+  "careerTransitionNote": "Il CV dovrebbe essere riorganizzato per rendere subito leggibile la nuova direzione professionale, senza cancellare le esperienze precedenti.",
+  "defaultNote": "Il CV dovrebbe essere organizzato mettendo prima gli elementi più pertinenti al target e lasciando in secondo piano ciò che è meno decisivo.",
+  "sections": [
+    {
+      "key": "header",
+      "title": "Intestazione",
+      "purpose": "Nome, contatti, eventuale foto professionale sobria."
+    },
+    {
+      "key": "professional_profile",
+      "title": "Profilo professionale",
+      "purpose": "Raccontare subito la direzione professionale e il valore del profilo."
+    },
+    {
+      "key": "key_skills",
+      "title": "Competenze chiave",
+      "purpose": "Mostrare in modo sintetico le competenze più coerenti con il target."
+    },
+    {
+      "key": "relevant_training",
+      "title": "Formazione rilevante",
+      "purpose": "Portare in alto studi, master, specializzazioni e tirocini più vicini al target."
+    },
+    {
+      "key": "relevant_experience",
+      "title": "Esperienze rilevanti",
+      "purpose": "Evidenziare esperienze, tirocini o attività direttamente collegate alla candidatura."
+    },
+    {
+      "key": "other_experience",
+      "title": "Altre esperienze professionali",
+      "purpose": "Mantenere il passato lavorativo come prova di continuità e affidabilità, ma in forma più sintetica."
+    },
+    {
+      "key": "languages_it",
+      "title": "Lingue e competenze informatiche",
+      "purpose": "Chiudere con lingue, strumenti e competenze tecniche di supporto."
+    }
+    ]
+    },
+    "targetFocus": {
+    "discovery": "Senza un target unico, conviene costruire un CV versatile ma non generico: deve far emergere il filo conduttore del percorso, i segnali trasferibili e le aree professionali più coerenti. L'obiettivo non è piacere a tutti, ma aiutare il lettore a capire rapidamente quali sono i punti di forza ricorrenti del profilo, quali contesti valorizzano maggiormente tali caratteristiche e quale direzione professionale emerge con maggiore naturalezza.",
+    "targetWithFocus": "Per il target \"{{targetRole}}\", il CV dovrebbe rendere più visibili soprattutto {{targetFocusText}}. Questi elementi aiutano il lettore a collegare il percorso della candidata al contesto specifico della candidatura, senza trasformare il CV in un elenco generico di competenze.",
+    "careFallback": "Per il target \"{{targetRole}}\", il CV dovrebbe dare maggiore evidenza alle esperienze più vicine alla relazione di aiuto: tirocinio, ascolto, counseling, lavoro con famiglie, giovani, fragilità o disabilità. È importante mostrare non solo la formazione svolta, ma anche in quali contesti queste competenze sono state osservate, praticate o applicate.",
+    "genericFallback": "Per il target \"{{targetRole}}\", il CV dovrebbe rendere più visibili le esperienze, le responsabilità e i risultati più pertinenti, evitando che il profilo resti troppo generico."
+    },
+
+    "credibilityNarratives": {
+  "careerTransitionLearning": "Il CV racconta una traiettoria di evoluzione professionale piuttosto rara. Accanto alla continuità lavorativa emerge la capacità di investire per anni in un nuovo percorso formativo e professionale, costruendo progressivamente nuove competenze e una nuova identità professionale. Questo può essere letto come un segnale di motivazione, perseveranza e capacità di apprendimento nel lungo periodo.",
+  "careLearningCollaboration": "Il CV costruisce credibilità attraverso una combinazione molto riconoscibile: formazione continua, attenzione alla relazione di aiuto e capacità di lavorare con persone in contesti delicati. Non racconta soltanto un cambio di ambito professionale, ma una traiettoria in cui studio, tirocinio, counseling e psicologia sembrano convergere verso il sostegno educativo e relazionale. Questo è un patrimonio importante da rendere più esplicito, perché può parlare bene a servizi rivolti a famiglie, giovani, fragilità e disabilità.",
+  "methodAnalysisCollaboration": "Il CV costruisce credibilità soprattutto attraverso metodo, capacità di analisi e collaborazione. Non comunica solo una somma di strumenti o attività: suggerisce una persona abituata a leggere informazioni, organizzarle e renderle utili dentro contesti di lavoro condivisi. Questo è un punto forte da valorizzare meglio, perché può rendere il profilo spendibile in ruoli dove servono ordine, affidabilità e capacità di collegare dati, persone e priorità.",
+  "methodCommunication": "Il CV comunica una base professionale costruita su metodo e chiarezza. Questi segnali possono raccontare una persona capace di dare struttura al lavoro e rendere comprensibile il proprio contributo. Per aumentare la forza del profilo, conviene collegare questi elementi a risultati, responsabilità e contesti concreti.",
+  "visibleLabels": "Il CV contiene segnali utili, tra cui {{visibleLabelsText}}. Il passo successivo è trasformarli da elenco di competenze a racconto professionale: cosa rendono credibile, in quali contesti sono stati usati e quale valore hanno prodotto.",
+  "summaryFallback": "Il CV comunica una base professionale riconoscibile. {{summary}} Il passo successivo è rendere più chiaro quali elementi del percorso costruiscono credibilità, trasferibilità e valore professionale.",
+  "genericFallback": "Il CV mostra elementi utili, ma non ancora abbastanza organizzati per far emergere con forza il bagaglio professionale."
+    },
+
+
+
       "narrativeRepositioning": {
         "title": "Riposizionamento narrativo",
         "professionalTitleDiscovery": "Profilo in transizione verso l’area educativa e di sostegno alla persona",

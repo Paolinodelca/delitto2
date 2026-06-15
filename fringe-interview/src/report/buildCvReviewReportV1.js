@@ -193,7 +193,8 @@ function buildTargetFocusNarrative({
   targetMode = "cv_discovery",
   targetRole = "",
   traits = {},
-  roleTargetProfile = {}
+  roleTargetProfile = {},
+  cvReviewNarratives = {}
 } = {}) {
   const cleanTargetRole = normalizeString(targetRole);
   const targetFocus = ensureArray(roleTargetProfile?.focus)
@@ -202,33 +203,42 @@ function buildTargetFocusNarrative({
     .slice(0, 5);
 
   const targetFocusText = humanizeSignalList(targetFocus);
+  const templates = cvReviewNarratives?.targetFocus || {};
+
 
   if (targetMode === "cv_discovery") {
-    return (
-      `Senza un target unico, conviene costruire un CV versatile ma non generico: deve far emergere il filo conduttore del percorso, i segnali trasferibili e le aree professionali più coerenti. ` +
-      `L'obiettivo non è piacere a tutti, ma aiutare il lettore a capire rapidamente quali sono i punti di forza ricorrenti del profilo, quali contesti valorizzano maggiormente tali caratteristiche e quale direzione professionale emerge con maggiore naturalezza.`
-    );
-  }
-
-  if (targetFocusText) {
-    return (
-      `Per il target "${cleanTargetRole}", il CV dovrebbe rendere più visibili soprattutto ${targetFocusText}. ` +
-      `Questi elementi aiutano il lettore a collegare il percorso della candidata al contesto specifico della candidatura, senza trasformare il CV in un elenco generico di competenze.`
-    );
-  }
-
-  if (traits.careOrientation) {
-    return (
-      `Per il target "${cleanTargetRole}", il CV dovrebbe dare maggiore evidenza alle esperienze più vicine alla relazione di aiuto: tirocinio, ascolto, counseling, lavoro con famiglie, giovani, fragilità o disabilità. ` +
-      `È importante mostrare non solo la formazione svolta, ma anche in quali contesti queste competenze sono state osservate, praticate o applicate.`
-    );
-  }
-
   return (
-    `Per il target "${cleanTargetRole}", il CV dovrebbe rendere più visibili le esperienze, le responsabilità e i risultati più pertinenti, evitando che il profilo resti troppo generico.`
+    templates.discovery ||
+    "Senza un target unico, conviene costruire un CV versatile ma non generico: deve far emergere il filo conduttore del percorso, i segnali trasferibili e le aree professionali più coerenti. L'obiettivo non è piacere a tutti, ma aiutare il lettore a capire rapidamente quali sono i punti di forza ricorrenti del profilo, quali contesti valorizzano maggiormente tali caratteristiche e quale direzione professionale emerge con maggiore naturalezza."
   );
 }
 
+if (targetFocusText) {
+  return (
+    applyTemplate(templates.targetWithFocus, {
+      targetRole: cleanTargetRole,
+      targetFocusText
+    }) ||
+    `Per il target "${cleanTargetRole}", il CV dovrebbe rendere più visibili soprattutto ${targetFocusText}. Questi elementi aiutano il lettore a collegare il percorso della candidata al contesto specifico della candidatura, senza trasformare il CV in un elenco generico di competenze.`
+  );
+}
+
+if (traits.careOrientation) {
+  return (
+    applyTemplate(templates.careFallback, {
+      targetRole: cleanTargetRole
+    }) ||
+    `Per il target "${cleanTargetRole}", il CV dovrebbe dare maggiore evidenza alle esperienze più vicine alla relazione di aiuto: tirocinio, ascolto, counseling, lavoro con famiglie, giovani, fragilità o disabilità. È importante mostrare non solo la formazione svolta, ma anche in quali contesti queste competenze sono state osservate, praticate o applicate.`
+  );
+}
+
+return (
+  applyTemplate(templates.genericFallback, {
+    targetRole: cleanTargetRole
+  }) ||
+  `Per il target "${cleanTargetRole}", il CV dovrebbe rendere più visibili le esperienze, le responsabilità e i risultati più pertinenti, evitando che il profilo resti troppo generico.`
+);
+}
 
 function buildCvTransformationPlan({
   targetMode = "cv_discovery",
@@ -482,12 +492,14 @@ function buildCvKeySkillsDraft({
   };
 }
 
-
 function buildCvStructureDraft({
   traits = {},
-  targetMode = "cv_discovery"
+  targetMode = "cv_discovery",
+  cvReviewNarratives = {}
 } = {}) {
-  const sections = [
+  const templates = cvReviewNarratives?.structureDraft || {};
+
+  const fallbackSections = [
     {
       key: "header",
       title: "Intestazione",
@@ -526,73 +538,64 @@ function buildCvStructureDraft({
   ];
 
   return {
-    title: "Struttura consigliata del CV",
+    title: templates.title || "Struttura consigliata del CV",
     rationale:
       traits.careerTransition
-        ? "Il CV dovrebbe essere riorganizzato per rendere subito leggibile la nuova direzione professionale, senza cancellare le esperienze precedenti."
-        : "Il CV dovrebbe essere organizzato mettendo prima gli elementi più pertinenti al target e lasciando in secondo piano ciò che è meno decisivo.",
-    sections
+        ? templates.careerTransitionNote ||
+          "Il CV dovrebbe essere riorganizzato per rendere subito leggibile la nuova direzione professionale, senza cancellare le esperienze precedenti."
+        : templates.defaultNote ||
+          "Il CV dovrebbe essere organizzato mettendo prima gli elementi più pertinenti al target e lasciando in secondo piano ciò che è meno decisivo.",
+    sections:
+      ensureArray(templates.sections).length > 0
+        ? templates.sections
+        : fallbackSections
   };
 }
 
 function buildCvRewriteInstructions({
   traits = {},
-  roleTargetProfile = {}
+  roleTargetProfile = {},
+  cvReviewNarratives = {}
 } = {}) {
- const targetSkillLabels = ensureArray(roleTargetProfile?.skillLabels)
-  .map(normalizeString)
-  .filter(Boolean)
-  .slice(0, 5);
+  const targetSkillLabels = ensureArray(roleTargetProfile?.skillLabels)
+    .map(normalizeString)
+    .filter(Boolean)
+    .slice(0, 5);
+
+  const templates = cvReviewNarratives?.rewriteInstructions || {};
 
   const moveUp = [];
 
   if (traits.careOrientation) {
-    moveUp.push(
-      "formazione psicologica e relazionale",
-      "counseling",
-      "tirocini e attività osservate in contesti educativi o di sostegno"
-    );
+    moveUp.push(...ensureArray(templates.moveUpCare));
   }
 
   if (traits.learningOrientation) {
-    moveUp.push("formazione continua e percorsi di specializzazione");
+    moveUp.push(...ensureArray(templates.moveUpLearning));
   }
 
   targetSkillLabels.forEach((item) => {
-  if (!moveUp.includes(item)) {
-    moveUp.push(item);
-  }
+    if (!moveUp.includes(item)) {
+      moveUp.push(item);
+    }
   });
 
-  const compress = [
-    "esperienze lavorative non direttamente collegate al target",
-    "dettagli operativi che non aiutano a leggere la direzione attuale del profilo"
-  ];
+  const compress = ensureArray(templates.compress);
 
-  const keepAsCredibility = [
-    "continuità lavorativa",
-    "affidabilità maturata nel tempo",
-    "capacità organizzativa"
-  ];
+  const keepAsCredibility = ensureArray(templates.keepAsCredibility);
 
   const addNarrative = [];
 
   if (traits.careerTransition) {
-    addNarrative.push(
-      "spiegare il filo conduttore della transizione professionale",
-      "collegare esperienze precedenti, formazione recente e direzione futura"
-    );
+    addNarrative.push(...ensureArray(templates.addNarrativeCareerTransition));
   }
 
   if (traits.careOrientation) {
-    addNarrative.push(
-      "rendere più concreto l’uso delle competenze relazionali",
-      "mostrare in quali contesti sono state osservate o applicate le competenze di ascolto e sostegno"
-    );
+    addNarrative.push(...ensureArray(templates.addNarrativeCare));
   }
 
   return {
-    title: "Istruzioni operative per la riscrittura",
+    title: templates.title || "Istruzioni operative per la riscrittura",
     moveUp: moveUp.slice(0, 8),
     compress,
     keepAsCredibility,
@@ -864,69 +867,72 @@ function buildCvProfessionalTraits(signals = {}) {
   };
 }
 
-function buildCvCredibilityNarrative({ summary = "", traits = {}, visibleLabels = [], roleFamilyProfile = {} } = {}) {
-    
-    
-    const credibilityTemplate =
-  roleFamilyProfile?.credibilityNarrativeTemplates?.primary;
+function buildCvCredibilityNarrative({
+  summary = "",
+  traits = {},
+  visibleLabels = [],
+  roleFamilyProfile = {},
+  cvReviewNarratives = {}
+} = {}) {
+  const templates = cvReviewNarratives?.credibilityNarratives || {};
+
+  const credibilityTemplate =
+    roleFamilyProfile?.credibilityNarrativeTemplates?.primary;
 
   if (
-  credibilityTemplate &&
-  traits.careOrientation &&
-  traits.learningOrientation
-) {
-  return credibilityTemplate;
-}
-    if (
-  traits.careerTransition &&
-  traits.learningOrientation
-) {
-  return (
-    `Il CV racconta una traiettoria di evoluzione professionale piuttosto rara. ` +
-    `Accanto alla continuità lavorativa emerge la capacità di investire per anni in un nuovo percorso formativo e professionale, costruendo progressivamente nuove competenze e una nuova identità professionale. ` +
-    `Questo può essere letto come un segnale di motivazione, perseveranza e capacità di apprendimento nel lungo periodo.`
-     );
-    }
+    credibilityTemplate &&
+    traits.careOrientation &&
+    traits.learningOrientation
+  ) {
+    return credibilityTemplate;
+  }
 
-      if (
+  if (traits.careerTransition && traits.learningOrientation) {
+    return (
+      templates.careerTransitionLearning ||
+      "Il CV racconta una traiettoria di evoluzione professionale piuttosto rara. Accanto alla continuità lavorativa emerge la capacità di investire per anni in un nuovo percorso formativo e professionale, costruendo progressivamente nuove competenze e una nuova identità professionale. Questo può essere letto come un segnale di motivazione, perseveranza e capacità di apprendimento nel lungo periodo."
+    );
+  }
+
+  if (
     traits.careOrientation &&
     traits.learningOrientation &&
     traits.collaboration
   ) {
     return (
-      `Il CV costruisce credibilità attraverso una combinazione molto riconoscibile: formazione continua, attenzione alla relazione di aiuto e capacità di lavorare con persone in contesti delicati. ` +
-      `Non racconta soltanto un cambio di ambito professionale, ma una traiettoria in cui studio, tirocinio, counseling e psicologia sembrano convergere verso il sostegno educativo e relazionale. ` +
-      `Questo è un patrimonio importante da rendere più esplicito, perché può parlare bene a servizi rivolti a famiglie, giovani, fragilità e disabilità.`
+      templates.careLearningCollaboration ||
+      "Il CV costruisce credibilità attraverso una combinazione molto riconoscibile: formazione continua, attenzione alla relazione di aiuto e capacità di lavorare con persone in contesti delicati. Non racconta soltanto un cambio di ambito professionale, ma una traiettoria in cui studio, tirocinio, counseling e psicologia sembrano convergere verso il sostegno educativo e relazionale. Questo è un patrimonio importante da rendere più esplicito, perché può parlare bene a servizi rivolti a famiglie, giovani, fragilità e disabilità."
     );
   }
 
-
   if (traits.method && traits.analysis && traits.collaboration) {
     return (
-      `Il CV costruisce credibilità soprattutto attraverso metodo, capacità di analisi e collaborazione. ` +
-      `Non comunica solo una somma di strumenti o attività: suggerisce una persona abituata a leggere informazioni, organizzarle e renderle utili dentro contesti di lavoro condivisi. ` +
-      `Questo è un punto forte da valorizzare meglio, perché può rendere il profilo spendibile in ruoli dove servono ordine, affidabilità e capacità di collegare dati, persone e priorità.`
+      templates.methodAnalysisCollaboration ||
+      "Il CV costruisce credibilità soprattutto attraverso metodo, capacità di analisi e collaborazione. Non comunica solo una somma di strumenti o attività: suggerisce una persona abituata a leggere informazioni, organizzarle e renderle utili dentro contesti di lavoro condivisi. Questo è un punto forte da valorizzare meglio, perché può rendere il profilo spendibile in ruoli dove servono ordine, affidabilità e capacità di collegare dati, persone e priorità."
     );
   }
 
   if (traits.method && traits.communication) {
     return (
-      `Il CV comunica una base professionale costruita su metodo e chiarezza. ` +
-      `Questi segnali possono raccontare una persona capace di dare struttura al lavoro e rendere comprensibile il proprio contributo. ` +
-      `Per aumentare la forza del profilo, conviene collegare questi elementi a risultati, responsabilità e contesti concreti.`
+      templates.methodCommunication ||
+      "Il CV comunica una base professionale costruita su metodo e chiarezza. Questi segnali possono raccontare una persona capace di dare struttura al lavoro e rendere comprensibile il proprio contributo. Per aumentare la forza del profilo, conviene collegare questi elementi a risultati, responsabilità e contesti concreti."
     );
   }
 
   if (visibleLabels.length > 0) {
     return (
-      `Il CV contiene segnali utili, tra cui ${humanizeSignalList(visibleLabels)}. ` +
-      `Il passo successivo è trasformarli da elenco di competenze a racconto professionale: cosa rendono credibile, in quali contesti sono stati usati e quale valore hanno prodotto.`
+      applyTemplate(templates.visibleLabels, {
+        visibleLabelsText: humanizeSignalList(visibleLabels)
+      }) ||
+      `Il CV contiene segnali utili, tra cui ${humanizeSignalList(visibleLabels)}. Il passo successivo è trasformarli da elenco di competenze a racconto professionale: cosa rendono credibile, in quali contesti sono stati usati e quale valore hanno prodotto.`
     );
   }
 
   return summary
-    ? `Il CV comunica una base professionale riconoscibile. ${summary} Il passo successivo è rendere più chiaro quali elementi del percorso costruiscono credibilità, trasferibilità e valore professionale.`
-    : "Il CV mostra elementi utili, ma non ancora abbastanza organizzati per far emergere con forza il bagaglio professionale.";
+    ? applyTemplate(templates.summaryFallback, { summary }) ||
+        `Il CV comunica una base professionale riconoscibile. ${summary} Il passo successivo è rendere più chiaro quali elementi del percorso costruiscono credibilità, trasferibilità e valore professionale.`
+    : templates.genericFallback ||
+        "Il CV mostra elementi utili, ma non ancora abbastanza organizzati per far emergere con forza il bagaglio professionale.";
 }
 
 function buildCvReviewReportV1({
@@ -1008,12 +1014,15 @@ const roleTargetProfile = getRoleTargetNarrativeProfile({
 
     credibilityAssets: {
       title: "Bagaglio di credibilità",
+      
+      
       narrative: buildCvCredibilityNarrative({
-        summary,
-        traits: cvProfessionalTraits,
-         visibleLabels,
-        roleFamilyProfile
-        })
+  summary,
+  traits: cvProfessionalTraits,
+  visibleLabels,
+  roleFamilyProfile,
+  cvReviewNarratives
+  })
 
 
     },
@@ -1070,7 +1079,8 @@ targetFocus: {
     targetMode,
     targetRole,
     traits: cvProfessionalTraits,
-    roleTargetProfile
+    roleTargetProfile,
+    cvReviewNarratives
   })
 },
 
@@ -1089,8 +1099,9 @@ cvTransformationPlan: buildCvTransformationPlan({
   targetRole,
   traits: cvProfessionalTraits,
   roleFamilyProfile,
-  roleTargetProfile
-}),
+  roleTargetProfile,
+  cvReviewNarratives
+  }),
 
  cvOpeningDraft: buildCvOpeningDraft({
   targetMode,
@@ -1106,13 +1117,15 @@ cvTransformationPlan: buildCvTransformationPlan({
 
   cvStructureDraft: buildCvStructureDraft({
   traits: cvProfessionalTraits,
-  targetMode
+  targetMode,
+  cvReviewNarratives
   }),
 
   cvRewriteInstructions: buildCvRewriteInstructions({
   traits: cvProfessionalTraits,
-  roleTargetProfile
-  }),
+  roleTargetProfile,
+  cvReviewNarratives
+}),
 
   cvSectionRewritePlan: buildCvSectionRewritePlan({
   roleTargetProfile
