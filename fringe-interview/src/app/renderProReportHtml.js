@@ -1,4 +1,5 @@
 import { assembleReportSectionData } from "../report/assembleReportSectionData.js";
+import loadProReportNarrativeData from "../report/narrativeProfiles/loadProReportNarrativeData.js";
 
 function ensureArray(value) {
   return Array.isArray(value) ? value : [];
@@ -2410,27 +2411,27 @@ function renderSensitiveQuestionsModule(module) {
   `;
 }
 
-function buildFriendlySensitiveAdvice(item) {
+function buildFriendlySensitiveAdvice(item, {
+  roleFamily = "care_helping_professions",
+  locale = "it"
+} = {}) {
   const type = String(item?.type || "").toLowerCase();
   const note = text(item?.note, "");
 
-  if (type === "motivation_for_change") {
-    return "Preparerei una risposta breve e pulita: da dove parti oggi, che cosa cerchi adesso e perché questo ruolo è un passo coerente. Eviterei risposte troppo generiche o troppo centrate su ciò che non ti piace del lavoro attuale.";
-  }
+  const proReportNarratives = loadProReportNarrativeData({
+    roleFamily,
+    locale
+  });
 
-  if (type === "role_fit") {
-    return "Qui non basta dire che hai competenze utili. Conviene costruire un ponte chiaro: esperienza passata, competenze trasferibili, ruolo target. La domanda implicita è: perché proprio questo passaggio ha senso adesso?";
-  }
+  const sensitiveAdvice =
+    proReportNarratives?.sensitiveAdvice || {};
 
-  if (type === "conflict_pressure") {
-    return "Se questo tema conta per il ruolo, preparerei un episodio concreto: situazione, tensione, tua scelta, risultato. Meglio un caso semplice ma vero che una risposta generica sulla capacità di lavorare sotto pressione.";
-  }
-
-  if (type === "profile_gap") {
-    return "Non cercherei di nascondere il gap. Meglio riconoscerlo con lucidità e compensarlo: esperienze vicine, strumenti simili, apprendimento già avviato, o contesti in cui hai affrontato problemi analoghi.";
-  }
-
-  return note || "Preparerei questo punto con una risposta breve, concreta e collegata al ruolo target.";
+  return (
+    sensitiveAdvice[type] ||
+    note ||
+    sensitiveAdvice.default ||
+    "Preparerei questo punto con una risposta breve, concreta e collegata al ruolo target."
+  );
 }
 
 

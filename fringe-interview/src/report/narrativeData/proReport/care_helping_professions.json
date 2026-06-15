@@ -1,0 +1,28 @@
+{
+  "family": "care_helping_professions",
+  "locales": {
+    "it": {
+      "professionalPerception": {},
+
+      "quickReading": {},
+
+      "priorities": {},
+
+      "checklist": {},
+
+      "sensitiveAdvice": {
+        "motivation_for_change": "Preparerei una risposta breve e pulita: da dove parti oggi, che cosa cerchi adesso e perché questo ruolo è un passo coerente. Eviterei risposte troppo generiche o troppo centrate su ciò che non ti piace del lavoro attuale.",
+
+        "role_fit": "Qui non basta dire che hai competenze utili. Conviene costruire un ponte chiaro: esperienza passata, competenze trasferibili, ruolo target. La domanda implicita è: perché proprio questo passaggio ha senso adesso?",
+
+        "conflict_pressure": "Se questo tema conta per il ruolo, preparerei un episodio concreto: situazione, tensione, tua scelta, risultato. Meglio un caso semplice ma vero che una risposta generica sulla capacità di lavorare sotto pressione.",
+
+        "profile_gap": "Non cercherei di nascondere il gap. Meglio riconoscerlo con lucidità e compensarlo: esperienze vicine, strumenti simili, apprendimento già avviato, o contesti in cui hai affrontato problemi analoghi.",
+
+        "default": "Preparerei questo punto con una risposta breve, concreta e collegata al ruolo target."
+      },
+
+      "cvSignals": {}
+    }
+  }
+}
