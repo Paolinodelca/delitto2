@@ -1,0 +1,70 @@
+{
+  "family": "care_helping_professions",
+
+  "locales": {
+    "it": {
+      "label": "relazione di aiuto, educazione e fragilità",
+
+      "vocabulary": [
+        "ascolto",
+        "sostegno",
+        "famiglie",
+        "giovani",
+        "fragilità",
+        "disabilità",
+        "équipe",
+        "relazione di aiuto"
+      ],
+
+      "credibilityFocus": [
+        "presenza relazionale",
+        "formazione continua",
+        "ascolto",
+        "lavoro in contesti delicati"
+      ],
+
+      "riskFocus": [
+        "filo conduttore della transizione",
+        "contesti concreti di applicazione",
+        "ruolo professionale da chiarire"
+      ],
+
+      "rewriteProfile":
+        "Professionista con formazione psicologica e relazionale orientata ai servizi educativi, al sostegno della persona e ai contesti di aiuto.",
+
+      "rewriteSkills": [
+        "Ascolto e relazione di aiuto",
+        "Sostegno alla persona",
+        "Collaborazione in contesti educativi",
+        "Lavoro con famiglie e situazioni di fragilità",
+        "Formazione continua e aggiornamento professionale"
+      ],
+
+      "rewriteKeywords": [
+        "educazione",
+        "sostegno",
+        "relazione",
+        "famiglie",
+        "fragilità"
+      ],
+
+      "rewriteOutput": {
+        "professionalProfile":
+          "Professionista con formazione psicologica e relazionale orientata ai servizi educativi, al sostegno della persona e ai contesti di aiuto.",
+
+        "trainingOrdering": [
+          "Specializzazioni e formazione professionale",
+          "Tirocini e attività formative rilevanti",
+          "Formazione universitaria",
+          "Altra formazione"
+        ],
+
+        "experienceOrdering": [
+          "Esperienze direttamente collegate al target",
+          "Esperienze con competenze trasferibili",
+          "Esperienze meno rilevanti ma utili come credibilità"
+        ]
+      }
+    }
+  }
+}

@@ -1,3 +1,5 @@
+import loadRoleTargetNarrativeData from "./loadRoleTargetNarrativeData.js";
+
 const ROLE_TARGET_NARRATIVE_PROFILES = {
   care_helping_professions: {
     family_support: {
@@ -75,7 +77,24 @@ const ROLE_TARGET_NARRATIVE_PROFILES = {
         ],
         credibilityHints: [],
         riskHints: [],
-        openingKeywords: []
+        openingKeywords: [],
+        rewriteOutput: {
+  professionalProfile:
+    "Professionista con formazione psicologica e relazionale, orientata a disabilità e sostegno educativo. Ha sviluppato nel tempo competenze di ascolto, collaborazione e sostegno alla persona attraverso formazione continua, counseling, tirocini e percorsi di specializzazione.",
+
+  trainingOrdering: [
+    "Specializzazioni e formazione professionale",
+    "Tirocini e attività formative rilevanti",
+    "Formazione universitaria",
+    "Altra formazione"
+    ],
+
+  experienceOrdering: [
+    "Esperienze direttamente collegate al target",
+    "Esperienze con competenze trasferibili",
+    "Esperienze meno rilevanti ma utili come credibilità"
+    ]
+    }
       },
       en: {
         label: "disability and educational support",
@@ -89,7 +108,24 @@ const ROLE_TARGET_NARRATIVE_PROFILES = {
         ],
         credibilityHints: [],
         riskHints: [],
-        openingKeywords: []
+        openingKeywords: [],
+        rewriteOutput: {
+    professionalProfile:
+    "Professional with psychological and relational training, oriented towards disability support and educational services. Over time, she has developed listening, collaboration and personal support skills through continuous training, counselling, internships and specialist learning paths.",
+
+    trainingOrdering: [
+    "Specialist and professional training",
+    "Relevant internships and practical training",
+    "University education",
+    "Other training"
+    ],
+
+    experienceOrdering: [
+    "Experiences directly connected to the target",
+    "Experiences with transferable skills",
+    "Less relevant experiences kept as credibility signals"
+    ]
+    }
       }
     }
   },
@@ -480,6 +516,16 @@ export function getRoleTargetNarrativeProfile({
   roleTarget = "",
   locale = "it"
 } = {}) {
+  const dataProfile = loadRoleTargetNarrativeData({
+    roleFamily,
+    roleTarget,
+    locale
+  });
+
+  if (dataProfile) {
+    return dataProfile;
+  }
+
   const familyTargets = ROLE_TARGET_NARRATIVE_PROFILES[roleFamily] || {};
   const targetProfile = familyTargets[roleTarget] || null;
 

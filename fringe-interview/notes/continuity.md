@@ -4163,3 +4163,15 @@ Modifica CV
 Nuova simulazione
 ↓
 Confronto risultati
+
+## Decisione strategica importante
+
+La bonifica hardcoding non è considerata conclusa quando i testi vengono spostati da un builder a un file .js.
+
+La bonifica sarà considerata conclusa solo quando:
+
+* i contenuti saranno in Narrative Data esterni
+* il motore leggerà tali dati tramite loader
+* nuove famiglie e nuove lingue potranno essere aggiunte tramite sostituzione o aggiunta di file dati completi
+
+Questa è la direzione architetturale ufficiale del progetto.

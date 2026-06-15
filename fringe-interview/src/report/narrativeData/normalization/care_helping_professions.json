@@ -1,0 +1,29 @@
+{
+  "careerTransition": {
+    "triggers": [
+      "psicologia",
+      "counseling",
+      "psicoterapia",
+      "sostegno",
+      "educativo",
+      "relazione di aiuto",
+      "autismo",
+      "consultorio",
+      "tirocinio"
+    ],
+    "legacyAreas": {
+      "logistics_admin": {
+        "triggers": ["logistica", "doganale", "importazione"],
+        "label": "logistica e operazioni doganali"
+      }
+    },
+    "normalized": {
+      "senioritySignal": "mid",
+      "totalYearsDetected": "20+",
+      "targetRelevantYearsDetected": "1-3",
+      "targetExperienceArea": "psicologia, counseling, tirocini, sostegno educativo e relazione di aiuto",
+      "summary": "Professionista con lunga esperienza lavorativa in ambito logistico-amministrativo e percorso progressivo di riqualificazione verso psicologia, counseling, psicoterapia, sostegno alla persona e servizi educativi.",
+      "currentPositioning": "Psicologa in formazione psicoterapeutica, con esperienza in counseling e tirocini in ambito psicologico, educativo e di sostegno alla persona."
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "family": "care_helping_professions",
+  "locales": {
+    "it": {
+      "targets": {
+        "family_support": {
+          "label": "infanzia, famiglie e genitorialità",
+          "focus": ["famiglie", "genitorialità", "relazione educativa", "home visiting", "sostegno familiare"],
+          "skillLabels": [
+            "Lavoro con famiglie e contesti educativi",
+            "Sostegno alla genitorialità",
+            "Relazione educativa",
+            "Home visiting e supporto domiciliare",
+            "Sostegno familiare"
+          ]
+        },
+        "youth_prevention": {
+          "label": "giovani, ascolto e prevenzione",
+          "focus": ["giovani", "prevenzione", "sportelli di ascolto", "educazione affettiva", "dipendenze"],
+          "skillLabels": [
+            "Ascolto e supporto a giovani e adolescenti",
+            "Prevenzione e promozione del benessere",
+            "Sportelli di ascolto",
+            "Educazione affettiva e relazionale",
+            "Prevenzione delle dipendenze"
+          ]
+        },
+        "disability_support": {
+          "label": "disabilità e sostegno educativo",
+          "focus": ["disabilità", "sostegno educativo", "autonomia", "inclusione", "progetto educativo"],
+          "skillLabels": [
+            "Sostegno educativo a persone con disabilità",
+            "Supporto all’autonomia",
+            "Inclusione e partecipazione",
+            "Progettazione educativa",
+            "Collaborazione con équipe e famiglie"
+          ],
+          "rewriteOutput": {
+            "professionalProfile": "Professionista con formazione psicologica e relazionale, orientata a disabilità e sostegno educativo. Ha sviluppato nel tempo competenze di ascolto, collaborazione e sostegno alla persona attraverso formazione continua, counseling, tirocini e percorsi di specializzazione.",
+            "trainingOrdering": [
+              "Specializzazioni e formazione professionale",
+              "Tirocini e attività formative rilevanti",
+              "Formazione universitaria",
+              "Altra formazione"
+            ],
+            "experienceOrdering": [
+              "Esperienze direttamente collegate al target",
+              "Esperienze con competenze trasferibili",
+              "Esperienze meno rilevanti ma utili come credibilità"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

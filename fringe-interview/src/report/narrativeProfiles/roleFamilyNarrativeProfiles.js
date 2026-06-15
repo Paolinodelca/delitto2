@@ -213,6 +213,24 @@ const ROLE_FAMILY_NARRATIVE_PROFILES = {
   "fragilità"
   ],
 
+  rewriteOutput: {
+  professionalProfile:
+    "Professionista con formazione psicologica e relazionale orientata ai servizi educativi, al sostegno della persona e ai contesti di aiuto.",
+
+  trainingOrdering: [
+    "Specializzazioni e formazione professionale",
+    "Tirocini e attività formative rilevanti",
+    "Formazione universitaria",
+    "Altra formazione"
+  ],
+
+  experienceOrdering: [
+    "Esperienze direttamente collegate al target",
+    "Esperienze con competenze trasferibili",
+    "Esperienze meno rilevanti ma utili come credibilità"
+  ]
+  },
+
       discoveryDirections: ["servizi per famiglie", "sportelli di ascolto", "prevenzione giovani", "supporto educativo", "servizi per disabilità"]
     },
     en: {
@@ -248,6 +266,25 @@ const ROLE_FAMILY_NARRATIVE_PROFILES = {
   "families",
   "vulnerability"
   ],
+
+
+  rewriteOutput: {
+  professionalProfile:
+    "Professionista con formazione psicologica e relazionale orientata ai servizi educativi, al sostegno della persona e ai contesti di aiuto.",
+
+  trainingOrdering: [
+    "Specializzazioni e formazione professionale",
+    "Tirocini e attività formative rilevanti",
+    "Formazione universitaria",
+    "Altra formazione"
+  ],
+
+  experienceOrdering: [
+    "Esperienze direttamente collegate al target",
+    "Esperienze con competenze trasferibili",
+    "Esperienze meno rilevanti ma utili come credibilità"
+  ]
+  },
 
       discoveryDirections: ["family services", "listening desks", "youth prevention", "educational support", "disability services"]
     }

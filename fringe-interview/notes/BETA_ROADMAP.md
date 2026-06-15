@@ -283,7 +283,7 @@ Le narrative CV Discovery devono restare universali.
 
 Le narrative specifiche di settore devono essere delegate alle future Role Family Narrative.
 
-c Nuova priorità — Role Target Narrative Layer
+## Nuova priorità — Role Target Narrative Layer
 
 Problema emerso durante i test reali:
 
@@ -297,7 +297,7 @@ care_helping_professions
 
 * family_support
 * youth_prevention
-* disability_autism
+* disability_support
 * mental_health
 * addiction_support
 
@@ -328,7 +328,7 @@ Esempio:
 
 care_helping_professions
 ↓
-disability_autism
+disability_support
 ↓
 narrative specifiche
 credibility focus specifici
@@ -390,7 +390,7 @@ care_helping_professions
 
 * family_support
 * youth_prevention
-* disability_autism
+* disability_support
 
 administration_finance_backoffice
 
@@ -432,20 +432,21 @@ IN PROGRESS
 
 componenti completati:
 
-✅ Profile Read
-✅ Credibility Assets
-✅ Reading Risk
-✅ Possible Directions
-✅ Target Focus
-✅ Role Target Layer
-✅ CV Transformation Plan
+✅ Narrative Repositioning
+✅ CV Opening Draft
+✅ CV Key Skills Draft
+✅ CV Structure Draft
+✅ CV Rewrite Instructions
+✅ CV Section Rewrite Plan
+✅ CV Rewrite Output V1
 
 componenti future:
 
-⬜ Narrative Repositioning
 ⬜ CV Before / After Comparison
 ⬜ Cover Letter Generation
 ⬜ Transformation Impact Scoring
+⬜ Experience Rewrite Engine
+⬜ Training Rewrite Engine
 
 Per il futuro: CV Opening Draft
 ↓
@@ -478,4 +479,49 @@ aggiunte incrementalmente
 facile localizzazione IT/EN/FR/DE/ES
 aggiornamenti tramite singolo copia-incolla
 
+## Lezione per Fringe:
+
+CV Rewrite
+≠ aggiungere contenuto
+
+CV Rewrite
+= aumentare la densità informativa
+senza aumentare la lunghezza
+
+CV Before / After Comparison Engine
+
+Output futuro:
+
+Cosa è cambiato
+Cosa è migliorato
+Quali rischi si sono ridotti
+Quali segnali sono diventati più visibili
+Impatto stimato sul target
+
+ ## Target-Relevant Seniority
+
+non basta stimare la seniority totale
+serve stimare la seniority pertinente al target.
+
+Il profilo andrà normalizzato prima del CV Review:
+Nel futuro lo farà un adapter ma è ancora da implementare (rilevante per i casi tipo Giulia con cambiamento di percorso): passo tecnico da segnare: si deve creare
+
+src/report/normalizeParsedCandidateProfileForCvReview.js
+
+che farà esattamente questa trasformazione, senza correzioni manuali nello script.
+
+Per ora il test è validato: il parser esiste, ma va normalizzato prima di alimentare il motore CV.
+
+ ## Regola da scolpire
+
+Da ora in poi:
+
+Il motore non deve contenere linguaggio professionale.
+Il motore deve solo leggere profili narrativi.
+
+Quindi:
+
+codice = logica
+narrativeProfiles = linguaggio
+config = struttura
 

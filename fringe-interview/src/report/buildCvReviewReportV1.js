@@ -1,3 +1,7 @@
+import loadCvReviewNarrativeData, {
+  applyTemplate
+} from "./narrativeProfiles/loadCvReviewNarrativeData.js";
+
 import getRoleFamilyNarrativeProfile from "./roleFamilyNarrativeProfiles.js";
 import detectRoleTarget from "./detectRoleTarget.js";
 import getRoleTargetNarrativeProfile from "./roleTargetNarrativeProfiles.js";
@@ -30,7 +34,12 @@ function buildPossibleDirectionsNarrative({
   roleTargetProfile = {}
 } = {}) {
   const cleanTargetRole = normalizeString(targetRole);
+  const cvReviewNarratives = loadCvReviewNarrativeData({
+  roleFamily: roleFamilyProfile?.key || "care_helping_professions",
+  locale: "it"
+});
 
+const templates = cvReviewNarratives?.possibleDirections || {};
   const familyDirections = ensureArray(roleFamilyProfile?.discoveryDirections)
     .map(normalizeString)
     .filter(Boolean)
@@ -46,15 +55,20 @@ function buildPossibleDirectionsNarrative({
 
   if (targetMode === "cv_discovery") {
     return familyDirectionsText
-      ? `Senza un ruolo target unico, il CV dovrebbe essere letto a partire dai segnali trasferibili e dalle direzioni più coerenti con il profilo. In questa famiglia professionale, le piste naturali possono includere: ${familyDirectionsText}.`
-      : `Senza un ruolo target unico, il CV dovrebbe essere letto a partire dai segnali trasferibili e dalle direzioni professionali più coerenti con il profilo.`;
+  ? applyTemplate(templates.discoveryWithFamilyDirections, {
+      familyDirectionsText
+    })
+  : templates.discoveryFallback;
   }
 
   if (targetFocusText) {
-    return (
-      `Rispetto al target "${cleanTargetRole}", il CV può risultare più coerente se mette in primo piano ${targetFocusText}. ` +
-      `La candidatura dovrebbe aiutare il lettore a vedere rapidamente quali elementi del percorso sono più vicini a questo contesto specifico.`
-    );
+    
+    return applyTemplate(templates.targetWithFocus, {
+  targetRole: cleanTargetRole,
+  targetFocusText
+  });
+
+
   }
 
   if (targetMode === "cv_with_target" && traits.careOrientation) {
@@ -65,8 +79,10 @@ function buildPossibleDirectionsNarrative({
   }
 
   return cleanTargetRole
-    ? `Il CV può essere letto rispetto al ruolo target indicato: ${cleanTargetRole}.`
-    : "Il CV può essere letto rispetto a un possibile ruolo target, ma serve una direzione più esplicita per valutarne la coerenza.";
+  ? applyTemplate(templates.targetFallback, {
+      targetRole: cleanTargetRole
+    })
+  : templates.genericFallback;
 }
 
 
@@ -196,10 +212,17 @@ function buildCvTransformationPlan({
   targetMode = "cv_discovery",
   targetRole = "",
   traits = {},
+  roleFamilyProfile = {},
   roleTargetProfile = {}
 } = {}) {
-  const cleanTargetRole = normalizeString(targetRole);
 
+  const cleanTargetRole = normalizeString(targetRole);
+  const cvReviewNarratives = loadCvReviewNarrativeData({
+  roleFamily: roleFamilyProfile?.key || "care_helping_professions",
+  locale: "it"
+  });
+
+  const templates = cvReviewNarratives?.transformationPlan || {};
   const targetFocus = ensureArray(roleTargetProfile?.focus)
     .map(normalizeString)
     .filter(Boolean)
@@ -208,19 +231,16 @@ function buildCvTransformationPlan({
   const highlightMore = [];
 
   if (traits.careOrientation) {
-    highlightMore.push(
-      "formazione psicologica e relazionale",
-      "esperienze di tirocinio",
-      "ascolto e relazione di aiuto"
-    );
+   
+    highlightMore.push(...ensureArray(templates.highlightMoreCare));
   }
 
   if (traits.learningOrientation) {
-    highlightMore.push("formazione continua");
+   highlightMore.push(...ensureArray(templates.highlightMoreLearning));
   }
 
   if (traits.careerTransition) {
-    highlightMore.push("filo conduttore della transizione professionale");
+    highlightMore.push(...ensureArray(templates.highlightMoreCareerTransition));
   }
 
   targetFocus.forEach((item) => {
@@ -229,41 +249,33 @@ function buildCvTransformationPlan({
     }
   });
 
-  const compress = [
-    "esperienze non direttamente collegate al target",
-    "dettagli operativi troppo lontani dalla candidatura"
-  ];
+  const compress = ensureArray(templates.compress);
 
   const explainBetter = [];
 
   if (traits.careerTransition) {
-    explainBetter.push(
-      "perché il percorso formativo recente è coerente con la direzione professionale attuale",
-      "come le esperienze precedenti sostengono affidabilità, continuità e capacità organizzativa"
-    );
+    explainBetter.push(...ensureArray(templates.explainBetterCareerTransition));
   }
 
   if (traits.careOrientation) {
-    explainBetter.push(
-      "in quali contesti sono state applicate le competenze relazionali",
-      "quale contributo la candidata può portare nei servizi alla persona"
-    );
+    explainBetter.push(...ensureArray(templates.explainBetterCare));
   }
 
   const keyMessage =
-    targetMode === "cv_discovery"
-      ? "Il CV deve far emergere una direzione professionale chiara, senza chiudere inutilmente il profilo su un solo ruolo."
-      : cleanTargetRole
-      ? `Il CV deve far capire rapidamente perché il percorso della candidata è coerente con il target: ${cleanTargetRole}.`
-      : "Il CV deve rendere più leggibile il valore professionale del percorso.";
+  targetMode === "cv_discovery"
+    ? templates.keyMessageDiscovery
+    : cleanTargetRole
+    ? applyTemplate(templates.keyMessageTarget, {
+        targetRole: cleanTargetRole
+      })
+    : templates.keyMessageFallback;
 
-   const summaryNarrative =
-  traits.careerTransition
-    ? `Il CV non deve essere semplicemente arricchito, ma riorganizzato attorno alla nuova direzione professionale. Le esperienze più coerenti con il target devono diventare il centro della candidatura, mentre le esperienze precedenti possono restare come prova di continuità, affidabilità e capacità organizzativa. Il passaggio più importante è rendere leggibile il filo che collega percorso precedente, nuove competenze e direzione professionale desiderata.`
-    : `Il CV deve essere riorganizzato per rendere più immediata la coerenza con il target. Le esperienze più pertinenti devono essere portate in primo piano, mentre le informazioni meno decisive devono essere compresse o spostate in secondo piano.`;   
+   const summaryNarrative = traits.careerTransition
+  ? templates.summaryCareerTransition
+  : templates.summaryDefault;  
 
   return {
-    title: "Piano di trasformazione del CV",
+    title: templates.title || "Piano di trasformazione del CV",
     summaryNarrative,
     highlightMore: highlightMore.slice(0, 8),
     compress,
@@ -277,32 +289,43 @@ function buildNarrativeRepositioning({
   targetMode = "cv_discovery",
   targetRole = "",
   traits = {},
+  roleFamilyProfile = {},
   roleTargetProfile = {}
 } = {}) {
   const cleanTargetRole = normalizeString(targetRole);
   const label = normalizeString(roleTargetProfile?.label);
+  const cvReviewNarratives = loadCvReviewNarrativeData({
+  roleFamily: roleFamilyProfile?.key || "care_helping_professions",
+  locale: "it"
+  });
 
+  const templates = cvReviewNarratives?.narrativeRepositioning || {};
+  
+  
   const professionalTitle =
-    targetMode === "cv_discovery"
-      ? "Profilo in transizione verso l’area educativa e di sostegno alla persona"
-      : label
-      ? `Profilo orientato a ${label}`
-      : `Profilo orientato a ${cleanTargetRole}`;
+  targetMode === "cv_discovery"
+    ? templates.professionalTitleDiscovery
+    : label
+    ? applyTemplate(templates.professionalTitleTargetWithLabel, { label })
+    : applyTemplate(templates.professionalTitleTargetFallback, {
+        targetRole: cleanTargetRole
+      });
 
-  const corePositioning =
-    traits.careerTransition
-      ? "Il profilo dovrebbe essere raccontato come una transizione professionale progressiva e coerente, non come una somma di esperienze separate."
-      : "Il profilo dovrebbe mettere in evidenza le esperienze più pertinenti rispetto al target scelto.";
 
-  const professionalSummary =
-    traits.careOrientation
-      ? `Il CV dovrebbe far emergere una professionista con formazione psicologica e relazionale, orientata al sostegno alla persona e alla collaborazione in contesti educativi o di aiuto.`
-      : `Il CV dovrebbe far emergere una figura professionale con competenze coerenti con il target scelto e un contributo leggibile per il contesto di riferimento.`;
+  const corePositioning = traits.careerTransition
+  ? templates.corePositioningCareerTransition
+  : templates.corePositioningDefault;
+
+  const professionalSummary = traits.careOrientation
+  ? templates.professionalSummaryCare
+  : templates.professionalSummaryDefault;
 
   const openingMessage =
-    targetMode === "cv_discovery"
-      ? "Il messaggio iniziale deve chiarire la direzione professionale senza chiudere il profilo su un solo ruolo."
-      : `Il messaggio iniziale deve far capire rapidamente perché il percorso è coerente con il target: ${cleanTargetRole}.`;
+  targetMode === "cv_discovery"
+    ? templates.openingMessageDiscovery
+    : applyTemplate(templates.openingMessageTarget, {
+        targetRole: cleanTargetRole
+      });
 
   return {
     title: "Riposizionamento narrativo",
@@ -617,10 +640,14 @@ function buildCvRewriteOutput({
 
   const label = normalizeString(roleTargetProfile?.label);
 
+
   const skills = ensureArray(roleTargetProfile?.skillLabels)
     .map(normalizeString)
     .filter(Boolean)
     .slice(0, 5);
+  const targetRewriteOutput = roleTargetProfile?.rewriteOutput || {};
+
+  const familyRewriteOutput = roleFamilyProfile?.rewriteOutput || {};
 
   const familyRewriteProfile =
   normalizeString(roleFamilyProfile?.rewriteProfile);
@@ -629,10 +656,13 @@ function buildCvRewriteOutput({
   .map(normalizeString)
   .filter(Boolean);
 
-  const professionalProfile = label
-  ? `Professionista con formazione psicologica e relazionale, orientata a ${label}. Ha sviluppato nel tempo competenze di ascolto, collaborazione e sostegno alla persona attraverso formazione continua, counseling, tirocini e percorsi di specializzazione.`
-  : familyRewriteProfile ||
-    `Professionista con formazione psicologica e relazionale, orientata ai contesti educativi e di sostegno alla persona.`;
+
+
+  const professionalProfile =
+  normalizeString(targetRewriteOutput?.professionalProfile) ||
+  normalizeString(familyRewriteOutput?.professionalProfile) ||
+  familyRewriteProfile ||
+  "Profilo professionale da definire in base al target.";
 
   return {
     title: "CV Rewrite Output",
@@ -643,18 +673,25 @@ function buildCvRewriteOutput({
     skills.length > 0
     ? skills
     : familyRewriteSkills,
-    trainingOrdering: [
-      "Specializzazioni e formazione professionale",
-      "Tirocini e attività formative rilevanti",
-      "Formazione universitaria",
-      "Altra formazione"
-    ],
+    
 
-    experienceOrdering: [
-      "Esperienze direttamente collegate al target",
-      "Esperienze con competenze trasferibili",
-      "Esperienze meno rilevanti ma utili come credibilità"
-    ]
+
+  trainingOrdering:
+  ensureArray(targetRewriteOutput?.trainingOrdering).length > 0
+    ? targetRewriteOutput.trainingOrdering
+    : ensureArray(familyRewriteOutput?.trainingOrdering).length > 0
+    ? familyRewriteOutput.trainingOrdering
+    : [],
+
+  experienceOrdering:
+  ensureArray(targetRewriteOutput?.experienceOrdering).length > 0
+    ? targetRewriteOutput.experienceOrdering
+    : ensureArray(familyRewriteOutput?.experienceOrdering).length > 0
+    ? familyRewriteOutput.experienceOrdering
+    : []
+
+
+
   };
 }
 
@@ -997,10 +1034,12 @@ targetFocus: {
   })
 },
 
+
 cvTransformationPlan: buildCvTransformationPlan({
   targetMode,
   targetRole,
   traits: cvProfessionalTraits,
+  roleFamilyProfile,
   roleTargetProfile
 }),
 
@@ -1008,8 +1047,9 @@ cvTransformationPlan: buildCvTransformationPlan({
   targetMode,
   targetRole,
   traits: cvProfessionalTraits,
+  roleFamilyProfile,
   roleTargetProfile
-  }),
+}),
 
  cvOpeningDraft: buildCvOpeningDraft({
   targetMode,

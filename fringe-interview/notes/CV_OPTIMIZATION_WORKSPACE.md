@@ -224,8 +224,6 @@ Questa esigenza è emersa durante il beta test reale del profilo "Giulia", ma è
 
 ## STATO ATTUALE DEL MOTORE CV (GIUGNO 2026)
 
-# STATO ATTUALE DEL MOTORE CV (GIUGNO 2026)
-
 ## Obiettivo
 
 Costruire un motore di ottimizzazione CV che non si limiti ad analizzare il profilo, ma che produca versioni del CV adattate a diversi target professionali.
@@ -399,3 +397,369 @@ il prossimo limite non è più l'analisi del CV ma la riscrittura delle esperien
 
 Solo dopo questo test decidere eventuali nuove evoluzioni del motore.
 
+# CONTINUITY — CV ARCHITECTURE MIGRATION (GIUGNO 2026)
+
+## Stato attuale
+
+Completato:
+
+* CV Review Engine
+* CV Optimization Engine V1
+* Role Family Narrative Layer
+* Role Target Narrative Layer
+* CandidateProfile Normalization Layer
+* Parser → CV Review integration
+* Primo Narrative Data Loader
+
+Validato tramite caso reale:
+
+Giulia
+
+Target:
+
+* Famiglie / Genitorialità
+* Giovani / Prevenzione
+* Disabilità / Sostegno educativo
+
+---
+
+## Nuovo principio architetturale
+
+Da ora in avanti:
+
+codice = logica
+
+narrativeData = contenuti
+
+I builder non devono contenere narrativa professionale.
+
+I motori non devono contenere vocabolari professionali.
+
+Tutti i contenuti professionali devono migrare progressivamente verso Narrative Data esterni.
+
+---
+
+## Prima migrazione completata
+
+Implementato:
+
+src/report/narrativeData/normalization/care_helping_professions.json
+
+Loader:
+
+src/report/narrativeProfiles/cvReviewNormalizationProfiles.js
+
+Utilizzato da:
+
+normalizeParsedCandidateProfileForCvReview.js
+
+Risultato:
+
+Parser reale
+↓
+Normalizzazione
+↓
+CV Review
+
+senza hardcoding specifici nel normalizzatore.
+
+---
+
+## Problema scoperto
+
+La seniority totale e la seniority rilevante per il target non coincidono.
+
+Caso Giulia:
+
+20+ anni esperienza lavorativa totale
+
+vs
+
+1-3 anni esperienza rilevante nel nuovo target professionale.
+
+Concetto introdotto:
+
+Target-Relevant Seniority
+
+Da estendere in futuro ad altre famiglie professionali.
+
+---
+
+## Direzione futura confermata
+
+Narrative Data V1
+
+Struttura candidata:
+
+src/report/narrativeData/
+
+├── normalization/
+├── roleFamilies/
+├── roleTargets/
+├── rewriteOutput/
+└── locales/
+
+Obiettivo:
+
+aggiungere nuove famiglie e nuove lingue senza modificare i builder.
+
+---
+
+## Priorità prossima sessione
+
+Progettare Narrative Data Architecture V1.
+
+Decidere:
+
+A)
+
+care_helping_professions.json
+
+oppure
+
+B)
+
+care_helping_professions.it.json
+care_helping_professions.en.json
+care_helping_professions.fr.json
+
+Decisione architetturale ancora aperta.
+
+---
+
+## Regola da preservare
+
+L'utente non deve essere costretto a:
+
+* cercare testi nel codice
+* fare patch distribuite
+* aggiornare più file per aggiungere una lingua
+
+L'obiettivo finale è:
+
+1 file dati
+↓
+aggiunta nuova famiglia
+oppure
+aggiunta nuova lingua
+
+senza modificare il motore.
+
+# CONTINUITÀ — MIGRAZIONE NARRATIVE DATA (CV REVIEW)
+
+## Stato raggiunto
+
+Obiettivo della fase:
+
+Separare progressivamente la narrativa dalla logica del motore CV.
+
+Principio architetturale confermato:
+
+* Nessuna narrativa professionale significativa deve restare hardcoded nei builder.
+* I builder devono contenere logica.
+* Le narrative devono vivere in narrativeData.
+* Le narrative devono essere organizzate per:
+
+  * famiglia professionale
+  * target professionale
+  * lingua
+
+---
+
+## Struttura introdotta
+
+Creati:
+
+src/report/narrativeData/
+
+* normalization/
+* roleFamilies/
+* cvReview/
+
+Loader creati:
+
+* loadRoleFamilyNarrativeData.js
+* loadCvReviewNarrativeData.js
+
+con supporto:
+
+* cache
+* fallback locale
+* applyTemplate()
+
+---
+
+## Audit automatico narrative
+
+Script creati:
+
+scripts/audit_hardcoded_report_texts.js
+
+scripts/extract_narrative_texts_to_catalog.js
+
+scripts/group_narrative_catalog_by_area.js
+
+Risultato audit:
+
+* cv_review: 61 narrative candidate
+* pro_report_builder: 170
+* pro_report_renderer: 104
+* other: 162
+
+Nota:
+
+L'audit iniziale catturava anche codice.
+
+La seconda versione produce un catalogo molto più utilizzabile.
+
+File generati:
+
+tmp/audit/narrative_text_catalog.raw.json
+
+tmp/audit/narrative_text_catalog.grouped.json
+
+tmp/audit/narrative_text_catalog.summary.json
+
+---
+
+## Migrazione CV Review
+
+Creato:
+
+src/report/narrativeData/cvReview/care_helping_professions.json
+
+Contiene:
+
+* possibleDirections
+* transformationPlan
+* narrativeRepositioning
+
+---
+
+## Già migrato
+
+buildPossibleDirectionsNarrative()
+
+ora legge da:
+
+cvReview/care_helping_professions.json
+
+tramite:
+
+loadCvReviewNarrativeData()
+
+e
+
+applyTemplate()
+
+---
+
+## Già migrato
+
+buildNarrativeRepositioning()
+
+ora legge da:
+
+cvReview/care_helping_professions.json
+
+tramite:
+
+loadCvReviewNarrativeData()
+
+e
+
+applyTemplate()
+
+Health check:
+
+PASS
+
+test_build_cv_review_giulia:
+
+PASS
+
+---
+
+## Ancora da migrare
+
+buildCvTransformationPlan()
+
+I testi necessari sono già presenti in:
+
+cvReview/care_helping_professions.json
+
+sezione:
+
+transformationPlan
+
+Questa è la prossima attività operativa.
+
+---
+
+## Decisione architetturale importante
+
+NON migrare narrativa testo per testo.
+
+Migrare blocchi funzionali completi.
+
+Esempio:
+
+buildPossibleDirectionsNarrative
+↓
+possibleDirections
+
+buildNarrativeRepositioning
+↓
+narrativeRepositioning
+
+buildCvTransformationPlan
+↓
+transformationPlan
+
+Obiettivo:
+
+evitare centinaia di chiavi sparse e mantenere una struttura leggibile.
+
+---
+
+## Direzione futura confermata
+
+Dopo completamento CV Review:
+
+1. completare migration transformationPlan
+
+2. estendere approccio a:
+
+   * roleTargets
+   * Professional Perception
+   * buildProReportV2
+
+3. mantenere il principio:
+
+Narrative
+↓
+JSON narrativeData
+↓
+loader
+↓
+builder
+
+mai:
+
+Narrative
+↓
+hardcoded nei builder
+
+---
+
+## Visione di lungo periodo
+
+Il sistema deve consentire future estensioni tramite:
+
+* aggiunta di famiglie professionali
+* aggiunta di target professionali
+* aggiunta di lingue
+
+senza modificare il motore.
+
+L'obiettivo finale è poter aggiungere una nuova famiglia o una nuova lingua principalmente tramite nuovi file narrativeData.
