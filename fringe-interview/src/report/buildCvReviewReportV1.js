@@ -384,38 +384,49 @@ function buildCvOpeningDraft({
   targetMode = "cv_discovery",
   targetRole = "",
   traits = {},
-  roleTargetProfile = {}
-} = {}) {
+  roleTargetProfile = {},
+  cvReviewNarratives = {}
+  } = {}) {
+
   const label = normalizeString(roleTargetProfile?.label);
   const focus = ensureArray(roleTargetProfile?.focus)
     .map(normalizeString)
     .filter(Boolean);
 
   const focusText = humanizeSignalList(focus.slice(0, 4));
-
+  const templates = cvReviewNarratives?.openingDraft || {};
   const professionalTitle =
-    targetMode === "cv_discovery"
-      ? "Professionista con formazione psicologica e relazionale"
-      : label
-      ? `Psicologa in formazione psicoterapeutica orientata a ${label}`
-      : "Psicologa in formazione psicoterapeutica orientata al sostegno alla persona";
+  targetMode === "cv_discovery"
+    ? templates.professionalTitleDiscovery ||
+      "Professionista con formazione psicologica e relazionale"
+    : label
+    ? applyTemplate(
+        templates.professionalTitleTargetWithLabel,
+        { label }
+      ) ||
+      `Psicologa in formazione psicoterapeutica orientata a ${label}`
+    : templates.professionalTitleTargetFallback ||
+      "Psicologa in formazione psicoterapeutica orientata al sostegno alla persona";
+
+
 
   let openingParagraph;
 
   if (traits.careerTransition && traits.careOrientation && focusText) {
-    openingParagraph =
-      `Psicologa in formazione psicoterapeutica, con formazione in counseling e interesse per i servizi educativi e di sostegno alla persona. ` +
-      `Ha affiancato alla propria esperienza lavorativa un percorso continuativo di studio, tirocinio e specializzazione, sviluppando competenze di ascolto, relazione e collaborazione. ` +
-      `Il profilo si orienta in particolare verso ${focusText}.`;
-  } else if (traits.careerTransition && traits.careOrientation) {
-    openingParagraph =
-      `Professionista con formazione psicologica e relazionale, orientata al sostegno alla persona e ai contesti educativi. ` +
-      `Ha costruito progressivamente un percorso di studio, counseling, psicologia e specializzazione, sviluppando competenze di ascolto, relazione e collaborazione.`;
-  } else {
-    openingParagraph =
-      `Professionista con competenze coerenti con il ruolo target e un percorso orientato alla crescita continua. ` +
-      `Il profilo evidenzia esperienze e competenze spendibili nel contesto professionale di riferimento.`;
-  }
+  openingParagraph =
+    applyTemplate(templates.openingCareerTransitionCareFocus, {
+      focusText
+    }) ||
+    `Psicologa in formazione psicoterapeutica, con formazione in counseling e interesse per i servizi educativi e di sostegno alla persona. Ha affiancato alla propria esperienza lavorativa un percorso continuativo di studio, tirocinio e specializzazione, sviluppando competenze di ascolto, relazione e collaborazione. Il profilo si orienta in particolare verso ${focusText}.`;
+} else if (traits.careerTransition && traits.careOrientation) {
+  openingParagraph =
+    templates.openingCareerTransitionCare ||
+    "Professionista con formazione psicologica e relazionale, orientata al sostegno alla persona e ai contesti educativi. Ha costruito progressivamente un percorso di studio, counseling, psicologia e specializzazione, sviluppando competenze di ascolto, relazione e collaborazione.";
+} else {
+  openingParagraph =
+    templates.openingGeneric ||
+    "Professionista con competenze coerenti con il ruolo target e un percorso orientato alla crescita continua. Il profilo evidenzia esperienze e competenze spendibili nel contesto professionale di riferimento.";
+}
 
   return {
     title: "Bozza apertura CV",
@@ -1107,7 +1118,8 @@ cvTransformationPlan: buildCvTransformationPlan({
   targetMode,
   targetRole,
   traits: cvProfessionalTraits,
-  roleTargetProfile
+  roleTargetProfile,
+  cvReviewNarratives
   }),
 
   cvKeySkillsDraft: buildCvKeySkillsDraft({

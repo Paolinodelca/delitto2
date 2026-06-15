@@ -895,3 +895,94 @@ Migrare per blocchi funzionali:
 
 Obiettivo: evitare 500 patch sparse e creare contenitori dati leggibili.
 
+## STATO MIGRAZIONE CV REVIEW
+
+Completati:
+
+- possibleDirections
+- targetFocus
+- credibilityNarratives
+- transformationPlan
+- narrativeRepositioning
+- rewriteInstructions
+- structureDraft
+
+Architettura stabilizzata:
+
+src/report/narrativeData/cvReview/
+→ narrativa report CV
+
+src/report/narrativeData/normalization/
+→ regole di normalizzazione parser
+
+Pattern standard:
+
+loadCvReviewNarrativeData()
+↓
+templates
+↓
+applyTemplate()
+↓
+fallback tecnico minimo
+
+Ancora da migrare:
+
+- buildCvOpeningDraft
+- buildCvSectionDrafts
+
+Non migrare ancora:
+
+- buildCvKeySkillsDraft
+- buildCvSectionRewritePlan
+- buildCvRewriteOutput
+
+perché sono strutture dati e non narrativa principale.
+
+## CHECKPOINT — CV REVIEW MIGRATION
+
+Stato attuale:
+
+Completati:
+
+* buildPossibleDirectionsNarrative
+* buildTargetFocusNarrative
+* buildCvTransformationPlan
+* buildNarrativeRepositioning
+* buildCvStructureDraft
+* buildCvRewriteInstructions
+* buildCvCredibilityNarrative
+
+Separazione architetturale completata:
+
+* narrativeData/cvReview → narrativa report
+* narrativeData/normalization → regole di normalizzazione parser
+
+Pattern standard:
+
+loadCvReviewNarrativeData()
+→ templates
+→ applyTemplate()
+→ fallback tecnico minimo
+
+Audit:
+
+* cv_review: 61 → 51
+* pro_report_builder: 170
+* pro_report_renderer: 100
+
+Ancora da migrare:
+
+* buildCvOpeningDraft
+* buildCvSectionDrafts
+
+Da lasciare nel codice:
+
+* buildCvKeySkillsDraft
+* buildCvSectionRewritePlan
+* buildCvRewriteOutput
+* buildCvProfessionalSignals
+* buildCvProfessionalTraits
+
+Obiettivo successivo:
+
+Chiudere buildCvOpeningDraft e buildCvSectionDrafts e dichiarare completata la fase "CV Review Narrative Migration".

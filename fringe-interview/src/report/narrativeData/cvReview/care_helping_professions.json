@@ -130,6 +130,21 @@
   "genericFallback": "Il CV mostra elementi utili, ma non ancora abbastanza organizzati per far emergere con forza il bagaglio professionale."
     },
 
+    "openingDraft": {
+  "title": "Bozza apertura CV",
+
+  "professionalTitleDiscovery": "Professionista con formazione psicologica e relazionale",
+
+  "professionalTitleTargetWithLabel": "Psicologa in formazione psicoterapeutica orientata a {{label}}",
+
+  "professionalTitleTargetFallback": "Psicologa in formazione psicoterapeutica orientata al sostegno alla persona",
+
+  "openingCareerTransitionCareFocus": "Psicologa in formazione psicoterapeutica, con formazione in counseling e interesse per i servizi educativi e di sostegno alla persona. Ha affiancato alla propria esperienza lavorativa un percorso continuativo di studio, tirocinio e specializzazione, sviluppando competenze di ascolto, relazione e collaborazione. Il profilo si orienta in particolare verso {{focusText}}.",
+
+  "openingCareerTransitionCare": "Professionista con formazione psicologica e relazionale, orientata al sostegno alla persona e ai contesti educativi. Ha costruito progressivamente un percorso di studio, counseling, psicologia e specializzazione, sviluppando competenze di ascolto, relazione e collaborazione.",
+
+  "openingGeneric": "Professionista con competenze coerenti con il ruolo target e un percorso orientato alla crescita continua. Il profilo evidenzia esperienze e competenze spendibili nel contesto professionale di riferimento."
+    },
 
 
       "narrativeRepositioning": {
