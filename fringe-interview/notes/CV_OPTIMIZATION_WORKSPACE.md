@@ -763,3 +763,135 @@ Il sistema deve consentire future estensioni tramite:
 senza modificare il motore.
 
 L'obiettivo finale è poter aggiungere una nuova famiglia o una nuova lingua principalmente tramite nuovi file narrativeData.
+
+## TACTICAL NOTE — CV Review Narrative Data Migration
+
+### Obiettivo
+
+Spostare progressivamente le narrative del CV Review fuori da `buildCvReviewReportV1.js` e dentro file dati JSON esterni.
+
+Principio:
+
+* codice = logica
+* narrativeData = contenuti
+* builder = usa template, non contiene testi professionali
+
+---
+
+### Struttura dati introdotta
+
+Creata cartella:
+
+`src/report/narrativeData/cvReview/`
+
+Creato file:
+
+`src/report/narrativeData/cvReview/care_helping_professions.json`
+
+Il file contiene blocchi organizzati per:
+
+* `possibleDirections`
+* `transformationPlan`
+* `narrativeRepositioning`
+
+con struttura:
+
+`family → locales → it → blocchi narrativi`
+
+---
+
+### Loader già esistente
+
+File:
+
+`src/report/narrativeProfiles/loadCvReviewNarrativeData.js`
+
+Funzioni:
+
+* `loadCvReviewNarrativeData({ roleFamily, locale })`
+* `applyTemplate(template, values)`
+
+Il loader legge:
+
+`src/report/narrativeData/cvReview/{roleFamily}.json`
+
+---
+
+### Stato migrazione buildCvReviewReportV1.js
+
+#### 1. `buildPossibleDirectionsNarrative`
+
+Stato: MIGRATO PARZIALMENTE / ATTIVO
+
+Ora riceve:
+
+`cvReviewNarratives`
+
+e legge da:
+
+`cvReviewNarratives.possibleDirections`
+
+Usa ancora fallback hardcoded di sicurezza per casi non migrati o `generic_professional`.
+
+Da eliminare solo quando esisteranno fallback JSON generici.
+
+---
+
+#### 2. `buildNarrativeRepositioning`
+
+Stato: GIÀ MIGRATO
+
+La funzione usa già:
+
+`templates`
+
+derivati da:
+
+`cvReviewNarratives.narrativeRepositioning`
+
+Non sostituire ulteriormente se sono presenti:
+
+`const templates = cvReviewNarratives?.narrativeRepositioning || {};`
+
+e la chiamata passa:
+
+`cvReviewNarratives`
+
+---
+
+#### 3. `buildCvTransformationPlan`
+
+Stato: DA VERIFICARE / PROSSIMO BLOCCO
+
+Controllare se usa già template esterni oppure contiene ancora hardcoded.
+
+Se contiene hardcoded, migrare verso:
+
+`cvReviewNarratives.transformationPlan`
+
+---
+
+### Test da eseguire dopo ogni micro-step
+
+```bash
+node scripts/test_build_cv_review_giulia.js
+node scripts/test_cv_review_from_parser_giulia.js
+node scripts/fringe_health_check.js
+```
+
+---
+
+### Regola operativa
+
+Non migrare tutti i testi singolarmente.
+
+Migrare per blocchi funzionali:
+
+* Possible Directions
+* Transformation Plan
+* Narrative Repositioning
+* Rewrite Instructions
+* Rewrite Output
+
+Obiettivo: evitare 500 patch sparse e creare contenitori dati leggibili.
+
