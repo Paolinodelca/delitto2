@@ -986,3 +986,58 @@ Da lasciare nel codice:
 Obiettivo successivo:
 
 Chiudere buildCvOpeningDraft e buildCvSectionDrafts e dichiarare completata la fase "CV Review Narrative Migration".
+
+## CHECKPOINT — CV REVIEW NARRATIVE MIGRATION PHASE 1
+
+Stato: completata fase principale.
+
+Obiettivo raggiunto:
+
+* spostare le narrative principali del CV Review fuori da `buildCvReviewReportV1.js`
+* usare file dati JSON in `src/report/narrativeData/cvReview/`
+* usare fallback dati tramite `generic_professional.json`
+* ridurre la dipendenza da testi hardcoded nel builder
+
+File principali:
+
+* `src/report/narrativeData/cvReview/care_helping_professions.json`
+* `src/report/narrativeData/cvReview/generic_professional.json`
+* `src/report/narrativeProfiles/loadCvReviewNarrativeData.js`
+* `src/report/buildCvReviewReportV1.js`
+
+Blocchi migrati o collegati a narrativeData:
+
+* `buildPossibleDirectionsNarrative`
+* `buildTargetFocusNarrative`
+* `buildCvTransformationPlan`
+* `buildNarrativeRepositioning`
+* `buildCvStructureDraft`
+* `buildCvRewriteInstructions`
+* `buildCvCredibilityNarrative`
+* `buildCvOpeningDraft`
+* `buildCvSectionDrafts`
+
+Pattern attuale:
+
+`roleFamily specifica → generic_professional fallback`
+
+Il fallback deve vivere nei JSON, non nel builder.
+
+Test superati:
+
+```bash
+node scripts/test_build_cv_review_giulia.js
+node scripts/test_cv_review_from_parser_giulia.js
+node scripts/fringe_health_check.js
+```
+
+Prossime priorità:
+
+1. completare audit residui CV Review
+2. decidere se migrare `roleFamilyNarrativeProfiles` e `roleTargetNarrativeProfiles` verso JSON
+3. poi passare a `buildProReportV2`
+4. infine valutare `renderProReportHtml`
+
+Nota strategica:
+
+Non migrare testi uno per uno. Migrare per blocchi funzionali e mantenere file dati leggibili per famiglia e lingua.

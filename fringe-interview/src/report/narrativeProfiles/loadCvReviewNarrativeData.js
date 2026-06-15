@@ -14,6 +14,17 @@ const DATA_DIR = path.resolve(
 
 const cache = new Map();
 
+function readNarrativeFile(roleFamily = "generic_professional") {
+  const filePath = path.join(DATA_DIR, `${roleFamily}.json`);
+
+  try {
+    const raw = readFileSync(filePath, "utf8");
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
 export default function loadCvReviewNarrativeData({
   roleFamily = "generic_professional",
   locale = "it"
@@ -24,22 +35,17 @@ export default function loadCvReviewNarrativeData({
     return cache.get(cacheKey);
   }
 
-  try {
-    const filePath = path.join(DATA_DIR, `${roleFamily}.json`);
-    const raw = readFileSync(filePath, "utf8");
-    const parsed = JSON.parse(raw);
+  const parsed =
+    readNarrativeFile(roleFamily) ||
+    readNarrativeFile("generic_professional");
 
-    const result =
-      parsed?.locales?.[locale] ||
-      parsed?.locales?.it ||
-      null;
+  const result =
+    parsed?.locales?.[locale] ||
+    parsed?.locales?.it ||
+    null;
 
-    cache.set(cacheKey, result);
-    return result;
-  } catch {
-    cache.set(cacheKey, null);
-    return null;
-  }
+  cache.set(cacheKey, result);
+  return result;
 }
 
 export function applyTemplate(template = "", values = {}) {
