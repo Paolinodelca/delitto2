@@ -1,61 +1,33 @@
 {
-  "family": "care_helping_professions",
-  "locales": {
-    "it": {
-      "possibleDirections": {
-        "discoveryWithFamilyDirections": "Senza un ruolo target unico, il CV dovrebbe essere letto a partire dai segnali trasferibili e dalle direzioni più coerenti con il profilo. In questa famiglia professionale, le piste naturali possono includere: {{familyDirectionsText}}.",
-        "discoveryFallback": "Senza un ruolo target unico, il CV dovrebbe essere letto a partire dai segnali trasferibili e dalle direzioni professionali più coerenti con il profilo.",
-        "targetWithFocus": "Rispetto al target \"{{targetRole}}\", il CV può risultare più coerente se mette in primo piano {{targetFocusText}}. La candidatura dovrebbe aiutare il lettore a vedere rapidamente quali elementi del percorso sono più vicini a questo contesto specifico.",
-        "careFallback": "Rispetto al target \"{{targetRole}}\", il CV ha una base coerente: formazione psicologica, orientamento alla relazione di aiuto, ascolto, tirocinio e attenzione a persone in situazione di fragilità. Per renderlo più forte, conviene però esplicitare meglio quali esperienze sono più vicine al target scelto, quali competenze relazionali sono state usate in contesti concreti e che tipo di contributo la candidata può portare in servizi educativi, sportelli di ascolto o progetti con famiglie, giovani e disabilità.",
-        "targetFallback": "Il CV può essere letto rispetto al ruolo target indicato: {{targetRole}}.",
-        "genericFallback": "Il CV può essere letto rispetto a un possibile ruolo target, ma serve una direzione più esplicita per valutarne la coerenza."
-      },
-
-      "transformationPlan": {
-        "title": "Piano di trasformazione del CV",
-        "highlightMoreCare": [
-          "formazione psicologica e relazionale",
-          "esperienze di tirocinio",
-          "ascolto e relazione di aiuto"
+  "careerTransition": {
+    "triggers": [
+      "psicologia",
+      "counseling",
+      "psicoterapia",
+      "sostegno",
+      "educativo",
+      "relazione di aiuto",
+      "autismo",
+      "consultorio",
+      "tirocinio"
+    ],
+    "legacyAreas": {
+      "logistics_admin": {
+        "triggers": [
+          "logistica",
+          "doganale",
+          "importazione"
         ],
-        "highlightMoreLearning": [
-          "formazione continua"
-        ],
-        "highlightMoreCareerTransition": [
-          "filo conduttore della transizione professionale"
-        ],
-        "compress": [
-          "esperienze non direttamente collegate al target",
-          "dettagli operativi troppo lontani dalla candidatura"
-        ],
-        "explainBetterCareerTransition": [
-          "perché il percorso formativo recente è coerente con la direzione professionale attuale",
-          "come le esperienze precedenti sostengono affidabilità, continuità e capacità organizzativa"
-        ],
-        "explainBetterCare": [
-          "in quali contesti sono state applicate le competenze relazionali",
-          "quale contributo la candidata può portare nei servizi alla persona"
-        ],
-        "keyMessageDiscovery": "Il CV deve far emergere una direzione professionale chiara, senza chiudere inutilmente il profilo su un solo ruolo.",
-        "keyMessageTarget": "Il CV deve far capire rapidamente perché il percorso della candidata è coerente con il target: {{targetRole}}.",
-        "keyMessageFallback": "Il CV deve rendere più leggibile il valore professionale del percorso.",
-        "summaryCareerTransition": "Il CV non deve essere semplicemente arricchito, ma riorganizzato attorno alla nuova direzione professionale. Le esperienze più coerenti con il target devono diventare il centro della candidatura, mentre le esperienze precedenti possono restare come prova di continuità, affidabilità e capacità organizzativa. Il passaggio più importante è rendere leggibile il filo che collega percorso precedente, nuove competenze e direzione professionale desiderata.",
-        "summaryDefault": "Il CV deve essere riorganizzato per rendere più immediata la coerenza con il target. Le esperienze più pertinenti devono essere portate in primo piano, mentre le informazioni meno decisive devono essere compresse o spostate in secondo piano."
-      },
-
-      "narrativeRepositioning": {
-        "title": "Riposizionamento narrativo",
-        "professionalTitleDiscovery": "Profilo in transizione verso l’area educativa e di sostegno alla persona",
-        "professionalTitleTargetWithLabel": "Profilo orientato a {{label}}",
-        "professionalTitleTargetFallback": "Profilo orientato a {{targetRole}}",
-        "corePositioningCareerTransition": "Il profilo dovrebbe essere raccontato come una transizione professionale progressiva e coerente, non come una somma di esperienze separate.",
-        "corePositioningDefault": "Il profilo dovrebbe mettere in evidenza le esperienze più pertinenti rispetto al target scelto.",
-        "professionalSummaryCare": "Il CV dovrebbe far emergere una professionista con formazione psicologica e relazionale, orientata al sostegno alla persona e alla collaborazione in contesti educativi o di aiuto.",
-        "professionalSummaryDefault": "Il CV dovrebbe far emergere una figura professionale con competenze coerenti con il target scelto e un contributo leggibile per il contesto di riferimento.",
-        "openingMessageDiscovery": "Il messaggio iniziale deve chiarire la direzione professionale senza chiudere il profilo su un solo ruolo.",
-        "openingMessageTarget": "Il messaggio iniziale deve far capire rapidamente perché il percorso è coerente con il target: {{targetRole}}."
+        "label": "logistica e operazioni doganali"
       }
+    },
+    "normalized": {
+      "senioritySignal": "mid",
+      "totalYearsDetected": "20+",
+      "targetRelevantYearsDetected": "1-3",
+      "targetExperienceArea": "psicologia, counseling, tirocini, sostegno educativo e relazione di aiuto",
+      "summary": "Professionista con lunga esperienza lavorativa in ambito logistico-amministrativo e percorso progressivo di riqualificazione verso psicologia, counseling, psicoterapia, sostegno alla persona e servizi educativi.",
+      "currentPositioning": "Psicologa in formazione psicoterapeutica, con esperienza in counseling e tirocini in ambito psicologico, educativo e di sostegno alla persona."
     }
   }
 }
-
