@@ -2,7 +2,10 @@ import loadRoleFamilyNarrativeData from "./narrativeProfiles/loadRoleFamilyNarra
 
 
 import detectRoleTarget from "./detectRoleTarget.js";
-import getRoleTargetNarrativeProfile from "./roleTargetNarrativeProfiles.js";
+
+import loadRoleTargetNarrativeData from "./narrativeProfiles/loadRoleTargetNarrativeData.js";
+
+
 import loadCvReviewNarrativeData, {
   applyTemplate
 } from "./narrativeProfiles/loadCvReviewNarrativeData.js";
@@ -926,11 +929,12 @@ function buildCvReviewReportV1({
   targetRole
   });
 
-const roleTargetProfile = getRoleTargetNarrativeProfile({
-  roleFamily,
-  roleTarget: roleTargetKey,
-  locale: "it"
-  });
+ const roleTargetProfile =
+  loadRoleTargetNarrativeData({
+    roleFamily,
+    roleTarget: roleTargetKey,
+    locale: "it"
+  }) || {};
 
   const visibleLabels = [
     cvProfessionalTraits.method ? "metodo" : "",
