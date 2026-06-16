@@ -29,6 +29,14 @@
         "ruolo professionale da chiarire"
       ],
 
+      "riskNarrativeTemplates": {
+        "careerTransition": "Il percorso appare ricco e articolato, ma potrebbe non essere immediatamente evidente quale sia il legame tra le diverse esperienze maturate nel tempo. In assenza di un racconto più esplicito della transizione professionale, alcuni lettori potrebbero faticare a comprendere come formazione, esperienza e direzione futura si integrino in un progetto professionale coerente."
+        },
+
+        "credibilityNarrativeTemplates": {
+        "primary": "Il profilo costruisce credibilità soprattutto attraverso la capacità di creare relazione, l'investimento continuo nella formazione e l'esperienza maturata in contesti dove ascolto, fiducia e attenzione alla persona assumono un ruolo centrale. Questi elementi possono trasmettere affidabilità, presenza relazionale e disponibilità a lavorare con persone e situazioni complesse."
+        },
+
       "rewriteProfile":
         "Professionista con formazione psicologica e relazionale orientata ai servizi educativi, al sostegno della persona e ai contesti di aiuto.",
 
@@ -64,7 +72,17 @@
           "Esperienze con competenze trasferibili",
           "Esperienze meno rilevanti ma utili come credibilità"
         ]
-      }
-    }
+      },
+      "discoveryDirections": [
+        "servizi per famiglie",
+        "sportelli di ascolto",
+        "prevenzione giovani",
+        "supporto educativo",
+        "servizi per disabilità"
+        ]
+
+
+    },
+     "en": {}
   }
 }

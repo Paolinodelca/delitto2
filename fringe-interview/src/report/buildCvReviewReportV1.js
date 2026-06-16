@@ -1,4 +1,6 @@
-import getRoleFamilyNarrativeProfile from "./roleFamilyNarrativeProfiles.js";
+import loadRoleFamilyNarrativeData from "./narrativeProfiles/loadRoleFamilyNarrativeData.js";
+
+
 import detectRoleTarget from "./detectRoleTarget.js";
 import getRoleTargetNarrativeProfile from "./roleTargetNarrativeProfiles.js";
 import loadCvReviewNarrativeData, {
@@ -911,7 +913,8 @@ function buildCvReviewReportV1({
 
   const targetMode = normalizeString(targetRole) ? "cv_with_target" : "cv_discovery";
 
-    const roleFamilyProfile = getRoleFamilyNarrativeProfile(roleFamily, "it");
+    const roleFamilyProfile =
+  loadRoleFamilyNarrativeData(roleFamily, "it") || {};
     const cvReviewNarratives =
   loadCvReviewNarrativeData({
     roleFamily,
