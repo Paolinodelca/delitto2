@@ -1041,3 +1041,48 @@ Prossime priorità:
 Nota strategica:
 
 Non migrare testi uno per uno. Migrare per blocchi funzionali e mantenere file dati leggibili per famiglia e lingua.
+
+## RISULTATO FASE 1
+
+Audit iniziale:
+
+* narrative candidates: 497
+* cv_review: 61
+* primary_narrative: 17
+
+Audit finale:
+
+* narrative candidates: 454
+* cv_review: 22
+* primary_narrative: 8
+
+Riduzione CV Review:
+
+* 61 → 22 (-64%)
+
+Riduzione narrative principali:
+
+* 17 → 8 (-53%)
+
+Architettura ottenuta:
+
+builder
+↓
+narrativeData
+↓
+family JSON
+↓
+locale JSON
+
+File introdotti:
+
+* cvReview/care_helping_professions.json
+* cvReview/generic_professional.json
+
+Loader:
+
+* fallback automatico su generic_professional
+
+Conseguenza:
+
+nuove famiglie e nuove lingue possono essere aggiunte prevalentemente tramite file dati, senza intervenire sistematicamente nei builder.

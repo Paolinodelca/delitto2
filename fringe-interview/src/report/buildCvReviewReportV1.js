@@ -92,9 +92,11 @@ return cleanTargetRole
 function buildReadingRiskNarrative({
   traits = {},
   roleFamilyProfile = {},
-  roleTargetProfile = {}
+  roleTargetProfile = {},
+  cvReviewNarratives = {}
 } = {}) {
   const templates = roleFamilyProfile?.riskNarrativeTemplates || {};
+  const riskTemplates = cvReviewNarratives?.readingRisk || {};
 
   const targetFocus = ensureArray(roleTargetProfile?.focus)
     .map(normalizeString)
@@ -107,9 +109,11 @@ function buildReadingRiskNarrative({
     return (
       `${templates.careerTransition} ` +
       (targetFocusText
-        ? `Rispetto a questo target, il rischio principale è che non risultino abbastanza visibili ${targetFocusText}. `
+        ? `${applyTemplate(riskTemplates.targetFocusVisibility, {
+            targetFocusText
+          })} `
         : "") +
-      `Rendere più esplicite le motivazioni e la direzione professionale può aiutare a trasformare questa eterogeneità in un punto di forza.`
+      riskTemplates.careerTransitionWithFamilyTemplateSuffix
     );
   }
 
@@ -122,52 +126,50 @@ function buildReadingRiskNarrative({
 
   if (traits.careerTransition) {
     return (
-      `Alcuni lettori potrebbero inizialmente percepire il percorso come molto eterogeneo, perché combina esperienze e competenze maturate in ambiti differenti. ` +
-      `Se la transizione professionale non viene raccontata chiaramente, esiste il rischio che il filo conduttore del percorso rimanga poco visibile. ` +
+      `${riskTemplates.careerTransitionIntro} ` +
       (targetFocusText
-        ? `Rispetto a questo target, il rischio principale è che non risultino abbastanza visibili ${targetFocusText}. `
+        ? `${applyTemplate(riskTemplates.targetFocusVisibility, {
+            targetFocusText
+          })} `
         : riskFocusText
-        ? `In questo ambito, sarà importante rendere più leggibili soprattutto ${riskFocusText}. `
+        ? `${applyTemplate(riskTemplates.riskFocusVisibility, {
+            riskFocusText
+          })} `
         : "") +
-      `Rendere più esplicite le motivazioni e la direzione professionale può aiutare a trasformare questa eterogeneità in un punto di forza.`
+      riskTemplates.careerTransitionWithFamilyTemplateSuffix
     );
   }
 
   if (targetFocusText) {
-    return (
-      `Il principale rischio di lettura è che il CV non colleghi abbastanza chiaramente il percorso al target scelto. ` +
-      `In particolare, potrebbero non risultare abbastanza visibili ${targetFocusText}. ` +
-      `Rendere questi aspetti più concreti aiuta il lettore a capire meglio valore, coerenza e spendibilità del profilo.`
-    );
+    return applyTemplate(riskTemplates.targetFocusRisk, {
+      targetFocusText
+    });
   }
 
   if (riskFocusText) {
-    return (
-      `Il principale rischio di lettura è che alcuni elementi rilevanti del percorso restino impliciti o poco collegati alla direzione professionale desiderata. ` +
-      `In questo ambito, sarà importante rendere più leggibili soprattutto ${riskFocusText}. ` +
-      `Rendere questi aspetti più concreti aiuta il lettore a capire meglio valore, coerenza e spendibilità del profilo.`
-    );
+    return applyTemplate(riskTemplates.riskFocusRisk, {
+      riskFocusText
+    });
   }
 
-  return (
-    `Il principale rischio di lettura non sembra legato alle competenze presenti, ma alla loro interpretazione. ` +
-    `Alcuni elementi importanti del percorso potrebbero risultare meno visibili di quanto meritino se non vengono collegati chiaramente ai risultati, alle responsabilità e agli obiettivi professionali.`
-  );
+  return riskTemplates.genericFallback;
 }
 
-function buildImprovementHintNarrative({ traits = {} } = {}) {
+
+function buildImprovementHintNarrative({
+  traits = {},
+  cvReviewNarratives = {}
+} = {}) {
+
+  const templates =
+    cvReviewNarratives?.improvementHint || {};
+
   if (traits.careerTransition) {
-    return (
-      `Può essere utile spiegare in poche righe come le esperienze maturate nel tempo si colleghino tra loro e quale direzione professionale stiano costruendo. ` +
-      `L'obiettivo non è giustificare il cambiamento, ma aiutare il lettore a comprenderne il senso e il valore professionale.`
-    );
+    return templates.careerTransition;
   }
 
-  return (
-    `Per aumentare la leggibilità del profilo, conviene rendere più espliciti contributi, responsabilità, risultati e contesti nei quali le competenze sono state sviluppate.`
-  );
+  return templates.default;
 }
-
 
 
 function buildTargetFocusNarrative({
@@ -1009,11 +1011,14 @@ const roleTargetProfile = getRoleTargetNarrativeProfile({
 
    readingRisk: {
   title: "Possibili rischi di lettura",
+
   narrative: buildReadingRiskNarrative({
-    traits: cvProfessionalTraits,
-    roleFamilyProfile,
-    roleTargetProfile
-  })
+  traits: cvProfessionalTraits,
+  roleFamilyProfile,
+  roleTargetProfile,
+  cvReviewNarratives
+})
+
 },
 
 
@@ -1021,9 +1026,11 @@ const roleTargetProfile = getRoleTargetNarrativeProfile({
 improvementHint: {
   title: "Come rendere più leggibile il profilo",
   narrative: buildImprovementHintNarrative({
-    traits: cvProfessionalTraits
+    traits: cvProfessionalTraits,
+    cvReviewNarratives
   })
 },
+
 
 targetFocus: {
   title: "Cosa mettere in evidenza per questo target",
