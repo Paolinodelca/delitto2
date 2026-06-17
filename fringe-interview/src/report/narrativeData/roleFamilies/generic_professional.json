@@ -1,0 +1,45 @@
+{
+  "family": "generic_professional",
+  "locales": {
+    "it": {
+      "label": "profilo professionale generale",
+      "vocabulary": ["responsabilità", "continuità", "collaborazione", "metodo"],
+      "credibilityFocus": ["esperienza", "affidabilità", "contributo", "trasferibilità"],
+      "riskFocus": ["profilo troppo generico", "contributo poco visibile"],
+      "rewriteProfile": "Profilo professionale da definire in base al target.",
+      "rewriteSkills": [],
+      "rewriteKeywords": [],
+      "credibilityNarrativeTemplates": {
+        "primary": ""
+      },
+      "discoveryDirections": [
+        "ruoli coerenti con esperienza, competenze e contesto"
+      ],
+      "rewriteOutput": {
+        "professionalProfile": "Profilo professionale da definire in base al target.",
+        "trainingOrdering": [],
+        "experienceOrdering": []
+      }
+    },
+    "en": {
+      "label": "general professional profile",
+      "vocabulary": ["responsibility", "continuity", "collaboration", "method"],
+      "credibilityFocus": ["experience", "reliability", "contribution", "transferability"],
+      "riskFocus": ["profile too generic", "contribution not visible enough"],
+      "rewriteProfile": "Professional profile to be defined according to the target.",
+      "rewriteSkills": [],
+      "rewriteKeywords": [],
+      "credibilityNarrativeTemplates": {
+        "primary": ""
+      },
+      "discoveryDirections": [
+        "roles coherent with experience, skills and context"
+      ],
+      "rewriteOutput": {
+        "professionalProfile": "Professional profile to be defined according to the target.",
+        "trainingOrdering": [],
+        "experienceOrdering": []
+      }
+    }
+  }
+}

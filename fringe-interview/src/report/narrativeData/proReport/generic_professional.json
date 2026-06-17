@@ -1,10 +1,8 @@
 {
-  "family": "care_helping_professions",
+  "family": "generic_professional",
   "locales": {
     "it": {
       "professionalPerception": {
-
-
 
 "headline": "Profilo con segnali utili, ma ancora da rendere più leggibile rispetto al ruolo target.",
 
@@ -23,7 +21,6 @@
 "credibilityAssetsWithSignals": "Nel percorso sono presenti segnali utili, tra cui {{signals}}. Presi singolarmente possono sembrare semplici attività o competenze, ma letti insieme iniziano a raccontare una base professionale su cui costruire maggiore credibilità. Il punto è renderli più visibili come evidenze di contributo, responsabilità e valore trasferibile.",
 
 "credibilityAssetsFallback": "Nel percorso sono presenti elementi utili, ma devono ancora essere trasformati in una storia professionale più leggibile. La credibilità non nasce solo da ciò che è stato fatto, ma dal modo in cui il candidato riesce a mostrare responsabilità, continuità, contributo e impatto.",
-
 
 
 
@@ -50,6 +47,7 @@
 
         "attitudeShiftTitle": "Cambio di atteggiamento consigliato",
         "attitudeShiftNarrative": "Nelle prossime risposte prova a fare un piccolo esperimento. Quando racconti una situazione, chiediti: \"Qual è stata la mia scelta?\", \"Quale decisione ho preso?\", \"Cosa sarebbe andato diversamente se io non ci fossi stato?\". Spesso è proprio lì che emerge la differenza tra una persona che ha partecipato a un progetto e una persona che ha contribuito a determinarne il risultato.",
+
 
         "targetDistanceTitle": "Dove nasce la distanza dal ruolo target",
         "targetDistanceCurrentSignalsWithArchetype": "Oggi emerge soprattutto {{archetypeNarrative}}. Questa combinazione costruisce una percezione di credibilità professionale e aiuta a capire sia i punti di forza già visibili sia gli aspetti che potrebbero essere resi più evidenti durante il colloquio.",
@@ -136,8 +134,8 @@
 "lessVisibleInternationalExposure": "il valore della tua esposizione internazionale",
 "lessVisibleLearningVelocity": "la velocità con cui apprendi e trasformi l’esperienza"
 
-
         },
+
 
 "openingPositioning": {
   "missingMessage": "Non è stato possibile valutare il posizionamento iniziale.",
@@ -155,6 +153,7 @@
 
   "fallbackPitchExample": "Negli ultimi anni mi sono occupato di [area/attività principale] in [tipo di azienda o contesto], lavorando su [attività concreta] per [durata indicativa]. In quel percorso ho sviluppato responsabilità su [perimetro/responsabilità] e ho contribuito a [risultato o impatto osservabile]. Oggi vorrei portare questa esperienza nel ruolo di [ruolo target], perché mi permette di collegare ciò che ho già fatto con un contributo più diretto su [priorità del ruolo target]."
 },
+
 
 "operationalActionPlan": {
   "strongEpisodesTitle": "Preparare 2–3 episodi forti da riusare nel colloquio",
@@ -237,7 +236,6 @@
   "profileGapNoteWithEvidence": "I punti che oggi richiedono più attenzione sono: {{items}}.",
   "profileGapNoteFallback": "Non emerge ancora un gap dominante, ma conviene comunque verificare i punti meno coperti del profilo."
 },
-
 
 
 
@@ -352,26 +350,10 @@
     },
 
 
-
-
       "quickReading": {},
-
       "priorities": {},
-
       "checklist": {},
-
-      "sensitiveAdvice": {
-        "motivation_for_change": "Preparerei una risposta breve e pulita: da dove parti oggi, che cosa cerchi adesso e perché questo ruolo è un passo coerente. Eviterei risposte troppo generiche o troppo centrate su ciò che non ti piace del lavoro attuale.",
-
-        "role_fit": "Qui non basta dire che hai competenze utili. Conviene costruire un ponte chiaro: esperienza passata, competenze trasferibili, ruolo target. La domanda implicita è: perché proprio questo passaggio ha senso adesso?",
-
-        "conflict_pressure": "Se questo tema conta per il ruolo, preparerei un episodio concreto: situazione, tensione, tua scelta, risultato. Meglio un caso semplice ma vero che una risposta generica sulla capacità di lavorare sotto pressione.",
-
-        "profile_gap": "Non cercherei di nascondere il gap. Meglio riconoscerlo con lucidità e compensarlo: esperienze vicine, strumenti simili, apprendimento già avviato, o contesti in cui hai affrontato problemi analoghi.",
-
-        "default": "Preparerei questo punto con una risposta breve, concreta e collegata al ruolo target."
-      },
-
+      "sensitiveAdvice": {},
       "cvSignals": {}
     }
   }
