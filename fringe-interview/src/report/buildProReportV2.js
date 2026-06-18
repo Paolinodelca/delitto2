@@ -867,8 +867,7 @@ function buildProfessionalPerceptionSummary({
 
       narrative:
     candidateSummary ||
-    proReportNarratives?.professionalPerception?.emergingImageFallback ||
-    "Il profilo mostra alcuni segnali professionali utili, ma la percezione complessiva richiede ancora una lettura più strutturata.",
+    proReportNarratives?.professionalPerception?.emergingImageFallback,
 
 
 
@@ -944,10 +943,8 @@ function buildProfessionalPerceptionSummary({
             targetSignalsGap: describeTargetSignalsGap(professionalSignals,proReportNarratives)
           }
         )
-      : (
-          proReportNarratives?.professionalPerception?.targetDistanceTargetSignalsFallback ||
-          "Il ruolo target richiede soprattutto evidenze di responsabilità, impatto, autonomia decisionale e capacità di guidare risultati."
-        ),
+      :  proReportNarratives?.professionalPerception?.        targetDistanceTargetSignalsFallback,
+        
 
   bridgeNarrative:
     perceptionGap.length > 0
@@ -957,10 +954,8 @@ function buildProfessionalPerceptionSummary({
             gapNarrative: perceptionGap[0].narrative
           }
         )
-      : (
-          proReportNarratives?.professionalPerception?.targetDistanceBridgeFallback ||
-          "La distanza principale non sembra nascere dalla mancanza di competenze, ma dalla difficoltà nel rendere immediatamente visibili contributo personale, decisioni e impatto."
-        )
+      : proReportNarratives?.professionalPerception?.targetDistanceBridgeFallback 
+        
 },
 
 
@@ -1036,13 +1031,26 @@ attitudeShift: {
     },
 
     credibilityPath: {
+
+
       currentPositioning:
         candidateSummary ||
-        "Il profilo attuale mostra segnali professionali utili ma ancora da rendere più leggibili.",
-      targetPositioning:
-        roleTitle
-          ? `Per risultare più credibile come ${roleTitle}, il candidato deve rendere più visibili i segnali più richiesti dal ruolo.`
-          : "Per risultare più credibile verso il ruolo target, il candidato deve rendere più visibili i segnali più richiesti.",
+        proReportNarratives?.professionalPerception?.currentPositioningFallback,
+
+
+      currentPositioning:
+  candidateSummary ||
+  proReportNarratives?.professionalPerception?.currentPositioningFallback,
+
+targetPositioning:
+  roleTitle
+    ? applyTemplate(
+        proReportNarratives?.professionalPerception?.targetPositioningWithRole,
+        { roleTitle }
+      )
+    : proReportNarratives?.professionalPerception?.targetPositioningFallback,
+
+
       recommendedExperiences: credibilityExperiences,
       missingEvidenceAreas: underVisibleSignals.slice(0, 6).map((signal) => ({
         label: signal,
@@ -1059,9 +1067,9 @@ attitudeShift: {
             ? "medium"
             : "uncertain",
       rationale:
-        alignmentNarrative ||
-        cvReadinessNarrative ||
-        "Il tempo di impatto percepito dipende da quanto rapidamente il candidato riesce a rendere evidenti responsabilità, impatto e trasferibilità verso il ruolo."
+  alignmentNarrative ||
+  cvReadinessNarrative ||
+  proReportNarratives?.professionalPerception?.perceivedTimeToImpactFallback
     }
   };
 }
@@ -1094,8 +1102,10 @@ export default function buildProReportV2({
   const answersWorkspaceItems = enrichAnswersWithCoachingPatternProgression(
   buildAllAnswersWorkspace(
     runtimeAnswers,
-    finalCandidateReport?.cvAdvice || {}
-  )
+    finalCandidateReport?.cvAdvice || {},
+    proReportNarratives
+  ),
+  proReportNarratives
   );
 
 
@@ -1152,7 +1162,11 @@ export default function buildProReportV2({
       }),
 
       answersWorkspace: {
-        patternSummary: aggregateAnswerCoachingPatterns(answersWorkspaceItems),
+        patternSummary: aggregateAnswerCoachingPatterns(
+          answersWorkspaceItems,
+          proReportNarratives
+
+        ),
         items: answersWorkspaceItems
       }
     }
@@ -1370,7 +1384,8 @@ function buildOperationalActionPlan({
     .map((answer, index) =>
       buildAnswerWorkspaceItem(answer, index, {
         openingCredit,
-        finalCandidateProfile: finalCandidateReport?.cvAdvice || {}
+        finalCandidateProfile: finalCandidateReport?.cvAdvice || {},
+        proReportNarratives
       })
     )
     .filter(Boolean);
@@ -1747,6 +1762,7 @@ function buildSensitiveQuestionsDashboard({
 }
 
 
+
 function buildSensitiveQuestionFromAnswer(answer, type) {
   if (!answer) {
     return {
@@ -1780,7 +1796,11 @@ function buildSensitiveQuestionFromAnswer(answer, type) {
    5. CV SLIM
 ========================================================= */
 
-function normalizeCvSignals(items, type = "strength") {
+function normalizeCvSignals(
+  items,
+  type = "strength",
+  proReportNarratives = {}
+) {
   const normalized = [];
 
   for (const rawItem of ensureArray(items)) {
@@ -1796,7 +1816,7 @@ function normalizeCvSignals(items, type = "strength") {
 
     if (existing) continue;
 
-    normalized.push(buildCvSignalDescriptor(canonical, type));
+    normalized.push(buildCvSignalDescriptor(canonical, type,proReportNarratives));
   }
 
   return normalized.slice(0, 4);
@@ -1856,69 +1876,76 @@ function canonicalizeCvLabel(value) {
   return capitalizeFirst(normalizeString(value));
 }
 
-function buildCvSignalDescriptor(label, type = "strength") {
+function buildCvSignalDescriptor(
+  label,
+  type = "strength",
+  proReportNarratives = {}
+) {
   const lower = label.toLowerCase();
+
+  const templates =
+    proReportNarratives?.cvSignals || {};
 
   if (type === "strength") {
     if (lower.includes("analisi aziendale")) {
       return {
         label,
-        weight: "leva forte",
-        impact: "Aiuta in modo credibile il passaggio verso ruoli che richiedono lettura di processi, priorità e coordinamento."
+        weight: templates.strengthBusinessAnalysisWeight,
+        impact: templates.strengthBusinessAnalysisImpact
       };
     }
 
     if (lower.includes("coordinamento di progetti")) {
       return {
         label,
-        weight: "leva utile",
-        impact: "Rafforza la percezione di autonomia operativa e collaborazione trasversale."
+        weight: templates.strengthProjectCoordinationWeight,
+        impact: templates.strengthProjectCoordinationImpact
       };
     }
 
     return {
       label,
-      weight: "leva utile",
-      impact: "Può sostenere il posizionamento, ma va collegato bene al ruolo target."
+      weight: templates.strengthDefaultWeight,
+      impact: templates.strengthDefaultImpact
     };
   }
 
   if (lower.includes("product operations")) {
     return {
       label,
-      weight: "gap rilevante",
-      impact: "Può indebolire la credibilità del passaggio se non viene compensato con esperienze molto trasferibili."
+      weight: templates.gapProductOperationsWeight,
+      impact: templates.gapProductOperationsImpact
     };
   }
 
   if (lower.includes("saas")) {
     return {
       label,
-      weight: "gap rilevante",
-      impact: "Nei contesti digitali o software questo elemento può pesare molto nella lettura del profilo."
+      weight: templates.gapSaasWeight,
+      impact: templates.gapSaasImpact
     };
   }
 
   if (lower.includes("strumenti bi")) {
     return {
       label,
-      weight: "gap medio",
-      impact: "Può diventare un punto debole, ma spesso è più recuperabile se il resto del profilo regge bene."
+      weight: templates.gapBiWeight,
+      impact: templates.gapBiImpact
     };
   }
 
   if (lower.includes("confini del ruolo")) {
     return {
       label,
-      weight: "gap da chiarire",
-      impact: "Se il perimetro delle responsabilità non è leggibile, il profilo rischia di apparire meno solido."
+      weight: templates.gapRoleBoundariesWeight,
+      impact: templates.gapRoleBoundariesImpact
     };
   }
 
   return {
     label,
-    weight: "gap da chiarire",
-    impact: "Questo punto oggi non aiuta la lettura del profilo e andrebbe chiarito meglio."
+    weight: templates.gapDefaultWeight,
+    impact: templates.gapDefaultImpact
   };
 }
 
@@ -2366,7 +2393,8 @@ function buildCvSlimSection(
 
   const strengthsForRole = normalizeCvSignals(
     ensureArray(roleFit?.strengths).slice(0, 6),
-    "strength"
+    "strength",
+    proReportNarratives
   );
 
   const weakOrMissing = normalizeCvSignals(
@@ -2374,7 +2402,8 @@ function buildCvSlimSection(
       ...ensureArray(roleFit?.clarificationsNeeded).slice(0, 4),
       ...ensureArray(roleFit?.missingSkills).slice(0, 4)
     ],
-    "gap"
+    "gap",
+    proReportNarratives
   );
 
   const cvReadiness = cvAdvice?.cvReadiness || "partial";
@@ -2919,7 +2948,8 @@ function selectSignalsByKeywords(signals = [], keywords = []) {
 
 function buildAllAnswersWorkspace(
   runtimeAnswers,
-  finalCandidateProfile = {}
+  finalCandidateProfile = {},
+  proReportNarratives = {}
 ) {
   const answers = ensureArray(runtimeAnswers);
 
@@ -2931,7 +2961,8 @@ function buildAllAnswersWorkspace(
   .map((answer, index) =>
     buildAnswerWorkspaceItem(answer, index, {
       openingCredit,
-      finalCandidateProfile
+      finalCandidateProfile,
+      proReportNarratives
     })
   )
   .filter(Boolean);
@@ -2940,13 +2971,29 @@ function buildAllAnswersWorkspace(
 }
 
 
-function buildFallbackQuestionText(answer, index) {
-  const stepType = String(answer?.stepType || "").toLowerCase();
-  const phaseName = String(answer?.phaseName || "").toLowerCase();
-  const label = String(answer?.label || "").toLowerCase();
+function buildFallbackQuestionText(
+  answer,
+  index,
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.fallbackQuestionText || {};
 
-  if (stepType === "opening" || phaseName === "opening" || label === "opening") {
-    return "Apri il colloquio raccontando il tuo percorso e mettendo subito a fuoco le esperienze più rilevanti per il ruolo.";
+  const stepType =
+    String(answer?.stepType || "").toLowerCase();
+
+  const phaseName =
+    String(answer?.phaseName || "").toLowerCase();
+
+  const label =
+    String(answer?.label || "").toLowerCase();
+
+  if (
+    stepType === "opening" ||
+    phaseName === "opening" ||
+    label === "opening"
+  ) {
+    return templates.opening;
   }
 
   if (
@@ -2954,7 +3001,7 @@ function buildFallbackQuestionText(answer, index) {
     phaseName.includes("role") ||
     label.includes("aderenza")
   ) {
-    return "Spiega perché il tuo profilo è credibile per questo ruolo e quali esperienze puoi trasferire nel contesto target.";
+    return templates.roleFit;
   }
 
   if (
@@ -2962,7 +3009,7 @@ function buildFallbackQuestionText(answer, index) {
     phaseName.includes("case") ||
     label.includes("caso")
   ) {
-    return "Racconta un caso concreto, chiarendo contesto, tua azione e risultato.";
+    return templates.case;
   }
 
   if (
@@ -2970,27 +3017,32 @@ function buildFallbackQuestionText(answer, index) {
     phaseName.includes("decision") ||
     label.includes("decisione")
   ) {
-    return "Racconta una decisione o un trade-off, spiegando che cosa hai scelto, che cosa hai lasciato indietro e perché.";
+    return templates.decision;
   }
 
   if (
     stepType.includes("pressure") ||
     phaseName.includes("pressure") ||
     label.includes("pressione") ||
-    label.includes("attrito")
+    label.includes("conflitto")
   ) {
-    return "Racconta una situazione di pressione, conflitto o attrito e spiega come l’hai gestita.";
+    return templates.pressure;
   }
 
   if (
     stepType.includes("closing") ||
     phaseName.includes("closing") ||
-    label.includes("closing")
+    label.includes("chiusura")
   ) {
-    return "Chiudi il colloquio rafforzando il collegamento tra il tuo percorso, il ruolo target e i punti principali emersi.";
+    return templates.closing;
   }
 
-  return `Domanda ${index + 1}`;
+  return applyTemplate(
+    templates.defaultTemplate,
+    {
+      index: index + 1
+    }
+  );
 }
 
 function getRuntimeContextCarryoverCredit(answer) {
@@ -3001,19 +3053,28 @@ function getRuntimeContextCarryoverCredit(answer) {
   );
 }
 
-
 function buildRecruiterRecoveryPrompt({
   item = {},
   analysis = {},
-  questionContext = {}
+  questionContext = {},
+  proReportNarratives = {}
 } = {}) {
+  const templates =
+    proReportNarratives?.recruiterRecoveryPrompt || {};
+
   const questionText = normalizeString(item?.questionText);
   const score = safeNumber(item?.score);
-  const problematicAnswerType = normalizeString(item?.problematicAnswerType).toLowerCase();
-  const offTopicRisk = normalizeString(item?.offTopicRisk).toLowerCase();
-  const questionAlignment = Number(item?.questionAlignment ?? 100);
+  const problematicAnswerType =
+    normalizeString(item?.problematicAnswerType).toLowerCase();
 
-  const flags = questionContext?.questionTypeFlags || {};
+  const offTopicRisk =
+    normalizeString(item?.offTopicRisk).toLowerCase();
+
+  const questionAlignment =
+    Number(item?.questionAlignment ?? 100);
+
+  const flags =
+    questionContext?.questionTypeFlags || {};
 
   const shouldShow =
     problematicAnswerType === "off_topic" ||
@@ -3033,54 +3094,54 @@ function buildRecruiterRecoveryPrompt({
     return null;
   }
 
-  let title = "Come ti avrebbe fermato un recruiter";
+  let title = templates.defaultTitle;
 
-  let prompt =
-    "Ti fermo un attimo: la risposta contiene elementi utili, ma non sta centrando bene la domanda. Prova a rispondere restando solo sul punto richiesto.";
+  let prompt = templates.defaultPrompt;
 
-  const genericExpectedVariants = [
-  "Riparti dalla domanda e rispondi prima al punto preciso richiesto. Solo dopo aggiungi contesto, responsabilità personale e risultato.",
-  "Apri con una frase che risponda direttamente alla domanda. Poi usa un esempio breve per mostrare contesto, tua azione e risultato.",
-  "Seleziona un solo episodio pertinente: chiarisci situazione, tuo contributo e effetto prodotto, evitando di spostarti su un tema vicino ma diverso.",
-  "Prima chiarisci che cosa vuoi dimostrare rispetto alla domanda. Poi porta una prova concreta, non un racconto laterale."
-];
+  const genericExpectedVariants =
+    ensureArray(templates.genericExpectedVariants);
 
-const answerIndex = Number(item?.answerIndex || 0);
+  const answerIndex =
+    Number(item?.answerIndex || 0);
 
-let expected =
-  genericExpectedVariants[
-    answerIndex > 0
-      ? (answerIndex - 1) % genericExpectedVariants.length
-      : 0
-  ];
+  let expected =
+    genericExpectedVariants[
+      answerIndex > 0
+        ? (answerIndex - 1) % genericExpectedVariants.length
+        : 0
+    ];
 
-  if (flags.isRoleFit || questionText.includes("passo successivo") || questionText.includes("perché questo ruolo") || questionText.includes("perche questo ruolo")) {
-    prompt =
-      "Ti fermo un attimo: non ti stavo chiedendo un esempio operativo generico. Vorrei capire perché questo ruolo è il passaggio coerente adesso. Puoi rispondere restando su questo punto?";
-    expected =
-      "Spiega il collegamento tra percorso, motivazione attuale e ruolo target. Non basta dire cosa sai fare: devi chiarire perché questo ruolo ha senso adesso.";
+  if (
+    flags.isRoleFit ||
+    questionText.includes("passo successivo") ||
+    questionText.includes("perché questo ruolo") ||
+    questionText.includes("perche questo ruolo")
+  ) {
+    prompt = templates.roleFitPrompt;
+    expected = templates.roleFitExpected;
   }
 
-  if (flags.isDecision || questionText.includes("trade-off") || questionText.includes("tradeoff")) {
-    prompt =
-      "Ti fermo un attimo: qui non mi interessa solo il contesto. Vorrei capire quale scelta hai fatto, che cosa hai lasciato indietro e perché. Puoi ripartire da questo?";
-    expected =
-      "Rispondi con: scelta fatta, alternativa sacrificata, criterio usato e conseguenza della decisione.";
+  if (
+    flags.isDecision ||
+    questionText.includes("trade-off") ||
+    questionText.includes("tradeoff")
+  ) {
+    prompt = templates.decisionPrompt;
+    expected = templates.decisionExpected;
   }
 
-  if (flags.isOpening || questionText.includes("percorso professionale")) {
-    prompt =
-      "Ti fermo un attimo: mi serve una ricostruzione più concreta del percorso, non solo una sintesi generale. Puoi indicare ruoli, contesti, durata, responsabilità e risultati principali?";
-    expected =
-      "Costruisci una mini-linea temporale: ruolo, contesto, durata, responsabilità principale, risultato e collegamento al ruolo target.";
+  if (
+    flags.isOpening ||
+    questionText.includes("percorso professionale")
+  ) {
+    prompt = templates.openingPrompt;
+    expected = templates.openingExpected;
   }
 
   if (problematicAnswerType === "evasive") {
-    title = "Come il recruiter riporterebbe la risposta sul punto";
-    prompt =
-      "Ti fermo un attimo: questa risposta resta troppo prudente. Ti chiedo di prendere posizione e rispondere direttamente alla domanda.";
-    expected =
-      "Evita formule generiche. Dai una risposta netta, poi aggiungi un esempio o una prova concreta.";
+    title = templates.evasiveTitle;
+    prompt = templates.evasivePrompt;
+    expected = templates.evasiveExpected;
   }
 
   return {
@@ -3098,39 +3159,53 @@ function buildContextLinkNote({
   questionText,
   answerText,
   answerIndex,
-  openingCredit = null
+  openingCredit = null,
+  proReportNarratives = {}
 }) {
-
+  const templates =
+    proReportNarratives?.contextLinkNote || {};
 
   const score = safeNumber(analysis?.overallScore);
-  const intent = String(buildQuestionIntentLabel(questionContext)).toLowerCase();
-  const q = String(questionText || "").toLowerCase();
-  const phaseName = String(answer?.phaseName || "").toUpperCase();
+  const intent =
+    String(buildQuestionIntentLabel(questionContext)).toLowerCase();
 
- const isOpening = phaseName === "OPENING";
-  
-const isClosing = phaseName === "CLOSING" || intent.includes("chiusura");
+  const q =
+    String(questionText || "").toLowerCase();
 
-const openingIsWeak =
-  openingCredit?.credibilityLevel === "weak" ||
-  openingCredit?.shouldRequireConcreteEvidenceLater === true;
+  const phaseName =
+    String(answer?.phaseName || "").toUpperCase();
 
-if (isOpening) {
-  return "Questa risposta costruisce la credibilità iniziale del colloquio. Non basta essere ordinati: servono riferimenti concreti a ruoli, contesti, durata delle esperienze, responsabilità e risultati, soprattutto se sono pertinenti al ruolo target.";
-}
+  const isOpening =
+    phaseName === "OPENING";
 
-if (isClosing) {
-  return score < 60
-    ? "La chiusura dovrebbe recuperare il messaggio principale del profilo: che cosa porti, perché sei coerente con il ruolo e quale contributo vuoi lasciare chiaro."
-    : "";
-}
+  const isClosing =
+    phaseName === "CLOSING" ||
+    intent.includes("chiusura");
 
-if (!isOpening && !isClosing && openingIsWeak && score < 65) {
-  return "Poiché l’apertura non ha costruito abbastanza credibilità concreta, questa risposta deve recuperare con esempi specifici: contesto, responsabilità personale, decisioni prese e risultati.";
-}
+  const openingIsWeak =
+    openingCredit?.credibilityLevel === "weak" ||
+    openingCredit?.shouldRequireConcreteEvidenceLater === true;
 
+  if (isOpening) {
+    return templates.opening;
+  }
 
-const roleBridgeMissing =
+  if (isClosing) {
+    return score < 60
+      ? templates.closingWeak
+      : "";
+  }
+
+  if (
+    !isOpening &&
+    !isClosing &&
+    openingIsWeak &&
+    score < 65
+  ) {
+    return templates.weakOpeningCarryover;
+  }
+
+  const roleBridgeMissing =
     score < 55 &&
     (
       intent.includes("ruolo") ||
@@ -3140,18 +3215,22 @@ const roleBridgeMissing =
     );
 
   if (roleBridgeMissing) {
-    return "Questa risposta perde forza perché non rende abbastanza esplicito il ponte tra percorso, ruolo target e contributo personale.";
+    return templates.roleBridgeMissing;
   }
 
   const ownershipWeak =
     score < 60 &&
     (
-      String(analysis?.weaknesses || "").toLowerCase().includes("contributo diretto") ||
-      String(analysis?.weaknesses || "").toLowerCase().includes("responsabilità")
+      String(analysis?.weaknesses || "")
+        .toLowerCase()
+        .includes("contributo diretto") ||
+      String(analysis?.weaknesses || "")
+        .toLowerCase()
+        .includes("responsabilità")
     );
 
   if (ownershipWeak) {
-    return "Qui serve chiarire meglio quale parte dipendeva davvero da te: ruolo personale, decisioni prese, responsabilità dirette e risultato ottenuto.";
+    return templates.ownershipWeak;
   }
 
   const isPressureOrDecision =
@@ -3163,12 +3242,11 @@ const roleBridgeMissing =
     q.includes("pressione");
 
   if (isPressureOrDecision && score < 65) {
-    return "Questa risposta dovrebbe confermare con un episodio concreto le qualità che il CV o l’apertura lasciano intuire.";
+    return templates.pressureOrDecisionWeak;
   }
 
   return "";
 }
-
 
 function buildOperationalPriorities(runtimeAnswers = []) {
   const answers = ensureArray(runtimeAnswers);
@@ -3235,53 +3313,69 @@ function buildAnswerDisplaySummary({
   problematicAnswerType = "none",
   isDuplicate = false,
   isOffTopic = false,
-  index = 0
+  index = 0,
+  proReportNarratives = {}
 } = {}) {
-  const type = String(problematicAnswerType || "none").toLowerCase();
-  const score = safeNumber(analysis?.overallScore);
-  const weakness = getPrimaryAnswerWeakness(analysis);
+  const templates =
+    proReportNarratives?.answerDisplaySummary || {};
+
+  const type =
+    String(problematicAnswerType || "none").toLowerCase();
+
+  const score =
+    safeNumber(analysis?.overallScore);
+
+  const weakness =
+    getPrimaryAnswerWeakness(analysis);
 
   if (isDuplicate || type === "duplicate") {
-    return "La risposta ripete contenuti già emersi: anche se può sembrare coerente, in un colloquio non aggiunge nuove evidenze e quindi perde molta forza.";
+    return templates.duplicate;
   }
 
   if (type === "non_answer") {
-    return "La risposta non entra davvero nel merito della domanda: prima ancora di migliorarne la forma, serve dare una risposta concreta al punto richiesto.";
+    return templates.nonAnswer;
   }
 
   if (type === "evasive") {
-    return "La risposta resta prudente e poco impegnativa: evita il punto più importante invece di trasformarlo in un esempio concreto e verificabile.";
+    return templates.evasive;
   }
 
   if (isOffTopic || type === "off_topic") {
-    return pickRotatingText([
-      "La risposta è comprensibile, ma resta laterale rispetto alla domanda: per funzionare deve collegarsi più direttamente al punto richiesto.",
-      "La risposta ha una forma ordinata, però non mette abbastanza a fuoco ciò che l’intervistatore sta chiedendo: serve un aggancio più esplicito alla domanda.",
-      "Qui il problema principale non è il tono, ma il bersaglio: la risposta parla di elementi utili, ma non li collega con sufficiente precisione alla domanda.",
-      "La risposta contiene materiale potenzialmente utile, ma rischia di non essere percepita come una vera risposta alla domanda posta.",
-      "La risposta suona professionale, ma deve diventare più mirata: meno cornice generale e più risposta diretta al punto richiesto."
-    ], index);
+    return pickRotatingText(
+      ensureArray(templates.offTopicVariants),
+      index
+    );
   }
 
   if (score < 50) {
     return weakness
-      ? `La risposta resta debole perché non porta ancora abbastanza evidenza concreta. Il primo nodo da correggere è: ${weakness}`
-      : "La risposta resta fragile: per diventare credibile deve aggiungere contesto, responsabilità personale e risultati osservabili.";
+      ? applyTemplate(
+          templates.weakWithPrimaryWeakness,
+          { weakness }
+        )
+      : templates.weakFallback;
   }
 
   if (score < 70) {
     return weakness
-      ? `La risposta ha una base utilizzabile, ma va rafforzata. Il punto più importante da migliorare è: ${weakness}`
-      : "La risposta è utilizzabile, ma ancora troppo generica: serve renderla più concreta e più collegata al ruolo target.";
+      ? applyTemplate(
+          templates.mediumWithPrimaryWeakness,
+          { weakness }
+        )
+      : templates.mediumFallback;
   }
 
   return analysis?.summary ||
-    "La risposta è complessivamente solida: per renderla ancora più efficace conviene aggiungere un dettaglio concreto su contesto, ruolo personale o risultato.";
+    templates.solidFallback;
 }
-
 
 function buildAnswerWorkspaceItem(answer, index, context = {}) {
   const openingCredit = context?.openingCredit || null;
+  const proReportNarratives =
+  context?.proReportNarratives || {};
+  const templates =
+  proReportNarratives?.answerDisplaySummary || {};
+
   if (!answer || typeof answer !== "object") {
     return null;
   }
@@ -3299,7 +3393,7 @@ function buildAnswerWorkspaceItem(answer, index, context = {}) {
     answer?.prompt ||
     answer?.question ||
     answer?.questionContext?.questionText ||
-    buildFallbackQuestionText(answer, index);
+    buildFallbackQuestionText(answer, index,proReportNarratives);
 
   const answerText =
     answer?.answerText ||
@@ -3338,7 +3432,8 @@ const baseSummary = buildAnswerDisplaySummary({
   problematicAnswerType,
   isDuplicate,
   isOffTopic,
-  index
+  index,
+  proReportNarratives
 });
 
 
@@ -3349,7 +3444,7 @@ const displaySummary =
   openingIsWeak &&
   index > 0 &&
   safeNumber(analysis?.overallScore) < 65
-    ? `${baseSummary} Inoltre, poiché l’apertura non ha ancora costruito una credibilità concreta, questa risposta dovrebbe recuperare con riferimenti più specifici a contesto, responsabilità personale e risultati.`
+    ? `${baseSummary} ${templates.weakOpeningCarryoverSuffix}`
     : baseSummary;
 
 
@@ -3360,20 +3455,19 @@ const displayOffTopicRisk = isDuplicate || isOffTopic
 
 const displayWeaknesses = isDuplicate
   ? [
-      "Ripete contenuti già usati in una risposta precedente.",
-      "Non aggiunge nuove evidenze, esempi o decisioni.",
-      "Può dare l’impressione di evitare la domanda o di non avere altri elementi da portare."
-    ]
+      templates.duplicateWeaknessRepeatedContent,
+      templates.duplicateWeaknessNoNewEvidence,
+      templates.duplicateWeaknessAvoidanceSignal
+    ].filter(Boolean)
   : ensureArray(analysis?.weaknesses).slice(0, 4);
 
 const displayImprovementHints = isDuplicate
   ? [
-      "Rispondi con un esempio diverso da quelli già usati.",
-      "Aggiungi un fatto nuovo: contesto, tua responsabilità, decisione o risultato.",
-      "Evita di riutilizzare la stessa formulazione: ogni risposta deve portare una prova diversa."
-    ]
+      templates.duplicateHintUseDifferentExample,
+      templates.duplicateHintAddNewFact,
+      templates.duplicateFormulationWarning
+    ].filter(Boolean)
   : ensureArray(analysis?.improvementHints).slice(0, 4);
-
 
    const contextLinkNoteRaw = buildContextLinkNote({
   answer,
@@ -3382,7 +3476,8 @@ const displayImprovementHints = isDuplicate
   questionText,
   answerText,
   answerIndex: index + 1,
-  openingCredit
+  openingCredit,
+  proReportNarratives
 });
 
 
@@ -3419,7 +3514,8 @@ const cvSupportRead = buildCvSupportRead({
     questionAlignment
   },
   analysis,
-  questionContext
+  questionContext,
+  proReportNarratives
 });
 
   return {
@@ -3543,31 +3639,40 @@ function classifyAnswerCoachingPatterns(item = {}) {
   return Array.from(new Set(patterns));
 }
 
-function humanizeCoachingPattern(patternKey) {
+function humanizeCoachingPattern(
+  patternKey,
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.answerDisplaySummary || {};
+
   const map = {
     misalignment:
-      "la risposta tende a spostarsi verso temi vicini invece di restare sul punto richiesto",
+      templates.coachingPatternOffTopic,
 
     weak_ownership:
-      "il tuo contributo personale resta poco visibile o poco definito",
+      templates.coachingPatternWeakOwnership,
 
     weak_outcome:
-      "l’impatto concreto del tuo lavoro emerge ancora poco",
+      templates.coachingPatternWeakOutcome,
 
     genericity:
-      "la risposta resta troppo generale e poco verificabile",
+      templates.coachingPatternGenericity,
 
     decision_without_tradeoff:
-      "la decisione viene descritta senza chiarire davvero il trade-off o il criterio scelto",
+      templates.coachingPatternDecisionWeak,
 
     duplicate_answer:
-      "alcuni contenuti tendono a ripetersi senza aggiungere nuovi elementi"
+      templates.coachingPatternDuplicateAnswer
   };
 
   return map[patternKey] || patternKey;
 }
 
-function aggregateAnswerCoachingPatterns(items = []) {
+function aggregateAnswerCoachingPatterns(
+  items = [],
+  proReportNarratives = {}
+) {
   const counts = {};
 
   ensureArray(items).forEach((item) => {
@@ -3575,27 +3680,31 @@ function aggregateAnswerCoachingPatterns(items = []) {
       if (!counts[patternKey]) {
         counts[patternKey] = {
           key: patternKey,
-          label: humanizeCoachingPattern(patternKey),
+          label: humanizeCoachingPattern(
+            patternKey,
+            proReportNarratives
+          ),
           count: 0,
           seenIn: []
         };
       }
 
       counts[patternKey].count += 1;
-      counts[patternKey].seenIn.push(item?.label || `Risposta ${item?.answerIndex || ""}`);
+      counts[patternKey].seenIn.push(
+        item?.label || `Risposta ${item?.answerIndex || ""}`
+      );
     });
   });
 
   return Object.values(counts)
     .sort((a, b) => b.count - a.count)
-    .map((item) => ({
-      ...item,
-      seenIn: Array.from(new Set(item.seenIn)).filter(Boolean)
-    }));
+    .slice(0, 5);
 }
 
-
-function enrichAnswersWithCoachingPatternProgression(items = []) {
+function enrichAnswersWithCoachingPatternProgression(
+  items = [],
+  proReportNarratives = {}
+) {
   const counters = {};
 
   return ensureArray(items).map((item) => {
@@ -3608,7 +3717,10 @@ function enrichAnswersWithCoachingPatternProgression(items = []) {
 
       return {
         key: patternKey,
-        label: humanizeCoachingPattern(patternKey),
+        label: humanizeCoachingPattern(
+          patternKey,
+          proReportNarratives
+        ),
         occurrence,
         tone:
           occurrence === 1
@@ -3625,32 +3737,51 @@ function enrichAnswersWithCoachingPatternProgression(items = []) {
       ...item,
       coachingPatterns: patterns,
       coachingPatternProgression,
-      coachingPatternNote: buildCoachingPatternNote(coachingPatternProgression)
+      coachingPatternNote: buildCoachingPatternNote(
+        coachingPatternProgression,
+        proReportNarratives
+      )
     };
   });
 }
 
-function buildCoachingPatternNote(patternProgression = []) {
-  const main = ensureArray(patternProgression)[0];
 
-  if (!main) {
+function buildCoachingPatternNote(
+  patternProgression = [],
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.answerDisplaySummary || {};
+
+  const lastPattern =
+    ensureArray(patternProgression).slice(-1)[0];
+
+  if (!lastPattern) {
     return "";
   }
 
-  const label = main.label || "questo punto";
-  const occurrence = Number(main.occurrence || 1);
-
-  if (occurrence <= 1) {
-    return `Qui emerge un punto da osservare: ${label}.`;
+  if (lastPattern.occurrence === 1) {
+    return applyTemplate(
+      templates.coachingPatternNoteFirstNotice,
+      {
+        label: lastPattern.label
+      }
+    );
   }
 
-  if (occurrence === 2) {
-    return `Questo punto torna di nuovo nel colloquio: ${label}.`;
+  if (lastPattern.occurrence === 2) {
+    return applyTemplate(
+      templates.coachingPatternNoteRepeated,
+      {
+        label: lastPattern.label
+      }
+    );
   }
 
-  if (occurrence === 3) {
-    return `Il pattern si sta confermando: ${label}. Non sembra più un episodio isolato.`;
-  }
-
-  return `Questo è ormai un pattern ricorrente nel colloquio: ${label}. Va trattato come priorità di miglioramento.`;
+  return applyTemplate(
+    templates.coachingPatternNotePersistent,
+    {
+      label: lastPattern.label
+    }
+  );
 }

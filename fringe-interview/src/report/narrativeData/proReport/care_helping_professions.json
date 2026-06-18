@@ -134,10 +134,16 @@
 "lessVisibleCommunicationClarity": "la chiarezza con cui rendi leggibile il tuo contributo",
 "lessVisibleAdaptability": "la capacità di adattarti a contesti nuovi",
 "lessVisibleInternationalExposure": "il valore della tua esposizione internazionale",
-"lessVisibleLearningVelocity": "la velocità con cui apprendi e trasformi l’esperienza"
+"lessVisibleLearningVelocity": "la velocità con cui apprendi e trasformi l’esperienza",
+
+"currentPositioningFallback": "Il profilo attuale mostra segnali professionali utili ma ancora da rendere più leggibili.",
+"targetPositioningWithRole": "Per risultare più credibile come {{roleTitle}}, il candidato deve rendere più visibili i segnali più richiesti dal ruolo.",
+"targetPositioningFallback": "Per risultare più credibile verso il ruolo target, il candidato deve rendere più visibili i segnali più richiesti.",
+
+"perceivedTimeToImpactFallback": "Il tempo di impatto percepito dipende da quanto rapidamente il candidato riesce a rendere evidenti responsabilità, impatto e trasferibilità verso il ruolo."
 
 
-        },
+ },
 
 "openingPositioning": {
   "missingMessage": "Non è stato possibile valutare il posizionamento iniziale.",
@@ -192,6 +198,109 @@
   "sectionTitle": "Priorità operative",
   "sectionSummary": "Questa sezione raccoglie le azioni più importanti da fare prima di lavorare sui dettagli. Serve a non perdere il filo mentre leggi il report."
 },
+
+"recruiterRecoveryPrompt": {
+  "defaultTitle": "Come ti avrebbe fermato un recruiter",
+  "evasiveTitle": "Come il recruiter riporterebbe la risposta sul punto",
+
+  "defaultPrompt": "Ti fermo un attimo: la risposta contiene elementi utili, ma non sta centrando bene la domanda. Prova a rispondere restando solo sul punto richiesto.",
+
+  "genericExpectedVariants": [
+    "Riparti dalla domanda e rispondi prima al punto preciso richiesto. Solo dopo aggiungi contesto, responsabilità personale e risultato.",
+    "Apri con una frase che risponda direttamente alla domanda. Poi usa un esempio breve per mostrare contesto, tua azione e risultato.",
+    "Seleziona un solo episodio pertinente: chiarisci situazione, tuo contributo e effetto prodotto, evitando di spostarti su un tema vicino ma diverso.",
+    "Prima chiarisci che cosa vuoi dimostrare rispetto alla domanda. Poi porta una prova concreta, non un racconto laterale."
+  ],
+
+  "roleFitPrompt": "Ti fermo un attimo: non ti stavo chiedendo un esempio operativo generico. Vorrei capire perché questo ruolo è il passaggio coerente adesso. Puoi rispondere restando su questo punto?",
+  "roleFitExpected": "Spiega il collegamento tra percorso, motivazione attuale e ruolo target. Non basta dire cosa sai fare: devi chiarire perché questo ruolo ha senso adesso.",
+
+  "decisionPrompt": "Ti fermo un attimo: qui non mi interessa solo il contesto. Vorrei capire quale scelta hai fatto, che cosa hai lasciato indietro e perché. Puoi ripartire da questo?",
+  "decisionExpected": "Rispondi con: scelta fatta, alternativa sacrificata, criterio usato e conseguenza della decisione.",
+
+  "openingPrompt": "Ti fermo un attimo: mi serve una ricostruzione più concreta del percorso, non solo una sintesi generale. Puoi indicare ruoli, contesti, durata, responsabilità e risultati principali?",
+  "openingExpected": "Costruisci una mini-linea temporale: ruolo, contesto, durata, responsabilità principale, risultato e collegamento al ruolo target.",
+
+  "evasivePrompt": "Ti fermo un attimo: questa risposta resta troppo prudente. Ti chiedo di prendere posizione e rispondere direttamente alla domanda.",
+  "evasiveExpected": "Evita formule generiche. Dai una risposta netta, poi aggiungi un esempio o una prova concreta."
+},
+
+"contextLinkNote": {
+  "opening": "Questa risposta costruisce la credibilità iniziale del colloquio. Non basta essere ordinati: servono riferimenti concreti a ruoli, contesti, durata delle esperienze, responsabilità e risultati, soprattutto se sono pertinenti al ruolo target.",
+
+  "closingWeak": "La chiusura dovrebbe recuperare il messaggio principale del profilo: che cosa porti, perché sei coerente con il ruolo e quale contributo vuoi lasciare chiaro.",
+
+  "weakOpeningCarryover": "Poiché l’apertura non ha costruito abbastanza credibilità concreta, questa risposta deve recuperare con esempi specifici: contesto, responsabilità personale, decisioni prese e risultati.",
+
+  "roleBridgeMissing": "Questa risposta perde forza perché non rende abbastanza esplicito il ponte tra percorso, ruolo target e contributo personale.",
+
+  "ownershipWeak": "Qui serve chiarire meglio quale parte dipendeva davvero da te: ruolo personale, decisioni prese, responsabilità dirette e risultato ottenuto.",
+
+  "pressureOrDecisionWeak": "Questa risposta dovrebbe confermare con un episodio concreto le qualità che il CV o l’apertura lasciano intuire."
+},
+
+"answerDisplaySummary": {
+  "duplicate": "La risposta ripete contenuti già emersi: anche se può sembrare coerente, in un colloquio non aggiunge nuove evidenze e quindi perde molta forza.",
+
+  "nonAnswer": "La risposta non entra davvero nel merito della domanda: prima ancora di migliorarne la forma, serve dare una risposta concreta al punto richiesto.",
+
+  "evasive": "La risposta resta prudente e poco impegnativa: evita il punto più importante invece di trasformarlo in un esempio concreto e verificabile.",
+
+  "offTopicVariants": [
+    "La risposta è comprensibile, ma resta laterale rispetto alla domanda: per funzionare deve collegarsi più direttamente al punto richiesto.",
+    "La risposta ha una forma ordinata, però non mette abbastanza a fuoco ciò che l’intervistatore sta chiedendo: serve un aggancio più esplicito alla domanda.",
+    "Qui il problema principale non è il tono, ma il bersaglio: la risposta parla di elementi utili, ma non li collega con sufficiente precisione alla domanda.",
+    "La risposta contiene materiale potenzialmente utile, ma rischia di non essere percepita come una vera risposta alla domanda posta.",
+    "La risposta suona professionale, ma deve diventare più mirata: meno cornice generale e più risposta diretta al punto richiesto."
+  ],
+
+  "weakWithPrimaryWeakness": "La risposta resta debole perché non porta ancora abbastanza evidenza concreta. Il primo nodo da correggere è: {{weakness}}",
+
+  "weakFallback": "La risposta resta fragile: per diventare credibile deve aggiungere contesto, responsabilità personale e risultati osservabili.",
+
+  "mediumWithPrimaryWeakness": "La risposta ha una base utilizzabile, ma va rafforzata. Il punto più importante da migliorare è: {{weakness}}",
+
+  "mediumFallback": "La risposta è utilizzabile, ma ancora troppo generica: serve renderla più concreta e più collegata al ruolo target.",
+
+  "solidFallback": "La risposta è complessivamente solida: per renderla ancora più efficace conviene aggiungere un dettaglio concreto su contesto, ruolo personale o risultato.",
+
+  "duplicateFormulationWarning": "Evita di riutilizzare la stessa formulazione: ogni risposta deve portare una prova diversa.",
+
+  "coachingPatternOffTopic": "la risposta tende a spostarsi verso temi vicini invece di restare sul punto richiesto",
+
+  "coachingPatternDecisionWeak": "la decisione viene descritta senza chiarire davvero il trade-off o il criterio scelto",
+
+  "coachingPatternWeakOwnership": "il tuo contributo personale resta poco visibile o poco definito",
+"coachingPatternWeakOutcome": "l’impatto concreto del tuo lavoro emerge ancora poco",
+"coachingPatternGenericity": "la risposta resta troppo generale e poco verificabile",
+"coachingPatternDuplicateAnswer": "alcuni contenuti tendono a ripetersi senza aggiungere nuovi elementi",
+
+"coachingPatternNoteFirstNotice": "Nota: qui compare un primo segnale ricorrente — {{label}}.",
+"coachingPatternNoteRepeated": "Attenzione: questo schema si sta ripetendo — {{label}}.",
+"coachingPatternNotePersistent": "Pattern ormai evidente: {{label}}.",
+
+"weakOpeningCarryoverSuffix": "Inoltre, poiché l’apertura non ha ancora costruito una credibilità concreta, questa risposta dovrebbe recuperare con riferimenti più specifici a contesto, responsabilità personale e risultati.",
+
+"duplicateWeaknessRepeatedContent": "Ripete contenuti già usati in una risposta precedente.",
+"duplicateWeaknessNoNewEvidence": "Non aggiunge nuove evidenze, esempi o decisioni.",
+"duplicateWeaknessAvoidanceSignal": "Può dare l’impressione di evitare la domanda o di non avere altri elementi da portare.",
+
+"duplicateHintUseDifferentExample": "Rispondi con un esempio diverso da quelli già usati.",
+"duplicateHintAddNewFact": "Aggiungi un fatto nuovo: contesto, tua responsabilità, decisione o risultato."
+
+
+},
+
+"fallbackQuestionText": {
+  "opening": "Apri il colloquio raccontando il tuo percorso e mettendo subito a fuoco le esperienze più rilevanti per il ruolo.",
+  "roleFit": "Spiega perché il tuo profilo è credibile per questo ruolo e quali esperienze puoi trasferire nel contesto target.",
+  "case": "Racconta un caso concreto, chiarendo contesto, tua azione e risultato.",
+  "decision": "Racconta una decisione o un trade-off, spiegando che cosa hai scelto, che cosa hai lasciato indietro e perché.",
+  "pressure": "Racconta una situazione di pressione, conflitto o attrito e spiega come l’hai gestita.",
+  "closing": "Chiudi il colloquio rafforzando il collegamento tra il tuo percorso, il ruolo target e i punti principali emersi.",
+  "defaultTemplate": "Risposta {{index}}"
+},
+
 
 "sensitiveQuestionsDashboard": {
   "motivationLabel": "Motivazione al cambiamento",
@@ -372,7 +481,35 @@
         "default": "Preparerei questo punto con una risposta breve, concreta e collegata al ruolo target."
       },
 
-      "cvSignals": {}
+      "cvSignals": {
+
+        "strengthBusinessAnalysisWeight": "leva forte",
+"strengthBusinessAnalysisImpact": "Aiuta in modo credibile il passaggio verso ruoli che richiedono lettura di processi, priorità e coordinamento.",
+
+"strengthProjectCoordinationWeight": "leva utile",
+"strengthProjectCoordinationImpact": "Rafforza la percezione di autonomia operativa e collaborazione trasversale.",
+
+"strengthDefaultWeight": "leva utile",
+"strengthDefaultImpact": "Può sostenere il posizionamento, ma va collegato bene al ruolo target.",
+
+"gapProductOperationsWeight": "gap rilevante",
+"gapProductOperationsImpact": "Può indebolire la credibilità del passaggio se non viene compensato con esperienze molto trasferibili.",
+
+"gapSaasWeight": "gap rilevante",
+"gapSaasImpact": "Nei contesti digitali o software questo elemento può pesare molto nella lettura del profilo.",
+
+"gapBiWeight": "gap medio",
+"gapBiImpact": "Può diventare un punto debole, ma spesso è più recuperabile se il resto del profilo regge bene.",
+
+"gapRoleBoundariesWeight": "gap da chiarire",
+"gapRoleBoundariesImpact": "Se il perimetro delle responsabilità non è leggibile, il profilo rischia di apparire meno solido.",
+
+"gapDefaultWeight": "gap da chiarire",
+"gapDefaultImpact": "Questo punto oggi non aiuta la lettura del profilo e andrebbe chiarito meglio."
+
+
+
+      }
     }
   }
 }
