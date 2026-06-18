@@ -206,12 +206,19 @@ function toneFromSensitiveReadiness(value) {
 }
 
 
-function humanizeProblematicAnswerType(value, item = {}) {
+function humanizeProblematicAnswerType(
+  value,
+  item = {},
+  proReportNarratives = {}
+) {
   const clean = String(value || "").toLowerCase();
   const score = Number(item?.score ?? 0);
   const weaknesses = ensureArray(item?.weaknesses).filter(Boolean);
   const offTopicRisk = String(item?.offTopicRisk || "").toLowerCase();
   const answerIndex = Number(item?.answerIndex || 0);
+
+  const templates =
+    proReportNarratives?.renderer?.problematicAnswerType || {};
 
   function pickVariant(variants) {
     const cleanVariants = ensureArray(variants).filter(Boolean);
@@ -231,138 +238,107 @@ function humanizeProblematicAnswerType(value, item = {}) {
   if (clean === "none") {
     if (score <= 15) {
       if (weaknesses.length > 0) {
-        return rewriteWeaknessForUser(weaknesses[0]);
+        return rewriteWeaknessForUser(
+          weaknesses[0],
+         proReportNarratives
+        );
       }
 
       if (offTopicRisk === "high") {
-        return "la risposta non entra ancora nel punto centrale della domanda";
+        return templates.offTopicHighVeryWeak;
       }
 
-      return "la risposta è troppo debole per sostenere davvero il profilo";
+      return templates.veryWeakFallback;
     }
 
     if (score <= 40) {
       const firstWeakness =
-        weaknesses.length > 0 ? rewriteWeaknessForUser(weaknesses[0]) : "";
+        weaknesses.length > 0
+          ? rewriteWeaknessForUser(
+            weaknesses[0],
+            proReportNarratives
+          )
+          : "";
 
       return pickVariant([
         firstWeakness,
-        "la risposta resta fragile: servono più concretezza, responsabilità personale e risultato",
-        "il passaggio non è ancora abbastanza solido per costruire credibilità",
-        "la risposta ha bisogno di un esempio più chiaro e verificabile",
-        "qui serve una prova più concreta: cosa hai fatto, in quale contesto e con quale effetto",
-        "la risposta dà una direzione, ma non porta ancora abbastanza evidenze",
-        "il contenuto va rafforzato con un episodio specifico e un risultato osservabile"
+        ...ensureArray(templates.weakVariants)
       ]);
     }
 
     if (offTopicRisk === "high") {
-      return pickVariant([
-        "la risposta è leggibile, ma rischia di non rispondere davvero alla domanda",
-        "il contenuto è ordinato, ma non resta abbastanza centrato sul punto chiesto",
-        "la risposta suona coerente, ma devia dal cuore della domanda",
-        "la forma regge, ma il focus non resta abbastanza vicino alla domanda",
-        "il passaggio sembra preparato bene, ma non intercetta del tutto ciò che viene chiesto",
-        "la risposta parla di un tema utile, ma non affronta fino in fondo il punto richiesto"
-      ]);
+      return pickVariant(templates.offTopicVariants);
     }
 
-    return pickVariant([
-      "la risposta è utilizzabile, ma può diventare più concreta e incisiva",
-      "il passaggio è leggibile, ma non lascia ancora una prova forte",
-      "la direzione è corretta, ma servono più dettagli per renderla credibile",
-      "la risposta evita errori evidenti, ma resta migliorabile in profondità",
-      "il contenuto regge, ma può mostrare meglio responsabilità, contesto e risultato",
-      "la base c’è, ma va resa più specifica e meno generica"
-    ]);
+    return pickVariant(templates.usableVariants);
   }
 
   const map = {
-    duplicate: [
-      "ripete contenuti già emersi e non aggiunge una prova nuova",
-      "torna su elementi già usati, invece di portare un esempio diverso",
-      "non amplia il quadro: serve un contenuto nuovo per questa domanda"
-    ],
-    evasive: [
-      "resta evasiva rispetto al punto chiesto",
-      "gira attorno alla domanda senza prendere davvero posizione",
-      "non affronta con sufficiente chiarezza ciò che viene chiesto"
-    ],
-    off_topic: [
-      "si sposta fuori fuoco rispetto alla domanda",
-      "risponde a un tema vicino, ma non al punto richiesto",
-      "non resta abbastanza aderente alla domanda posta"
-    ],
-    provocative_unserious: [
-      "assume un tono poco collaborativo",
-      "rischia di apparire poco professionale nel contesto del colloquio",
-      "sposta l’attenzione sul tono invece che sul contenuto"
-    ],
-    non_answer: [
-      "non fornisce ancora una risposta valutabile",
-      "è troppo debole per sostenere davvero la valutazione",
-      "manca una risposta concreta su cui costruire credibilità"
-    ],
-    nonsense: [
-      "resta poco leggibile o poco consistente",
-      "non costruisce un messaggio comprensibile e credibile",
-      "il contenuto non è abbastanza chiaro per essere valutato bene"
-    ],
-    generic_example_missing: [
-      "manca un esempio davvero concreto",
-      "serve un episodio specifico, non solo una dichiarazione generale",
-      "non porta ancora una prova riconoscibile del comportamento descritto"
-    ]
+    duplicate: templates.duplicate,
+    evasive: templates.evasive,
+    off_topic: templates.off_topic,
+    provocative_unserious: templates.provocative_unserious,
+    non_answer: templates.non_answer,
+    nonsense: templates.nonsense,
+    generic_example_missing: templates.generic_example_missing
   };
 
-  return pickVariant(map[clean]) || "criticità da rileggere";
+  return pickVariant(map[clean]) || templates.fallback;
 }
 
-
-function rewriteWeaknessForUser(value) {
+function rewriteWeaknessForUser(
+  value,
+  proReportNarratives = {}
+) {
   const clean = text(value, "");
 
+  const templates =
+    proReportNarratives?.renderer?.weaknessRewrite || {};
+
   if (!clean) {
-    return "la risposta resta ancora debole in un punto importante";
+    return templates.emptyFallback;
   }
 
   const replacements = [
     {
       from: "La risposta non resta abbastanza aderente al punto chiesto.",
-      to: "non resta abbastanza aderente al punto centrale della domanda"
+      to: templates.notAligned
     },
     {
       from: "La risposta rischia di andare fuori asse rispetto alla domanda.",
-      to: "rischia di allargarsi o di non colpire davvero il punto"
+      to: templates.goesOffTrack
     },
     {
       from: "La risposta suona più come un’introduzione o una promessa di risposta che come una risposta vera.",
-      to: "resta troppo introduttiva e non entra ancora davvero nel merito"
+      to: templates.tooIntroductory
     },
     {
       from: "La risposta resta troppo astratta e beneficerebbe di un esempio più concreto.",
-      to: "resta troppo astratta e avrebbe bisogno di un esempio concreto"
+      to: templates.tooAbstract
     },
     {
       from: "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
-      to: "non chiarisce abbastanza bene che cosa dipendeva davvero da te"
+      to: templates.ownershipUnclear
     },
     {
       from: "La risposta è chiara ma non mette ancora abbastanza in evidenza il tuo contributo diretto.",
-      to: "non mette ancora abbastanza in evidenza il tuo contributo diretto"
+      to: templates.directContributionWeak
     },
     {
       from: "La risposta non mostra ancora riflessione, apprendimento o adattamento.",
-      to: "non fa emergere bene che cosa hai imparato o corretto nel tempo"
+      to: templates.learningNotVisible
     },
     {
       from: "La risposta sarebbe più facile da seguire con una struttura più chiara.",
-      to: "ha bisogno di una struttura più chiara per risultare più forte"
+      to: templates.structureWeak
     }
   ];
 
   const exact = replacements.find((item) => item.from === clean);
-  if (exact) return exact.to;
+
+  if (exact?.to) {
+    return exact.to;
+  }
 
   return clean
     .replace(/^La risposta /, "")
@@ -402,33 +378,43 @@ function humanizeQuestionIntent(value) {
   return map[clean] || clean.toLowerCase();
 }
 
-
-function rewritePriorityText(value) {
+function rewritePriorityText(
+  value,
+  proReportNarratives = {}
+) {
   const clean = text(value, "");
 
-  if (!clean) return "";
+  if (!clean) {
+    return "";
+  }
+
+  const templates =
+    proReportNarratives?.renderer?.priorityRewrite || {};
 
   const replacements = [
     {
       from: "La risposta non mostra ancora riflessione, apprendimento o adattamento.",
-      to: "Nel colloquio emerge ancora poca riflessione su ciò che hai imparato, corretto o adattato."
+      to: templates.learningNotVisible
     },
     {
       from: "La risposta sarebbe più facile da seguire con una struttura più chiara.",
-      to: "Nel colloquio il racconto perde forza quando la struttura della risposta non è abbastanza chiara."
+      to: templates.structureWeak
     },
     {
       from: "La risposta è chiara ma non mette ancora abbastanza in evidenza il tuo contributo diretto.",
-      to: "Nelle risposte non sempre emerge con sufficiente chiarezza che cosa dipendeva davvero da te."
+      to: templates.directContributionWeak
     },
     {
       from: "La risposta non distingue con chiarezza il contributo personale dall’attività del team.",
-      to: "In più passaggi del colloquio non è ancora abbastanza netto il confine tra il tuo contributo personale e quello del team."
+      to: templates.ownershipUnclear
     }
   ];
 
   const exact = replacements.find((item) => item.from === clean);
-  return exact ? exact.to : clean.replace(/^La risposta /, "Nel colloquio ");
+
+  return exact?.to
+    ? exact.to
+    : clean.replace(/^La risposta /, "Nel colloquio ");
 }
 
 function rewriteChecklistAction(value) {
@@ -463,10 +449,15 @@ function rewriteChecklistAction(value) {
   return exact ? exact.to : clean;
 }
 
-function normalizeImprovementHints(items = []) {
+function normalizeImprovementHints(
+  items = [],
+  proReportNarratives = {}
+) {
   const raw = ensureArray(items).map((item) => text(item, "")).filter(Boolean);
 
-  const normalized = raw.map((item) => rewriteImprovementHint(item));
+  const normalized = raw.map((item) =>
+  rewriteImprovementHint(item, proReportNarratives)
+);
   const deduped = [];
 
   for (const item of normalized) {
@@ -481,74 +472,117 @@ function normalizeImprovementHints(items = []) {
   return deduped.slice(0, 3);
 }
 
+function buildTemplateImprovedAnswer(
+  item = {},
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.renderer?.templateImprovedAnswer || {};
 
-function buildTemplateImprovedAnswer(item = {}) {
-  const questionIntent = String(item?.questionIntent || "").toLowerCase();
-  const score = Number(item?.score ?? 0);
-  const offTopicRisk = String(item?.offTopicRisk || "").toLowerCase();
-  const weaknesses = ensureArray(item?.weaknesses).join(" ").toLowerCase();
-  const annotations = ensureArray(item?.annotations);
+  const questionIntent =
+    String(item?.questionIntent || "").toLowerCase();
+
+  const score =
+    Number(item?.score ?? 0);
+
+  const offTopicRisk =
+    String(item?.offTopicRisk || "").toLowerCase();
+
+  const weaknesses =
+    ensureArray(item?.weaknesses).join(" ").toLowerCase();
+
+  const annotations =
+    ensureArray(item?.annotations);
 
   const hasOwnershipIssue =
     weaknesses.includes("contributo diretto") ||
     weaknesses.includes("responsabilità") ||
-    annotations.some((a) => String(a?.dimension || "").toLowerCase() === "ownership");
+    annotations.some(
+      (a) => String(a?.dimension || "").toLowerCase() === "ownership"
+    );
 
   const hasSpecificityIssue =
     weaknesses.includes("concreto") ||
     weaknesses.includes("specific") ||
-    annotations.some((a) => String(a?.dimension || "").toLowerCase() === "specificity");
+    annotations.some(
+      (a) => String(a?.dimension || "").toLowerCase() === "specificity"
+    );
 
   const hasStructureIssue =
     weaknesses.includes("struttura") ||
-    annotations.some((a) => String(a?.dimension || "").toLowerCase() === "structure");
+    annotations.some(
+      (a) => String(a?.dimension || "").toLowerCase() === "structure"
+    );
 
   const hasReflectionIssue =
     weaknesses.includes("riflessione") ||
     weaknesses.includes("adattamento") ||
-    annotations.some((a) => String(a?.dimension || "").toLowerCase() === "reflection");
+    annotations.some(
+      (a) => String(a?.dimension || "").toLowerCase() === "reflection"
+    );
 
-  if (questionIntent.includes("apertura") || questionIntent.includes("posizionamento")) {
-    return "Una versione più forte dovrebbe aprire con un posizionamento netto: da dove arrivi, quali esperienze sono davvero trasferibili e perché contano per questo ruolo. Eviterei di promettere che racconterai il percorso: entrerei subito nel merito con 2–3 leve concrete.";
+  if (
+    questionIntent.includes("apertura") ||
+    questionIntent.includes("posizionamento")
+  ) {
+    return templates.opening;
   }
 
-  if (questionIntent.includes("ruolo") || offTopicRisk === "high") {
-    return "Una versione più forte dovrebbe rispondere prima al perché del passaggio: quale parte del tuo percorso rende credibile questo ruolo, quale gap riconosci e come pensi di colmarlo. L’esempio va bene solo se chiudi esplicitamente il ponte verso il ruolo target.";
+  if (
+    questionIntent.includes("ruolo") ||
+    offTopicRisk === "high"
+  ) {
+    return templates.roleOrOffTopic;
   }
 
-  if (questionIntent.includes("pressione") || questionIntent.includes("conflitto")) {
-    return "Una versione più forte dovrebbe mostrare la sequenza: tensione reale, vincoli, tua scelta, conseguenza. Non basta dire che hai gestito bene la situazione: serve far vedere quale posizione hai preso e che cosa è cambiato grazie al tuo intervento.";
+  if (
+    questionIntent.includes("pressione") ||
+    questionIntent.includes("conflitto")
+  ) {
+    return templates.pressureConflict;
   }
 
-  if (questionIntent.includes("decisione") || questionIntent.includes("priorità")) {
-    return "Una versione più forte dovrebbe mettere subito a fuoco il trade-off: che cosa hai scelto, che cosa hai lasciato indietro e quale criterio hai usato. Poi aggiungerei l’effetto della decisione, anche qualitativo, per far capire che non era solo una preferenza ma una scelta ragionata.";
+  if (
+    questionIntent.includes("decisione") ||
+    questionIntent.includes("priorità")
+  ) {
+    return templates.decisionPriority;
   }
 
   if (hasOwnershipIssue) {
-    return "Una versione più forte dovrebbe rendere più visibile il tuo ruolo personale: quali parti erano sotto la tua responsabilità, quali decisioni hai preso direttamente e quale risultato dipendeva dal tuo contributo.";
+    return templates.ownershipIssue;
   }
 
   if (hasSpecificityIssue) {
-    return "Una versione più forte dovrebbe sostituire le formule generiche con un episodio preciso: contesto, problema, azione concreta e risultato. Anche senza numeri, serve un dettaglio verificabile che renda la risposta più credibile.";
+    return templates.specificityIssue;
   }
 
   if (hasReflectionIssue) {
-    return "Una versione più forte dovrebbe chiudere con una breve riflessione: che cosa hai imparato, che cosa rifaresti uguale e che cosa cambieresti oggi. Questo aiuta a trasformare l’esperienza in maturità professionale.";
+    return templates.reflectionIssue;
   }
 
   if (hasStructureIssue || score < 50) {
-    return "Una versione più forte dovrebbe essere più ordinata: prima il messaggio centrale, poi un esempio, poi il risultato. L’obiettivo è far seguire all’intervistatore una linea semplice, senza costringerlo a ricostruire il senso della risposta.";
+    return templates.structureIssue;
   }
 
-  return "Una versione più forte dovrebbe mantenere ciò che già funziona, ma renderlo più incisivo: una frase iniziale chiara, un dettaglio concreto e una chiusura che torni esplicitamente alla domanda.";
+  return templates.fallback;
 }
 
+function buildInspirationalAnswerDraft(
+  item = {},
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.renderer?.inspirationalAnswerDraft || {};
 
-function buildInspirationalAnswerDraft(item = {}) {
-  const questionIntent = String(item?.questionIntent || "").toLowerCase();
-  const questionText = String(item?.questionText || "").toLowerCase();
-  const answerText = String(item?.answerText || "");
-  const score = Number(item?.score ?? 0);
+  const questionIntent =
+    String(item?.questionIntent || "").toLowerCase();
+
+  const questionText =
+    String(item?.questionText || "").toLowerCase();
+
+  const score =
+    Number(item?.score ?? 0);
 
   const isLearningCurve =
     questionText.includes("curva di apprendimento") ||
@@ -576,93 +610,106 @@ function buildInspirationalAnswerDraft(item = {}) {
     questionText.includes("pressione") ||
     questionText.includes("conflitto");
 
-    const weaknesses = Array.isArray(item?.weaknesses) ? item.weaknesses : [];
+  const weaknesses =
+    Array.isArray(item?.weaknesses)
+      ? item.weaknesses
+      : [];
 
   if (score >= 75) {
-  return "";
-}
+    return "";
+  }
 
   if (isOpening) {
-    return "Potresti renderla più forte così: “Il mio percorso si è sviluppato in [ruolo/contesto], dove mi sono occupato di [responsabilità concreta]. In particolare, ho lavorato su [esperienza rilevante] ottenendo [risultato/effetto]. Per questo vedo un collegamento con questo ruolo: porto [competenza trasferibile] e devo consolidare [area da sviluppare].”";
+    return templates.opening;
   }
 
   if (isLearningCurve) {
-    return "Uno spunto più centrato potrebbe essere: “La curva di apprendimento più ripida per me sarebbe entrare rapidamente nelle logiche specifiche di prodotto, nei processi interni e nelle metriche usate dal team. La affronterei partendo da una mappa iniziale di stakeholder, flussi e KPI, chiedendo feedback nelle prime settimane e cercando di capire dove posso contribuire subito senza fare assunzioni sbagliate.”";
+    return templates.learningCurve;
   }
 
   if (isRole) {
-    return "Potresti impostarla così: “Questo ruolo mi interessa perché riprende parti del mio percorso già presenti in [esperienza/area], come [competenza trasferibile], ma le porta verso [aspetto specifico del ruolo target]. Il punto che voglio rendere chiaro è che non parto da zero: porto [evidenza concreta], mentre dovrò accelerare su [gap o apprendimento].”";
+    return templates.role;
   }
 
   if (isDecision) {
-    return "Uno spunto più efficace potrebbe essere: “In quella situazione il trade-off era tra [opzione A] e [opzione B]. Io ho scelto [scelta fatta] perché [criterio usato]. Il mio contributo diretto è stato [azione personale] e il risultato è stato [effetto concreto].”";
+    return templates.decision;
   }
 
   if (isPressure) {
-    return "Potresti rispondere così: “La difficoltà era gestire priorità diverse tra [stakeholder/parti coinvolte]. Io ho chiarito i vincoli, separato ciò che era urgente da ciò che era secondario e proposto [scelta/azione]. Il risultato è stato [effetto], e da quella situazione ho imparato [apprendimento].”";
+    return templates.pressure;
   }
 
-  const mainWeakness = weaknesses[0] || "";
+  const mainWeakness =
+    weaknesses[0] || "";
 
-if (mainWeakness.toLowerCase().includes("contesto")) {
-  return "Prova a rafforzarla così: “In quel caso il contesto era [azienda/progetto/situazione]. Io ero responsabile di [ruolo concreto] e ho preso la decisione di [azione]. Questo ha portato a [risultato].”";
+  if (mainWeakness.toLowerCase().includes("contesto")) {
+    return templates.contextWeakness;
+  }
+
+  if (mainWeakness.toLowerCase().includes("ownership")) {
+    return templates.ownershipWeakness;
+  }
+
+  if (mainWeakness.toLowerCase().includes("struttura")) {
+    return templates.structureWeakness;
+  }
+
+  return templates.fallback;
 }
 
-if (mainWeakness.toLowerCase().includes("ownership")) {
-  return "Rendila più forte chiarendo il tuo contributo: “In quella situazione il mio ruolo era [responsabilità diretta]. Ho deciso personalmente di [azione], perché [motivazione], e questo ha portato a [risultato].”";
-}
-
-if (mainWeakness.toLowerCase().includes("struttura")) {
-  return "Puoi renderla più chiara così: “La situazione era [contesto]. Ho fatto [azione]. Il risultato è stato [effetto].”";
-}
-
-return "Rendi la risposta più efficace aggiungendo un esempio concreto, chiarendo il tuo ruolo diretto e chiudendo con il risultato ottenuto.";
-}
-
-function rewriteImprovementHint(value) {
+function rewriteImprovementHint(
+  value,
+  proReportNarratives = {}
+) {
   const clean = text(value, "");
 
-  if (!clean) return "";
+  if (!clean) {
+    return "";
+  }
+
+  const templates =
+    proReportNarratives?.renderer?.improvementHintRewrite || {};
 
   const replacements = [
     {
       from: "Aggiungi una situazione concreta con contesto, azione e risultato invece di restare sul generale.",
-      to: "Porta un esempio reale con contesto, tua azione e risultato, invece di restare sul generale."
+      to: templates.concreteExample
     },
     {
       from: "Aggiungi una situazione concreta con contesto, tua azione diretta e risultato, invece di restare su una descrizione valida ma ancora generale.",
-      to: "Porta un esempio reale con contesto, tua azione e risultato, invece di restare sul generale."
+      to: templates.concreteExample
     },
     {
       from: "Usa una sequenza semplice come situazione, azione, risultato.",
-      to: "Usa una struttura semplice e leggibile: situazione, tua azione, risultato."
+      to: templates.simpleStructure
     },
     {
       from: "node scripts/test_render_pro_report_v2.js",
-      to: "Rendi più chiaro che cosa dipendeva davvero da te, quali decisioni hai preso e quale contributo hai portato in prima persona."
+      to: templates.ownership
     },
     {
       from: "Inserisci un outcome, una metrica o un effetto visibile del tuo lavoro.",
-      to: "Aggiungi un risultato, una metrica o un effetto concreto del tuo lavoro."
+      to: templates.outcome
     },
     {
       from: "Resta più vicino alla domanda: prima chiarisci il punto centrale, poi aggiungi contesto.",
-      to: "Parti dal punto centrale della domanda, poi aggiungi contesto solo se aiuta davvero."
+      to: templates.stayOnQuestion
     },
     {
       from: "Resta più aderente alla domanda: chiarisci prima il punto centrale, poi aggiungi contesto ed esempio.",
-      to: "Parti dal punto centrale della domanda, poi aggiungi contesto ed esempio solo se aiutano davvero."
+      to: templates.stayOnQuestionWithExample
     },
     {
       from: "Hai già una base chiara: rafforza il punto centrale con un elemento più specifico o verificabile.",
-      to: "Hai già una base utile: rendila più forte con un dettaglio più specifico o verificabile."
+      to: templates.makeItStronger
     }
   ];
 
-  const exact = replacements.find((item) => item.from === clean);
-  if (exact) return exact.to;
+  const exact = replacements.find(
+    (item) => item.from === clean
+  );
 
-  return clean;
+  return exact?.to || clean;
 }
 
 function renderImpactList(items = [], tone = "risk") {
@@ -704,7 +751,12 @@ function renderFeaturedRecruiterRecovery(item = {}) {
 }
 
 
-function renderAnswerCard(item) {
+function renderAnswerCard(
+  item,
+  context = {}
+) {
+  const proReportNarratives =
+  context?.proReportNarratives || {};
   const score = Number(item?.score ?? 0);
   const status = scoreStatus(score);
 
@@ -777,7 +829,10 @@ ${renderFeaturedRecruiterRecovery(item)}
   <div class="answer-subcard featured-subcard featured-subcard-advice">
     <div class="answer-subcard-title">Come può essere rafforzata</div>
     ${renderImpactList(
-      normalizeImprovementHints(item?.improvementHints).slice(0, 2),
+      normalizeImprovementHints(
+      item?.improvementHints,
+      proReportNarratives
+      ).slice(0, 2),
       "advice"
     )}
   </div>
@@ -1478,6 +1533,12 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
   const questionIndex = item?.answerIndex || 0;
   const scoreClass = score >= 75 ? "good" : score >= 50 ? "mid" : "weak";
 
+
+  const inspirationalAnswerDraft =
+  buildInspirationalAnswerDraft(
+    item,
+    context?.proReportNarratives || {}
+  );
   return `
     <div
       class="answer-tab-panel ${isActive ? "is-active" : ""}"
@@ -1528,7 +1589,13 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
           </div>
 
           <div class="fr-answer-first-correction-text">
-            ${escapeHtml(humanizeProblematicAnswerType(text(item?.problematicAnswerType, "none"), item))}
+            ${escapeHtml(
+          humanizeProblematicAnswerType(
+           text(item?.problematicAnswerType, "none"),
+          item,
+           context?.proReportNarratives || {}
+             )
+            )}
           </div>
         </div>
 
@@ -1616,24 +1683,31 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
                   <div class="improved-answer-title">Come potrebbe suonare meglio</div>
 
                   <div class="improved-answer-text">
-                    ${escapeHtml(buildTemplateImprovedAnswer(item))}
+                    ${escapeHtml(
+                        buildTemplateImprovedAnswer(
+                        item,
+                        context?.proReportNarratives || {}
+                            )
+                        )}
                   </div>
 
-                  ${buildInspirationalAnswerDraft(item) ? `
-                    <div class="inspiration-answer-box">
-                      <div class="inspiration-answer-label">Spunto di risposta</div>
-                      <div class="inspiration-answer-text">
-                        ${escapeHtml(buildInspirationalAnswerDraft(item))}
-                      </div>
-                    </div>
-                  ` : `
-                    <div class="inspiration-answer-box is-good-answer">
-                      <div class="inspiration-answer-label">Risposta già solida</div>
-                      <div class="inspiration-answer-text">
-                        In questo caso non serve riscrivere la risposta da zero: conviene solo aggiungere, se disponibile, un dettaglio concreto in più.
-                      </div>
-                    </div>
-                  `}
+                  ${inspirationalAnswerDraft ? `
+  <div class="inspiration-answer-box">
+    <div class="inspiration-answer-label">Spunto di risposta</div>
+    <div class="inspiration-answer-text">
+      ${escapeHtml(inspirationalAnswerDraft)}
+    </div>
+  </div>
+` : `
+  <div class="inspiration-answer-box is-good-answer">
+    <div class="inspiration-answer-label">Risposta già solida</div>
+    <div class="inspiration-answer-text">
+      In questo caso non serve riscrivere la risposta da zero: conviene solo aggiungere, se disponibile, un dettaglio concreto in più.
+    </div>
+  </div>
+`}
+
+
                 </div>
 
                 <div class="premium-soft-note">
@@ -2249,10 +2323,17 @@ function humanizeContinuityRead(value) {
 }
 
 function renderBlockingPrioritiesModule(module) {
+  const proReportNarratives = {};
+
   const priorities = module?.data || {};
+
+
   const rewrittenPriorities = ensureArray(priorities?.items).map((item) => ({
     ...item,
-    description: rewritePriorityText(item?.description)
+    description: rewritePriorityText(
+  item?.description,
+  proReportNarratives
+      )
   }));
 
   return `
@@ -2350,7 +2431,10 @@ function renderQuestionAlignmentAlert(item = {}) {
   `;
 }
 
-function renderFeaturedAnswersModule(module) {
+function renderFeaturedAnswersModule(
+  module,
+  context = {}
+) {
   const featuredAnswers = module?.data || {};
 
   return `
@@ -2366,7 +2450,9 @@ function renderFeaturedAnswersModule(module) {
 
       <div class="answer-stack overview-answer-stack">
         ${ensureArray(featuredAnswers?.items).length > 0
-          ? ensureArray(featuredAnswers.items).map(renderAnswerCard).join("\n")
+          ? ensureArray(featuredAnswers.items)
+            .map((item) => renderAnswerCard(item, context))
+           .join("\n")
           : `<p class="muted">Non emergono ancora risposte chiave sintetizzate.</p>`
         }
       </div>
@@ -3118,6 +3204,22 @@ function renderFinalChecklistModule(module) {
 }
 
 function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
+
+  const proReportNarratives =
+  loadProReportNarrativeData({
+    roleFamily:
+      proReportV2?.roleFamily ||
+      proReportV2?.professionalPerception?.roleFamily ||
+      "care_helping_professions",
+    locale:
+      proReportV2?.locale ||
+      proReportV2?.rawInput?.locale ||
+      "it"
+  }) || {};
+
+const context = {
+  proReportNarratives
+};
   const safeModules = ensureArray(modules);
 
   const operational = safeModules.find((m) => m?.key === "operationalPriorities");
@@ -3316,7 +3418,7 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
 
 
 
-      ${renderOverviewModule(opening)}
+      ${renderOverviewModule(opening, context)}
     </div>
   ` : ""}
 
@@ -3362,19 +3464,19 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
 
   title: "Interventi prioritari per migliorare subito",
   intro: "Qui trovi le azioni più urgenti: sono i punti che conviene correggere prima perché hanno più impatto sulla qualità percepita del colloquio.",
-  html: renderOverviewModule(operational)
+  html: renderOverviewModule(operational, context)
 }) : ""}
 
 ${blocking ? renderSituationExpandableBlock({
   title: "Pattern ricorrenti che possono penalizzarti",
   intro: "Questi elementi rendono meno forte la candidatura o riducono la credibilità delle risposte. Non vanno solo letti: vanno trasformati in interventi concreti.",
-  html: renderOverviewModule(blocking)
+  html: renderOverviewModule(blocking, context)
 }) : ""}
 
  ${actionPlan ? renderSituationExpandableBlock({
 
   title: "Priorità operative",
-  html: renderOverviewModule(actionPlan)
+  html: renderOverviewModule(actionPlan, context)
 
 }) : ""}
 
@@ -3427,7 +3529,10 @@ function renderSituationExpandableBlock({ title, intro, html }) {
   `;
 }
 
-function renderOverviewModule(module) {
+function renderOverviewModule(
+  module,
+  context = {}
+) {
   if (!module || typeof module !== "object") {
     return "";
   }
@@ -3443,9 +3548,9 @@ function renderOverviewModule(module) {
 
 
     case "blockingPriorities":
-      return renderBlockingPrioritiesModule(module);
+     return renderBlockingPrioritiesModule(module);
     case "featuredAnswers":
-      return renderFeaturedAnswersModule(module);
+      return renderFeaturedAnswersModule(module, context);
     case "sensitiveQuestionsDashboard":
       return renderSensitiveQuestionsModule(module);
     case "cvSlim":
@@ -3741,9 +3846,22 @@ function renderProfessionalPerceptionSection(proReportV2) {
 }
 
 export function renderProReportHtml({ proReportV2, activeSection = "overview" }) {
+
   if (!proReportV2 || typeof proReportV2 !== "object") {
     throw new Error("renderProReportHtml: proReportV2 is required.");
   }
+const proReportNarratives =
+  loadProReportNarrativeData({
+    roleFamily:
+      proReportV2?.roleFamily ||
+      proReportV2?.professionalPerception?.roleFamily ||
+      "care_helping_professions",
+    locale:
+      proReportV2?.locale ||
+      proReportV2?.rawInput?.locale ||
+      "it"
+  }) || {};
+
 
   const reportData = buildReportDataFromProReport(proReportV2);
 
@@ -12858,11 +12976,14 @@ details > summary[class*="summary"] {
 
 
       ${answersModules.map((module) =>
-    renderAnswersModule(module, {
+  renderAnswersModule(module, {
     productMode: proReportV2?.productMode || "pro",
-    productCapabilities: proReportV2?.productCapabilities || {}
-    })
+    productCapabilities: proReportV2?.productCapabilities || {},
+    proReportNarratives
+  })
   ).join("\n")}
+
+
 
 
     </div>
