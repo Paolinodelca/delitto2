@@ -492,6 +492,78 @@
 
 "renderer": {
 
+"featuredAnswersModule": {
+  "title": "Risposte chiave del colloquio",
+
+  "note": "Una risposta mostra dove oggi il colloquio perde più forza; l’altra mostra quale risposta regge meglio e può diventare un riferimento utile.",
+
+  "empty": "Non emergono ancora risposte chiave sintetizzate."
+},
+
+
+"displayAnswer": {
+
+  "offTopicRiskVariants": [
+  "Questa risposta rischia di non rispondere davvero al punto richiesto.",
+  "Anche qui il problema principale è il fuoco: la risposta parla, ma non centra abbastanza la domanda.",
+  "Il passaggio resta fuori bersaglio: serve rispondere più direttamente a ciò che viene chiesto.",
+  "Qui la forma non basta: la risposta deve rientrare meglio nel cuore della domanda.",
+  "La risposta è comprensibile, ma non aggancia con sufficiente precisione il punto richiesto.",
+  "Attenzione: anche questa risposta rischia di restare laterale rispetto alla domanda."
+    ],
+
+  "duplicateSummary": "La risposta ripete contenuti già emersi: anche se può sembrare coerente con il tema, non aggiunge nuove evidenze e quindi perde molta forza nel colloquio.",
+
+  "summaryFallback": "Sintesi non disponibile.",
+
+  "duplicateQuestionAlignment": "formalmente può restare sul tema, ma non aggiunge una nuova prova: è quindi poco utile alla domanda"
+},
+
+"usefulImprovementHint": {
+  "concreteEarly": "Porta un episodio preciso: situazione, tua azione e risultato. Senza questo passaggio la risposta resta troppo generale.",
+
+  "concreteRepeatedEven": "Questo punto torna di nuovo: serve un episodio concreto, non solo una descrizione del modo in cui lavori.",
+
+  "concreteRepeatedOdd": "Il tema si ripresenta: prova a scegliere un caso reale e a raccontarlo con contesto, tua azione e risultato.",
+
+  "concretePersistent": "Il pattern è ormai chiaro: quando manca un caso reale, anche una risposta ben formulata perde forza.",
+
+  "outcomeEarly": "Chiudi la risposta con un effetto osservabile: cosa è cambiato, anche senza usare numeri.",
+
+  "outcomeRepeated": "Anche qui manca l’effetto finale: il recruiter deve capire che cosa ha prodotto concretamente il tuo intervento.",
+
+  "outcomePersistent": "Questo errore si ripete: racconti l’azione, ma lasci troppo spesso implicito il risultato.",
+
+  "ownershipEarly": "Rendi più chiaro che cosa dipendeva davvero da te e quale contributo hai portato in prima persona.",
+
+  "ownershipRepeated": "Torna il tema della responsabilità personale: separa meglio ciò che hai fatto tu da ciò che ha fatto il team.",
+
+  "ownershipPersistent": "Qui il report sta rilevando un pattern: il tuo contributo personale resta troppo spesso implicito.",
+
+  "makeVerifiable": "La base è utilizzabile, ma va resa più verificabile: aggiungi un fatto, una scelta o un risultato concreto."
+},
+
+"specificHintFromAnnotation": {
+  "opportunity": "Questo passaggio è già utilizzabile, ma va collegato meglio alla domanda: spiega perché è rilevante per il ruolo o per il punto che ti è stato chiesto.",
+
+  "ownership": "Rendi più visibile il tuo ruolo personale: non solo cosa è successo, ma quale decisione, responsabilità o contributo erano davvero tuoi.",
+
+  "specificity": "Aggiungi un dettaglio verificabile: contesto, vincolo, interlocutori o risultato. Serve qualcosa che faccia sembrare l’episodio reale, non generico.",
+
+  "evidence": "Chiudi con un effetto osservabile: una decisione resa più chiara, un output consegnato, una priorità risolta o un rischio ridotto.",
+
+  "structure": "Ordina la risposta in tre passaggi: situazione, tua scelta, risultato. Così l’intervistatore non deve ricostruire da solo il filo.",
+
+  "reflection": "Aggiungi una chiusura di maturità: cosa hai imparato, cosa rifaresti uguale e cosa gestiresti meglio oggi.",
+
+  "roleIntent": "Chiudi sempre il ponte verso il ruolo target: questa esperienza conta perché dimostra una capacità trasferibile, non solo perché è un buon esempio.",
+
+  "decisionIntent": "Metti subito in evidenza il criterio della scelta: cosa hai privilegiato, cosa hai lasciato fuori e perché.",
+
+  "pressureIntent": "Fai emergere la tensione reale: chi voleva cosa, quale vincolo esisteva e quale posizione hai preso tu."
+},
+
+
 "improvementHintRewrite": {
   "concreteExample": "Porta un esempio reale con contesto, tua azione e risultato, invece di restare sul generale.",
 

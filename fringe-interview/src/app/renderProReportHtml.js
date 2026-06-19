@@ -803,7 +803,12 @@ function renderAnswerCard(
 
 
   <div class="featured-answer-summary-inside">
-    ${escapeHtml(getDisplayAnswerSummary(item))}
+    ${escapeHtml(
+  getDisplayAnswerSummary(
+    item,
+    context?.proReportNarratives || {}
+      )
+    )}
   </div>
 ${item?.contextLinkNote ? `
   <div class="featured-context-link-note">
@@ -1265,52 +1270,74 @@ function selectSecondaryWeaknesses(item = {}) {
 }
 
 
+function buildSpecificHintFromAnnotation(
+  annotation,
+  item = {},
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.renderer?.specificHintFromAnnotation || {};
 
-function buildSpecificHintFromAnnotation(annotation, item = {}) {
-  const type = String(annotation?.type || "").toLowerCase();
-  const dimension = String(annotation?.dimension || "").toLowerCase();
-  const intent = String(item?.questionIntent || "").toLowerCase();
+  const type =
+    String(annotation?.type || "").toLowerCase();
+
+  const dimension =
+    String(annotation?.dimension || "").toLowerCase();
+
+  const intent =
+    String(item?.questionIntent || "").toLowerCase();
 
   if (type === "opportunity") {
-    return "Questo passaggio è già utilizzabile, ma va collegato meglio alla domanda: spiega perché è rilevante per il ruolo o per il punto che ti è stato chiesto.";
+    return templates.opportunity;
   }
 
   if (dimension === "ownership") {
-    return "Rendi più visibile il tuo ruolo personale: non solo cosa è successo, ma quale decisione, responsabilità o contributo erano davvero tuoi.";
+    return templates.ownership;
   }
 
   if (dimension === "specificity") {
-    return "Aggiungi un dettaglio verificabile: contesto, vincolo, interlocutori o risultato. Serve qualcosa che faccia sembrare l’episodio reale, non generico.";
+    return templates.specificity;
   }
 
   if (dimension === "evidence") {
-    return "Chiudi con un effetto osservabile: una decisione resa più chiara, un output consegnato, una priorità risolta o un rischio ridotto.";
+    return templates.evidence;
   }
 
   if (dimension === "structure") {
-    return "Ordina la risposta in tre passaggi: situazione, tua scelta, risultato. Così l’intervistatore non deve ricostruire da solo il filo.";
+    return templates.structure;
   }
 
   if (dimension === "reflection") {
-    return "Aggiungi una chiusura di maturità: cosa hai imparato, cosa rifaresti uguale e cosa gestiresti meglio oggi.";
+    return templates.reflection;
   }
 
   if (intent.includes("ruolo")) {
-    return "Chiudi sempre il ponte verso il ruolo target: questa esperienza conta perché dimostra una capacità trasferibile, non solo perché è un buon esempio.";
+    return templates.roleIntent;
   }
 
   if (intent.includes("decisione")) {
-    return "Metti subito in evidenza il criterio della scelta: cosa hai privilegiato, cosa hai lasciato fuori e perché.";
+    return templates.decisionIntent;
   }
 
-  if (intent.includes("pressione") || intent.includes("conflitto")) {
-    return "Fai emergere la tensione reale: chi voleva cosa, quale vincolo esisteva e quale posizione hai preso tu.";
+  if (
+    intent.includes("pressione") ||
+    intent.includes("conflitto")
+  ) {
+    return templates.pressureIntent;
   }
 
   return "";
 }
 
-function selectUsefulImprovementHints(item) {
+
+
+function selectUsefulImprovementHints(
+  item,
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.renderer?.usefulImprovementHint || {};
+
   const hints = ensureArray(item?.improvementHints);
 
   if (hints.length === 0) {
@@ -1340,16 +1367,16 @@ function selectUsefulImprovementHints(item) {
       lower.includes("aggancia la risposta a un caso preciso")
     ) {
       if (answerIndex <= 2) {
-        return "Porta un episodio preciso: situazione, tua azione e risultato. Senza questo passaggio la risposta resta troppo generale.";
+        return templates.concreteEarly;
       }
 
       if (answerIndex <= 4) {
-  return answerIndex % 2 === 0
-    ? "Questo punto torna di nuovo: serve un episodio concreto, non solo una descrizione del modo in cui lavori."
-    : "Il tema si ripresenta: prova a scegliere un caso reale e a raccontarlo con contesto, tua azione e risultato.";
-    }
+        return answerIndex % 2 === 0
+          ? templates.concreteRepeatedEven
+          : templates.concreteRepeatedOdd;
+      }
 
-      return "Il pattern è ormai chiaro: quando manca un caso reale, anche una risposta ben formulata perde forza.";
+      return templates.concretePersistent;
     }
 
     if (
@@ -1358,14 +1385,14 @@ function selectUsefulImprovementHints(item) {
       lower.includes("un effetto visibile")
     ) {
       if (answerIndex <= 2) {
-        return "Chiudi la risposta con un effetto osservabile: cosa è cambiato, anche senza usare numeri.";
+        return templates.outcomeEarly;
       }
 
       if (answerIndex <= 4) {
-        return "Anche qui manca l’effetto finale: il recruiter deve capire che cosa ha prodotto concretamente il tuo intervento.";
+        return templates.outcomeRepeated;
       }
 
-      return "Questo errore si ripete: racconti l’azione, ma lasci troppo spesso implicito il risultato.";
+      return templates.outcomePersistent;
     }
 
     if (
@@ -1374,14 +1401,14 @@ function selectUsefulImprovementHints(item) {
       lower.includes("dipendeva davvero da te")
     ) {
       if (answerIndex <= 2) {
-        return "Rendi più chiaro che cosa dipendeva davvero da te e quale contributo hai portato in prima persona.";
+        return templates.ownershipEarly;
       }
 
       if (answerIndex <= 4) {
-        return "Torna il tema della responsabilità personale: separa meglio ciò che hai fatto tu da ciò che ha fatto il team.";
+        return templates.ownershipRepeated;
       }
 
-      return "Qui il report sta rilevando un pattern: il tuo contributo personale resta troppo spesso implicito.";
+      return templates.ownershipPersistent;
     }
 
     if (
@@ -1390,7 +1417,7 @@ function selectUsefulImprovementHints(item) {
       lower.includes("elemento più specifico o verificabile") ||
       lower.includes("elemento piu specifico o verificabile")
     ) {
-      return "La base è utilizzabile, ma va resa più verificabile: aggiungi un fatto, una scelta o un risultato concreto.";
+      return templates.makeVerifiable;
     }
 
     return hint;
@@ -1405,94 +1432,64 @@ function selectUsefulImprovementHints(item) {
     "riallinea la risposta",
     "prima di migliorare lo stile",
     "perché è rilevante",
-    "perche è rilevante",
-    "perche e rilevante",
-    "collega il tutto al ruolo target",
-    "passaggio coerente",
-    "ricostruisci l’apertura",
-    "ricostruisci l'apertura",
-    "spiega perché questo ruolo",
-    "spiega perche questo ruolo",
-    "logica del passaggio",
-    "restando solo sul punto richiesto",
-    "parti dal punto centrale della domanda"
+    "perche e rilevante"
   ];
 
-  const weakContextPatterns = [
-    "poiché l’apertura",
-    "poiche l’apertura",
-    "poiché l'apertura",
-    "poiche l'apertura",
-    "l’apertura non ha",
-    "l'apertura non ha"
-  ];
-
-  const cleaned = hints
+  const normalized = hints
+    .map((hint) => normalizeHint(hint))
+    .filter(Boolean)
     .filter((hint) => {
+      if (!shouldFilterAlignmentHints) {
+        return true;
+      }
+
       const lower = String(hint || "").toLowerCase();
 
-      if (
-        weakContextPatterns.some((pattern) =>
-          lower.includes(pattern)
-        )
-      ) {
-        return false;
-      }
+      return !recoveryPatterns.some((pattern) =>
+        lower.includes(pattern)
+      );
+    });
 
-      if (
-        shouldFilterAlignmentHints &&
-        recoveryPatterns.some((pattern) =>
-          lower.includes(String(pattern || "").toLowerCase())
-        )
-      ) {
-        return false;
-      }
-
-      return true;
-    })
-    .map(normalizeHint);
-
-  const compacted = [];
-  const seen = new Set();
-
-  for (const hint of cleaned) {
-    const key =
-      String(hint || "")
-        .toLowerCase()
-        .slice(0, 80);
-
-    if (seen.has(key)) {
-      continue;
-    }
-
-    seen.add(key);
-    compacted.push(hint);
-  }
-
-  return compacted.slice(0, 3);
+  return normalized.slice(0, 4);
 }
 
+function getDisplayAnswerSummary(
+  item = {},
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.renderer?.displayAnswer || {};
 
-
-function getDisplayAnswerSummary(item = {}) {
-  const type = String(item?.problematicAnswerType || "").toLowerCase();
+  const type =
+    String(item?.problematicAnswerType || "").toLowerCase();
 
   if (type === "duplicate") {
-    return "La risposta ripete contenuti già emersi: anche se può sembrare coerente con il tema, non aggiunge nuove evidenze e quindi perde molta forza nel colloquio.";
+    return templates.duplicateSummary;
   }
 
-  return text(item?.summary, "Sintesi non disponibile.");
+  return text(
+    item?.summary,
+    templates.summaryFallback
+  );
 }
 
-function getDisplayQuestionAlignment(item = {}) {
-  const type = String(item?.problematicAnswerType || "").toLowerCase();
+function getDisplayQuestionAlignment(
+  item = {},
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.renderer?.displayAnswer || {};
+
+  const type =
+    String(item?.problematicAnswerType || "").toLowerCase();
 
   if (type === "duplicate") {
-    return "formalmente può restare sul tema, ma non aggiunge una nuova prova: è quindi poco utile alla domanda";
+    return templates.duplicateQuestionAlignment;
   }
 
   return humanizeOffTopicRisk(text(item?.offTopicRisk, "low"));
 }
+
 
 function renderCvSupportDetails(cvSupportRead = {}) {
   const usableSignals = ensureArray(cvSupportRead?.usableSignals);
@@ -1580,7 +1577,12 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
         </div>
 
         <p class="fr-text fr-answer-summary-text">
-          ${escapeHtml(getDisplayAnswerSummary(item))}
+          ${escapeHtml(
+          getDisplayAnswerSummary(
+            item,
+            context?.proReportNarratives || {}
+          )
+        )}
         </p>
 
         <div class="fr-answer-first-correction">
@@ -1608,7 +1610,7 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
           </div>
         ` : ""}
 
-        ${renderQuestionAlignmentAlert(item)}
+        ${renderQuestionAlignmentAlert(item, context)}
 
 
         ${renderCapabilityBlock(
@@ -1677,7 +1679,12 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
 
                 <div class="workspace-column-main-title">Come puoi rafforzarla</div>
 
-                ${renderImprovementNarrativeList(selectUsefulImprovementHints(item))}
+                ${renderImprovementNarrativeList(
+                  selectUsefulImprovementHints(
+                    item,
+                    context?.proReportNarratives || {}
+                  )
+                )}
 
                 <div class="improved-answer-highlight">
                   <div class="improved-answer-title">Come potrebbe suonare meglio</div>
@@ -2387,8 +2394,14 @@ function renderRecruiterRecoveryPrompt(item = {}) {
 }
 
 
-function renderQuestionAlignmentAlert(item = {}) {
-  const baseText = getDisplayQuestionAlignment(item);
+function renderQuestionAlignmentAlert(
+  item = {},
+  context = {}
+) {
+  const baseText = getDisplayQuestionAlignment(
+  item,
+  context?.proReportNarratives || {}
+  );
   const offTopicRisk = String(item?.offTopicRisk || "").toLowerCase();
   const score = Number(item?.score ?? 0);
   const answerIndex = Number(item?.answerIndex || 0);
@@ -2401,14 +2414,8 @@ function renderQuestionAlignmentAlert(item = {}) {
   let displayText = baseText;
 
   if (String(baseText || "").toLowerCase().includes("rischia di non rispondere")) {
-    const variants = [
-      "Questa risposta rischia di non rispondere davvero al punto richiesto.",
-      "Anche qui il problema principale è il fuoco: la risposta parla, ma non centra abbastanza la domanda.",
-      "Il passaggio resta fuori bersaglio: serve rispondere più direttamente a ciò che viene chiesto.",
-      "Qui la forma non basta: la risposta deve rientrare meglio nel cuore della domanda.",
-      "La risposta è comprensibile, ma non aggancia con sufficiente precisione il punto richiesto.",
-      "Attenzione: anche questa risposta rischia di restare laterale rispetto alla domanda."
-    ];
+    const variants =
+  context?.proReportNarratives?.renderer?.displayAnswer?.offTopicRiskVariants || [];
 
     const idx =
       Number.isFinite(answerIndex) && answerIndex > 0
@@ -2435,17 +2442,20 @@ function renderFeaturedAnswersModule(
   module,
   context = {}
 ) {
+  const templates =
+    context?.proReportNarratives?.renderer?.featuredAnswersModule || {};
+
   const featuredAnswers = module?.data || {};
 
   return `
     <div class="overview-pro-block">
 
       <div class="overview-standard-title">
-        Risposte chiave del colloquio
+        ${escapeHtml(templates.title)}
       </div>
 
       <div class="overview-pro-note">
-        Una risposta mostra dove oggi il colloquio perde più forza; l’altra mostra quale risposta regge meglio e può diventare un riferimento utile.
+        ${escapeHtml(templates.note)}
       </div>
 
       <div class="answer-stack overview-answer-stack">
@@ -2453,7 +2463,7 @@ function renderFeaturedAnswersModule(
           ? ensureArray(featuredAnswers.items)
             .map((item) => renderAnswerCard(item, context))
            .join("\n")
-          : `<p class="muted">Non emergono ancora risposte chiave sintetizzate.</p>`
+          : `<p class="muted">${escapeHtml(templates.empty)}</p>`
         }
       </div>
     </div>
