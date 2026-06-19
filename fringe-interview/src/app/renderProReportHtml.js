@@ -3331,9 +3331,11 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
       "it"
   }) || {};
 
-const context = {
-  proReportNarratives
-};
+  const context = {
+    proReportNarratives
+  };
+  const templates =
+    proReportNarratives?.renderer?.overviewSituation || {};
   const safeModules = ensureArray(modules);
 
   const operational = safeModules.find((m) => m?.key === "operationalPriorities");
@@ -3344,14 +3346,14 @@ const context = {
   const cvSlim = proReportV2?.overview?.cvSlim || {};
 
   const cvSummary = text(
-    cvSlim?.candidateSummary,
-    "Il CV contiene elementi utili, ma deve essere letto meglio rispetto al ruolo target."
+  cvSlim?.candidateSummary,
+  templates.cvSummaryFallback
   );
-
   const openingData = opening?.data || {};
+  
   const openingAssessment = text(
-    openingData?.openingAssessment || openingData?.message,
-    "L’apertura è il primo punto in cui costruisci credibilità: deve rendere chiaro percorso, contesto, responsabilità e collegamento al ruolo target."
+  openingData?.openingAssessment || openingData?.message,
+  templates.openingAssessmentFallback
   );
 
   const featuredItems = ensureArray(featured?.data?.items);
@@ -3367,11 +3369,14 @@ const context = {
   const weakAnswers = featuredItems.filter((item) => Number(item?.score || 0) < 50).length;
 
   const answerNarrative =
-    avgScore !== null
-      ? weakAnswers > 0
-        ? `Le risposte mostrano passaggi da rafforzare: ${weakAnswers} risultano deboli o poco centrati. La media dei passaggi evidenziati è ${avgScore}/100.`
-        : `Le risposte hanno una base leggibile, con una media dei passaggi evidenziati di ${avgScore}/100.`
-      : "Le risposte vanno lette per qualità, aderenza alla domanda e capacità di costruire credibilità.";
+  avgScore !== null
+    ? weakAnswers > 0
+      ? String(templates.weakAnswersNarrative || "")
+          .replace("{weakAnswers}", String(weakAnswers))
+          .replace("{avgScore}", String(avgScore))
+      : String(templates.solidAnswersNarrative || "")
+          .replace("{avgScore}", String(avgScore))
+    : templates.answersFallback;
 
   return `
     <div class="situation-shell">
@@ -3468,7 +3473,7 @@ const context = {
             Tenuta complessiva
           </div>
           <p style="font-size:14px; line-height:1.5; font-weight:700; color:#3b0764;">
-            CV, apertura e risposte devono raccontare la stessa traiettoria. Se uno di questi elementi resta generico, anche una risposta formalmente buona perde forza.
+            ${escapeHtml(templates.overallTrajectory)}
           </p>
         </article>
 
@@ -3577,14 +3582,17 @@ const context = {
   ${operational ? renderSituationExpandableBlock({
 
   title: "Interventi prioritari per migliorare subito",
-  intro: "Qui trovi le azioni più urgenti: sono i punti che conviene correggere prima perché hanno più impatto sulla qualità percepita del colloquio.",
+  intro: templates.urgentActionsIntro,
   html: renderOverviewModule(operational, context)
+
 }) : ""}
 
 ${blocking ? renderSituationExpandableBlock({
+
   title: "Pattern ricorrenti che possono penalizzarti",
-  intro: "Questi elementi rendono meno forte la candidatura o riducono la credibilità delle risposte. Non vanno solo letti: vanno trasformati in interventi concreti.",
+  intro: templates.blockingPrioritiesIntro,
   html: renderOverviewModule(blocking, context)
+
 }) : ""}
 
  ${actionPlan ? renderSituationExpandableBlock({

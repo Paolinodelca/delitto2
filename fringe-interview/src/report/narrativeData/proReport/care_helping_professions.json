@@ -513,6 +513,24 @@
 
 "renderer": {
 
+"overviewSituation": {
+  "cvSummaryFallback": "Il CV contiene elementi utili, ma deve essere letto meglio rispetto al ruolo target.",
+
+  "openingAssessmentFallback": "L’apertura è il primo punto in cui costruisci credibilità: deve rendere chiaro percorso, contesto, responsabilità e collegamento al ruolo target.",
+
+  "answersFallback": "Le risposte vanno lette per qualità, aderenza alla domanda e capacità di costruire credibilità.",
+
+  "weakAnswersNarrative": "Le risposte mostrano passaggi da rafforzare: {weakAnswers} risultano deboli o poco centrati. La media dei passaggi evidenziati è {avgScore}/100.",
+
+  "solidAnswersNarrative": "Le risposte hanno una base leggibile, con una media dei passaggi evidenziati di {avgScore}/100.",
+
+  "overallTrajectory": "CV, apertura e risposte devono raccontare la stessa traiettoria. Se uno di questi elementi resta generico, anche una risposta formalmente buona perde forza.",
+
+  "urgentActionsIntro": "Qui trovi le azioni più urgenti: sono i punti che conviene correggere prima perché hanno più impatto sulla qualità percepita del colloquio.",
+
+  "blockingPrioritiesIntro": "Questi elementi rendono meno forte la candidatura o riducono la credibilità delle risposte. Non vanno solo letti: vanno trasformati in interventi concreti."
+},
+
 "professionalPerception": {
   "credibilityAssetsFallback": "Nel percorso sono presenti elementi utili che possono sostenere la candidatura, ma devono essere resi più visibili durante il colloquio."
 },
