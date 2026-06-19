@@ -805,9 +805,13 @@ function buildProfessionalPerceptionSummary({
       area: "Seniorità percepita",
       currentSignal: candidateSeniority,
       targetSignal: targetSeniority,
-      narrative:
-        `Il profilo oggi viene letto più vicino a una seniority ${candidateSeniority}, ` +
-        `mentre il ruolo target richiede segnali più vicini a ${targetSeniority}.`
+      narrative: applyTemplate(
+  proReportNarratives?.professionalPerception?.seniorityGapNarrative,
+  {
+    candidateSeniority,
+    targetSeniority
+  }
+)
     });
   }
 
@@ -817,8 +821,7 @@ function buildProfessionalPerceptionSummary({
       currentSignal: "poco visibile",
       targetSignal: "più evidente nel racconto e nel CV",
       narrative:
-        `Questo elemento non va letto necessariamente come assente, ` +
-        `ma oggi non emerge con sufficiente forza rispetto al ruolo target.`
+      proReportNarratives?.professionalPerception?.riskPerceptionGapNarrative
     });
   });
 
@@ -831,10 +834,16 @@ function buildProfessionalPerceptionSummary({
   .slice(0, 4)
   .map((risk) => ({
     area: risk,
+    
     whyItMatters:
-      `Questo elemento oggi pesa sulla distanza percepita dal ruolo target: va trasformato in evidenza concreta, non solo dichiarato.`,
-    possibleEvidence:
-      `Progetti, responsabilità, risultati o contesti in cui il candidato abbia mostrato ${risk.toLowerCase()} in modo osservabile.`
+  proReportNarratives?.professionalPerception?.credibilityExperienceWhyItMatters,
+possibleEvidence: applyTemplate(
+  proReportNarratives?.professionalPerception?.credibilityExperiencePossibleEvidence,
+  {
+    risk: risk.toLowerCase()
+  }
+)
+
   }));
     const cvInterviewPerceptionGap = buildCvInterviewPerceptionGap({
     candidateSummary,
@@ -982,7 +991,9 @@ attitudeShift: {
   title:
     proReportNarratives?.professionalPerception?.attitudeShiftTitle,
   narrative:
-    proReportNarratives?.professionalPerception?.attitudeShiftNarrative
+    proReportNarratives?.professionalPerception?.attitudeShiftNarrative,
+  practicePrompt:
+    proReportNarratives?.professionalPerception?.attitudeShiftPracticePrompt
 }
 
 
@@ -1032,12 +1043,7 @@ attitudeShift: {
 
     credibilityPath: {
 
-
-      currentPositioning:
-        candidateSummary ||
-        proReportNarratives?.professionalPerception?.currentPositioningFallback,
-
-
+      
       currentPositioning:
   candidateSummary ||
   proReportNarratives?.professionalPerception?.currentPositioningFallback,

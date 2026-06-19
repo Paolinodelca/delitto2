@@ -3336,6 +3336,8 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
   };
   const templates =
     proReportNarratives?.renderer?.overviewSituation || {};
+  const ui =
+  proReportNarratives?.ui || {};
   const safeModules = ensureArray(modules);
 
   const operational = safeModules.find((m) => m?.key === "operationalPriorities");
@@ -3384,7 +3386,7 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
       <section style="padding:18px; border-radius:18px; background:linear-gradient(180deg,#111827 0%,#1e1b4b 100%); border:2px solid #818cf8; box-shadow:0 10px 22px rgba(15,23,42,0.18);">
 
         <div style="width:calc(100% - 28px); margin:0 auto 14px auto; padding:10px 16px; border-radius:10px; background:linear-gradient(180deg,#818cf8 0%,#4338ca 100%); color:#ffffff; font-size:20px; font-weight:900; text-align:center;">
-          Situazione attuale
+          ${escapeHtml(ui?.sections?.currentSituation || "Situazione attuale")}
         </div>
 
         <p style="margin:0; color:#e0e7ff; font-size:15px; line-height:1.55; font-weight:800; text-align:center;">
@@ -3396,7 +3398,7 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
 
         <article style="padding:16px; border-radius:18px; background:#ecfdf5; border:2px solid #22c55e;">
           <div style="margin:0 auto 12px auto; padding:10px 14px; border-radius:10px; background:linear-gradient(180deg,#22c55e 0%,#15803d 100%); color:#fff; font-size:16px; font-weight:900; text-align:center;">
-            Il tuo CV
+            ${escapeHtml(ui?.sections?.yourCv || "Il tuo CV")}
           </div>
           <p style="font-size:14px; line-height:1.5; font-weight:700; color:#064e3b;">
             ${escapeHtml(cvSummary)}
@@ -3432,7 +3434,10 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
 
         <article style="padding:16px; border-radius:18px; background:#fff7ed; border:2px solid #f59e0b;">
           <div style="margin:0 auto 12px auto; padding:10px 14px; border-radius:10px; background:linear-gradient(180deg,#f59e0b 0%,#b45309 100%); color:#fff; font-size:16px; font-weight:900; text-align:center;">
-            Le tue risposte
+            ${escapeHtml(
+            ui?.sections?.yourAnswers ||
+            "Le tue risposte"
+          )}
           </div>
           <p style="font-size:14px; line-height:1.5; font-weight:700; color:#7c2d12;">
             ${escapeHtml(answerNarrative)}
@@ -3470,7 +3475,10 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
 
         <article style="padding:16px; border-radius:18px; background:#f5f3ff; border:2px solid #8b5cf6;">
           <div style="margin:0 auto 12px auto; padding:10px 14px; border-radius:10px; background:linear-gradient(180deg,#8b5cf6 0%,#6d28d9 100%); color:#fff; font-size:16px; font-weight:900; text-align:center;">
-            Tenuta complessiva
+            ${escapeHtml(
+            ui?.sections?.overallStrength ||
+            "Tenuta complessiva"
+          )}
           </div>
           <p style="font-size:14px; line-height:1.5; font-weight:700; color:#3b0764;">
             ${escapeHtml(templates.overallTrajectory)}
@@ -3479,7 +3487,10 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
 
       <article style="padding:16px; border-radius:18px; background:#eef2ff; border:2px solid #818cf8;">
           <div style="margin:0 auto 12px auto; padding:10px 14px; border-radius:10px; background:linear-gradient(180deg,#818cf8 0%,#4338ca 100%); color:#fff; font-size:16px; font-weight:900; text-align:center;">
-            La tua apertura
+            ${escapeHtml(
+            ui?.sections?.yourOpening ||
+            "La tua apertura"
+          )}
           </div>
           <p style="font-size:14px; line-height:1.5; font-weight:700; color:#1e1b4b;">
             ${escapeHtml(openingAssessment)}

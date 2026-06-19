@@ -2,7 +2,35 @@
   "family": "generic_professional",
   "locales": {
     "it": {
+
+"ui": {
+  "sections": {
+    "currentSituation": "Situazione attuale",
+    "yourCv": "Il tuo CV",
+    "yourOpening": "La tua apertura",
+    "yourAnswers": "Le tue risposte",
+    "overallStrength": "Tenuta complessiva"
+  },
+  "buttons": {
+    "goToCv": "Vai alla pagina CV ›",
+    "goToAnswers": "Vai alle risposte ›"
+  },
+  "labels": {
+    "premium": "PREMIUM",
+    "status": "Stato",
+    "priority": "Priorità"
+  }
+},
+
       "professionalPerception": {
+
+"seniorityGapNarrative": "Il profilo oggi viene letto più vicino a una seniority {candidateSeniority}, mentre il ruolo target richiede segnali più vicini a {targetSeniority}.",
+
+"riskPerceptionGapNarrative": "Questo elemento non va letto necessariamente come assente, ma oggi non emerge con sufficiente forza rispetto al ruolo target.",
+
+"credibilityExperienceWhyItMatters": "Questo elemento oggi pesa sulla distanza percepita dal ruolo target: va trasformato in evidenza concreta, non solo dichiarato.",
+
+"credibilityExperiencePossibleEvidence": "Progetti, responsabilità, risultati o contesti in cui il candidato abbia mostrato {risk} in modo osservabile.",
 
 "headline": "Profilo con segnali utili, ma ancora da rendere più leggibile rispetto al ruolo target.",
 
@@ -46,7 +74,7 @@
         "blindSpotsNarrative": "È possibile che tu stia concentrando molta energia nel raccontare il contesto, i progetti e le attività svolte. Chi ascolta però non vede il contesto: vede te. Più spazio occupano gli eventi e meno spazio rimane per capire quale sia stato il tuo contributo personale. Paradossalmente, cercando di spiegare tutto, rischi di rendere meno visibile proprio la parte più importante.",
 
         "attitudeShiftTitle": "Cambio di atteggiamento consigliato",
-        "attitudeShiftNarrative": "Nelle prossime risposte prova a fare un piccolo esperimento. Quando racconti una situazione, chiediti: \"Qual è stata la mia scelta?\", \"Quale decisione ho preso?\", \"Cosa sarebbe andato diversamente se io non ci fossi stato?\". Spesso è proprio lì che emerge la differenza tra una persona che ha partecipato a un progetto e una persona che ha contribuito a determinarne il risultato.",
+        "attitudeShiftPracticePrompt": "Nelle prossime risposte prova a fare un piccolo esperimento. Quando racconti una situazione, chiediti: \"Qual è stata la mia scelta?\", \"Quale decisione ho preso?\", \"Cosa sarebbe andato diversamente se io non ci fossi stato?\". Spesso è proprio lì che emerge la differenza tra una persona che ha partecipato a un progetto e una persona che ha contribuito a determinarne il risultato.",
 
 
         "targetDistanceTitle": "Dove nasce la distanza dal ruolo target",
