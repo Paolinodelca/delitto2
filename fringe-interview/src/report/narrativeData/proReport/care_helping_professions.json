@@ -513,6 +513,28 @@
 
 "renderer": {
 
+"professionalPerception": {
+  "credibilityAssetsFallback": "Nel percorso sono presenti elementi utili che possono sostenere la candidatura, ma devono essere resi più visibili durante il colloquio."
+},
+
+"openingReadability": {
+  "narrativeStyleDescriptive": "Il racconto sembra ordinato, ma rischia di restare un po’ descrittivo: spiega cosa hai fatto, però deve far capire meglio perché quelle esperienze ti rendono credibile per il ruolo target.",
+
+  "narrativeStyleTechnical": "Il racconto appare tecnico: può aiutare se il ruolo richiede competenza specifica, ma va collegato subito al valore che puoi portare nel ruolo.",
+
+  "narrativeStyleDispersive": "Il racconto rischia di disperdersi: conviene scegliere pochi passaggi forti e usarli per costruire un filo chiaro.",
+
+  "narrativeStyleFallback": "Il racconto iniziale va reso più intenzionale: non deve solo riassumere il CV, ma orientare subito l’intervistatore verso il ruolo target.",
+
+  "continuityPartial": "Il percorso si capisce, ma non è ancora raccontato come una traiettoria pienamente lineare. Conviene spiegare meglio il filo che collega esperienze, competenze maturate e ruolo target.",
+
+  "continuityLinear": "Il percorso appare abbastanza lineare: ora va solo raccontato scegliendo i passaggi più utili per il ruolo target, senza perdersi in dettagli secondari.",
+
+  "continuityFragmented": "Il percorso può sembrare frammentato: è importante preparare una spiegazione semplice dei passaggi, dei cambi e del filo logico che li collega.",
+
+  "continuityFallback": "Il percorso del CV va chiarito meglio: chi ascolta deve capire rapidamente da dove arrivi, che cosa hai costruito e perché questo ruolo è il passo successivo."
+},
+
 "cvMissingSignal": {
   "responsibility": "Non emerge ancora con chiarezza quale fosse la responsabilità personale diretta",
   "duration": "Manca un riferimento temporale che renda più credibile il percorso raccontato",

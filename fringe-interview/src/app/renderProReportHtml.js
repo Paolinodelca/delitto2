@@ -2292,14 +2292,24 @@ function renderOpeningPositioningModule(
             <div class="fr-card opening-reading-item-v09">
               <div class="opening-reading-label-v09">Impressione iniziale</div>
               <div class="fr-text">
-                ${escapeHtml(humanizeNarrativeStyle(opening?.narrativeStyle))}
+                ${escapeHtml(
+                  humanizeNarrativeStyle(
+                    opening?.narrativeStyle,
+                    context?.proReportNarratives || {}
+                  )
+                )}
               </div>
             </div>
 
             <div class="fr-card opening-reading-item-v09">
               <div class="opening-reading-label-v09">Chiarezza del percorso</div>
               <div class="fr-text">
-                ${escapeHtml(humanizeContinuityRead(opening?.continuityRead))}
+                ${escapeHtml(
+                  humanizeContinuityRead(
+                    opening?.continuityRead,
+                    context?.proReportNarratives || {}
+                  )
+                )}
               </div>
             </div>
           </div>
@@ -2374,41 +2384,54 @@ function renderCvFitBadge(label, score = 0, isRisk = false) {
 
 
 
+function humanizeNarrativeStyle(
+  value,
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.renderer?.openingReadability || {};
 
-function humanizeNarrativeStyle(value) {
-  const clean = String(value || "").toLowerCase();
+  const clean =
+    String(value || "").toLowerCase();
 
   if (clean.includes("descrittivo")) {
-    return "Il racconto sembra ordinato, ma rischia di restare un po’ descrittivo: spiega cosa hai fatto, però deve far capire meglio perché quelle esperienze ti rendono credibile per il ruolo target.";
+    return templates.narrativeStyleDescriptive;
   }
 
   if (clean.includes("tecnico")) {
-    return "Il racconto appare tecnico: può aiutare se il ruolo richiede competenza specifica, ma va collegato subito al valore che puoi portare nel ruolo.";
+    return templates.narrativeStyleTechnical;
   }
 
   if (clean.includes("dispersivo")) {
-    return "Il racconto rischia di disperdersi: conviene scegliere pochi passaggi forti e usarli per costruire un filo chiaro.";
+    return templates.narrativeStyleDispersive;
   }
 
-  return "Il racconto iniziale va reso più intenzionale: non deve solo riassumere il CV, ma orientare subito l’intervistatore verso il ruolo target.";
+  return templates.narrativeStyleFallback;
 }
 
-function humanizeContinuityRead(value) {
-  const clean = String(value || "").toLowerCase();
+function humanizeContinuityRead(
+  value,
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.renderer?.openingReadability || {};
+
+  const clean =
+    String(value || "").toLowerCase();
 
   if (clean.includes("parzialmente")) {
-    return "Il percorso si capisce, ma non è ancora raccontato come una traiettoria pienamente lineare. Conviene spiegare meglio il filo che collega esperienze, competenze maturate e ruolo target.";
+    return templates.continuityPartial;
   }
 
   if (clean.includes("lineare")) {
-    return "Il percorso appare abbastanza lineare: ora va solo raccontato scegliendo i passaggi più utili per il ruolo target, senza perdersi in dettagli secondari.";
+    return templates.continuityLinear;
   }
 
   if (clean.includes("framment")) {
-    return "Il percorso può sembrare frammentato: è importante preparare una spiegazione semplice dei passaggi, dei cambi e del filo logico che li collega.";
+    return templates.continuityFragmented;
   }
 
-  return "Il percorso del CV va chiarito meglio: chi ascolta deve capire rapidamente da dove arrivi, che cosa hai costruito e perché questo ruolo è il passo successivo.";
+  return templates.continuityFallback;
 }
 
 function renderBlockingPrioritiesModule(module) {
@@ -2608,10 +2631,9 @@ function buildFriendlySensitiveAdvice(item, {
     sensitiveAdvice[type] ||
     note ||
     sensitiveAdvice.default ||
-    "Preparerei questo punto con una risposta breve, concreta e collegata al ruolo target."
+    ""
   );
 }
-
 
 function renderCvDocumentReadBox(read = {}) {
   if (!read || typeof read !== "object") {
@@ -3824,6 +3846,20 @@ function buildReportDataFromProReport(proReportV2) {
 }
 
 function renderProfessionalPerceptionSection(proReportV2) {
+
+  const roleFamily =
+  proReportV2?.roleFamily ||
+  "care_helping_professions";
+
+const locale =
+  proReportV2?.locale ||
+  "it";
+
+const proReportNarratives =
+  loadProReportNarrativeData({
+    roleFamily,
+    locale
+  });
   const perception = proReportV2?.professionalPerception || {};
   const v2 = perception?.perceptionV2 || {};
   const fallbackNarrative = perception?.narrativeRead || {};
@@ -3861,15 +3897,15 @@ function renderProfessionalPerceptionSection(proReportV2) {
             credibilityAssets?.title || "Il tuo bagaglio di credibilità"
           )}</div>
           
-          
-          
-
-
+              
 
           <p>${escapeHtml(
-            credibilityAssets?.narrative ||
-              "Nel percorso sono presenti elementi utili che possono sostenere la candidatura, ma devono essere resi più visibili durante il colloquio."
-          )}</p>
+  credibilityAssets?.narrative ||
+    proReportNarratives?.renderer?.professionalPerception?.credibilityAssetsFallback ||
+    ""
+)}</p>
+
+
         </div>
 
           <div class="answer-subcard">
