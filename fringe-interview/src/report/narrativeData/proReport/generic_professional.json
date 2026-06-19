@@ -492,6 +492,69 @@
 
 "renderer": {
 
+"cvMissingSignal": {
+  "responsibility": "Non emerge ancora con chiarezza quale fosse la responsabilità personale diretta",
+  "duration": "Manca un riferimento temporale che renda più credibile il percorso raccontato",
+  "roleContext": "Serve chiarire meglio ruolo ricoperto e contesto operativo",
+  "resultsImpact": "Mancano risultati o impatti osservabili a sostegno della risposta",
+  "tradeoff": "Va esplicitato meglio che cosa è stato scelto e che cosa è stato lasciato indietro",
+  "stakeholders": "Vanno rese più leggibili le persone o funzioni coinvolte",
+  "fallbackPrefix": "Elemento da chiarire:"
+},
+
+"cvMissingSignalView": {
+  "technicalDetailLabel": "Dettaglio tecnico da usare solo se serve",
+  "technicalDetailHint": "non inserirlo in ogni risposta: conta solo se la domanda riguarda strumenti, dati o reporting",
+
+  "personalRoleLabel": "Ruolo personale",
+  "personalRoleHint": "far capire quale parte della decisione o dell’azione dipendeva davvero da te",
+
+  "contextLabel": "Contesto della situazione",
+  "contextHint": "spiegare dove eri, con quale responsabilità e dentro quale vincolo",
+
+  "tradeoffLabel": "Scelta fatta e rinuncia",
+  "tradeoffHint": "dire chiaramente cosa hai scelto, cosa hai lasciato fuori e perché",
+
+  "criteriaLabel": "Criterio di scelta",
+  "criteriaHint": "spiegare quale logica hai usato per decidere",
+
+  "effectLabel": "Effetto concreto",
+  "effectHint": "mostrare cosa è cambiato dopo la scelta",
+
+  "roleBridgeLabel": "Collegamento al ruolo target",
+  "roleBridgeHint": "far vedere perché quell’esperienza rende più credibile il passaggio verso questo ruolo",
+
+  "concreteExampleLabel": "Esempio concreto",
+  "concreteExampleHint": "porta un episodio reale e spiegane il collegamento con la domanda",
+
+  "observableResultLabel": "Risultato osservabile",
+  "observableResultHint": "mostra l’effetto prodotto, anche in modo semplice",
+
+  "peopleLabel": "Persone coinvolte",
+  "peopleHint": "rendere chiari interlocutori, funzioni o resistenze gestite",
+
+  "fallbackHint": "da trasformare in un punto concreto e collegato alla domanda"
+},
+
+"fallbackAnnotations": {
+  "alignmentRisk": "La risposta introduce elementi utili, ma non aggancia abbastanza bene il punto centrale della domanda.",
+
+  "ownershipOpportunity": "Qui sarebbe utile distinguere meglio ciò che dipendeva direttamente da te rispetto al lavoro del team.",
+
+  "specificityRisk": "Il passaggio resta ancora troppo generale: servirebbe un episodio più verificabile o concreto.",
+
+  "strength": "La risposta costruisce un racconto abbastanza leggibile e coerente."
+},
+
+"openingCreditBox": {
+  "labelStrong": "Credito forte",
+  "labelPartial": "Credito parziale",
+  "labelWeak": "Credito debole",
+  "title": "Credito generato dall’apertura",
+  "weakText": "L’apertura non basta ancora a rendere credibili le risposte successive: serviranno esempi concreti, responsabilità e risultati.",
+  "strongText": "L’apertura fornisce già riferimenti abbastanza concreti: le risposte successive possono costruire su questa base senza ripetere tutto."
+},
+
 "featuredAnswersModule": {
   "title": "Risposte chiave del colloquio",
 

@@ -23,7 +23,13 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;");
 }
 
-function renderOpeningCreditBox(opening = {}) {
+function renderOpeningCreditBox(
+  opening = {},
+  proReportNarratives = {}
+) {
+  const templates =
+  proReportNarratives?.renderer?.openingCreditBox || {};
+
   const credit = opening?.contextCarryoverCredit || null;
 
   if (!credit) {
@@ -32,10 +38,10 @@ function renderOpeningCreditBox(opening = {}) {
 
   const label =
     credit.credibilityLevel === "strong"
-      ? "Credito forte"
+      ? templates.labelStrong
       : credit.credibilityLevel === "partial"
-        ? "Credito parziale"
-        : "Credito debole";
+        ? templates.labelPartial
+        : templates.labelWeak;
 
   const tone =
     credit.credibilityLevel === "strong"
@@ -46,17 +52,18 @@ function renderOpeningCreditBox(opening = {}) {
 
   return `
     <div class="opening-credit-box opening-credit-${tone}">
-      <div class="opening-credit-label">Credito generato dall’apertura</div>
+      <div class="opening-credit-label">${escapeHtml(templates.title)}</div>
       <div class="opening-credit-value">${escapeHtml(label)}</div>
       <div class="opening-credit-text">
-        ${credit.shouldRequireConcreteEvidenceLater
-          ? "L’apertura non basta ancora a rendere credibili le risposte successive: serviranno esempi concreti, responsabilità e risultati."
-          : "L’apertura fornisce già riferimenti abbastanza concreti: le risposte successive possono costruire su questa base senza ripetere tutto."}
+        ${escapeHtml(
+          credit.shouldRequireConcreteEvidenceLater
+            ? templates.weakText
+            : templates.strongText
+        )}
       </div>
     </div>
   `;
 }
-
 
 function renderList(items, emptyLabel = "—") {
   const values = ensureArray(items).filter(Boolean);
@@ -939,9 +946,15 @@ function segmentImpactLabel(type) {
   return "Da leggere";
 }
 
-function buildFallbackAnnotations(item = {}) {
-  const analysis = item?.analysis || {};
-  const answerText = String(item?.answerText || "").trim();
+function buildFallbackAnnotations(
+  item = {},
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.renderer?.fallbackAnnotations || {};
+
+  const answerText =
+    String(item?.answerText || "").trim();
 
   if (!answerText) {
     return [];
@@ -957,7 +970,7 @@ function buildFallbackAnnotations(item = {}) {
     annotations.push({
       type: "risk",
       excerpt: answerText.slice(0, 180),
-      note: "La risposta introduce elementi utili, ma non aggancia abbastanza bene il punto centrale della domanda."
+      note: templates.alignmentRisk
     });
   }
 
@@ -969,7 +982,7 @@ function buildFallbackAnnotations(item = {}) {
     annotations.push({
       type: "opportunity",
       excerpt: answerText.slice(0, 220),
-      note: "Qui sarebbe utile distinguere meglio ciò che dipendeva direttamente da te rispetto al lavoro del team."
+      note: templates.ownershipOpportunity
     });
   }
 
@@ -981,29 +994,32 @@ function buildFallbackAnnotations(item = {}) {
     annotations.push({
       type: "risk",
       excerpt: answerText.slice(0, 220),
-      note: "Il passaggio resta ancora troppo generale: servirebbe un episodio più verificabile o concreto."
+      note: templates.specificityRisk
     });
   }
 
-  if (
-    ensureArray(item?.weaknesses).length === 0
-  ) {
+  if (ensureArray(item?.weaknesses).length === 0) {
     annotations.push({
       type: "strength",
       excerpt: answerText.slice(0, 220),
-      note: "La risposta costruisce un racconto abbastanza leggibile e coerente."
+      note: templates.strength
     });
   }
 
   return annotations.slice(0, 3);
 }
 
-
-function renderAnswerSegments(item = {}) {
+function renderAnswerSegments(
+  item = {},
+  context = {}
+) {
  const annotationsSource =
   ensureArray(item?.annotations).length > 0
     ? item?.annotations
-    : buildFallbackAnnotations(item);
+    : buildFallbackAnnotations(
+    item,
+    context?.proReportNarratives || {}
+  );
 
 const annotations = ensureArray(annotationsSource)
 
@@ -1652,7 +1668,10 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
 
                 <div class="workspace-block workspace-block-after-title">
                   <div class="answer-subcard-title">Dettagli rilevanti della risposta</div>
-                  ${renderAnswerSegments(item)}
+                  ${renderAnswerSegments(
+                  item,
+                  context
+                )}
                 </div>
 
                 <div class="workspace-block workspace-block-risk">
@@ -1660,7 +1679,10 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
                   ${renderWeaknessNarrativeList(selectSecondaryWeaknesses(item))}
                 </div>
 
-                ${renderMissingAnswerSignalsBox(item?.cvSupportRead)}
+                ${renderMissingAnswerSignalsBox(
+                  item?.cvSupportRead,
+                  context
+                )}
 
                 ${ensureArray(item?.strengths).length > 0 ? `
                   <div class="workspace-block workspace-block-positive">
@@ -1768,37 +1790,49 @@ function humanizeCvUsefulSignal(value) {
   return `Segnale utile dal CV: ${clean}`;
 }
 
-function humanizeCvMissingSignal(value) {
+function humanizeCvMissingSignal(
+  value,
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.renderer?.cvMissingSignal || {};
+
   const clean = String(value || "").trim();
   const lower = clean.toLowerCase();
 
-  if (!clean) return "";
+  if (!clean) {
+    return "";
+  }
 
-  if (lower.includes("responsabilità")) {
-    return "Non emerge ancora con chiarezza quale fosse la responsabilità personale diretta";
+  if (lower.includes("responsabilità") || lower.includes("responsabilit")) {
+    return templates.responsibility;
   }
 
   if (lower.includes("durata")) {
-    return "Manca un riferimento temporale che renda più credibile il percorso raccontato";
+    return templates.duration;
   }
 
   if (lower.includes("ruolo") || lower.includes("contesto")) {
-    return "Serve chiarire meglio ruolo ricoperto e contesto operativo";
+    return templates.roleContext;
   }
 
   if (lower.includes("risultati") || lower.includes("impatti")) {
-    return "Mancano risultati o impatti osservabili a sostegno della risposta";
+    return templates.resultsImpact;
   }
 
   if (lower.includes("lasciare indietro") || lower.includes("trade")) {
-    return "Va esplicitato meglio che cosa è stato scelto e che cosa è stato lasciato indietro";
+    return templates.tradeoff;
   }
 
-  if (lower.includes("persone") || lower.includes("funzioni") || lower.includes("stakeholder")) {
-    return "Vanno rese più leggibili le persone o funzioni coinvolte";
+  if (
+    lower.includes("persone") ||
+    lower.includes("funzioni") ||
+    lower.includes("stakeholder")
+  ) {
+    return templates.stakeholders;
   }
 
-  return `Elemento da chiarire: ${clean}`;
+  return `${templates.fallbackPrefix} ${clean}`;
 }
 
 function renderRecruiterPanel(item = {}, context = {}) {
@@ -1836,13 +1870,23 @@ function renderRecruiterPanel(item = {}, context = {}) {
   `;
 }
 
-function renderCvSupportNarrativeList(items = [], type = "useful") {
+function renderCvSupportNarrativeList(
+  items = [],
+  type = "useful",
+  context = {}
+  ) {
+  const proReportNarratives =
+  context?.proReportNarratives || {};
   const values = ensureArray(items)
-    .map((item) =>
-      type === "missing"
-        ? buildCvMissingSignalView(item)
-        : buildCvUsefulSignalView(item)
-    )
+   
+  
+  .map((item) =>
+  type === "missing"
+    ? buildCvMissingSignalView(item, proReportNarratives)
+    : buildCvUsefulSignalView(item)
+   )
+
+
     .filter(Boolean)
     .slice(0, 4);
 
@@ -1956,91 +2000,114 @@ function renderWeaknessNarrativeList(items = []) {
   `;
 }
 
-function buildCvMissingSignalView(value) {
+function buildCvMissingSignalView(
+  value,
+  proReportNarratives = {}
+) {
+  const templates =
+    proReportNarratives?.renderer?.cvMissingSignalView || {};
+
   const clean = String(value || "").trim();
   const lower = clean.toLowerCase();
 
-  if (!clean) return null;
+  if (!clean) {
+    return null;
+  }
 
   if (lower.includes("bi specifici") || lower.includes("strumenti bi")) {
     return {
-      label: "Dettaglio tecnico da usare solo se serve",
-      hint: "non inserirlo in ogni risposta: conta solo se la domanda riguarda strumenti, dati o reporting"
+      label: templates.technicalDetailLabel,
+      hint: templates.technicalDetailHint
     };
   }
 
-  if (lower.includes("responsabilità") || lower.includes("personale")) {
+  if (lower.includes("responsabilità") || lower.includes("responsabilit") || lower.includes("personale")) {
     return {
-      label: "Ruolo personale",
-      hint: "far capire quale parte della decisione o dell’azione dipendeva davvero da te"
+      label: templates.personalRoleLabel,
+      hint: templates.personalRoleHint
     };
   }
 
   if (lower.includes("ruolo") || lower.includes("contesto")) {
     return {
-      label: "Contesto della situazione",
-      hint: "spiegare dove eri, con quale responsabilità e dentro quale vincolo"
+      label: templates.contextLabel,
+      hint: templates.contextHint
     };
   }
 
-  if (lower.includes("trade") || lower.includes("lasciare indietro") || lower.includes("sacrificata")) {
+  if (
+    lower.includes("trade") ||
+    lower.includes("lasciare indietro") ||
+    lower.includes("sacrificata")
+  ) {
     return {
-      label: "Scelta fatta e rinuncia",
-      hint: "dire chiaramente cosa hai scelto, cosa hai lasciato fuori e perché"
+      label: templates.tradeoffLabel,
+      hint: templates.tradeoffHint
     };
   }
 
   if (lower.includes("criterio")) {
     return {
-      label: "Criterio di scelta",
-      hint: "spiegare quale logica hai usato per decidere"
+      label: templates.criteriaLabel,
+      hint: templates.criteriaHint
     };
   }
 
-  if (lower.includes("effetto") || lower.includes("risultati") || lower.includes("impatti")) {
+  if (
+    lower.includes("effetto") ||
+    lower.includes("risultati") ||
+    lower.includes("impatti")
+  ) {
     return {
-      label: "Effetto concreto",
-      hint: "mostrare cosa è cambiato dopo la scelta"
+      label: templates.effectLabel,
+      hint: templates.effectHint
     };
   }
 
-  if (lower.includes("trasferibilità") || lower.includes("ponte")) {
+  if (lower.includes("trasferibilità") || lower.includes("trasferibilit") || lower.includes("ponte")) {
     return {
-      label: "Collegamento al ruolo target",
-      hint: "far vedere perché quell’esperienza rende più credibile il passaggio verso questo ruolo"
+      label: templates.roleBridgeLabel,
+      hint: templates.roleBridgeHint
     };
   }
 
   if (lower.includes("esempio concreto") || lower.includes("collegato al cv")) {
-  return {
-    label: "Esempio concreto",
-    hint: "porta un episodio reale e spiegane il collegamento con la domanda"
-  };
-}
-
-if (lower.includes("risultato osservabile")) {
-  return {
-    label: "Risultato osservabile",
-    hint: "mostra l’effetto prodotto, anche in modo semplice"
-  };
-}
-
-
-
-  if (lower.includes("persone") || lower.includes("funzioni") || lower.includes("stakeholder")) {
     return {
-      label: "Persone coinvolte",
-      hint: "rendere chiari interlocutori, funzioni o resistenze gestite"
+      label: templates.concreteExampleLabel,
+      hint: templates.concreteExampleHint
+    };
+  }
+
+  if (lower.includes("risultato osservabile")) {
+    return {
+      label: templates.observableResultLabel,
+      hint: templates.observableResultHint
+    };
+  }
+
+  if (
+    lower.includes("persone") ||
+    lower.includes("funzioni") ||
+    lower.includes("stakeholder")
+  ) {
+    return {
+      label: templates.peopleLabel,
+      hint: templates.peopleHint
     };
   }
 
   return {
-  label: clean,
-  hint: "da trasformare in un punto concreto e collegato alla domanda"
+    label: clean,
+    hint: templates.fallbackHint
   };
 }
 
-function renderMissingAnswerSignalsBox(cvSupportRead = {}) {
+function renderMissingAnswerSignalsBox(
+  cvSupportRead = {},
+  context = {}
+) {
+  const proReportNarratives =
+  context?.proReportNarratives || {};
   const missingSignals = ensureArray(cvSupportRead?.missingSignals).slice(0, 4);
 
   if (!missingSignals.length) {
@@ -2048,7 +2115,12 @@ function renderMissingAnswerSignalsBox(cvSupportRead = {}) {
   }
 
   const values = missingSignals
-    .map((item) => buildCvMissingSignalView(item))
+    .map((item) =>
+  buildCvMissingSignalView(
+    item,
+    proReportNarratives
+  )
+)
     .filter(Boolean);
 
   return `
@@ -2122,7 +2194,11 @@ function renderCvSupportReadBox(cvSupportRead = {}) {
 
           <div class="cv-support-grid fr-cv-support-grid">
             <div class="cv-support-column cv-support-good fr-cv-support-column">
-              ${renderCvSupportNarrativeList(usableSignals, "useful")}
+              ${renderCvSupportNarrativeList(
+              usableSignals,
+              "useful",
+              context
+            )}
             </div>
           </div>
         </div>
@@ -2164,7 +2240,10 @@ function renderWeightedList(items = []) {
   }).join("");
 }
 
-function renderOpeningPositioningModule(module) {
+function renderOpeningPositioningModule(
+  module,
+  context = {}
+) {
   const opening = module?.data || {};
 
   return `
@@ -2204,7 +2283,10 @@ function renderOpeningPositioningModule(module) {
             </div>
           ` : ""}
 
-          ${renderOpeningCreditBox(opening)}
+          ${renderOpeningCreditBox(
+            opening,
+            context?.proReportNarratives || {}
+          )}
 
           <div class="overview-reading-grid opening-reading-grid-v09">
             <div class="fr-card opening-reading-item-v09">
@@ -3549,7 +3631,7 @@ function renderOverviewModule(
 
   switch (module.key) {
     case "openingPositioning":
-      return renderOpeningPositioningModule(module);
+      return renderOpeningPositioningModule(module, context);
       case "operationalPriorities":
   return renderOperationalPrioritiesModule(module);
     case "operationalActionPlan":
