@@ -4,6 +4,29 @@
     "it": {
 
 "ui": {
+
+  "brand": {
+  "productLine": "Interview · PRO",
+  "taglineHtml": "Preparare il colloquio,<br>sul serio."
+},
+"tabs": {
+  "overview": "Situazione",
+  "perception": "Percezione",
+  "answers": "Risposte",
+  "criticalPoints": "Domande delicate",
+  "cv": "CV",
+  "final": "Checklist"
+},
+
+  "sensitiveQuestions": {
+  "title": "Punti delicati da preparare bene",
+  "subtitle": "Qui non trovi “voti”, ma i passaggi in cui conviene arrivare preparato: sono quelli dove una risposta vaga può indebolire anche un buon profilo.",
+  "fallbackItemTitle": "Punto delicato",
+  "whyTitle": "Perché ti conviene prepararlo bene",
+  "evidenceTitle": "Da dove nasce questa lettura",
+  "adviceTitle": "Come lo affronterei io al tuo posto"
+},
+
   "sections": {
     "currentSituation": "Situazione attuale",
     "yourCv": "Il tuo CV",
@@ -23,6 +46,14 @@
 },
 
       "professionalPerception": {
+
+"seniorityGapNarrative": "Il profilo oggi viene letto più vicino a una seniority {candidateSeniority}, mentre il ruolo target richiede segnali più vicini a {targetSeniority}.",
+
+"riskPerceptionGapNarrative": "Questo elemento non va letto necessariamente come assente, ma oggi non emerge con sufficiente forza rispetto al ruolo target.",
+
+"credibilityExperienceWhyItMatters": "Questo elemento oggi pesa sulla distanza percepita dal ruolo target: va trasformato in evidenza concreta, non solo dichiarato.",
+
+"credibilityExperiencePossibleEvidence": "Progetti, responsabilità, risultati o contesti in cui il candidato abbia mostrato {risk} in modo osservabile.",
 
 
 

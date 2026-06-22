@@ -1740,7 +1740,7 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
                 </div>
 
                 <div class="premium-soft-note">
-                  <strong>PREMIUM</strong>
+                  <strong>${escapeHtml(context?.proReportNarratives?.ui?.labels?.premium || "")}</strong>
                   Puoi riscrivere la risposta, confrontare la nuova versione con quella iniziale e misurare il miglioramento con una nuova analisi.
                 </div>
 
@@ -2575,35 +2575,56 @@ function renderFeaturedAnswersModule(
   `;
 }
 
-function renderSensitiveQuestionsModule(module) {
+function renderSensitiveQuestionsModule(
+  module,
+  context = {}
+) {
+  const proReportNarratives =
+    context?.proReportNarratives || {};
+
+  const ui =
+    proReportNarratives?.ui || {};
+
+  const uiLabels =
+    ui?.labels || {};
+
+  const sensitiveUi =
+    ui?.sensitiveQuestions || {};
+
   const sensitiveQuestions = module?.data || {};
   const sensitiveItems = ensureArray(sensitiveQuestions?.items);
 
   return `
     <div class="section-shell">
-      <div class="section-shell-title">Punti delicati da preparare bene</div>
+      <div class="section-shell-title">${escapeHtml(sensitiveUi.title || "")}</div>
       <div class="section-shell-subtitle">
-        Qui non trovi “voti”, ma i passaggi in cui conviene arrivare preparato: sono quelli dove una risposta vaga può indebolire anche un buon profilo.
+        ${escapeHtml(sensitiveUi.subtitle || "")}
       </div>
 
       <div class="grid-2">
         ${sensitiveItems.map((item) => `
           <section class="card ${toneFromSensitiveReadiness(item?.readinessLabel)}">
-            <h3>${escapeHtml(text(item?.label, "Punto delicato"))}</h3>
+            <h3>${escapeHtml(text(item?.label, sensitiveUi.fallbackItemTitle || ""))}</h3>
 
             <div class="pill-row">
-            ${renderPill(`Stato: ${text(item?.statusLabel, "—")}`, "neutral")}
-             ${renderPill(`Priorità: ${text(item?.readinessLabel, "—")}`, "neutral")}
+              ${renderPill(
+                `${uiLabels.status || ""}: ${text(item?.statusLabel, "—")}`,
+                "neutral"
+              )}
+
+              ${renderPill(
+                `${uiLabels.priority || ""}: ${text(item?.readinessLabel, "—")}`,
+                "neutral"
+              )}
             </div>
 
-
-            <p><strong>Perché ti conviene prepararlo bene</strong></p>
+            <p><strong>${escapeHtml(sensitiveUi.whyTitle || "")}</strong></p>
             <p>${escapeHtml(text(item?.whyItMatters, "—"))}</p>
 
-            <p><strong>Da dove nasce questa lettura</strong></p>
+            <p><strong>${escapeHtml(sensitiveUi.evidenceTitle || "")}</strong></p>
             <p>${escapeHtml(text(item?.evidenceQuestionLabel, "—"))}</p>
 
-            <p><strong>Come lo affronterei io al tuo posto</strong></p>
+            <p><strong>${escapeHtml(sensitiveUi.adviceTitle || "")}</strong></p>
             <p>${escapeHtml(buildFriendlySensitiveAdvice(item))}</p>
           </section>
         `).join("\n")}
@@ -2914,7 +2935,10 @@ function renderCvTargetWeaknessBox(cvSlim = {}) {
   `;
 }
 
-function renderCvSlimModule(module) {
+function renderCvSlimModule(
+  module,
+  context = {}
+) {
   const cvSlim = module?.data || {};
 
   return `
@@ -2927,13 +2951,16 @@ function renderCvSlimModule(module) {
       ${renderCvDocumentReadBox(cvSlim?.cvDocumentRead)}
       ${renderCvParsedProfileBox(cvSlim)}
 
-      ${renderCvDeepDiveMenu(cvSlim)}
+      ${renderCvDeepDiveMenu(cvSlim, context)}
 
     </div>
   `;
 }
 
-function renderCvDeepDiveMenu(cvSlim = {}) {
+function renderCvDeepDiveMenu(
+  cvSlim = {},
+  context = {}
+) {
   return `
     <section class="cv-deep-dive-menu">
 
@@ -2955,21 +2982,24 @@ function renderCvDeepDiveMenu(cvSlim = {}) {
       <details class="cv-deep-dive-item">
         <summary>Come mitigare i gap del CV</summary>
         <div class="cv-deep-dive-content">
-          ${renderCvMitigationDeepDive(cvSlim)}
+          ${renderCvMitigationDeepDive(cvSlim, context)}
         </div>
       </details>
 
       <details class="cv-deep-dive-item">
         <summary>Ruoli alternativi o vicini</summary>
         <div class="cv-deep-dive-content">
-          ${renderAlternativePositioningBox(cvSlim?.alternativePositioning)}
+          ${renderAlternativePositioningBox(
+            cvSlim?.alternativePositioning,
+            context
+          )}
         </div>
       </details>
 
       <details class="cv-deep-dive-item">
         <summary>Uso del CV durante il colloquio</summary>
         <div class="cv-deep-dive-content">
-          ${renderCvInterviewUseContent(cvSlim)}
+          ${renderCvInterviewUseContent(cvSlim, context)}
         </div>
       </details>
 
@@ -3023,7 +3053,13 @@ function renderCvInterviewUseContent(cvSlim = {}) {
 }
 
 
-function renderCvMitigationDeepDive(cvSlim = {}) {
+function renderCvMitigationDeepDive(
+  cvSlim = {},
+  context = {}
+) {
+
+  const ui =
+  context?.proReportNarratives?.ui || {};
   return `
     <section class="overview-coach-box strong">
       <div class="overview-card-title">Come mitigare i punti deboli del CV</div>
@@ -3047,7 +3083,7 @@ function renderCvMitigationDeepDive(cvSlim = {}) {
       )}
 
       <div class="premium-soft-note">
-        <strong>PREMIUM</strong>
+        <strong>${escapeHtml(ui?.labels?.premium || "")}</strong>
         Questa parte può evolvere in una 
         <span class="premium-emphasis">riscrittura guidata del CV</span>,
         con <span class="premium-emphasis">alternative di posizionamento</span>,
@@ -3097,7 +3133,13 @@ function renderTransitionFragilityStrip(items = []) {
 }
 
 
-function renderAlternativePositioningBox(alternativePositioning = {}) {
+function renderAlternativePositioningBox(
+  alternativePositioning = {},
+  context = {}
+) {
+
+  const ui =
+  context?.proReportNarratives?.ui || {};
   const items = ensureArray(alternativePositioning?.items).slice(0, 4);
     const transitionFragilities = ensureArray(
     alternativePositioning?.transitionFragilities
@@ -3156,7 +3198,7 @@ function renderAlternativePositioningBox(alternativePositioning = {}) {
       ` : ""}
 
       <div class="premium-soft-note">
-        <strong>PREMIUM</strong>
+        <strong>${escapeHtml(ui?.labels?.premium || "")}</strong>
         Questa lettura può evolvere in una 
         <span class="premium-emphasis">mappa di riposizionamento professionale</span>,
         con ruoli target alternativi, gap recuperabili e priorità formative.
@@ -3423,7 +3465,7 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
       inset 0 1px 0 rgba(255,255,255,0.18);
     "
     >
-     Vai alla pagina CV ›
+     ${escapeHtml(ui?.buttons?.goToCv || "Vai alla pagina CV ›")}
     </button>
         </article>
 
@@ -3463,7 +3505,7 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
       inset 0 1px 0 rgba(255,255,255,0.18);
      "
     >
-    Vai alle risposte ›
+    ${escapeHtml(ui?.buttons?.goToAnswers || "Vai alle risposte ›")}
     </button>
 
 
@@ -3685,9 +3727,10 @@ function renderOverviewModule(
     case "featuredAnswers":
       return renderFeaturedAnswersModule(module, context);
     case "sensitiveQuestionsDashboard":
-      return renderSensitiveQuestionsModule(module);
+      return renderSensitiveQuestionsModule(module, context);
     case "cvSlim":
-      return renderCvSlimModule(module);
+    return renderCvSlimModule(module, context);
+
     case "finalChecklist":
       return renderFinalChecklistModule(module);
     default:
@@ -4009,7 +4052,8 @@ const proReportNarratives =
       "it"
   }) || {};
 
-
+  const ui =
+  proReportNarratives?.ui || {};
   const reportData = buildReportDataFromProReport(proReportV2);
 
   const overviewLayout = assembleReportSectionData({
@@ -4045,12 +4089,12 @@ if (
   });
 
   const sections = [
-  { key: "overview", label: "Situazione" },
-  { key: "perception", label: "Percezione" },
-  { key: "answers", label: "Risposte" },
-  { key: "criticalPoints", label: "Punti delicati" },
-  { key: "cv", label: "CV" },
-  { key: "final", label: "Checklist" }
+  { key: "overview", label: ui?.tabs?.overview || "" },
+  { key: "perception", label: ui?.tabs?.perception || "" },
+  { key: "answers", label: ui?.tabs?.answers || "" },
+  { key: "criticalPoints", label: ui?.tabs?.criticalPoints || "" },
+  { key: "cv", label: ui?.tabs?.cv || "" },
+  { key: "final", label: ui?.tabs?.final || "" }
 ];
 
    const answersModules = ensureArray(answersLayout.enabled);
@@ -13083,13 +13127,12 @@ details > summary[class*="summary"] {
 
   <div class="fringe-brand-block">
     <div class="fringe-brand-main">FRINGE</div>
-    <div class="fringe-brand-sub">Interview · PRO</div>
+    <div class="fringe-brand-sub">${escapeHtml(ui?.brand?.productLine || "")}</div>
   </div>
 
   <div class="fringe-tagline">
-  Preparare il colloquio,<br>
-  sul serio.
-</div>
+  ${ui?.brand?.taglineHtml || ""}
+  </div>
 
   </section>
 
@@ -13098,14 +13141,14 @@ details > summary[class*="summary"] {
 
   <div class="top-nav">
 
-      <button class="top-nav-item active" data-report-nav="overview" type="button">Situazione</button>
+      <button class="top-nav-item active" data-report-nav="overview" type="button">${escapeHtml(ui?.tabs?.overview || "")}</button>
 
-      <button class="top-nav-item" data-report-nav="perception" type="button">Percezione</button>
+      <button class="top-nav-item" data-report-nav="perception" type="button">${escapeHtml(ui?.tabs?.perception || "")}</button>
 
-      <button class="top-nav-item" data-report-nav="answers" type="button">Risposte</button>
-      <button class="top-nav-item" data-report-nav="criticalPoints" type="button">Domande delicate</button>
-      <button class="top-nav-item" data-report-nav="cv" type="button">CV</button>
-      <button class="top-nav-item" data-report-nav="final" type="button">Checklist</button>
+      <button class="top-nav-item" data-report-nav="answers" type="button">${escapeHtml(ui?.tabs?.answers || "")}</button>
+      <button class="top-nav-item" data-report-nav="criticalPoints" type="button">${escapeHtml(ui?.tabs?.criticalPoints || "")}</button>
+      <button class="top-nav-item" data-report-nav="cv" type="button">${escapeHtml(ui?.tabs?.cv || "")}</button>
+      <button class="top-nav-item" data-report-nav="final" type="button">${escapeHtml(ui?.tabs?.final || "")}</button>
     </div>
     </div>
 
@@ -13136,15 +13179,21 @@ details > summary[class*="summary"] {
     </div>
 
     <div class="report-section" data-report-section="criticalPoints">
-      ${criticalModules.map(renderOverviewModule).join("\n")}
+      ${criticalModules.map((module) =>
+    renderOverviewModule(module, { proReportNarratives })
+    ).join("\n")}
     </div>
 
     <div class="report-section" data-report-section="cv">
-      ${cvModules.map(renderOverviewModule).join("\n")}
+      ${cvModules.map((module) =>
+    renderOverviewModule(module, { proReportNarratives })
+    ).join("\n")}
     </div>
 
     <div class="report-section" data-report-section="final">
-      ${finalModules.map(renderOverviewModule).join("\n")}
+      ${finalModules.map((module) =>
+    renderOverviewModule(module, { proReportNarratives })
+    ).join("\n")}
     </div>
 
   </div>

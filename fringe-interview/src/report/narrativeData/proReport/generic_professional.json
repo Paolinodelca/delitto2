@@ -4,6 +4,29 @@
     "it": {
 
 "ui": {
+
+  "brand": {
+  "productLine": "Interview · PRO",
+  "taglineHtml": "Preparare il colloquio,<br>sul serio."
+},
+"tabs": {
+  "overview": "Situazione",
+  "perception": "Percezione",
+  "answers": "Risposte",
+  "criticalPoints": "Domande delicate",
+  "cv": "CV",
+  "final": "Checklist"
+},
+
+  "sensitiveQuestions": {
+  "title": "Punti delicati da preparare bene",
+  "subtitle": "Qui non trovi “voti”, ma i passaggi in cui conviene arrivare preparato: sono quelli dove una risposta vaga può indebolire anche un buon profilo.",
+  "fallbackItemTitle": "Punto delicato",
+  "whyTitle": "Perché ti conviene prepararlo bene",
+  "evidenceTitle": "Da dove nasce questa lettura",
+  "adviceTitle": "Come lo affronterei io al tuo posto"
+},
+
   "sections": {
     "currentSituation": "Situazione attuale",
     "yourCv": "Il tuo CV",
