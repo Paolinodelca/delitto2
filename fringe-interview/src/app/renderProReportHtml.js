@@ -2656,45 +2656,63 @@ function buildFriendlySensitiveAdvice(item, {
   );
 }
 
-function renderCvDocumentReadBox(read = {}) {
+function renderCvDocumentReadBox(
+  read = {},
+  context = {}
+) {
+  const ui =
+  context?.proReportNarratives?.ui || {};
+
+const cvUi =
+  ui?.cv || {};
+
   if (!read || typeof read !== "object") {
     return "";
   }
 
   return `
     <section class="cv-document-read-box">
-      <div class="cv-document-title">Lettura del CV come documento</div>
+      <div class="cv-document-title">${escapeHtml(cvUi.documentReadTitle || "")}</div>
 
       <div class="cv-document-headline">
-        ${escapeHtml(text(read?.headline, "Il CV contiene elementi utili, ma va reso più mirato al ruolo target."))}
+        ${escapeHtml(text(read?.headline, cvUi.documentReadHeadlineFallback || ""))}
       </div>
 
       <div class="cv-document-grid">
         <div class="cv-document-item">
-          <div class="cv-document-label">Chiarezza del profilo</div>
-          <div class="cv-document-text">${escapeHtml(text(read?.clarity, "Da chiarire meglio."))}</div>
+          <div class="cv-document-label">${escapeHtml(cvUi.documentReadClarityLabel || "")}</div>
+          <div class="cv-document-text">${escapeHtml(text(read?.clarity, cvUi.documentReadClarityFallback || ""))}</div>
         </div>
 
         <div class="cv-document-item">
-          <div class="cv-document-label">Prove ed evidenze</div>
-          <div class="cv-document-text">${escapeHtml(text(read?.evidence, "Da rafforzare con esempi."))}</div>
+          <div class="cv-document-label">${escapeHtml(cvUi.documentReadEvidenceLabel || "")}</div>
+          <div class="cv-document-text">${escapeHtml(text(read?.evidence, cvUi.documentReadEvidenceFallback || ""))}</div>
         </div>
 
         <div class="cv-document-item">
-          <div class="cv-document-label">Punti da chiarire</div>
-          <div class="cv-document-text">${escapeHtml(text(read?.risks, "Da verificare."))}</div>
+          <div class="cv-document-label">${escapeHtml(cvUi.documentReadRisksLabel || "")}</div>
+          <div class="cv-document-text">${escapeHtml(text(read?.risks, cvUi.documentReadRisksFallback || ""))}</div>
         </div>
 
         <div class="cv-document-item">
-          <div class="cv-document-label">Priorità di riscrittura</div>
-          <div class="cv-document-text">${escapeHtml(text(read?.rewrite, "Rendere il CV più mirato."))}</div>
+          <div class="cv-document-label">${escapeHtml(cvUi.documentReadRewriteLabel || "")}</div>
+          <div class="cv-document-text">${escapeHtml(text(read?.rewrite, cvUi.documentReadRewriteFallback || ""))}</div>
         </div>
       </div>
     </section>
   `;
 }
 
-function renderCvParsedProfileBox(cvSlim = {}) {
+function renderCvParsedProfileBox(
+  cvSlim = {},
+  context = {}
+) {
+
+  const ui =
+  context?.proReportNarratives?.ui || {};
+
+const cvUi =
+  ui?.cv || {};
   const profile = cvSlim?.cvParsedProfileBox || {};
   const transitionPotential = cvSlim?.transitionPotential || {};
 
@@ -2717,21 +2735,21 @@ function renderCvParsedProfileBox(cvSlim = {}) {
     <section class="overview-card overview-card-neutral strong" style="margin-top:14px;">
 
      <div style="width:calc(100% - 28px); min-height:44px; margin:0 auto 16px auto; padding:10px 16px; display:flex; align-items:center; justify-content:center; border-radius:10px; background:linear-gradient(180deg,#818cf8 0%,#4338ca 100%); border:1px solid rgba(255,255,255,0.26); color:#ffffff; font-size:18px; font-weight:900; line-height:1.2; text-align:center; box-shadow:inset 0 1px 0 rgba(255,255,255,0.22),0 2px 8px rgba(15,23,42,0.14);">
-    Come FRINGE legge il tuo CV
+    ${escapeHtml(cvUi.parsedProfileTitle || "")}
     </div>
       <div class="cv-reading-main">
         <div class="cv-reading-main-label">
-          Profilo percepito
+          ${escapeHtml(cvUi.perceivedProfileLabel || "")}
         </div>
 
         <div class="cv-reading-main-role">
-          ${escapeHtml(text(profile?.targetRole, "Ruolo non disponibile"))}
+          ${escapeHtml(text(profile?.targetRole, cvUi.targetRoleFallback || ""))}
         </div>
 
         <div class="cv-reading-main-seniority">
-     <span>Seniority percepita</span>
+     <span>${escapeHtml(cvUi.perceivedSeniorityLabel || "")}</span>
      <strong class="cv-seniority-badge">
-     ${escapeHtml(text(profile?.seniority, "non disponibile"))}
+     ${escapeHtml(text(profile?.seniority, cvUi.seniorityFallback || ""))}
          </strong>
         </div>
 
@@ -2740,7 +2758,7 @@ function renderCvParsedProfileBox(cvSlim = {}) {
           ${escapeHtml(
             text(
               profile?.summary,
-              "Il sistema non è riuscito a costruire una sintesi leggibile del profilo."
+              cvUi.profileSummaryFallback || ""
             )
           )}
         </div>
@@ -2749,58 +2767,61 @@ function renderCvParsedProfileBox(cvSlim = {}) {
       <div class="cv-profile-snapshot-grid">
 
   <section class="cv-snapshot-card cv-snapshot-good">
-    <div class="cv-snapshot-title">Leve forti del profilo</div>
+    <div class="cv-snapshot-title">${escapeHtml(cvUi.strongLeversTitle || "")}</div>
 
     ${renderList(
       transferableStrengths,
-      "Non emergono ancora leve forti chiaramente trasferibili."
+      cvUi.strongLeversEmpty || ""
     )}
   </section>
 
   <section class="cv-snapshot-card cv-snapshot-compatible">
-    <div class="cv-snapshot-title">Competenze compatibili col ruolo</div>
+    <div class="cv-snapshot-title">${escapeHtml(cvUi.compatibleSkillsTitle || "")}</div>
 
     ${renderList(
       matchedSkills,
-      "Non emergono ancora elementi fortemente coerenti col ruolo target."
+      cvUi.compatibleSkillsEmpty || ""
     )}
   </section>
 
   <section class="cv-snapshot-card cv-snapshot-risk">
-    <div class="cv-snapshot-title">Gap o elementi poco leggibili</div>
+    <div class="cv-snapshot-title">${escapeHtml(cvUi.gapsTitle || "")}</div>
     
     ${renderList(
       missingSkills,
-      "Non emergono gap sintetizzati."
+      cvUi.gapsEmpty || ""
     )}
   </section>
 
   <section class="cv-snapshot-card cv-snapshot-potential">
-    <div class="cv-snapshot-title">Potenziale di transizione</div>
+    <div class="cv-snapshot-title">${escapeHtml(cvUi.transitionPotentialTitle || "")}</div>
 
     <div class="cv-potential-row">
-      <div class="cv-potential-label">Vicinanza attuale al ruolo</div>
+      <div class="cv-potential-label">${escapeHtml(cvUi.roleClosenessLabel || "")}</div>
       <span class="transition-potential-badge level-${readiness}">
-        ${escapeHtml(humanizePotentialLevel(readiness))}
+        ${escapeHtml(humanizePotentialLevel(readiness, context))}
       </span>
     </div>
 
     <div class="cv-potential-row">
-      <div class="cv-potential-label">Recuperabilità dei gap</div>
+      <div class="cv-potential-label">${escapeHtml(cvUi.gapRecoverabilityLabel || "")}</div>
       <span class="transition-potential-badge level-${recoverability}">
-        ${escapeHtml(humanizePotentialLevel(recoverability))}
+        ${escapeHtml(humanizePotentialLevel(recoverability, context))}
       </span>
     </div>
   </section>
 
 </div>
 
-${renderCvTransitionBalance({
-  readiness,
-  recoverability,
-  missingSkillsCount: missingSkills.length,
-  strengthsCount: transferableStrengths.length + matchedSkills.length
-})}
+${renderCvTransitionBalance(
+  {
+    readiness,
+    recoverability,
+    missingSkillsCount: missingSkills.length,
+    strengthsCount: transferableStrengths.length + matchedSkills.length
+  },
+  context
+)}
 
 
 
@@ -2809,13 +2830,21 @@ ${renderCvTransitionBalance({
   `;
 }
 
-function renderCvTransitionBalance({
-  readiness = "medium",
-  recoverability = "medium",
-  missingSkillsCount = 0,
-  strengthsCount = 0
-} = {}) {
+function renderCvTransitionBalance(
+  {
+    readiness = "medium",
+    recoverability = "medium",
+    missingSkillsCount = 0,
+    strengthsCount = 0
+  } = {},
+  context = {}
+) {
 
+  const ui =
+  context?.proReportNarratives?.ui || {};
+
+const cvUi =
+  ui?.cv || {};
   const positiveWeight =
     strengthsCount * 14 +
     (readiness === "high" ? 22 : readiness === "medium" ? 14 : 8) +
@@ -2837,7 +2866,7 @@ function renderCvTransitionBalance({
     <section class="cv-transition-balance">
 
       <div class="cv-transition-balance-title">
-        Solidità del passaggio verso il ruolo target
+        ${escapeHtml(cvUi.transitionBalanceTitle || "")}
       </div>
 
       <div class="cv-transition-balance-bar">
@@ -2860,12 +2889,12 @@ function renderCvTransitionBalance({
 
         <div class="cv-transition-legend-good">
           <span></span>
-          basi già credibili per il ruolo
+         ${escapeHtml(cvUi.transitionBalanceGood || "")}
         </div>
 
         <div class="cv-transition-legend-risk">
           <span></span>
-          gap o aspetti ancora da rafforzare
+          ${escapeHtml(cvUi.transitionBalanceRisk || "")}
         </div>
 
       </div>
@@ -2874,18 +2903,41 @@ function renderCvTransitionBalance({
   `;
 }
 
+function humanizePotentialLevel(
+  level,
+  context = {}
+) {
+  const cvUi =
+    context?.proReportNarratives?.ui?.cv || {};
 
-function humanizePotentialLevel(level) {
-  const clean = String(level || "").toLowerCase();
+  const clean =
+    String(level || "").toLowerCase();
 
-  if (clean === "high") return "Alta";
-  if (clean === "medium") return "Media";
-  if (clean === "low") return "Bassa";
+  if (clean === "high") {
+    return cvUi.potentialHigh || "";
+  }
 
-  return "Da chiarire";
+  if (clean === "medium") {
+    return cvUi.potentialMedium || "";
+  }
+
+  if (clean === "low") {
+    return cvUi.potentialLow || "";
+  }
+
+  return cvUi.potentialUnknown || "";
 }
 
-function renderCvTargetWeaknessBox(cvSlim = {}) {
+function renderCvTargetWeaknessBox(
+  cvSlim = {},
+  context = {}
+) {
+
+  const ui =
+  context?.proReportNarratives?.ui || {};
+
+const cvUi =
+  ui?.cv || {};
   const weakOrMissing = ensureArray(cvSlim?.weakOrMissing).slice(0, 4);
   const transitionFragilities = ensureArray(
     cvSlim?.alternativePositioning?.transitionFragilities
@@ -2899,25 +2951,25 @@ function renderCvTargetWeaknessBox(cvSlim = {}) {
     <section class="cv-target-weakness-box">
 
       <div class="cv-target-weakness-title">
-        Punti da rafforzare per il ruolo target
+        ${escapeHtml(cvUi.targetWeaknessTitle || "")}
       </div>
 
       <div class="cv-target-weakness-grid">
 
         <div class="cv-target-weakness-column">
           <div class="cv-target-weakness-subtitle">
-            Cosa va spiegato meglio
+            ${escapeHtml(cvUi.targetWeaknessExplain || "")}
           </div>
 
           ${renderCvSignalCards(
             weakOrMissing,
-            "Non emergono ancora gap sintetizzati."
+            cvUi.gapsEmpty || ""
           )}
         </div>
 
         <div class="cv-target-weakness-column">
           <div class="cv-target-weakness-subtitle">
-            Cosa indebolisce il passaggio
+            ${escapeHtml(cvUi.targetWeaknessWeakens || "")}
           </div>
 
           <div class="alternative-fragility-pills">
@@ -2953,8 +3005,15 @@ const cvUi =
     ${escapeHtml(cvUi.title || "")}
     </div>
 
-      ${renderCvDocumentReadBox(cvSlim?.cvDocumentRead)}
-      ${renderCvParsedProfileBox(cvSlim)}
+      ${renderCvDocumentReadBox(
+        cvSlim?.cvDocumentRead,
+        context
+      )}
+
+      ${renderCvParsedProfileBox(
+        cvSlim,
+        context
+      )}
 
       ${renderCvDeepDiveMenu(cvSlim, context)}
 
@@ -2986,7 +3045,10 @@ const cvUi =
       <details class="cv-deep-dive-item">
         <summary>${escapeHtml(cvUi.targetGapSummary || "")}</summary>
         <div class="cv-deep-dive-content">
-          ${renderCvTargetWeaknessBox(cvSlim)}
+          ${renderCvTargetWeaknessBox(
+            cvSlim,
+            context
+          )}
         </div>
       </details>
 
@@ -3028,24 +3090,33 @@ const cvUi =
   `;
 }
 
-function renderCvInterviewUseContent(cvSlim = {}) {
+function renderCvInterviewUseContent(
+  cvSlim = {},
+  context = {}
+) {
+
+  const ui =
+  context?.proReportNarratives?.ui || {};
+
+const cvUi =
+  ui?.cv || {};
   return `
     <p class="cv-pro-text">
-      Questa sezione non valuta il CV come documento, ma suggerisce come usare le informazioni del CV per rendere più credibili apertura e risposte.
+      ${escapeHtml(cvUi.interviewUseIntro || "")}
     </p>
 
     <div class="overview-card-grid overview-card-grid-2" style="margin-top:14px;">
 
       <section class="overview-card overview-card-neutral strong">
         <div style="width:calc(100% - 24px); min-height:42px; margin:0 auto 14px auto; padding:10px 14px; display:flex; align-items:center; justify-content:center; border-radius:10px; background:linear-gradient(180deg,#818cf8 0%,#4338ca 100%); border:1px solid rgba(255,255,255,0.24); color:#ffffff; font-size:16px; font-weight:900; line-height:1.2; text-align:center; box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 2px 8px rgba(15,23,42,0.12);">
-  Cosa usare nell’apertura
+  ${escapeHtml(cvUi.openingUseTitle || "")}
 </div>
 
         <p class="cv-pro-text">
           ${escapeHtml(
             text(
               cvSlim?.openingUseNarrative,
-              "Porta subito le esperienze più trasferibili e collegale al ruolo target."
+              text(cvSlim?.openingUseNarrative, cvUi.openingUseFallback || "")
             )
           )}
         </p>
@@ -3053,12 +3124,12 @@ function renderCvInterviewUseContent(cvSlim = {}) {
 
       <section class="overview-card overview-card-neutral strong">
         <div style="width:calc(100% - 24px); min-height:42px; margin:0 auto 14px auto; padding:10px 14px; display:flex; align-items:center; justify-content:center; border-radius:10px; background:linear-gradient(180deg,#818cf8 0%,#4338ca 100%); border:1px solid rgba(255,255,255,0.24); color:#ffffff; font-size:16px; font-weight:900; line-height:1.2; text-align:center; box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 2px 8px rgba(15,23,42,0.12);">
-     Cosa usare nelle risposte
+     ${escapeHtml(cvUi.answerUseTitle || "")}
     </div>
 
         ${renderList(
           ensureArray(cvSlim?.answerUseSuggestions).slice(0, 4),
-          "Usa esempi concreti del CV per sostenere le risposte più deboli."
+           cvUi.answerUseFallback || ""
         )}
       </section>
 
@@ -3081,31 +3152,29 @@ function renderCvMitigationDeepDive(
       <div class="overview-card-title">${escapeHtml(cvUi.mitigationCardTitle || "")}</div>
 
       <p class="cv-pro-text" style="color:#ffffff; font-weight:700;">
-        Questa parte non serve solo a “coprire” i gap: serve a costruire una strada credibile per ridurne il peso nella lettura del profilo.
+        ${escapeHtml(cvUi.mitigationIntro || "")}
       </p>
 
       ${renderList(
         ensureArray(cvSlim?.mitigationSuggestions).slice(0, 4),
-        "Non emergono ancora strategie di mitigazione sintetizzate."
+         cvUi.mitigationEmpty || ""
       )}
 
       <div class="overview-card-title" style="margin-top:16px;">
-        Strade laterali per ridurre il peso dei gap
+        ${escapeHtml(cvUi.lateralMitigationTitle || "")}
       </div>
 
       ${renderList(
         ensureArray(cvSlim?.lateralMitigationSuggestions).slice(0, 4),
-        "Non emergono ancora strade laterali sintetizzate."
+          cvUi.lateralMitigationEmpty || ""
       )}
 
       <div class="premium-soft-note">
         <strong>${escapeHtml(ui?.labels?.premium || "")}</strong>
-        Questa parte può evolvere in una 
-        <span class="premium-emphasis">riscrittura guidata del CV</span>,
-        con <span class="premium-emphasis">alternative di posizionamento</span>,
-        strategie di mitigazione dei gap e suggerimenti più specifici sulle
-        <span class="premium-emphasis">competenze da rafforzare</span>.
+        ${cvUi.mitigationPremiumNoteHtml || ""}
       </div>
+
+
     </section>
   `;
 }
@@ -3132,7 +3201,12 @@ const cvUi =
   `;
 }
 
-function renderTransitionFragilityStrip(items = []) {
+function renderTransitionFragilityStrip(
+  items = [],
+  context = {}
+) {
+  const cvUi =
+  context?.proReportNarratives?.ui?.cv || {};
   const transitionFragilities = ensureArray(items).slice(0, 4);
 
   if (!transitionFragilities.length) {
@@ -3142,7 +3216,7 @@ function renderTransitionFragilityStrip(items = []) {
   return `
     <div class="alternative-fragility-strip" style="margin-top:14px;">
       <div class="alternative-fragility-strip-title">
-        Punti che oggi indeboliscono il passaggio verso il ruolo target
+        ${escapeHtml(cvUi.transitionFragilityTitle || "")}
       </div>
 
       <div class="alternative-fragility-pills">
@@ -3179,7 +3253,7 @@ function renderAlternativePositioningBox(
 
   return `
     <section class="alternative-positioning-box">
-      <div class="alternative-positioning-kicker">Lettura laterale del profilo</div>
+      <div class="alternative-positioning-kicker">${escapeHtml(cvUi.alternativePositioningKicker || "")}</div>
       <div class="alternative-positioning-title">
         ${escapeHtml(cvUi.alternativeRolesCardTitle || "")}
       </div>
@@ -3198,25 +3272,25 @@ function renderAlternativePositioningBox(
             <article class="alternative-positioning-card">
               <div class="alternative-positioning-card-top">
                 <div class="alternative-positioning-card-title">
-                  ${escapeHtml(text(item?.title, "Ruolo alternativo"))}
+                  ${escapeHtml(text(item?.title, cvUi.alternativeRoleFallback || ""))}
                 </div>
                 <span class="alternative-fit-badge">
-                  ${escapeHtml(text(item?.fitLevel, "fit"))}
+                  ${escapeHtml(text(item?.fitLevel, cvUi.alternativeFitFallback || ""))}
                 </span>
               </div>
 
               <div class="alternative-positioning-card-label">
-                Perché può funzionare
+                ${escapeHtml(cvUi.alternativeWhyLabel || "")}
               </div>
               <p class="alternative-positioning-card-text">
-                ${escapeHtml(text(item?.why, "Non disponibile."))}
+                ${escapeHtml(text(item?.why, cvUi.alternativeWhyFallback || ""))}
               </p>
 
               <div class="alternative-positioning-card-label">
-                Da rafforzare
+                ${escapeHtml(cvUi.alternativeToStrengthenLabel || "")}
               </div>
               <p class="alternative-positioning-card-text">
-                ${escapeHtml(text(item?.toStrengthen, "Non disponibile."))}
+                ${escapeHtml(text(item?.toStrengthen, cvUi.alternativeToStrengthenFallback || ""))}
               </p>
             </article>
           `).join("")}
@@ -3224,11 +3298,9 @@ function renderAlternativePositioningBox(
       ` : ""}
 
       <div class="premium-soft-note">
-        <strong>${escapeHtml(ui?.labels?.premium || "")}</strong>
-        Questa lettura può evolvere in una 
-        <span class="premium-emphasis">mappa di riposizionamento professionale</span>,
-        con ruoli target alternativi, gap recuperabili e priorità formative.
-      </div>
+      <strong>${escapeHtml(ui?.labels?.premium || "")}</strong>
+      ${cvUi.alternativePremiumNoteHtml || ""}
+    </div>
     </section>
   `;
 }

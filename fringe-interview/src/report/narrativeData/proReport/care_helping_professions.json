@@ -7,7 +7,71 @@
 
   "cv": {
 
-  "interviewUseCardTitle": "Uso del CV durante il colloquio",
+"interviewUseIntro": "Questa sezione non valuta il CV come documento, ma suggerisce come usare le informazioni del CV per rendere più credibili apertura e risposte.",
+"openingUseTitle": "Cosa usare nell’apertura",
+"openingUseFallback": "Porta subito le esperienze più trasferibili e collegale al ruolo target.",
+"answerUseTitle": "Cosa usare nelle risposte",
+"answerUseFallback": "Usa esempi concreti del CV per sostenere le risposte più deboli.",
+
+"mitigationIntro": "Questa parte non serve solo a “coprire” i gap: serve a costruire una strada credibile per ridurne il peso nella lettura del profilo.",
+"mitigationEmpty": "Non emergono ancora strategie di mitigazione sintetizzate.",
+"lateralMitigationTitle": "Strade laterali per ridurre il peso dei gap",
+"lateralMitigationEmpty": "Non emergono ancora strade laterali sintetizzate.",
+"mitigationPremiumNoteHtml": "Questa parte può evolvere in una <span class=\"premium-emphasis\">riscrittura guidata del CV</span>, con <span class=\"premium-emphasis\">alternative di posizionamento</span>, strategie di mitigazione dei gap e suggerimenti più specifici sulle <span class=\"premium-emphasis\">competenze da rafforzare</span>.",
+
+"transitionFragilityTitle": "Punti che oggi indeboliscono il passaggio verso il ruolo target",
+
+"alternativePositioningKicker": "Lettura laterale del profilo",
+"alternativeRoleFallback": "Ruolo alternativo",
+"alternativeFitFallback": "fit",
+"alternativeWhyLabel": "Perché può funzionare",
+"alternativeWhyFallback": "Non disponibile.",
+"alternativeToStrengthenLabel": "Da rafforzare",
+"alternativeToStrengthenFallback": "Non disponibile.",
+"alternativePremiumNoteHtml": "Questa lettura può evolvere in una <span class=\"premium-emphasis\">mappa di riposizionamento professionale</span>, con ruoli target alternativi, gap recuperabili e priorità formative.",
+
+"documentReadTitle": "Lettura del CV come documento",
+"documentReadHeadlineFallback": "Il CV contiene elementi utili, ma va reso più mirato al ruolo target.",
+"documentReadClarityLabel": "Chiarezza del profilo",
+"documentReadClarityFallback": "Da chiarire meglio.",
+"documentReadEvidenceLabel": "Prove ed evidenze",
+"documentReadEvidenceFallback": "Da rafforzare con esempi.",
+"documentReadRisksLabel": "Punti da chiarire",
+"documentReadRisksFallback": "Da verificare.",
+"documentReadRewriteLabel": "Priorità di riscrittura",
+"documentReadRewriteFallback": "Rendere il CV più mirato.",
+
+"parsedProfileTitle": "Come FRINGE legge il tuo CV",
+"perceivedProfileLabel": "Profilo percepito",
+"targetRoleFallback": "Ruolo non disponibile",
+"perceivedSeniorityLabel": "Seniority percepita",
+"seniorityFallback": "non disponibile",
+"profileSummaryFallback": "Il sistema non è riuscito a costruire una sintesi leggibile del profilo.",
+
+"strongLeversTitle": "Leve forti del profilo",
+"strongLeversEmpty": "Non emergono ancora leve forti chiaramente trasferibili.",
+"compatibleSkillsTitle": "Competenze compatibili col ruolo",
+"compatibleSkillsEmpty": "Non emergono ancora elementi fortemente coerenti col ruolo target.",
+"gapsTitle": "Gap o elementi poco leggibili",
+"gapsEmpty": "Non emergono gap sintetizzati.",
+"transitionPotentialTitle": "Potenziale di transizione",
+"roleClosenessLabel": "Vicinanza attuale al ruolo",
+"gapRecoverabilityLabel": "Recuperabilità dei gap",
+
+"transitionBalanceTitle": "Solidità del passaggio verso il ruolo target",
+"transitionBalanceGood": "basi già credibili per il ruolo",
+"transitionBalanceRisk": "gap o aspetti ancora da rafforzare",
+
+"potentialHigh": "Alta",
+"potentialMedium": "Media",
+"potentialLow": "Bassa",
+"potentialUnknown": "Da chiarire",
+
+"targetWeaknessTitle": "Punti da rafforzare per il ruolo target",
+"targetWeaknessExplain": "Cosa va spiegato meglio",
+"targetWeaknessWeakens": "Cosa indebolisce il passaggio",
+
+"interviewUseCardTitle": "Uso del CV durante il colloquio",
 "originalCvUnavailable": "CV originale non disponibile.",
 "originalCvLoaded": "CV originale caricato",
 "alternativeRolesCardTitle": "Ruoli alternativi o vicini dove il profilo può risultare credibile",
