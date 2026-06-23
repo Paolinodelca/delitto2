@@ -14,32 +14,57 @@ const DATA_DIR = path.resolve(
 
 const cache = new Map();
 
+function readNarrativeFile(roleFamily, locale) {
+  try {
+    const filePath = path.join(DATA_DIR, `${roleFamily}.json`);
+    const raw = readFileSync(filePath, "utf8");
+    const parsed = JSON.parse(raw);
+
+    return (
+      parsed?.locales?.[locale] ||
+      parsed?.locales?.it ||
+      null
+    );
+  } catch {
+    return null;
+  }
+}
+
 export default function loadProReportNarrativeData({
   roleFamily = "care_helping_professions",
   locale = "it"
 } = {}) {
-  const cacheKey = `${roleFamily}:${locale}`;
+  const normalizedRoleFamily =
+    roleFamily || "care_helping_professions";
+
+  const normalizedLocale =
+    locale || "it";
+
+  const cacheKey = `${normalizedRoleFamily}:${normalizedLocale}`;
 
   if (cache.has(cacheKey)) {
     return cache.get(cacheKey);
   }
 
-  try {
-    const filePath = path.join(DATA_DIR, `${roleFamily}.json`);
+  const fallback =
+    readNarrativeFile("generic_professional", normalizedLocale) ||
+    readNarrativeFile("care_helping_professions", normalizedLocale) ||
+    {};
 
-    const raw = readFileSync(filePath, "utf8");
-    const parsed = JSON.parse(raw);
+  const selected =
+    readNarrativeFile(normalizedRoleFamily, normalizedLocale) ||
+    {};
 
-    const result =
-      parsed?.locales?.[locale] ||
-      parsed?.locales?.it ||
-      null;
+  const result = {
+    ...fallback,
+    ...selected,
+    ui:
+      selected?.ui ||
+      fallback?.ui ||
+      {}
+  };
 
-    cache.set(cacheKey, result);
+  cache.set(cacheKey, result);
 
-    return result;
-  } catch {
-    cache.set(cacheKey, null);
-    return null;
-  }
+  return result;
 }

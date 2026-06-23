@@ -1507,7 +1507,10 @@ function getDisplayQuestionAlignment(
 }
 
 
-function renderCvSupportDetails(cvSupportRead = {}) {
+  function renderCvSupportDetails(
+  cvSupportRead = {},
+  context = {}
+) {
   const usableSignals = ensureArray(cvSupportRead?.usableSignals);
   const credibilityBridge = text(cvSupportRead?.credibilityBridge, "");
   const positioningHint = text(cvSupportRead?.positioningHint, "");
@@ -1535,7 +1538,10 @@ function renderCvSupportDetails(cvSupportRead = {}) {
       </summary>
 
       <div class="fr-situation-details-body fr-answer-cv-support-body">
-        ${renderCvSupportReadBox(cvSupportRead)}
+        ${renderCvSupportReadBox(
+        cvSupportRead,
+        context
+      )}
       </div>
     </details>
   `;
@@ -1545,6 +1551,8 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
   const score = Number(item?.score ?? 0);
   const questionIndex = item?.answerIndex || 0;
   const scoreClass = score >= 75 ? "good" : score >= 50 ? "mid" : "weak";
+  const answersUi =
+  context?.proReportNarratives?.ui?.answers || {};
 
 
   const inspirationalAnswerDraft =
@@ -1638,7 +1646,10 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
 
 
         ${renderDuplicateAnswerWarning(item)}
-        ${renderCvSupportDetails(item?.cvSupportRead)}
+        ${renderCvSupportDetails(
+        item?.cvSupportRead,
+        context
+      )}
       </section>
 
       ${renderCapabilityBlock(
@@ -1699,7 +1710,7 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
 
               <div class="answer-subcard workspace-advice-column">
 
-                <div class="workspace-column-main-title">Come puoi rafforzarla</div>
+                <div class="workspace-column-main-title">${escapeHtml(answersUi.strengthenTitle || "")}</div>
 
                 ${renderImprovementNarrativeList(
                   selectUsefulImprovementHints(
@@ -1709,7 +1720,7 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
                 )}
 
                 <div class="improved-answer-highlight">
-                  <div class="improved-answer-title">Come potrebbe suonare meglio</div>
+                  <div class="improved-answer-title">${escapeHtml(answersUi.improvedAnswerTitle || "")}</div>
 
                   <div class="improved-answer-text">
                     ${escapeHtml(
@@ -1722,16 +1733,16 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
 
                   ${inspirationalAnswerDraft ? `
   <div class="inspiration-answer-box">
-    <div class="inspiration-answer-label">Spunto di risposta</div>
+   <div class="inspiration-answer-label">${escapeHtml(answersUi.inspirationAnswerLabel || "")}</div>
     <div class="inspiration-answer-text">
       ${escapeHtml(inspirationalAnswerDraft)}
     </div>
   </div>
 ` : `
   <div class="inspiration-answer-box is-good-answer">
-    <div class="inspiration-answer-label">Risposta già solida</div>
+    <div class="inspiration-answer-label">${escapeHtml(answersUi.solidAnswerLabel || "")}</div>
     <div class="inspiration-answer-text">
-      In questo caso non serve riscrivere la risposta da zero: conviene solo aggiungere, se disponibile, un dettaglio concreto in più.
+      ${escapeHtml(answersUi.solidAnswerText || "")}
     </div>
   </div>
 `}
@@ -1836,6 +1847,8 @@ function humanizeCvMissingSignal(
 }
 
 function renderRecruiterPanel(item = {}, context = {}) {
+  const answersUi =
+  context?.proReportNarratives?.ui?.answers || {};
   const recoveryHtml = renderRecruiterRecoveryPrompt(item);
   const patternNote = item?.coachingPatternNote || "";
 
@@ -1846,11 +1859,11 @@ function renderRecruiterPanel(item = {}, context = {}) {
   return `
     <div class="fr-recruiter-panel">
       <div class="fr-recruiter-panel-title">
-        Il pannello del recruiter
+        ${escapeHtml(answersUi.recruiterPanelTitle || "")}
       </div>
 
       <div class="fr-recruiter-panel-subtitle">
-        Ecco come un recruiter leggerebbe questa risposta nel contesto del colloquio.
+        ${escapeHtml(answersUi.recruiterPanelSubtitle || "")}
       </div>
 
       ${recoveryHtml}
@@ -1858,7 +1871,7 @@ function renderRecruiterPanel(item = {}, context = {}) {
       ${patternNote && isCapabilityEnabled(context, "showPatternMemory") ? `
         <div class="fr-note fr-answer-pattern-note fr-recruiter-pattern-note">
           <div class="fr-answer-mini-title">
-            Pattern che sta notando
+            ${escapeHtml(answersUi.patternNoticeTitle || "")}
           </div>
 
           <div class="fr-text">
@@ -2109,6 +2122,8 @@ function renderMissingAnswerSignalsBox(
   const proReportNarratives =
   context?.proReportNarratives || {};
   const missingSignals = ensureArray(cvSupportRead?.missingSignals).slice(0, 4);
+  const answersUi =
+  context?.proReportNarratives?.ui?.answers || {};
 
   if (!missingSignals.length) {
     return "";
@@ -2126,7 +2141,7 @@ function renderMissingAnswerSignalsBox(
   return `
     <div class="workspace-block workspace-block-risk fr-answer-missing-box">
       <div class="answer-subcard-title risk-title-strong">
-        Cosa manca nella risposta
+        ${escapeHtml(answersUi.missingSignalsTitle || "")}
       </div>
 
       <div class="fr-answer-missing-list">
@@ -2145,7 +2160,10 @@ function renderMissingAnswerSignalsBox(
   `;
 }
 
-function renderCvSupportReadBox(cvSupportRead = {}) {
+function renderCvSupportReadBox(
+  cvSupportRead = {},
+  context = {}
+) {
   const usableSignals = ensureArray(cvSupportRead?.usableSignals).slice(0, 4);
   const credibilityBridge = text(cvSupportRead?.credibilityBridge, "");
   const positioningHint = text(cvSupportRead?.positioningHint, "");
@@ -2503,6 +2521,8 @@ function renderQuestionAlignmentAlert(
   item = {},
   context = {}
 ) {
+  const answersUi =
+  context?.proReportNarratives?.ui?.answers || {};
   const baseText = getDisplayQuestionAlignment(
   item,
   context?.proReportNarratives || {}
@@ -2533,7 +2553,7 @@ function renderQuestionAlignmentAlert(
   return `
     <div class="fr-question-alignment-alert fr-question-alignment-${statusClass}">
       <div class="fr-question-alignment-label">
-        Aderenza alla domanda
+        ${escapeHtml(answersUi.questionAlignmentTitle || "")}
       </div>
 
       <div class="fr-question-alignment-text">
@@ -4152,7 +4172,12 @@ const proReportNarratives =
 
   const ui =
   proReportNarratives?.ui || {};
+
+
+
+  
   const reportData = buildReportDataFromProReport(proReportV2);
+
 
   const overviewLayout = assembleReportSectionData({
     planKey: "pro",

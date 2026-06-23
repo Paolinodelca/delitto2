@@ -5,6 +5,19 @@
 
 "ui": {
 
+"answers": {
+  "strengthenTitle": "Come puoi rafforzarla",
+  "improvedAnswerTitle": "Come potrebbe suonare meglio",
+  "recruiterPanelTitle": "Il pannello del recruiter",
+  "recruiterPanelSubtitle": "Ecco come un recruiter leggerebbe questa risposta nel contesto del colloquio.",
+  "patternNoticeTitle": "Pattern che sta notando",
+  "questionAlignmentTitle": "Aderenza alla domanda",
+  "missingSignalsTitle": "Cosa manca nella risposta",
+  "inspirationAnswerLabel": "Spunto di risposta",
+  "solidAnswerLabel": "Risposta già solida",
+  "solidAnswerText": "In questo caso non serve riscrivere la risposta da zero: conviene solo aggiungere, se disponibile, un dettaglio concreto in più."
+},
+
   "cv": {
 
 "interviewUseIntro": "Questa sezione non valuta il CV come documento, ma suggerisce come usare le informazioni del CV per rendere più credibili apertura e risposte.",
