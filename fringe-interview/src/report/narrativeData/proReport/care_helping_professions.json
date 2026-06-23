@@ -5,6 +5,24 @@
 
 "ui": {
 
+  "cv": {
+
+  "interviewUseCardTitle": "Uso del CV durante il colloquio",
+"originalCvUnavailable": "CV originale non disponibile.",
+"originalCvLoaded": "CV originale caricato",
+"alternativeRolesCardTitle": "Ruoli alternativi o vicini dove il profilo può risultare credibile",
+
+  "title": "CV mirato al ruolo",
+  "deepDiveTitle": "Approfondisci la lettura del CV",
+  "deepDiveSubtitle": "Apri solo i filoni che vuoi esplorare: gap, mitigazioni, potenziale, ruoli alternativi e uso del CV nel colloquio.",
+  "targetGapSummary": "Gap e rischi del passaggio verso il ruolo target",
+  "mitigationSummary": "Come mitigare i gap del CV",
+  "alternativeRolesSummary": "Ruoli alternativi o vicini",
+  "interviewUseSummary": "Uso del CV durante il colloquio",
+  "originalCvSummary": "CV originale caricato",
+  "mitigationCardTitle": "Come mitigare i punti deboli del CV"
+},
+
   "brand": {
   "productLine": "Interview · PRO",
   "taglineHtml": "Preparare il colloquio,<br>sul serio."

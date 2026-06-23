@@ -2940,12 +2940,17 @@ function renderCvSlimModule(
   context = {}
 ) {
   const cvSlim = module?.data || {};
+  const ui =
+  context?.proReportNarratives?.ui || {};
+
+const cvUi =
+  ui?.cv || {};
 
   return `
     <div class="overview-pro-block cv-pro-block">
 
       <div class="fringe-section-title fringe-title-blue">
-    CV mirato al ruolo
+    ${escapeHtml(cvUi.title || "")}
     </div>
 
       ${renderCvDocumentReadBox(cvSlim?.cvDocumentRead)}
@@ -2961,33 +2966,39 @@ function renderCvDeepDiveMenu(
   cvSlim = {},
   context = {}
 ) {
+
+  const ui =
+  context?.proReportNarratives?.ui || {};
+
+const cvUi =
+  ui?.cv || {};
   return `
     <section class="cv-deep-dive-menu">
 
       <div class="cv-deep-dive-title">
-        Approfondisci la lettura del CV
+        ${escapeHtml(cvUi.deepDiveTitle || "")}
       </div>
 
       <div class="cv-deep-dive-subtitle">
-        Apri solo i filoni che vuoi esplorare: gap, mitigazioni, potenziale, ruoli alternativi e uso del CV nel colloquio.
+        ${escapeHtml(cvUi.deepDiveSubtitle || "")}
       </div>
 
       <details class="cv-deep-dive-item">
-        <summary>Gap e rischi del passaggio verso il ruolo target</summary>
+        <summary>${escapeHtml(cvUi.targetGapSummary || "")}</summary>
         <div class="cv-deep-dive-content">
           ${renderCvTargetWeaknessBox(cvSlim)}
         </div>
       </details>
 
       <details class="cv-deep-dive-item">
-        <summary>Come mitigare i gap del CV</summary>
+        <summary>${escapeHtml(cvUi.mitigationSummary || "")}</summary>
         <div class="cv-deep-dive-content">
           ${renderCvMitigationDeepDive(cvSlim, context)}
         </div>
       </details>
 
       <details class="cv-deep-dive-item">
-        <summary>Ruoli alternativi o vicini</summary>
+        <summary>${escapeHtml(cvUi.alternativeRolesSummary || "")}</summary>
         <div class="cv-deep-dive-content">
           ${renderAlternativePositioningBox(
             cvSlim?.alternativePositioning,
@@ -2997,16 +3008,19 @@ function renderCvDeepDiveMenu(
       </details>
 
       <details class="cv-deep-dive-item">
-        <summary>Uso del CV durante il colloquio</summary>
+        <summary>${escapeHtml(cvUi.interviewUseSummary || "")}</summary>
         <div class="cv-deep-dive-content">
           ${renderCvInterviewUseContent(cvSlim, context)}
         </div>
       </details>
 
       <details class="cv-deep-dive-item">
-        <summary>CV originale caricato</summary>
+        <summary>${escapeHtml(cvUi.originalCvSummary || "")}</summary>
         <div class="cv-deep-dive-content">
-          ${renderOriginalCvContentOnly(cvSlim?.originalCv)}
+          ${renderOriginalCvContentOnly(
+          cvSlim?.originalCv,
+          context
+        )}
         </div>
       </details>
 
@@ -3060,9 +3074,11 @@ function renderCvMitigationDeepDive(
 
   const ui =
   context?.proReportNarratives?.ui || {};
+  const cvUi =
+  ui?.cv || {};
   return `
     <section class="overview-coach-box strong">
-      <div class="overview-card-title">Come mitigare i punti deboli del CV</div>
+      <div class="overview-card-title">${escapeHtml(cvUi.mitigationCardTitle || "")}</div>
 
       <p class="cv-pro-text" style="color:#ffffff; font-weight:700;">
         Questa parte non serve solo a “coprire” i gap: serve a costruire una strada credibile per ridurne il peso nella lettura del profilo.
@@ -3094,11 +3110,19 @@ function renderCvMitigationDeepDive(
   `;
 }
 
-function renderOriginalCvContentOnly(originalCv) {
+function renderOriginalCvContentOnly(
+  originalCv,
+  context = {}
+) {
+  const ui =
+  context?.proReportNarratives?.ui || {};
+
+const cvUi =
+  ui?.cv || {};
   const cvText = text(originalCv?.text, "");
 
   if (!cvText) {
-    return `<p class="muted">CV originale non disponibile.</p>`;
+    return `<p class="muted">${escapeHtml(cvUi.originalCvUnavailable || "")}</p>`;
   }
 
   return `
@@ -3140,6 +3164,8 @@ function renderAlternativePositioningBox(
 
   const ui =
   context?.proReportNarratives?.ui || {};
+  const cvUi =
+  ui?.cv || {};
   const items = ensureArray(alternativePositioning?.items).slice(0, 4);
     const transitionFragilities = ensureArray(
     alternativePositioning?.transitionFragilities
@@ -3155,7 +3181,7 @@ function renderAlternativePositioningBox(
     <section class="alternative-positioning-box">
       <div class="alternative-positioning-kicker">Lettura laterale del profilo</div>
       <div class="alternative-positioning-title">
-        Ruoli alternativi o vicini dove il profilo può risultare credibile
+        ${escapeHtml(cvUi.alternativeRolesCardTitle || "")}
       </div>
 
       ${headline ? `
