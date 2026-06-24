@@ -52,7 +52,11 @@ export function applyTemplate(template = "", values = {}) {
   let result = typeof template === "string" ? template : "";
 
   Object.entries(values).forEach(([key, value]) => {
-    result = result.replaceAll(`{{${key}}}`, String(value ?? ""));
+    const safeValue = String(value ?? "");
+
+    result = result
+      .replaceAll(`{{${key}}}`, safeValue)
+      .replaceAll(`{${key}}`, safeValue);
   });
 
   return result;
