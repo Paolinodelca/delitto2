@@ -762,8 +762,12 @@ function renderAnswerCard(
   item,
   context = {}
 ) {
+  
   const proReportNarratives =
   context?.proReportNarratives || {};
+  const answersUi =
+  proReportNarratives?.ui?.answers || {};
+
   const score = Number(item?.score ?? 0);
   const status = scoreStatus(score);
 
@@ -771,14 +775,14 @@ function renderAnswerCard(
   const isStrong = item?.featuredType === "strong";
 
   const typeLabel = isCritical
-    ? "La risposta più penalizzante"
-    : isStrong
-      ? "La risposta che oggi regge meglio"
-      : "Risposta significativa";
+  ? answersUi.featuredCriticalLabel
+  : isStrong
+    ? answersUi.featuredStrongLabel
+    : answersUi.featuredDefaultLabel;
 
   const mainHint =
-    ensureArray(item?.improvementHints)[0] ||
-    "Rendi la risposta più concreta, più centrata e più collegata al ruolo.";
+  ensureArray(item?.improvementHints)[0] ||
+  answersUi.featuredDefaultHint;
 
   const featuredToneClass = isCritical
     ? "featured-answer-critical"
@@ -797,15 +801,15 @@ function renderAnswerCard(
 
       <div class="featured-answer-qa-box">
         <div class="featured-answer-question">
-          <span>Domanda</span>
-          ${escapeHtml(text(item?.questionText, "Domanda non disponibile"))}
+          <span>${escapeHtml(answersUi.questionLabel || "")}</span>
+          ${escapeHtml(text(item?.questionText, answersUi.questionUnavailable || ""))}
         </div>
 
 
     <div class="featured-answer-response">
-  <span>Risposta</span>
+  <span>${escapeHtml(answersUi.answerLabel || "")}</span>
   <div class="featured-answer-response-text">
-    ${escapeHtml(text(item?.answerText, "Risposta non disponibile"))}
+    ${escapeHtml(text(item?.answerText, answersUi.answerUnavailable || ""))}
   </div>
 
 
@@ -819,7 +823,7 @@ function renderAnswerCard(
   </div>
 ${item?.contextLinkNote ? `
   <div class="featured-context-link-note">
-    <div class="featured-context-link-title">Collegamento con il racconto iniziale</div>
+    <div class="featured-context-link-title">${escapeHtml(answersUi.featuredContextLinkTitle || "")}</div>
     ${escapeHtml(item.contextLinkNote)}
   </div>
 ` : ""}
@@ -831,7 +835,7 @@ ${renderFeaturedRecruiterRecovery(item)}
 
 <div class="answer-card-grid featured-analysis-grid">
   <div class="answer-subcard featured-subcard featured-subcard-risk">
-    <div class="answer-subcard-title">Che cosa oggi la indebolisce</div>
+    <div class="answer-subcard-title">${escapeHtml(answersUi.featuredWeaknessTitle || "")}</div>
     ${renderImpactList(
       ensureArray(item?.weaknesses).slice(0, 3),
       "risk"
@@ -839,7 +843,7 @@ ${renderFeaturedRecruiterRecovery(item)}
   </div>
 
   <div class="answer-subcard featured-subcard featured-subcard-advice">
-    <div class="answer-subcard-title">Come può essere rafforzata</div>
+    <div class="answer-subcard-title">${escapeHtml(answersUi.featuredAdviceTitle || "")}</div>
     ${renderImpactList(
       normalizeImprovementHints(
       item?.improvementHints,
@@ -1582,23 +1586,24 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
           <div class="workspace-question-box compact fr-card fr-answer-question-box">
             <div class="qa-question-label compact-label">Domanda ${escapeHtml(String(questionIndex))}</div>
             <div class="qa-question-text compact fr-text">
-              ${escapeHtml(text(item?.questionText, "Domanda non disponibile"))}
+              ${escapeHtml(text(item?.questionText, answersUi.questionUnavailable || ""))}
             </div>
           </div>
 
           <div class="workspace-answer-box compact fr-card fr-answer-original-box">
             <div class="qa-answer-label compact-label">Risposta ${escapeHtml(String(questionIndex))}</div>
             <div class="qa-answer-text compact-scroll fr-text">
-              ${escapeHtml(text(item?.answerText, "Risposta non disponibile"))}
+              ${escapeHtml(text(item?.answerText, answersUi.answerUnavailable || ""))}
             </div>
           </div>
         </div>
       </details>
 
       <section class="fr-card fr-answer-reading-box">
-        <div class="fr-title-primary">
-          Lettura sintetica della risposta
-        </div>
+        
+      <div class="fr-title-primary">
+      ${escapeHtml(answersUi.summaryTitle || "")}
+       </div>
 
         <p class="fr-text fr-answer-summary-text">
           ${escapeHtml(
@@ -1610,9 +1615,10 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
         </p>
 
         <div class="fr-answer-first-correction">
-          <div class="fr-pill fr-pill-risk">
-            Punto da correggere per primo
-          </div>
+         
+        <div class="fr-pill fr-pill-risk">
+        ${escapeHtml(answersUi.firstImprovementTitle || "")}
+        </div>
 
           <div class="fr-answer-first-correction-text">
             ${escapeHtml(
@@ -1626,8 +1632,12 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
         </div>
 
         ${item?.contextLinkNote ? `
+          
           <div class="fr-note fr-answer-context-note">
-            <div class="fr-answer-mini-title">Collegamento con apertura e CV</div>
+           
+          <div class="fr-answer-mini-title">
+          ${escapeHtml(answersUi.contextLinkTitle || "")}
+           </div>
             <div class="fr-text">
               ${escapeHtml(item.contextLinkNote)}
             </div>
@@ -1664,7 +1674,7 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
         "
       >
         <summary class="fr-situation-summary">
-          <span>Analisi dettagliata della risposta</span>
+         <span>${escapeHtml(answersUi.detailsTitle || "")}</span>
           <strong data-analysis-open-label class="fr-situation-summary-button">Apri</strong>
         </summary>
 
@@ -1675,10 +1685,12 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
 
               <div class="answer-subcard workspace-analysis-column">
 
-                <div class="workspace-column-main-title">Analisi della risposta</div>
+                <div class="workspace-column-main-title">
+                ${escapeHtml(answersUi.analysisTitle || "")}
+                </div>
 
                 <div class="workspace-block workspace-block-after-title">
-                  <div class="answer-subcard-title">Dettagli rilevanti della risposta</div>
+                 <div class="answer-subcard-title">${escapeHtml(answersUi.relevantDetailsTitle || "")}</div>
                   ${renderAnswerSegments(
                   item,
                   context
@@ -1686,7 +1698,7 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
                 </div>
 
                 <div class="workspace-block workspace-block-risk">
-                  <div class="answer-subcard-title risk-title-strong">Aspetti che oggi indeboliscono la risposta</div>
+                  <div class="answer-subcard-title risk-title-strong">${escapeHtml(answersUi.weaknessTitle || "")}</div>
                   ${renderWeaknessNarrativeList(selectSecondaryWeaknesses(item))}
                 </div>
 
@@ -1697,7 +1709,7 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
 
                 ${ensureArray(item?.strengths).length > 0 ? `
                   <div class="workspace-block workspace-block-positive">
-                    <div class="answer-subcard-title">Altri elementi che aiutano la risposta</div>
+                    <div class="answer-subcard-title">${escapeHtml(answersUi.positiveSignalsTitle || "")}</div>
 
                     ${renderList(
                       ensureArray(item?.strengths).slice(0, 3),
@@ -1976,7 +1988,22 @@ function buildCvUsefulSignalView(value) {
 
 
 function renderImprovementNarrativeList(items = []) {
-  const values = ensureArray(items).filter(Boolean).slice(0, 4);
+  const seen = new Set();
+
+const values = ensureArray(items)
+  .map((item) => String(item || "").trim())
+  .filter(Boolean)
+  .filter((item) => {
+    const key = item.toLowerCase();
+
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  })
+  .slice(0, 4);
 
   if (!values.length) {
     return `<p class="muted">Non emergono suggerimenti operativi aggiuntivi.</p>`;
@@ -3466,14 +3493,157 @@ function renderTransitionPotentialBox(data = {}) {
 }
 
 
-function renderFinalChecklistModule(module) {
+function renderFinalChecklistModule(
+  module,
+  context = {}
+) {
   const finalChecklist = module?.data || {};
- 
+  const actions = ensureArray(finalChecklist?.actions).slice(0, 5);
+
+  const ui =
+    context?.proReportNarratives?.ui || {};
+
+  const checklistUi =
+    ui?.checklist || {};
+
+  const priorityItems = actions.length > 0
+    ? actions
+    : [
+        {
+          id: "fallback_action_1",
+          description: checklistUi.fallbackPriorityOne || ""
+        },
+        {
+          id: "fallback_action_2",
+          description: checklistUi.fallbackPriorityTwo || ""
+        },
+        {
+          id: "fallback_action_3",
+          description: checklistUi.fallbackPriorityThree || ""
+        }
+      ];
+
+  function renderChecklistItems(items = []) {
+    return `
+      <div class="fr-checklist-items">
+        ${ensureArray(items).filter(Boolean).map((item) => `
+          <label class="fr-checklist-item">
+            <span class="fr-checklist-box">□</span>
+            <span class="fr-checklist-text">${escapeHtml(item)}</span>
+          </label>
+        `).join("")}
+      </div>
+    `;
+  }
+
+  function renderChecklistPanel({
+    tone = "blue",
+    title = "",
+    intro = "",
+    items = []
+  }) {
+    return `
+      <details class="fr-checklist-panel fr-checklist-panel-${tone}">
+        <summary class="fr-checklist-summary">
+          <span>${escapeHtml(title)}</span>
+        </summary>
+
+        <div class="fr-checklist-panel-body">
+          ${intro ? `
+            <p class="fr-checklist-intro">${escapeHtml(intro)}</p>
+          ` : ""}
+
+          ${renderChecklistItems(items)}
+        </div>
+      </details>
+    `;
+  }
 
   return `
-    
-  
-     
+    <div class="section-shell fr-checklist-shell">
+
+      <section class="fr-checklist-hero">
+        <div class="fr-checklist-kicker">
+          ${escapeHtml(checklistUi.kicker || "")}
+        </div>
+
+        <div class="fr-checklist-title">
+          ${escapeHtml(checklistUi.title || "")}
+        </div>
+
+        <p class="fr-checklist-subtitle">
+          ${escapeHtml(checklistUi.subtitle || "")}
+        </p>
+      </section>
+
+      <section class="fr-checklist-priorities">
+        <div class="fr-checklist-block-title">
+          ${escapeHtml(checklistUi.prioritiesTitle || "")}
+        </div>
+
+        <div class="fr-checklist-priority-grid">
+          ${priorityItems.slice(0, 3).map((item, index) => `
+            <article class="fr-checklist-priority-card priority-${index + 1}">
+              <div class="fr-checklist-priority-index">
+                ${index + 1}
+              </div>
+
+              <div class="fr-checklist-priority-text">
+                ${escapeHtml(item?.description || "")}
+              </div>
+            </article>
+          `).join("")}
+        </div>
+      </section>
+
+      <section class="fr-checklist-panels">
+        ${renderChecklistPanel({
+          tone: "blue",
+          title: checklistUi.openingTitle || "",
+          intro: checklistUi.openingIntro || "",
+          items: checklistUi.openingItems || []
+        })}
+
+        ${renderChecklistPanel({
+          tone: "amber",
+          title: checklistUi.sensitiveTitle || "",
+          intro: checklistUi.sensitiveIntro || "",
+          items: checklistUi.sensitiveItems || []
+        })}
+
+        ${renderChecklistPanel({
+          tone: "green",
+          title: checklistUi.credibilityTitle || "",
+          intro: checklistUi.credibilityIntro || "",
+          items: checklistUi.credibilityItems || []
+        })}
+
+        ${renderChecklistPanel({
+          tone: "purple",
+          title: checklistUi.answersTitle || "",
+          intro: checklistUi.answersIntro || "",
+          items: checklistUi.answersItems || []
+        })}
+
+        ${renderChecklistPanel({
+          tone: "indigo",
+          title: checklistUi.cvTitle || "",
+          intro: checklistUi.cvIntro || "",
+          items: checklistUi.cvItems || []
+        })}
+      </section>
+
+      <section class="fr-checklist-ready-box">
+        <div class="fr-checklist-ready-title">
+          ${escapeHtml(checklistUi.readyTitle || "")}
+        </div>
+
+        <p class="fr-checklist-ready-text">
+          ${escapeHtml(checklistUi.readyText || "")}
+        </p>
+      </section>
+
+    </div>
   `;
 }
 
@@ -3849,8 +4019,8 @@ function renderOverviewModule(
     case "cvSlim":
     return renderCvSlimModule(module, context);
 
-    case "finalChecklist":
-      return renderFinalChecklistModule(module);
+   case "finalChecklist":
+  return renderFinalChecklistModule(module, context);
     default:
       return "";
   }
@@ -13235,6 +13405,241 @@ details > summary[class*="summary"] {
   border-radius: var(--fr-radius-md) !important;
 }
 
+
+.fr-checklist-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.fr-checklist-hero {
+  padding: 20px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #111827 0%, #1e1b4b 100%);
+  border: 2px solid #818cf8;
+  box-shadow: 0 10px 22px rgba(15,23,42,0.16);
+  color: #ffffff;
+}
+
+.fr-checklist-kicker {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c7d2fe;
+  margin-bottom: 8px;
+}
+
+.fr-checklist-title {
+  font-size: 24px;
+  font-weight: 950;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.fr-checklist-subtitle {
+  margin: 0;
+  color: #e0e7ff;
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 700;
+}
+
+.fr-checklist-priorities {
+  padding: 18px;
+  border-radius: 20px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.fr-checklist-block-title {
+  font-size: 18px;
+  font-weight: 950;
+  color: #111827;
+  margin-bottom: 14px;
+}
+
+.fr-checklist-priority-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.fr-checklist-priority-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 8px 16px rgba(15,23,42,0.08);
+}
+
+.fr-checklist-priority-card.priority-1 {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.fr-checklist-priority-card.priority-2 {
+  border-color: #f59e0b;
+  background: #fff7ed;
+}
+
+.fr-checklist-priority-card.priority-3 {
+  border-color: #6366f1;
+  background: #eef2ff;
+}
+
+.fr-checklist-priority-index {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 950;
+}
+
+.fr-checklist-priority-text {
+  color: #111827;
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 800;
+}
+
+.fr-checklist-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fr-checklist-panel {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 8px 16px rgba(15,23,42,0.06);
+}
+
+.fr-checklist-summary {
+  cursor: pointer;
+  padding: 14px 16px;
+  list-style: none;
+  font-size: 15px;
+  font-weight: 950;
+  color: #ffffff;
+}
+
+.fr-checklist-summary::-webkit-details-marker {
+  display: none;
+}
+
+.fr-checklist-summary span::before {
+  content: "▶ ";
+  font-size: 12px;
+}
+
+.fr-checklist-panel[open] .fr-checklist-summary span::before {
+  content: "▼ ";
+}
+
+.fr-checklist-panel-blue .fr-checklist-summary {
+  background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.fr-checklist-panel-amber .fr-checklist-summary {
+  background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+}
+
+.fr-checklist-panel-green .fr-checklist-summary {
+  background: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+}
+
+.fr-checklist-panel-purple .fr-checklist-summary {
+  background: linear-gradient(180deg, #8b5cf6 0%, #6d28d9 100%);
+}
+
+.fr-checklist-panel-indigo .fr-checklist-summary {
+  background: linear-gradient(180deg, #818cf8 0%, #4338ca 100%);
+}
+
+.fr-checklist-panel-body {
+  padding: 16px;
+  background: #ffffff;
+}
+
+.fr-checklist-intro {
+  margin: 0 0 12px 0;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.fr-checklist-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fr-checklist-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.fr-checklist-box {
+  flex: 0 0 auto;
+  color: #4f46e5;
+  font-size: 18px;
+  font-weight: 950;
+  line-height: 1.1;
+}
+
+.fr-checklist-text {
+  color: #111827;
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 750;
+}
+
+.fr-checklist-ready-box {
+  padding: 18px;
+  border-radius: 20px;
+  background: #ecfdf5;
+  border: 2px solid #22c55e;
+}
+
+.fr-checklist-ready-title {
+  font-size: 18px;
+  font-weight: 950;
+  color: #064e3b;
+  margin-bottom: 8px;
+}
+
+.fr-checklist-ready-text {
+  margin: 0;
+  color: #064e3b;
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 750;
+}
+
+@media (max-width: 760px) {
+  .fr-checklist-priority-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fr-checklist-title {
+    font-size: 21px;
+  }
+}
 
 
 

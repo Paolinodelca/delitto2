@@ -5,6 +5,66 @@
 
 "ui": {
 
+"checklist": {
+  "kicker": "Piano operativo",
+  "title": "Checklist prima del colloquio",
+  "subtitle": "Questa pagina trasforma il report in azioni pratiche: cosa preparare, cosa chiarire e cosa non lasciare implicito prima del colloquio.",
+
+  "prioritiesTitle": "Le 3 cose che possono spostare davvero il risultato",
+
+  "fallbackPriorityOne": "Prepara 2–3 episodi concreti da usare nelle risposte più importanti.",
+  "fallbackPriorityTwo": "Rendi più chiaro il collegamento tra il tuo percorso e il ruolo target.",
+  "fallbackPriorityThree": "Chiarisci i punti che oggi possono indebolire la tua candidatura.",
+
+  "openingTitle": "La tua apertura è pronta?",
+  "openingIntro": "L’apertura deve orientare subito l’intervistatore: non basta raccontare il CV, serve far capire perché questo ruolo ha senso.",
+  "openingItems": [
+    "So spiegare perché questo ruolo è coerente con il mio percorso.",
+    "So raccontare il mio percorso in meno di due minuti.",
+    "So collegare almeno due esperienze al ruolo target.",
+    "La mia apertura non è solo una cronologia del CV."
+  ],
+
+  "sensitiveTitle": "Le zone di rischio sono sotto controllo?",
+  "sensitiveIntro": "Le domande delicate non vanno improvvisate: una risposta vaga può indebolire anche un profilo buono.",
+  "sensitiveItems": [
+    "So spiegare il principale gap emerso dal report.",
+    "So raccontare un eventuale cambio di direzione professionale in modo credibile.",
+    "Ho preparato un esempio concreto per ogni punto critico.",
+    "So distinguere ciò che manca davvero da ciò che va semplicemente spiegato meglio."
+  ],
+
+  "credibilityTitle": "Hai le prove?",
+  "credibilityIntro": "La credibilità nasce dagli episodi concreti: contesto, responsabilità personale, decisione e risultato.",
+  "credibilityItems": [
+    "Ho almeno tre episodi concreti pronti.",
+    "Per ogni episodio so spiegare contesto, mia azione e risultato.",
+    "So mostrare il mio impatto senza usare frasi generiche.",
+    "So chiarire quale parte dipendeva direttamente da me."
+  ],
+
+  "answersTitle": "Le risposte più deboli sono state corrette?",
+  "answersIntro": "Le risposte non devono solo suonare professionali: devono centrare la domanda e rendere visibile il tuo contributo.",
+  "answersItems": [
+    "Ho rivisto le risposte sotto soglia.",
+    "Ho eliminato le parti fuori tema o laterali.",
+    "Ho aggiunto esempi concreti dove mancavano.",
+    "Ho preparato una seconda versione delle risposte più critiche."
+  ],
+
+  "cvTitle": "Il CV sostiene davvero la tua candidatura?",
+  "cvIntro": "Il CV deve sostenere la storia che racconterai nel colloquio, non restare un elenco separato di esperienze.",
+  "cvItems": [
+    "Le esperienze più rilevanti sono subito visibili.",
+    "So richiamare dal CV esempi concreti coerenti con il ruolo.",
+    "I gap principali sono spiegabili senza difendermi troppo.",
+    "Il CV e il colloquio raccontano la stessa direzione."
+  ],
+
+  "readyTitle": "Se hai solo 10 minuti",
+  "readyText": "Concentrati sulle prime tre priorità, prepara un episodio concreto per ciascuna e prova ad aprire ogni risposta con il punto centrale prima di aggiungere contesto."
+},
+
 "answers": {
   "strengthenTitle": "Come puoi rafforzarla",
   "improvedAnswerTitle": "Come potrebbe suonare meglio",
@@ -15,7 +75,28 @@
   "missingSignalsTitle": "Cosa manca nella risposta",
   "inspirationAnswerLabel": "Spunto di risposta",
   "solidAnswerLabel": "Risposta già solida",
-  "solidAnswerText": "In questo caso non serve riscrivere la risposta da zero: conviene solo aggiungere, se disponibile, un dettaglio concreto in più."
+  "solidAnswerText": "In questo caso non serve riscrivere la risposta da zero: conviene solo aggiungere, se disponibile, un dettaglio concreto in più.",
+
+  "summaryTitle": "Come questa risposta potrebbe essere letta da un selezionatore",
+"firstImprovementTitle": "Il primo elemento che conviene rendere più evidente",
+"detailsTitle": "Approfondisci come questa risposta potrebbe essere letta",
+"analysisTitle": "Elementi che un selezionatore coglie da questa risposta",
+"contextLinkTitle": "Collegamento con apertura e CV",
+"relevantDetailsTitle": "Elementi che aiutano a comprendere questa risposta",
+"weaknessTitle": "Elementi che oggi possono rendere meno chiaro il tuo messaggio",
+"positiveSignalsTitle": "Elementi che rafforzano questa risposta",
+"featuredContextLinkTitle": "Collegamento con il racconto iniziale",
+"featuredWeaknessTitle": "Elementi che oggi possono rendere meno chiaro il messaggio",
+"featuredAdviceTitle": "Come questa risposta può diventare più efficace",
+"featuredCriticalLabel": "La risposta dove oggi emerge meno del tuo potenziale",
+"featuredStrongLabel": "La risposta dove il tuo valore emerge con maggiore chiarezza",
+"featuredDefaultLabel": "Risposta significativa",
+"featuredDefaultHint": "Rendi la risposta più concreta, più focalizzata sulla domanda e più collegata al ruolo.",
+"questionLabel": "Domanda",
+"questionUnavailable": "Domanda non disponibile",
+"answerLabel": "Risposta",
+"answerUnavailable": "Risposta non disponibile"
+
 },
 
   "cv": {
