@@ -100,7 +100,15 @@
 "questionLabel": "Domanda",
 "questionUnavailable": "Domanda non disponibile",
 "answerLabel": "Risposta",
-"answerUnavailable": "Risposta non disponibile"
+"answerUnavailable": "Risposta non disponibile",
+"usefulCvSignalsTitle": "Segnali CV utili",
+"openQuestionAnswerLabel": "Apri domanda e risposta {number}",
+"closeQuestionAnswerLabel": "Chiudi domanda e risposta {number}",
+"questionNumberLabel": "Domanda {number}",
+"answerNumberLabel": "Risposta {number}",
+"featuredRecruiterRecoveryTitle": "Dove un selezionatore potrebbe chiedere chiarimento",
+"recruiterRecoveryFallbackTitle": "Come questa risposta potrebbe essere approfondita",
+"duplicateAnswerWarningTitle": "Risposta già usata in modo simile"
 
 
 },
@@ -223,7 +231,9 @@
   "labels": {
     "premium": "PREMIUM",
     "status": "Stato",
-    "priority": "Priorità"
+    "priority": "Priorità",
+    "open": "Apri",
+    "close": "Chiudi"
   }
 },
 
@@ -371,7 +381,9 @@
 "targetPositioningWithRole": "Per risultare più credibile come {{roleTitle}}, il candidato deve rendere più visibili i segnali più richiesti dal ruolo.",
 "targetPositioningFallback": "Per risultare più credibile verso il ruolo target, il candidato deve rendere più visibili i segnali più richiesti.",
 
-"perceivedTimeToImpactFallback": "Il tempo di impatto percepito dipende da quanto rapidamente il candidato riesce a rendere evidenti responsabilità, impatto e trasferibilità verso il ruolo."
+"perceivedTimeToImpactFallback": "Il tempo di impatto percepito dipende da quanto rapidamente il candidato riesce a rendere evidenti responsabilità, impatto e trasferibilità verso il ruolo.",
+
+"recruiterMemoryFallbackTitle": "Cosa potrebbe restare in mente a un selezionatore"
 
         },
 

@@ -23,6 +23,20 @@ function escapeHtml(value) {
     .replace(/"/g, "&quot;");
 }
 
+function applyUiTemplate(template = "", values = {}) {
+  let result = typeof template === "string" ? template : "";
+
+  Object.entries(values).forEach(([key, value]) => {
+    const safeValue = String(value ?? "");
+
+    result = result
+      .replaceAll(`{{${key}}}`, safeValue)
+      .replaceAll(`{${key}}`, safeValue);
+  });
+
+  return result;
+}
+
 function renderOpeningCreditBox(
   opening = {},
   proReportNarratives = {}
@@ -737,7 +751,12 @@ function renderImpactList(items = [], tone = "risk") {
   }).join("");
 }
 
-function renderFeaturedRecruiterRecovery(item = {}) {
+function renderFeaturedRecruiterRecovery(
+  item = {},
+  context = {}
+) {
+  const answersUi =
+    context?.proReportNarratives?.ui?.answers || {};
   const recovery = item?.recruiterRecoveryPrompt;
 
   if (!recovery || typeof recovery !== "object") {
@@ -747,7 +766,7 @@ function renderFeaturedRecruiterRecovery(item = {}) {
   return `
     <div class="featured-recruiter-recovery">
       <div class="featured-recruiter-recovery-kicker">
-        Il recruiter ti avrebbe fermato qui
+       ${escapeHtml(answersUi.featuredRecruiterRecoveryTitle || "")}
       </div>
 
       <div class="featured-recruiter-recovery-text">
@@ -827,7 +846,7 @@ ${item?.contextLinkNote ? `
     ${escapeHtml(item.contextLinkNote)}
   </div>
 ` : ""}
-${renderFeaturedRecruiterRecovery(item)}
+${renderFeaturedRecruiterRecovery(item, context)}
 
 
 </div>
@@ -859,7 +878,12 @@ ${renderFeaturedRecruiterRecovery(item)}
   `;
 }
 
-function renderDuplicateAnswerWarning(item = {}) {
+function renderDuplicateAnswerWarning(
+  item = {},
+  context = {}
+) {
+  const answersUi =
+    context?.proReportNarratives?.ui?.answers || {};
   const type = String(item?.problematicAnswerType || "").toLowerCase();
 
   if (type !== "duplicate") {
@@ -868,7 +892,8 @@ function renderDuplicateAnswerWarning(item = {}) {
 
   return `
     <div class="duplicate-answer-warning">
-      <div class="duplicate-answer-warning-title">Risposta ripetuta</div>
+
+      <div class="duplicate-answer-warning-title">${escapeHtml(answersUi.duplicateAnswerWarningTitle || "")}</div>
       <div class="duplicate-answer-warning-text">
         Questa risposta ripete contenuti già emersi. In un colloquio questo penalizza molto, perché dà l’impressione di non aggiungere nuove evidenze, esempi o decisioni rispetto a quanto già detto.
       </div>
@@ -1515,6 +1540,12 @@ function getDisplayQuestionAlignment(
   cvSupportRead = {},
   context = {}
 ) {
+  const answersUi =
+    context?.proReportNarratives?.ui?.answers || {};
+
+  const ui =
+    context?.proReportNarratives?.ui || {};
+
   const usableSignals = ensureArray(cvSupportRead?.usableSignals);
   const credibilityBridge = text(cvSupportRead?.credibilityBridge, "");
   const positioningHint = text(cvSupportRead?.positioningHint, "");
@@ -1537,7 +1568,7 @@ function getDisplayQuestionAlignment(
       "
     >
       <summary class="fr-situation-summary fr-answer-cv-support-summary">
-        <span>Segnali CV utili</span>
+        <span>${escapeHtml(answersUi.usefulCvSignalsTitle || "")}</span>
         <strong data-open-label class="fr-situation-summary-button">Apri</strong>
       </summary>
 
@@ -1573,8 +1604,10 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
       <details class="workspace-qa-details fr-answer-qa-details">
         <summary class="fr-answer-qa-summary">
           <span class="workspace-details-label">
-            <span class="details-label-closed">Apri domanda e risposta ${questionIndex}</span>
-            <span class="details-label-open">Chiudi domanda e risposta ${questionIndex}</span>
+            
+          <span class="details-label-closed">${escapeHtml(applyUiTemplate(answersUi.openQuestionAnswerLabel || "", { number: questionIndex }))}</span>
+          <span class="details-label-open">${escapeHtml(applyUiTemplate(answersUi.closeQuestionAnswerLabel || "", { number: questionIndex }))}</span>
+
           </span>
 
           <span class="workspace-summary-score workspace-summary-score-${scoreClass}">
@@ -1584,14 +1617,18 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
 
         <div class="workspace-qa-content compact fr-answer-qa-content">
           <div class="workspace-question-box compact fr-card fr-answer-question-box">
-            <div class="qa-question-label compact-label">Domanda ${escapeHtml(String(questionIndex))}</div>
+
+            <div class="qa-question-label compact-label">${escapeHtml(applyUiTemplate(answersUi.questionNumberLabel || "", { number: questionIndex }))}</div>
+
             <div class="qa-question-text compact fr-text">
               ${escapeHtml(text(item?.questionText, answersUi.questionUnavailable || ""))}
             </div>
           </div>
 
           <div class="workspace-answer-box compact fr-card fr-answer-original-box">
-            <div class="qa-answer-label compact-label">Risposta ${escapeHtml(String(questionIndex))}</div>
+
+            <div class="qa-answer-label compact-label">${escapeHtml(applyUiTemplate(answersUi.answerNumberLabel || "", { number: questionIndex }))}</div>
+
             <div class="qa-answer-text compact-scroll fr-text">
               ${escapeHtml(text(item?.answerText, answersUi.answerUnavailable || ""))}
             </div>
@@ -1655,7 +1692,7 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
 
 
 
-        ${renderDuplicateAnswerWarning(item)}
+        ${renderDuplicateAnswerWarning(item, context)}
         ${renderCvSupportDetails(
         item?.cvSupportRead,
         context
@@ -1861,7 +1898,9 @@ function humanizeCvMissingSignal(
 function renderRecruiterPanel(item = {}, context = {}) {
   const answersUi =
   context?.proReportNarratives?.ui?.answers || {};
-  const recoveryHtml = renderRecruiterRecoveryPrompt(item);
+ 
+  const recoveryHtml = renderRecruiterRecoveryPrompt(item, context);
+
   const patternNote = item?.coachingPatternNote || "";
 
   if (!recoveryHtml && !patternNote) {
@@ -2516,7 +2555,13 @@ function renderBlockingPrioritiesModule(module) {
   `;
 }
 
-function renderRecruiterRecoveryPrompt(item = {}) {
+function renderRecruiterRecoveryPrompt(
+  item = {},
+  context = {}
+) {
+  const answersUi =
+    context?.proReportNarratives?.ui?.answers || {};
+
   const recovery = item?.recruiterRecoveryPrompt;
 
   if (!recovery || typeof recovery !== "object") {
@@ -2528,7 +2573,8 @@ function renderRecruiterRecoveryPrompt(item = {}) {
   return `
     <div class="fr-recruiter-recovery fr-recruiter-recovery-${escapeHtml(severity)}">
       <div class="fr-recruiter-recovery-label">
-        ${escapeHtml(recovery?.title || "Come ti avrebbe fermato un recruiter")}
+
+        ${escapeHtml(recovery?.title || answersUi.recruiterRecoveryFallbackTitle || "")}
       </div>
 
       <div class="fr-recruiter-recovery-prompt">
@@ -4292,7 +4338,9 @@ const proReportNarratives =
 
         <div class="answer-subcard">
           <div class="answer-subcard-title">${escapeHtml(
-            recruiterMemory?.title || "Cosa potrebbe restare in mente a un recruiter"
+            recruiterMemory?.title ||
+          proReportNarratives?.professionalPerception?.recruiterMemoryFallbackTitle ||
+          ""
           )}</div>
           <p>${escapeHtml(
             recruiterMemory?.narrative ||
