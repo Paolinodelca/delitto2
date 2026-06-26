@@ -103,7 +103,9 @@
 "answerNumberLabel": "Risposta {number}",
 "featuredRecruiterRecoveryTitle": "Dove un selezionatore potrebbe chiedere chiarimento",
 "recruiterRecoveryFallbackTitle": "Come questa risposta potrebbe essere approfondita",
-"duplicateAnswerWarningTitle": "Risposta già usata in modo simile"
+"duplicateAnswerWarningTitle": "Risposta già usata in modo simile",
+"answerTabLabel": "Risposta {number}",
+"answersAnalysisTitle": "Analisi delle risposte"
 
 },
 
@@ -216,7 +218,12 @@
     "yourCv": "Il tuo CV",
     "yourOpening": "La tua apertura",
     "yourAnswers": "Le tue risposte",
-    "overallStrength": "Tenuta complessiva"
+    "overallStrength": "Tenuta complessiva",
+    "operationalPrioritiesTitle": "Interventi prioritari per migliorare subito",
+    "operationalPrioritiesPanelTitle": "Interventi prioritari per migliorare subito",
+    "blockingPatternsPanelTitle": "Pattern ricorrenti che possono ridurre la forza della candidatura",
+    "operationalPrioritiesModuleTitle": "Priorità operative"
+
   },
   "buttons": {
     "goToCv": "Vai alla pagina CV ›",

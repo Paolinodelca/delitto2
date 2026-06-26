@@ -3968,7 +3968,7 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
 
   ${operational ? renderSituationExpandableBlock({
 
-  title: "Interventi prioritari per migliorare subito",
+  title: ui?.sections?.operationalPrioritiesPanelTitle || "",
   intro: templates.urgentActionsIntro,
   html: renderOverviewModule(operational, context)
 
@@ -3976,7 +3976,9 @@ function renderOverviewSituationSection(modules = [], proReportV2 = {}) {
 
 ${blocking ? renderSituationExpandableBlock({
 
-  title: "Pattern ricorrenti che possono penalizzarti",
+  title: ui?.sections?.blockingPatternsPanelTitle || "",
+
+
   intro: templates.blockingPrioritiesIntro,
   html: renderOverviewModule(blocking, context)
 
@@ -3984,7 +3986,7 @@ ${blocking ? renderSituationExpandableBlock({
 
  ${actionPlan ? renderSituationExpandableBlock({
 
-  title: "Priorità operative",
+  title: ui?.sections?.operationalPrioritiesModuleTitle || "",
   html: renderOverviewModule(actionPlan, context)
 
 }) : ""}
@@ -4050,7 +4052,7 @@ function renderOverviewModule(
     case "openingPositioning":
       return renderOpeningPositioningModule(module, context);
       case "operationalPriorities":
-  return renderOperationalPrioritiesModule(module);
+  return renderOperationalPrioritiesModule(module, context);
     case "operationalActionPlan":
      
   return renderOperationalActionPlanModule(module);
@@ -4146,7 +4148,9 @@ function humanizeActionPlanLevel(level = "") {
   return "Priorità";
 }
 
-function renderOperationalPrioritiesModule(module) {
+function renderOperationalPrioritiesModule(module, context = {}) {
+  const ui =
+    context?.proReportNarratives?.ui || {};
   const priorities = ensureArray(module?.data?.items || module?.data);
 
   if (priorities.length === 0) {
@@ -4156,7 +4160,7 @@ function renderOperationalPrioritiesModule(module) {
   return `
     <div class="fr-card fr-operational-priority-block">
       <div class="fr-title-primary">
-        Interventi prioritari per migliorare subito
+        ${escapeHtml(ui?.sections?.operationalPrioritiesTitle || "")}
       </div>
 
       <div class="fr-operational-priority-list">
@@ -4178,6 +4182,9 @@ function renderOperationalPrioritiesModule(module) {
 }
 
 function renderAnswersWorkspaceModule(module, context = {}) {
+  const answersUi =
+    context?.proReportNarratives?.ui?.answers || {};
+
   const answersWorkspace = module?.data || {};
   const workspaceItems = ensureArray(answersWorkspace?.items);
   const activeWorkspaceIndex =
@@ -4187,7 +4194,7 @@ function renderAnswersWorkspaceModule(module, context = {}) {
     <div class="section-shell">
 
       <div class="answer-tabs-shell">
-        <div class="answer-tabs-title">Analisi delle risposte</div>
+       <div class="answer-tabs-title">${escapeHtml(answersUi.answersAnalysisTitle || "")}</div>
 
         <div class="tabs-row">
 
@@ -4195,7 +4202,7 @@ function renderAnswersWorkspaceModule(module, context = {}) {
           ? workspaceItems.map((item) => `
            
           <button class="tab-button tab-score-${Number(item?.score ?? 0) >= 75 ? "good" : Number(item?.score ?? 0) >= 50 ? "mid" : "weak"} ${item.answerIndex === activeWorkspaceIndex ? "is-active" : ""}" data-answer-tab="${escapeHtml(String(item.answerIndex))}" type="button">
-            ${escapeHtml(`Risposta ${item.answerIndex}`)}
+            ${escapeHtml(applyUiTemplate(answersUi.answerTabLabel || "", { number: item.answerIndex }))}
             </button>
 
 
