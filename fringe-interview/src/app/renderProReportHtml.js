@@ -1610,9 +1610,21 @@ function renderWorkspaceAnswerPanel(item, isActive = false, context = {}) {
 
           </span>
 
-          <span class="workspace-summary-score workspace-summary-score-${scoreClass}">
-            ${escapeHtml(String(score))}/100
-          </span>
+         
+          <span class="workspace-summary-score-block">
+  <span class="workspace-summary-score-label">
+    ${escapeHtml(answersUi.answerScoreLabel || "")}
+  </span>
+
+  <span class="workspace-summary-score workspace-summary-score-${scoreClass}">
+    ${escapeHtml(String(score))}/100
+  </span>
+
+  <span class="workspace-summary-score-help">
+    ${escapeHtml(answersUi.answerScoreHelp || "")}
+  </span>
+</span>
+
         </summary>
 
         <div class="workspace-qa-content compact fr-answer-qa-content">

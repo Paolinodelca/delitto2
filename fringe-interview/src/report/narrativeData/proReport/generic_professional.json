@@ -110,7 +110,9 @@
 "recruiterRecoveryFallbackTitle": "Come questa risposta potrebbe essere approfondita",
 "duplicateAnswerWarningTitle": "Risposta già usata in modo simile",
 "answerTabLabel": "Risposta {number}",
-"answersAnalysisTitle": "Analisi delle risposte"
+"answersAnalysisTitle": "Analisi delle risposte",
+"answerScoreLabel": "Quanto questa risposta sostiene la candidatura",
+"answerScoreHelp": "Misura quanto la risposta rende visibili contributo, concretezza e aderenza alla domanda."
 
 
 },
