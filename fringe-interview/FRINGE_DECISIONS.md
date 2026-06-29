@@ -164,3 +164,7 @@ Prima di introdurre una nuova logica chiedersi:
 "Sto aggiungendo conoscenza rigida oppure sto migliorando la capacità di FRINGE di costruire e confrontare mappe?"
 
 La seconda opzione è quasi sempre quella corretta.
+
+Le domande non sono l'obiettivo del colloquio. Sono strumenti per raccogliere evidenze.
+
+Se un'evidenza non è ancora sufficiente, FRINGE deve poter cambiare angolazione, approfondire o recuperare prima di concludere che il segnale non è stato osservato
