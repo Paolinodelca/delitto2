@@ -209,6 +209,77 @@ Esempi di evidenceType:
 * cv_signal
 
 ---
+---
+
+# Collection Goal
+
+Il Collection Goal rappresenta un obiettivo di raccolta delle evidenze.
+
+Non rappresenta una domanda.
+
+Non rappresenta un follow-up.
+
+Non rappresenta una competenza.
+
+È l'obiettivo che il sistema vuole raggiungere durante il colloquio.
+
+Un recruiter umano non pensa:
+
+"Adesso faccio la domanda 7."
+
+Pensa:
+
+"Adesso voglio capire se il candidato prende decisioni."
+
+Il Collection Goal formalizza questo comportamento.
+
+---
+
+# Relazione
+
+Dimension  
+↓  
+Collection Goal  
+↓  
+Signals  
+↓  
+Evidence  
+↓  
+Coverage
+
+Il Goal viene considerato completato quando è stata raccolta una quantità sufficiente di evidenze osservabili.
+
+Solo il Goal governa:
+
+- domanda iniziale;
+- follow-up;
+- depth check;
+- pressure probe;
+- recovery;
+- stop condition.
+
+L'Interview Engine non deve contenere la logica dei follow-up.
+
+Esegue il Goal corrente e aggiorna l'Interview State.
+
+---
+
+# Schema
+
+```js
+collectionGoal = {
+  id,
+  label,
+  purpose,
+  priority,
+  targetSignals: [],
+  preferredQuestionTypes: [],
+  executionModes: [],
+  followupPolicy: {},
+  stopCondition,
+  failureInterpretation,
+  extensions: {}
+}
 
 # 6. evidenceCollectionPlan
 
