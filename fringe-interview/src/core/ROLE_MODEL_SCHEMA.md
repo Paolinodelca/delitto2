@@ -1,0 +1,259 @@
+# ROLE_MODEL_SCHEMA.md
+
+## Scopo
+
+Definire la struttura stabile del Role Model.
+
+Il Role Model è l’oggetto centrale prodotto dal Role Engine.
+
+Non descrive il candidato.
+Descrive ciò che deve diventare osservabile per risultare credibili in uno specifico ruolo.
+
+---
+
+# Principio
+
+FRINGE non parte da una lista piatta di competenze.
+
+Usa una struttura gerarchica:
+
+Role Model
+↓
+Dimensions
+↓
+Signals
+↓
+Evidence
+
+---
+
+# Role Model
+
+```js
+roleModel = {
+  roleIdentity: {},
+  roleUnderstanding: {},
+  dimensions: [],
+  confidence: {},
+  validation: {},
+  evidenceCollectionPlan: {},
+  metadata: {},
+  extensions: {}
+}
+```
+
+---
+
+# 1. roleIdentity
+
+```js
+roleIdentity = {
+  targetRole,
+  normalizedRole,
+  roleFamily,
+  seniority,
+  industry,
+  contextType,
+  confidence
+}
+```
+
+Serve a capire che ruolo stiamo realmente analizzando.
+
+Il titolo del ruolo non è sufficiente.
+
+---
+
+# 2. roleUnderstanding
+
+```js
+roleUnderstanding = {
+  roleMission,
+  successDefinition,
+  coreResponsibilities,
+  typicalChallenges,
+  decisionContext,
+  stakeholderContext,
+  seniorityExpectations,
+  uncertaintyFlags
+}
+```
+
+Descrive cosa significa avere successo in quel ruolo.
+
+---
+
+# 3. dimensions
+
+Le dimensioni sono i grandi pilastri della candidatura.
+
+Esempi:
+
+* narrative_credibility
+* professional_maturity
+* role_specific_competence
+* fit
+* potential
+
+```js
+dimension = {
+  id,
+  label,
+  description,
+  importance,
+  confidence,
+  signals: []
+}
+```
+
+---
+
+# 4. signals
+
+I signals sono gli elementi osservabili che costruiscono una dimensione.
+
+Esempi:
+
+* ownership
+* decision_making
+* stakeholder_alignment
+* kpi_reporting
+* learning_agility
+
+```js
+signal = {
+  id,
+  label,
+  category,
+  description,
+  whyItMatters,
+  importance,
+  confidence,
+
+  observableEvidence: [],
+  missingEvidenceRisk,
+  minimumEvidenceCount,
+
+  followupStrategy,
+  stopCondition,
+
+  source,
+  extensions: {}
+}
+```
+
+---
+
+# 5. observableEvidence
+
+Descrive quali evidenze possono rendere osservabile un signal.
+
+```js
+observableEvidence = {
+  evidenceType,
+  description,
+  example,
+  sourcePreference,
+  strengthWeight
+}
+```
+
+Esempi di evidenceType:
+
+* concrete_episode
+* decision
+* tradeoff
+* measurable_result
+* stakeholder_context
+* personal_contribution
+* learning_reflection
+* cv_signal
+
+---
+
+# 6. evidenceCollectionPlan
+
+Il piano operativo per raccogliere evidenze durante il colloquio.
+
+```js
+evidenceCollectionPlan = {
+  prioritySignals: [],
+  questionGoals: [],
+  followupPolicies: [],
+  coverageThresholds: {},
+  extensions: {}
+}
+```
+
+Il colloquio non procede per numero di domanda.
+
+Procede per copertura dei segnali.
+
+---
+
+# 7. confidence
+
+```js
+confidence = {
+  overall,
+  roleIdentity,
+  seniority,
+  roleSpecificSignals,
+  sourceQuality,
+  notes
+}
+```
+
+La confidence non riguarda il candidato.
+
+Riguarda quanto FRINGE si fida della propria comprensione del ruolo.
+
+---
+
+# 8. validation
+
+```js
+validation = {
+  status,
+  missingRequiredFields: [],
+  weakAreas: [],
+  warnings: [],
+  reviewerNotes: []
+}
+```
+
+Ogni Role Model deve poter essere validato prima di essere usato dal colloquio.
+
+---
+
+# 9. metadata
+
+```js
+metadata = {
+  version,
+  generatedAt,
+  model,
+  locale,
+  sourcesUsed: []
+}
+```
+
+---
+
+# Regole
+
+1. Non inserire giudizi sulla persona nel Role Model.
+2. Ogni signal deve essere osservabile.
+3. Ogni signal deve avere confidence e source.
+4. Non osservato non significa assente.
+5. Le competenze specifiche del ruolo vivono nei signals, non in liste hardcoded.
+6. Il renderer non deve leggere direttamente il Role Model: leggerà oggetti derivati più avanti.
+7. Se un campo sperimentale viene usato stabilmente, deve uscire da extensions e diventare parte dello schema.
+
+---
+
+# Sintesi
+
+Il Role Model non dice chi è il candidato.
+
+Dice cosa deve essere reso osservabile per costruire credibilità rispetto al ruolo target.
