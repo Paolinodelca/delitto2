@@ -674,6 +674,58 @@ if (!Array.isArray(result?.cvRewriteOutput?.keySkills)) {
 });
 
 
+addCheck("Role Credibility Map core", async () => {
+  const module = await import(
+    "../src/core/roleEngine/buildRoleCredibilityMap.js"
+  );
+
+  const buildRoleCredibilityMap = module.default;
+
+  const roleMap = buildRoleCredibilityMap({
+    targetContext: {
+      targetRole: "Product Operations Manager",
+      roleFamily: "operations_industrial",
+      seniorityExpected: "mid/senior"
+    }
+  });
+
+  if (!roleMap || typeof roleMap !== "object") {
+    throw new Error("Role Credibility Map not generated.");
+  }
+
+  if (!Array.isArray(roleMap.dimensions)) {
+    throw new Error("Role Credibility Map dimensions missing.");
+  }
+
+  const roleSpecificDimension = roleMap.dimensions.find(
+    (dimension) => dimension.id === "role_specific_competence"
+  );
+
+  if (!roleSpecificDimension) {
+    throw new Error("Role specific competence dimension missing.");
+  }
+
+  if (!Array.isArray(roleSpecificDimension.signals)) {
+    throw new Error("Role specific signals missing.");
+  }
+
+  if (roleSpecificDimension.signals.length === 0) {
+    throw new Error("Role specific signals empty.");
+  }
+
+  const stableDimension = roleMap.dimensions.find(
+    (dimension) => dimension.id === "narrative_credibility"
+  );
+
+  if (!stableDimension) {
+    throw new Error("Narrative credibility dimension missing.");
+  }
+
+  if (!Array.isArray(stableDimension.signals)) {
+    throw new Error("Narrative credibility signals missing.");
+  }
+});
+
 addCheck("Role family narrative profiles", async () => {
   const module = await import("../src/report/roleFamilyNarrativeProfiles.js");
   const getRoleFamilyNarrativeProfile = module.default;
