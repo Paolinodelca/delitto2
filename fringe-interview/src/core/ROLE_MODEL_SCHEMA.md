@@ -10,6 +10,45 @@ Non descrive il candidato.
 Descrive ciò che deve diventare osservabile per risultare credibili in uno specifico ruolo.
 
 ---
+## Decisione di naming
+
+Nel codice useremo il nome breve:
+
+RoleModel
+
+ma il significato corretto è:
+
+Interview Role Model.
+
+Il RoleModel non rappresenta un ruolo astratto o universale.
+
+Rappresenta il modello di credibilità richiesto per uno specifico colloquio, costruito a partire da:
+
+- ruolo target;
+- CV;
+- Job Description;
+- seniority;
+- azienda;
+- settore;
+- contesto;
+- informazioni disponibili.
+
+Quindi non esiste un RoleModel valido per tutti gli Operations Manager.
+
+Esiste un RoleModel per:
+
+Operations Manager
++
+questo candidato
++
+questa azienda
++
+questa seniority
++
+questo colloquio.
+
+Questa decisione evita di costruire librerie infinite di ruoli statici.
+
 
 # Principio
 
@@ -27,7 +66,7 @@ Evidence
 
 ---
 
-# Role Model
+# Role Model / Interview Role Model
 
 ```js
 roleModel = {
