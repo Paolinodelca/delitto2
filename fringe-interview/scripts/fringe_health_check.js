@@ -786,6 +786,76 @@ addCheck("Evidence Collection Plan core", async () => {
 });
 
 
+addCheck("Initial Coverage State core", async () => {
+  const roleMapModule = await import(
+    "../src/core/roleEngine/buildRoleCredibilityMap.js"
+  );
+
+  const planModule = await import(
+    "../src/core/roleEngine/buildEvidenceCollectionPlan.js"
+  );
+
+  const coverageModule = await import(
+    "../src/core/interview/buildInitialCoverageState.js"
+  );
+
+  const buildRoleCredibilityMap = roleMapModule.default;
+  const buildEvidenceCollectionPlan = planModule.default;
+  const buildInitialCoverageState = coverageModule.default;
+
+  const roleMap = buildRoleCredibilityMap({
+    targetContext: {
+      targetRole: "Product Operations Manager",
+      roleFamily: "operations_industrial",
+      seniorityExpected: "mid/senior"
+    }
+  });
+
+  const plan = buildEvidenceCollectionPlan(roleMap);
+
+  const coverageState = buildInitialCoverageState({
+    evidenceCollectionPlan: plan
+  });
+
+  if (!coverageState || typeof coverageState !== "object") {
+    throw new Error("Initial Coverage State not generated.");
+  }
+
+  if (coverageState.overallCoverage !== 0) {
+    throw new Error("Initial Coverage State overallCoverage must be 0.");
+  }
+
+  if (!Array.isArray(coverageState.goals)) {
+    throw new Error("Initial Coverage State goals missing.");
+  }
+
+  if (coverageState.goals.length === 0) {
+    throw new Error("Initial Coverage State goals empty.");
+  }
+
+  const invalidGoal = coverageState.goals.find(
+    (goal) => goal.status !== "not_started"
+  );
+
+  if (invalidGoal) {
+    throw new Error("Initial Coverage State contains non not_started goal.");
+  }
+
+  if (!Array.isArray(coverageState.signals)) {
+    throw new Error("Initial Coverage State signals missing.");
+  }
+
+  const stakeholderSignal = coverageState.signals.find(
+    (signal) => signal.signalId === "stakeholder_alignment"
+  );
+
+  if (!stakeholderSignal) {
+    throw new Error(
+      "Initial Coverage State missing stakeholder_alignment signal."
+    );
+  }
+});
+
 addCheck("Role family narrative profiles", async () => {
   const module = await import("../src/report/roleFamilyNarrativeProfiles.js");
   const getRoleFamilyNarrativeProfile = module.default;
