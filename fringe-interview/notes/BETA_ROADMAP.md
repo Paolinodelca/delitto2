@@ -525,3 +525,14 @@ codice = logica
 narrativeProfiles = linguaggio
 config = struttura
 
+Appendo concetti strategici da ricordare:
+ROADMAP STRATEGICA
+
+1. Professional Perception
+→ misurare il gap tra valore reale e valore (auto)percepito dal candidato
+
+2. Transition Potential
+→ mostrare potenziale non ancora espresso
+
+3. Negotiation Intelligence
+→ supportare il candidato nella fase di offerta e negoziazione

@@ -367,3 +367,17 @@ metadata = {
 Il Role Model non dice chi è il candidato.
 
 Dice cosa deve essere reso osservabile per costruire credibilità rispetto al ruolo target.
+
+NUOVA NOTA:
+Il Collection Goal rappresenta un comportamento generale del Core.
+
+Nell'applicazione Interview verrà eseguito tramite domande.
+
+In altri prodotti potrà essere eseguito tramite:
+
+- esercizi
+- simulazioni
+- test
+- casi pratici
+- role play
+- quiz

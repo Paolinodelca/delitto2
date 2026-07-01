@@ -192,3 +192,17 @@ Renderer
 FRINGE non genera semplicemente un report.
 
 FRINGE costruisce una comprensione del ruolo, raccoglie evidenze osservabili e mostra quanto della candidatura è riuscito ad arrivare.
+
+Generalizzazione del Core
+Il Core non è un Interview Engine.
+
+Il Core è un Evidence Intelligence Engine.
+
+Interview rappresenta solamente la prima applicazione sviluppata.
+
+In futuro il medesimo Core dovrà poter supportare domini differenti mantenendo invariata la logica di:
+
+- comprensione del dominio;
+- raccolta evidenze;
+- interpretazione;
+- piano d'azione.
