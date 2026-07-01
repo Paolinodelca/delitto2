@@ -155,6 +155,6 @@ function buildEvidenceCollectionPlan(roleCredibilityMap = {}) {
   };
 }
 
-module.exports = {
-  buildEvidenceCollectionPlan,
-};
+export { buildEvidenceCollectionPlan };
+
+export default buildEvidenceCollectionPlan;

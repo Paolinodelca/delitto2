@@ -726,6 +726,66 @@ addCheck("Role Credibility Map core", async () => {
   }
 });
 
+
+addCheck("Evidence Collection Plan core", async () => {
+  const roleMapModule = await import(
+    "../src/core/roleEngine/buildRoleCredibilityMap.js"
+  );
+
+  const planModule = await import(
+    "../src/core/roleEngine/buildEvidenceCollectionPlan.js"
+  );
+
+  const validatorModule = await import(
+    "../src/core/roleEngine/validateEvidenceCollectionPlan.js"
+  );
+
+  const buildRoleCredibilityMap = roleMapModule.default;
+  const buildEvidenceCollectionPlan = planModule.default;
+  const validateEvidenceCollectionPlan = validatorModule.default;
+
+  const roleMap = buildRoleCredibilityMap({
+    targetContext: {
+      targetRole: "Product Operations Manager",
+      roleFamily: "operations_industrial",
+      seniorityExpected: "mid/senior"
+    }
+  });
+
+  const plan = buildEvidenceCollectionPlan(roleMap);
+
+  const validation = validateEvidenceCollectionPlan(plan);
+
+  if (!validation.valid) {
+    throw new Error(
+      `Evidence Collection Plan validation failed: ${validation.errors.join("; ")}`
+    );
+  }
+
+  if (!Array.isArray(plan.collectionGoals)) {
+    throw new Error("Evidence Collection Plan collectionGoals missing.");
+  }
+
+  if (plan.collectionGoals.length === 0) {
+    throw new Error("Evidence Collection Plan collectionGoals empty.");
+  }
+
+  const stakeholderGoal = plan.collectionGoals.find((goal) =>
+  Array.isArray(goal.targetSignals) &&
+  goal.targetSignals.some((signal) =>
+    signal === "stakeholder_alignment" ||
+    signal?.signalId === "stakeholder_alignment"
+    )
+  );
+
+  if (!stakeholderGoal) {
+    throw new Error(
+      "Evidence Collection Plan missing stakeholder_alignment goal."
+    );
+  }
+});
+
+
 addCheck("Role family narrative profiles", async () => {
   const module = await import("../src/report/roleFamilyNarrativeProfiles.js");
   const getRoleFamilyNarrativeProfile = module.default;
