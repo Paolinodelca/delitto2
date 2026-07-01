@@ -856,6 +856,104 @@ addCheck("Initial Coverage State core", async () => {
   }
 });
 
+addCheck("Coverage State update core", async () => {
+
+  const roleMapModule = await import(
+    "../src/core/roleEngine/buildRoleCredibilityMap.js"
+  );
+
+  const planModule = await import(
+    "../src/core/roleEngine/buildEvidenceCollectionPlan.js"
+  );
+
+  const initialCoverageModule = await import(
+    "../src/core/interview/buildInitialCoverageState.js"
+  );
+
+  const updateCoverageModule = await import(
+    "../src/core/interview/updateCoverageState.js"
+  );
+
+  const buildRoleCredibilityMap = roleMapModule.default;
+  const buildEvidenceCollectionPlan = planModule.default;
+  const buildInitialCoverageState = initialCoverageModule.default;
+  const updateCoverageState = updateCoverageModule.default;
+
+  const roleMap = buildRoleCredibilityMap({
+    targetContext: {
+      targetRole: "Product Operations Manager",
+      roleFamily: "operations_industrial",
+      seniorityExpected: "mid/senior"
+    }
+  });
+
+  const plan = buildEvidenceCollectionPlan(roleMap);
+
+  const coverageState = buildInitialCoverageState({
+    evidenceCollectionPlan: plan
+  });
+
+  const firstGoal = coverageState.goals[0];
+
+  if (!firstGoal) {
+    throw new Error("Coverage State has no goals.");
+  }
+
+  const updatedCoverage = updateCoverageState({
+    coverageState,
+    collectionResult: {
+      goalId: firstGoal.goalId,
+      observedSignals: ["stakeholder_alignment"],
+      evidence: [
+        {
+          id: "evidence_1",
+          summary: "Candidate described stakeholder alignment."
+        }
+      ],
+      confidence: 0.82
+    }
+  });
+
+  if (updatedCoverage.overallCoverage <= 0) {
+    throw new Error("Coverage State overallCoverage not updated.");
+  }
+
+  const coveredGoal = updatedCoverage.goals.find(
+    (goal) => goal.goalId === firstGoal.goalId
+  );
+
+  if (!coveredGoal) {
+    throw new Error("Updated goal not found.");
+  }
+
+  if (coveredGoal.status !== "covered") {
+    throw new Error("Goal not marked as covered.");
+  }
+
+  const stakeholderSignal = updatedCoverage.signals.find(
+    (signal) => signal.signalId === "stakeholder_alignment"
+  );
+
+  if (!stakeholderSignal) {
+    throw new Error("stakeholder_alignment signal missing.");
+  }
+
+  if (stakeholderSignal.visibility !== 1) {
+    throw new Error("Signal visibility not updated.");
+  }
+
+  if (
+    ![
+      "continue_collection",
+      "collection_completed"
+    ].includes(updatedCoverage.nextRecommendation.action)
+  ) {
+    throw new Error("Invalid next recommendation.");
+  }
+
+});
+
+
 addCheck("Role family narrative profiles", async () => {
   const module = await import("../src/report/roleFamilyNarrativeProfiles.js");
   const getRoleFamilyNarrativeProfile = module.default;
