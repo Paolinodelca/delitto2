@@ -1074,6 +1074,267 @@ if (en?.skillLabels && !Array.isArray(en.skillLabels)) {
   }
 });
 
+addCheck("Input Bundle core", async () => {
+  const module = await import(
+    "../src/core/input/healthBuildInputBundle.js"
+  );
+
+  const healthBuildInputBundle =
+    module.healthBuildInputBundle || module.default;
+
+  const result = healthBuildInputBundle();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Input Bundle health failed: ${JSON.stringify(result.validation)}`
+    );
+  }
+});
+
+addCheck("Evidence Store core", async () => {
+  const module = await import(
+    "../src/core/evidence/healthBuildEvidenceStore.js"
+  );
+
+  const healthBuildEvidenceStore =
+    module.healthBuildEvidenceStore || module.default;
+
+  const result = healthBuildEvidenceStore();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Evidence Store health failed: ${JSON.stringify(result.validation)}`
+    );
+  }
+});
+
+addCheck("Identity Pipeline core", async () => {
+  const module = await import(
+    "../src/core/identity/healthBuildIdentityPipeline.js"
+  );
+
+  const healthBuildIdentityPipeline =
+    module.healthBuildIdentityPipeline || module.default;
+
+  const result = healthBuildIdentityPipeline();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Identity Pipeline health failed: ${JSON.stringify(result.validation)}`
+    );
+  }
+});
+
+addCheck("Professional Identity Draft core", async () => {
+  const module = await import(
+    "../src/core/identity/healthBuildProfessionalIdentityDraft.js"
+  );
+
+  const healthBuildProfessionalIdentityDraft =
+    module.healthBuildProfessionalIdentityDraft || module.default;
+
+  const result = healthBuildProfessionalIdentityDraft();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Professional Identity Draft health failed: ${JSON.stringify(
+        result.validation
+      )}`
+    );
+  }
+});
+
+addCheck("Identity Core Regression", async () => {
+  const inputSourceModule = await import("../src/core/input/buildInputSource.js");
+  const inputBundleModule = await import("../src/core/input/buildInputBundle.js");
+  const identityPipelineModule = await import(
+    "../src/core/identity/buildIdentityPipeline.js"
+  );
+  const summaryModule = await import(
+    "../src/core/identity/buildIdentityPipelineSummary.js"
+  );
+
+  const { buildInputSource } = inputSourceModule.default || inputSourceModule;
+  const { buildInputBundle } = inputBundleModule.default || inputBundleModule;
+  const { buildIdentityPipeline } =
+    identityPipelineModule.default || identityPipelineModule;
+  const { buildIdentityPipelineSummary } =
+    summaryModule.default || summaryModule;
+
+  const inputBundle = buildInputBundle({
+    sources: [
+      buildInputSource({
+        id: "source_cv_health",
+        type: "document",
+        label: "Health CV",
+        content: "Demo CV content",
+        language: "it",
+        sourceRole: "cv"
+      }),
+      buildInputSource({
+        id: "source_jd_health",
+        type: "text",
+        label: "Health Job Description",
+        content: "Demo Job Description content",
+        language: "it",
+        sourceRole: "job_description"
+      })
+    ],
+    professionalHistory: {
+      experiences: [{ id: "experience_health", role: "Operations Specialist" }],
+      skills: [{ id: "skill_health", name: "Process improvement" }],
+      motivations: [{ id: "motivation_health", text: "Crescita professionale." }],
+      targetDirections: [
+        { id: "target_direction_health", role: "Product Operations Manager" }
+      ]
+    },
+    discovery: {
+      questions: [{ id: "question_health", text: "Direzione professionale?" }],
+      answers: [
+        {
+          id: "answer_health",
+          questionId: "question_health",
+          text: "Vorrei valorizzare il coordinamento cross-funzionale."
+        }
+      ],
+      status: "in_progress"
+    },
+
+    updates: [
+    {
+      id: "update_health",
+      type: "profile_update",
+      content: "Health check update."
+    }
+  ]
+
+  });
+
+  const pipeline = buildIdentityPipeline(inputBundle);
+  const summary = buildIdentityPipelineSummary(pipeline);
+
+  if (pipeline.status !== "PASS") {
+    throw new Error("Identity Core Regression pipeline failed.");
+  }
+
+  if (!pipeline.evidenceStore?.evidence?.length) {
+    throw new Error("Identity Core Regression evidence missing.");
+  }
+
+  if (
+    pipeline.evidenceSummary.totalEvidence !==
+    pipeline.evidenceStore.evidence.length
+  ) {
+    throw new Error("Identity Core Regression evidence summary mismatch.");
+  }
+
+  if (pipeline.professionalIdentityDraft.identityStatus !== "draft") {
+    throw new Error("Identity Core Regression draft status mismatch.");
+  }
+
+  if (summary.status !== "PASS") {
+    throw new Error("Identity Core Regression summary failed.");
+  }
+
+  if (summary.evidence.total !== pipeline.evidenceSummary.totalEvidence) {
+    throw new Error("Identity Core Regression summary total mismatch.");
+  }
+});
+
+addCheck("Professional Identity Model core", async () => {
+  const module = await import(
+    "../src/core/identity/healthBuildProfessionalIdentityModel.js"
+  );
+
+  const healthBuildProfessionalIdentityModel =
+    module.healthBuildProfessionalIdentityModel || module.default;
+
+  const result = healthBuildProfessionalIdentityModel();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Professional Identity Model health failed: ${JSON.stringify(
+        result.validation
+      )}`
+    );
+  }
+});
+
+addCheck("Representation Readiness core", async () => {
+  const module = await import(
+    "../src/core/identity/healthBuildRepresentationReadiness.js"
+  );
+
+  const healthBuildRepresentationReadiness =
+    module.healthBuildRepresentationReadiness || module.default;
+
+  const result = healthBuildRepresentationReadiness();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Representation Readiness health failed: ${JSON.stringify(
+        result.validation
+      )}`
+    );
+  }
+});
+
+addCheck("Representation Strategy Pipeline core", async () => {
+  const module = await import(
+    "../src/core/representation/healthBuildRepresentationStrategyPipeline.js"
+  );
+
+  const healthBuildRepresentationStrategyPipeline =
+    module.healthBuildRepresentationStrategyPipeline || module.default;
+
+  const result = healthBuildRepresentationStrategyPipeline();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Representation Strategy Pipeline health failed: ${JSON.stringify(
+        result.validation
+      )}`
+    );
+  }
+});
+
+addCheck("Reasoning Pipeline core", async () => {
+  const module = await import(
+    "../src/core/reasoning/healthBuildReasoningPipeline.js"
+  );
+
+  const healthBuildReasoningPipeline =
+    module.healthBuildReasoningPipeline || module.default;
+
+  const result = healthBuildReasoningPipeline();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Reasoning Pipeline health failed: ${JSON.stringify(
+        result.validation
+      )}`
+    );
+  }
+});
+
+
+addCheck("Comparison Engine core", async () => {
+  const module = await import(
+    "../src/core/comparison/healthBuildComparisonResult.js"
+  );
+
+  const healthBuildComparisonResult =
+    module.healthBuildComparisonResult || module.default;
+
+  const result = healthBuildComparisonResult();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Comparison Engine health failed: ${JSON.stringify(result.validation)}`
+    );
+  }
+});
+
 addCheck("Role target detection", async () => {
   const module = await import("../src/report/detectRoleTarget.js");
   const detectRoleTarget = module.default;
