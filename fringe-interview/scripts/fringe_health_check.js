@@ -1335,6 +1335,25 @@ addCheck("Comparison Engine core", async () => {
   }
 });
 
+addCheck("Professional Visibility Comparison core", async () => {
+  const module = await import(
+    "../src/core/reasoning/healthBuildProfessionalVisibilityComparison.js"
+  );
+
+  const healthBuildProfessionalVisibilityComparison =
+    module.healthBuildProfessionalVisibilityComparison || module.default;
+
+  const result = healthBuildProfessionalVisibilityComparison();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Professional Visibility Comparison health failed: ${JSON.stringify(
+        result.validation
+      )}`
+    );
+  }
+});
+
 addCheck("Role target detection", async () => {
   const module = await import("../src/report/detectRoleTarget.js");
   const detectRoleTarget = module.default;

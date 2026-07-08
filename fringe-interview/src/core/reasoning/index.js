@@ -7,4 +7,7 @@ module.exports = {
   ...require("./validateReasoningPipeline"),
   ...require("./healthBuildReasoningPipeline"),
   ...require("./buildReasoningPipelineSummary"),
+  ...require("./buildProfessionalVisibilityComparison"),
+  ...require("./validateProfessionalVisibilityComparison"),
+  ...require("./healthBuildProfessionalVisibilityComparison"),
 };
