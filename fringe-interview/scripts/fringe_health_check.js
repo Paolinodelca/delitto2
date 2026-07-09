@@ -1354,6 +1354,24 @@ addCheck("Professional Visibility Comparison core", async () => {
   }
 });
 
+addCheck("IMAGO Runtime core", async () => {
+  const module = await import(
+    "../src/core/runtime/healthBuildImagoRuntime.js"
+  );
+
+  const healthBuildImagoRuntime =
+    module.healthBuildImagoRuntime || module.default;
+
+  const result = healthBuildImagoRuntime();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `IMAGO Runtime health failed: ${JSON.stringify(result.validation)}`
+    );
+  }
+});
+
+
 addCheck("Role target detection", async () => {
   const module = await import("../src/report/detectRoleTarget.js");
   const detectRoleTarget = module.default;
