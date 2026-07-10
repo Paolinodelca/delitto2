@@ -1372,6 +1372,26 @@ addCheck("IMAGO Runtime core", async () => {
 });
 
 
+addCheck("Measurement Core", async () => {
+  const module = await import(
+    "../src/core/measurement/healthBuildMeasureResult.js"
+  );
+
+  const healthBuildMeasureResult =
+    module.healthBuildMeasureResult || module.default;
+
+  const result = healthBuildMeasureResult();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Measurement Core health failed: ${JSON.stringify(
+        result.validation
+      )}`
+    );
+  }
+});
+
+
 addCheck("Role target detection", async () => {
   const module = await import("../src/report/detectRoleTarget.js");
   const detectRoleTarget = module.default;
