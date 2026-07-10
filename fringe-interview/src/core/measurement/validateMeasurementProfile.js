@@ -1,3 +1,7 @@
+const {
+  getMeasurementFactorDefinition,
+} = require("./getMeasurementFactorDefinition");
+
 function isObject(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
@@ -5,6 +9,13 @@ function isObject(value) {
 function isValidString(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
+
+const BASE_MANAGEMENT_SCOPE_FACTORS = [
+  "teamSize",
+  "durationYears",
+  "responsibilityType",
+  "managementLayer",
+];
 
 function validateMeasurementProfile(profile = {}) {
   const errors = [];
@@ -77,6 +88,88 @@ function validateMeasurementProfile(profile = {}) {
 
   if (!Array.isArray(profile.addedFactors)) {
     errors.push("addedFactors must be an array.");
+  } else {
+    profile.addedFactors.forEach((factor, index) => {
+      if (!isObject(factor)) {
+        errors.push(
+          `addedFactors[${index}] must be an object.`
+        );
+        return;
+      }
+
+      if (!isValidString(factor.factorId)) {
+        errors.push(
+          `addedFactors[${index}].factorId must be a non-empty string.`
+        );
+      }
+
+      if (
+        typeof factor.weight !== "number" ||
+        !Number.isFinite(factor.weight) ||
+        factor.weight < 0
+      ) {
+        errors.push(
+          `addedFactors[${index}].weight must be a non-negative number.`
+        );
+      }
+
+      if (
+        factor.minimum !== null &&
+        (
+          typeof factor.minimum !== "number" ||
+          !Number.isFinite(factor.minimum) ||
+          factor.minimum < 0 ||
+          factor.minimum > 1
+        )
+      ) {
+        errors.push(
+          `addedFactors[${index}].minimum must be between 0 and 1 or null.`
+        );
+      }
+
+      if (!isObject(factor.configuration)) {
+        errors.push(
+          `addedFactors[${index}].configuration must be an object.`
+        );
+      }
+
+      if (isValidString(factor.factorId)) {
+        const factorDefinition =
+          getMeasurementFactorDefinition(factor.factorId);
+
+        if (
+          factorDefinition.scoring.strategy === "unsupported"
+        ) {
+          warnings.push(
+            `Added factor is not present in the catalog: ${factor.factorId}`
+          );
+        } else if (
+          !factorDefinition.supportedDimensions.includes(
+            "management_scope"
+          )
+        ) {
+          warnings.push(
+            `Added factor does not support management_scope: ${factor.factorId}`
+          );
+        }
+
+        if (
+          BASE_MANAGEMENT_SCOPE_FACTORS.includes(
+            factor.factorId
+          )
+        ) {
+          warnings.push(
+            `Added factor already exists in the base definition: ${factor.factorId}`
+          );
+        }
+      }
+
+      if (factor.weight === 0) {
+        warnings.push(
+          `Added factor weight is 0: ${factor.factorId || index}`
+        );
+      }
+    });
   }
 
   if (!isObject(profile.metadata)) {
@@ -107,8 +200,16 @@ function validateMeasurementProfile(profile = {}) {
       Object.keys(profile.overrides.benchmark || {}).length > 0
     );
 
-  if (!hasOverrides) {
-    warnings.push("No measurement overrides are configured.");
+  if (
+    !hasOverrides &&
+    (!Array.isArray(profile.disabledFactors) ||
+      profile.disabledFactors.length === 0) &&
+    (!Array.isArray(profile.addedFactors) ||
+      profile.addedFactors.length === 0)
+  ) {
+    warnings.push(
+      "No measurement overrides are configured."
+    );
   }
 
   if (
@@ -130,12 +231,12 @@ function validateMeasurementProfile(profile = {}) {
     isObject(profile.overrides.weights) &&
     Object.keys(profile.overrides.weights).length > 0
   ) {
-    const weightSum = Object.values(profile.overrides.weights).reduce(
-      (sum, value) => sum + value,
-      0
-    );
+    const weightSum = Object.values(
+      profile.overrides.weights
+    ).reduce((sum, value) => sum + value, 0);
 
-    const roundedWeightSum = Math.round(weightSum * 1000000) / 1000000;
+    const roundedWeightSum =
+      Math.round(weightSum * 1000000) / 1000000;
 
     if (roundedWeightSum !== 1) {
       warnings.push(

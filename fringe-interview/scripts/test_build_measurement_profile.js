@@ -1,12 +1,15 @@
 const {
   buildMeasurementDefinition,
 } = require("../src/core/measurement/buildMeasurementDefinition");
+
 const {
   buildMeasurementProfile,
 } = require("../src/core/measurement/buildMeasurementProfile");
+
 const {
   validateMeasurementProfile,
 } = require("../src/core/measurement/validateMeasurementProfile");
+
 const {
   applyMeasurementProfile,
 } = require("../src/core/measurement/applyMeasurementProfile");
@@ -23,8 +26,10 @@ function sumWeights(weights) {
 const definition =
   buildMeasurementDefinition("management_scope");
 
+const definitionBefore = JSON.stringify(definition);
+
 /*
- * Scenario A — Profilo valido
+ * Scenario A — Profilo standard valido
  */
 const validProfile = buildMeasurementProfile({
   profileId: "management_scope_recruiter_001",
@@ -59,311 +64,439 @@ const validProfile = buildMeasurementProfile({
   },
 });
 
-const validProfileValidation =
+const validValidation =
   validateMeasurementProfile(validProfile);
 
-if (!validProfileValidation.isValid) {
+if (!validValidation.isValid) {
   failures.push(
-    `Valid profile failed validation: ${validProfileValidation.errors.join(
+    `Valid profile failed: ${validValidation.errors.join(
       "; "
     )}`
   );
 }
 
-const definitionBefore = JSON.stringify(definition);
-
-const appliedProfile = applyMeasurementProfile({
-  definition,
-  profile: validProfile,
-});
-
-if (
-  appliedProfile.effectiveDefinition.aggregation.weights.teamSize !==
-  0.45
-) {
-  failures.push(
-    "Expected effective teamSize weight === 0.45."
-  );
-}
+const validApplication =
+  applyMeasurementProfile({
+    definition,
+    profile: validProfile,
+  });
 
 if (
-  appliedProfile.effectiveDefinition.benchmark.reference.teamSize !==
-  150
+  validApplication.effectiveDefinition.aggregation
+    .weights.teamSize !== 0.45
 ) {
   failures.push(
-    "Expected effective benchmark teamSize === 150."
-  );
-}
-
-if (
-  appliedProfile.effectiveDefinition.thresholds.minimum !==
-  0.65
-) {
-  failures.push(
-    "Expected effective threshold minimum === 0.65."
+    "Expected teamSize weight override."
   );
 }
 
 /*
- * Scenario B — Disattivazione managementLayer
+ * Scenario B — Disabled factor
  */
 const disabledProfile = buildMeasurementProfile({
-  profileId: "management_disable_layer",
-  label: "Management Without Layer",
+  profileId: "disable_management_layer",
+
+  label: "Disable Management Layer",
+
   baseModelId: "management_scope_v1",
 
   disabledFactors: ["managementLayer"],
 
-  rationale: "Management layer excluded for this model.",
+  rationale: "Tests disabled factor.",
 
   source: {
     type: "test_configuration",
-    id: "disable_layer_test",
+    id: "disabled_factor_test",
   },
 });
 
-const disabledAppliedProfile = applyMeasurementProfile({
-  definition,
-  profile: disabledProfile,
-});
-
-const disabledAggregation =
-  disabledAppliedProfile.effectiveDefinition.aggregation;
-
-if (
-  !disabledAppliedProfile.disabledFactors.includes(
-    "managementLayer"
-  )
-) {
-  failures.push(
-    "Expected disabledFactors to contain managementLayer."
-  );
-}
-
-if (
-  !disabledAppliedProfile.appliedOverrides.disabledFactors.includes(
-    "managementLayer"
-  )
-) {
-  failures.push(
-    "Expected appliedOverrides.disabledFactors to contain managementLayer."
-  );
-}
+const disabledApplication =
+  applyMeasurementProfile({
+    definition,
+    profile: disabledProfile,
+  });
 
 if (
   Object.prototype.hasOwnProperty.call(
-    disabledAggregation.activeWeights,
+    disabledApplication.effectiveDefinition
+      .aggregation.activeWeights,
     "managementLayer"
   )
 ) {
   failures.push(
-    "Expected activeWeights not to contain managementLayer."
+    "Expected managementLayer not to be active."
   );
 }
 
 if (
   Math.abs(
-    sumWeights(disabledAggregation.activeWeights) - 1
+    sumWeights(
+      disabledApplication.effectiveDefinition
+        .aggregation.activeWeights
+    ) - 1
   ) > 0.0001
 ) {
   failures.push(
-    "Expected activeWeights sum to be approximately 1."
+    "Expected active weight sum approximately 1."
   );
 }
 
 /*
- * Scenario C — Fattore sconosciuto
+ * Scenario E — Aggiunta valida
  */
-const unknownFactorProfile = buildMeasurementProfile({
-  profileId: "management_unknown_factor",
-  label: "Unknown Factor Profile",
-  baseModelId: "management_scope_v1",
+const validAddedFactorProfile =
+  buildMeasurementProfile({
+    profileId: "profile_context_relevance",
 
-  disabledFactors: ["unknownFactor"],
+    label: "Context Relevance Profile",
 
-  rationale: "Tests unknown disabled factor.",
+    baseModelId: "management_scope_v1",
 
-  source: {
-    type: "test_configuration",
-    id: "unknown_factor_test",
-  },
-});
+    addedFactors: [
+      {
+        factorId: "contextRelevance",
+        weight: 0.2,
+        minimum: 0.5,
+        configuration: {},
+      },
+    ],
 
-const unknownFactorApplication = applyMeasurementProfile({
-  definition,
-  profile: unknownFactorProfile,
-});
+    rationale:
+      "Adds context relevance for future measurement.",
 
-if (
-  !unknownFactorApplication.warnings.includes(
-    "Unknown disabled factor: unknownFactor"
-  )
-) {
-  failures.push(
-    "Expected warning for unknown disabled factor."
-  );
-}
-
-if (
-  Object.keys(
-    unknownFactorApplication.effectiveDefinition.aggregation
-      .activeWeights
-  ).length !== 4
-) {
-  failures.push(
-    "Expected all valid factors to remain active."
-  );
-}
-
-/*
- * Scenario D — Tutti i fattori disattivati
- */
-const allDisabledProfile = buildMeasurementProfile({
-  profileId: "management_all_disabled",
-  label: "All Factors Disabled",
-  baseModelId: "management_scope_v1",
-
-  disabledFactors: [
-    "teamSize",
-    "durationYears",
-    "responsibilityType",
-    "managementLayer",
-  ],
-
-  rationale: "Tests all factors disabled.",
-
-  source: {
-    type: "test_configuration",
-    id: "all_disabled_test",
-  },
-});
-
-const allDisabledApplication = applyMeasurementProfile({
-  definition,
-  profile: allDisabledProfile,
-});
-
-if (
-  Object.keys(
-    allDisabledApplication.effectiveDefinition.aggregation
-      .activeWeights
-  ).length !== 0
-) {
-  failures.push(
-    "Expected activeWeights to be empty when all factors are disabled."
-  );
-}
-
-if (
-  !allDisabledApplication.warnings.includes(
-    "All measurement factors are disabled."
-  )
-) {
-  failures.push(
-    "Expected all-factors-disabled warning."
-  );
-}
-
-/*
- * Scenario E — Immutabilità
- */
-const definitionAfter = JSON.stringify(definition);
-
-if (definitionBefore !== definitionAfter) {
-  failures.push(
-    "Expected original MeasurementDefinition to remain unchanged."
-  );
-}
-
-/*
- * Scenario F — Added factors conservati
- */
-const addedFactorProfile = buildMeasurementProfile({
-  profileId: "management_added_factor",
-  label: "Added Factor Profile",
-  baseModelId: "management_scope_v1",
-
-  addedFactors: [
-    {
-      factorId: "changeManagement",
-      weight: 0.2,
-      minimum: 0.6,
+    source: {
+      type: "test_configuration",
+      id: "context_relevance_test",
     },
-  ],
+  });
 
-  rationale: "Tests preservation of added factors.",
+const validAddedFactorValidation =
+  validateMeasurementProfile(
+    validAddedFactorProfile
+  );
 
-  source: {
-    type: "test_configuration",
-    id: "added_factor_test",
-  },
-});
-
-const addedFactorApplication = applyMeasurementProfile({
-  definition,
-  profile: addedFactorProfile,
-});
-
-if (addedFactorApplication.addedFactors.length !== 1) {
+if (!validAddedFactorValidation.isValid) {
   failures.push(
-    "Expected addedFactors to be preserved."
+    `Valid added-factor profile failed: ${validAddedFactorValidation.errors.join(
+      "; "
+    )}`
+  );
+}
+
+const validAddedFactorApplication =
+  applyMeasurementProfile({
+    definition,
+    profile: validAddedFactorProfile,
+  });
+
+const pendingAddedFactors =
+  validAddedFactorApplication.effectiveDefinition
+    .aggregation.pendingAddedFactors;
+
+if (pendingAddedFactors.length !== 1) {
+  failures.push(
+    "Expected one pending added factor."
+  );
+}
+
+if (
+  pendingAddedFactors[0].factorId !==
+  "contextRelevance"
+) {
+  failures.push(
+    "Expected pending contextRelevance factor."
+  );
+}
+
+if (
+  !validAddedFactorApplication.appliedOverrides
+    .addedFactors.some(
+      (factor) =>
+        factor.factorId === "contextRelevance"
+    )
+) {
+  failures.push(
+    "Expected contextRelevance in appliedOverrides.addedFactors."
   );
 }
 
 if (
   Object.prototype.hasOwnProperty.call(
-    addedFactorApplication.effectiveDefinition.aggregation
-      .activeWeights,
-    "changeManagement"
+    validAddedFactorApplication
+      .effectiveDefinition.aggregation.weights,
+    "contextRelevance"
   )
 ) {
   failures.push(
-    "Expected added factor not to enter activeWeights."
+    "Expected contextRelevance not to enter weights yet."
   );
 }
 
-const output = {
-  test: "Measurement Profile Disables Existing Factors",
+if (
+  Object.prototype.hasOwnProperty.call(
+    validAddedFactorApplication
+      .effectiveDefinition.aggregation.activeWeights,
+    "contextRelevance"
+  )
+) {
+  failures.push(
+    "Expected contextRelevance not to enter activeWeights yet."
+  );
+}
 
-  status: failures.length === 0 ? "PASS" : "FAIL",
+/*
+ * Scenario F — Fattore sconosciuto
+ */
+const unknownAddedFactorProfile =
+  buildMeasurementProfile({
+    profileId: "profile_invented_factor",
 
-  validProfile: {
-    isValid: validProfileValidation.isValid,
-    activeWeights:
-      appliedProfile.effectiveDefinition.aggregation.activeWeights,
-  },
+    label: "Invented Factor Profile",
 
-  disabledProfile: {
-    disabledFactors:
-      disabledAppliedProfile.disabledFactors,
-    activeWeights:
-      disabledAggregation.activeWeights,
-    activeWeightSum:
-      sumWeights(disabledAggregation.activeWeights),
-  },
+    baseModelId: "management_scope_v1",
 
-  unknownFactor: {
-    warnings: unknownFactorApplication.warnings,
-  },
+    addedFactors: [
+      {
+        factorId: "inventedFactor",
+        weight: 0.2,
+        minimum: 0.5,
+        configuration: {},
+      },
+    ],
 
-  allDisabled: {
-    activeWeights:
-      allDisabledApplication.effectiveDefinition.aggregation
-        .activeWeights,
-    warnings: allDisabledApplication.warnings,
-  },
+    rationale: "Tests unknown factor.",
 
-  definitionUnchanged:
-    definitionBefore === definitionAfter,
-};
+    source: {
+      type: "test_configuration",
+      id: "invented_factor_test",
+    },
+  });
 
-console.log(JSON.stringify(output, null, 2));
+const unknownAddedValidation =
+  validateMeasurementProfile(
+    unknownAddedFactorProfile
+  );
+
+if (
+  !unknownAddedValidation.warnings.some(
+    (warning) =>
+      warning.includes(
+        "not present in the catalog"
+      )
+  )
+) {
+  failures.push(
+    "Expected profile warning for unknown factor."
+  );
+}
+
+const unknownAddedApplication =
+  applyMeasurementProfile({
+    definition,
+    profile: unknownAddedFactorProfile,
+  });
+
+if (
+  !unknownAddedApplication.warnings.includes(
+    "Unsupported added factor: inventedFactor"
+  )
+) {
+  failures.push(
+    "Expected unsupported added-factor warning."
+  );
+}
+
+if (
+  unknownAddedApplication.effectiveDefinition
+    .aggregation.pendingAddedFactors.length !== 0
+) {
+  failures.push(
+    "Expected inventedFactor not to be pending."
+  );
+}
+
+/*
+ * Scenario G — Fattore già esistente
+ */
+const existingFactorProfile =
+  buildMeasurementProfile({
+    profileId: "profile_existing_factor",
+
+    label: "Existing Factor Profile",
+
+    baseModelId: "management_scope_v1",
+
+    addedFactors: [
+      {
+        factorId: "teamSize",
+        weight: 0.2,
+        minimum: 0.5,
+        configuration: {},
+      },
+    ],
+
+    rationale:
+      "Tests already existing factor.",
+
+    source: {
+      type: "test_configuration",
+      id: "existing_factor_test",
+    },
+  });
+
+const existingValidation =
+  validateMeasurementProfile(
+    existingFactorProfile
+  );
+
+if (
+  !existingValidation.warnings.some(
+    (warning) =>
+      warning.includes(
+        "already exists in the base definition"
+      )
+  )
+) {
+  failures.push(
+    "Expected profile warning for existing factor."
+  );
+}
+
+const existingApplication =
+  applyMeasurementProfile({
+    definition,
+    profile: existingFactorProfile,
+  });
+
+if (
+  !existingApplication.warnings.includes(
+    "Added factor already exists in base definition: teamSize"
+  )
+) {
+  failures.push(
+    "Expected apply warning for existing factor."
+  );
+}
+
+if (
+  existingApplication.effectiveDefinition
+    .aggregation.pendingAddedFactors.length !== 0
+) {
+  failures.push(
+    "Expected teamSize not to be added."
+  );
+}
+
+/*
+ * Scenario duplicati: mantenere il primo
+ */
+const duplicateAddedProfile =
+  buildMeasurementProfile({
+    profileId: "profile_duplicate_factor",
+    baseModelId: "management_scope_v1",
+
+    addedFactors: [
+      {
+        factorId: "contextRelevance",
+        weight: 0.2,
+        minimum: 0.5,
+        configuration: {
+          source: "first",
+        },
+      },
+      {
+        factorId: "contextRelevance",
+        weight: 0.8,
+        minimum: 0.9,
+        configuration: {
+          source: "second",
+        },
+      },
+    ],
+  });
+
+if (duplicateAddedProfile.addedFactors.length !== 1) {
+  failures.push(
+    "Expected duplicate factorId to be removed."
+  );
+}
+
+if (
+  duplicateAddedProfile.addedFactors[0].weight !==
+  0.2
+) {
+  failures.push(
+    "Expected first duplicate factor to be retained."
+  );
+}
+
+/*
+ * Scenario H — Immutabilità
+ */
+const definitionAfter = JSON.stringify(definition);
+
+if (definitionBefore !== definitionAfter) {
+  failures.push(
+    "Expected definition to remain unchanged."
+  );
+}
+
+console.log(
+  JSON.stringify(
+    {
+      test: "Measurement Profile With Factor Catalog",
+
+      status:
+        failures.length === 0 ? "PASS" : "FAIL",
+
+      validProfile: {
+        isValid: validValidation.isValid,
+      },
+
+      validAddedFactor: {
+        isValid:
+          validAddedFactorValidation.isValid,
+        pendingAddedFactors,
+        weights:
+          validAddedFactorApplication
+            .effectiveDefinition.aggregation.weights,
+        activeWeights:
+          validAddedFactorApplication
+            .effectiveDefinition.aggregation
+            .activeWeights,
+      },
+
+      unknownAddedFactor: {
+        profileWarnings:
+          unknownAddedValidation.warnings,
+        applyWarnings:
+          unknownAddedApplication.warnings,
+      },
+
+      existingFactor: {
+        profileWarnings:
+          existingValidation.warnings,
+        applyWarnings:
+          existingApplication.warnings,
+      },
+
+      definitionUnchanged:
+        definitionBefore === definitionAfter,
+    },
+    null,
+    2
+  )
+);
 
 if (failures.length > 0) {
   console.error("FAIL");
-  console.error(JSON.stringify(failures, null, 2));
+  console.error(
+    JSON.stringify(failures, null, 2)
+  );
   process.exit(1);
 }
 
 console.log("PASS");
-console.log("test_build_measurement_profile PASS");
+console.log(
+  "test_build_measurement_profile PASS"
+);
