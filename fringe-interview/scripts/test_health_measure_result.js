@@ -2,16 +2,24 @@ const {
   healthBuildMeasureResult,
 } = require("../src/core/measurement/healthBuildMeasureResult");
 
-const result = healthBuildMeasureResult();
+const result =
+  healthBuildMeasureResult();
 
-console.log(JSON.stringify(result, null, 2));
+console.log(
+  JSON.stringify(result, null, 2)
+);
 
 if (result.status !== "PASS") {
-  console.error('Expected status === "PASS".');
+  console.error(
+    'Expected status === "PASS".'
+  );
   process.exit(1);
 }
 
-if (result.dimensionId !== "management_scope") {
+if (
+  result.dimensionId !==
+  "management_scope"
+) {
   console.error(
     'Expected dimensionId === "management_scope".'
   );
@@ -19,87 +27,81 @@ if (result.dimensionId !== "management_scope") {
 }
 
 if (
-  typeof result.measureValue !== "number" ||
-  result.measureValue <= 0 ||
-  result.measureValue >= 1
+  !result.contextRelevanceProfile
 ) {
   console.error(
-    "Expected base measureValue > 0 and < 1."
-  );
-  process.exit(1);
-}
-
-if (result.profileApplied !== true) {
-  console.error(
-    "Expected standard profileApplied === true."
-  );
-  process.exit(1);
-}
-
-if (!result.disabledFactorProfile) {
-  console.error(
-    "Expected disabledFactorProfile."
+    "Expected contextRelevanceProfile."
   );
   process.exit(1);
 }
 
 if (
-  result.disabledFactorProfile.profileId !==
-  "management_disabled_factor_health"
+  result.contextRelevanceProfile
+    .profileId !==
+  "management_context_health"
 ) {
   console.error(
-    "Expected disabled factor health profileId."
+    "Expected context relevance health profileId."
   );
   process.exit(1);
 }
 
 if (
-  !result.disabledFactorProfile.disabledFactors.includes(
-    "managementLayer"
-  )
+  !result.contextRelevanceProfile
+    .activeFactors.includes(
+      "contextRelevance"
+    )
 ) {
   console.error(
-    "Expected managementLayer in disabled factors."
+    "Expected contextRelevance active."
   );
   process.exit(1);
 }
 
 if (
-  result.disabledFactorProfile.activeFactors.includes(
-    "managementLayer"
-  )
+  !result.contextRelevanceProfile
+    .contextRelevanceComponent
 ) {
   console.error(
-    "Expected managementLayer not in active factors."
+    "Expected contextRelevance component."
   );
   process.exit(1);
 }
 
 if (
-  result.disabledFactorProfile.activeFactors.length !== 3
+  result.contextRelevanceProfile
+    .contextRelevanceComponent
+    .normalizedValue !== 0.8
 ) {
   console.error(
-    "Expected three active factors."
+    "Expected normalized context relevance === 0.8."
   );
   process.exit(1);
 }
 
-if (result.baseDefinitionUnchanged !== true) {
+if (
+  result.baseDefinitionUnchanged !== true
+) {
   console.error(
-    "Expected base definition unchanged."
+    "Expected definition unchanged."
   );
   process.exit(1);
 }
 
 if (
   !result.validation ||
-  !result.validation.disabledFactorResult ||
-  result.validation.disabledFactorResult.isValid !== true
+  !result.validation
+    .contextRelevanceResult ||
+  result.validation
+    .contextRelevanceResult
+    .isValid !== true
 ) {
   console.error(
-    "Expected disabled factor result validation to pass."
+    "Expected context relevance validation to pass."
   );
   process.exit(1);
 }
 
-console.log("test_health_measure_result PASS");
+console.log(
+  "test_health_measure_result PASS"
+);

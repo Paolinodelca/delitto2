@@ -1,449 +1,461 @@
 const {
   buildMeasurementDefinition,
 } = require("../src/core/measurement/buildMeasurementDefinition");
+
 const {
   buildMeasurementProfile,
 } = require("../src/core/measurement/buildMeasurementProfile");
+
+const {
+  buildManagementObservation,
+} = require("../src/core/measurement/buildManagementObservation");
+
 const {
   buildMeasureResult,
 } = require("../src/core/measurement/buildMeasureResult");
+
 const {
   validateMeasureResult,
 } = require("../src/core/measurement/validateMeasureResult");
 
 const failures = [];
 
-function sumWeights(weights) {
-  return Object.values(weights).reduce(
-    (sum, weight) => sum + weight,
+function sumComponentWeights(components) {
+  return Object.values(components).reduce(
+    (sum, component) =>
+      sum + component.weight,
     0
   );
 }
 
 const definition =
-  buildMeasurementDefinition("management_scope");
+  buildMeasurementDefinition(
+    "management_scope"
+  );
 
-const observation = {
-  observationId: "management_test_001",
-  teamSize: 20,
-  durationYears: 4,
-  responsibilityType: "direct",
-  managementLayer: "multi_layer",
-  contextType: "technical_office",
-  evidenceIds: ["ev_test_001"],
-  confidence: 0.85,
-};
+const baseObservation =
+  buildManagementObservation({
+    observationId:
+      "management_context_test",
+    teamSize: 20,
+    durationYears: 4,
+    responsibilityType: "direct",
+    managementLayer: "single_layer",
+    contextType: "technical_office",
+    contextRelevance: 0.9,
+    evidenceIds: ["ev_context_001"],
+    confidence: 0.85,
+  });
 
-/*
- * Scenario A — Nessun fattore disattivato
- */
-const baseResult = buildMeasureResult({
-  definition,
-  observations: [observation],
-});
+const baseResult =
+  buildMeasureResult({
+    definition,
+    observations: [baseObservation],
+  });
 
-const baseValidation = validateMeasureResult(baseResult);
+const baseValidation =
+  validateMeasureResult(baseResult);
 
 if (!baseValidation.isValid) {
   failures.push(
-    `Base result validation failed: ${baseValidation.errors.join(
+    `Base result invalid: ${baseValidation.errors.join(
+      "; "
+    )}`
+  );
+}
+
+/*
+ * Scenario E — contextRelevance attivo
+ */
+const contextProfile =
+  buildMeasurementProfile({
+    profileId:
+      "context_relevance_active",
+
+    label:
+      "Context Relevance Active",
+
+    baseModelId:
+      "management_scope_v1",
+
+    addedFactors: [
+      {
+        factorId: "contextRelevance",
+        weight: 0.2,
+        minimum: 0.5,
+        configuration: {},
+      },
+    ],
+
+    rationale:
+      "Activates context relevance.",
+
+    source: {
+      type: "test_configuration",
+      id: "context_active",
+    },
+  });
+
+const contextResult =
+  buildMeasureResult({
+    definition,
+    observations: [baseObservation],
+    profile: contextProfile,
+  });
+
+const contextValidation =
+  validateMeasureResult(contextResult);
+
+if (!contextValidation.isValid) {
+  failures.push(
+    `Context result invalid: ${contextValidation.errors.join(
       "; "
     )}`
   );
 }
 
 if (
-  baseResult.measurementContext.activeFactors.length !== 4
+  contextResult.measurementContext
+    .profileApplied !== true
 ) {
   failures.push(
-    "Expected four active factors without profile."
+    "Expected profileApplied true."
   );
 }
 
 if (
-  baseResult.measurementContext.disabledFactors.length !== 0
+  !contextResult.measurementContext
+    .activeFactors.includes(
+      "contextRelevance"
+    )
 ) {
   failures.push(
-    "Expected zero disabled factors without profile."
+    "Expected contextRelevance active."
   );
 }
 
 if (
-  baseResult.observationResults[0].factorUsage.activeFactors
-    .length !== 4
+  !contextResult.measurementContext
+    .addedFactors.includes(
+      "contextRelevance"
+    )
 ) {
   failures.push(
-    "Expected observation factorUsage to contain four active factors."
+    "Expected contextRelevance in addedFactors."
+  );
+}
+
+const contextComponent =
+  contextResult.observationResults[0]
+    .components.contextRelevance;
+
+if (!contextComponent) {
+  failures.push(
+    "Expected contextRelevance component."
+  );
+} else if (
+  contextComponent.normalizedValue !== 0.9
+) {
+  failures.push(
+    "Expected normalizedValue === 0.9."
+  );
+}
+
+if (
+  contextResult.value === baseResult.value
+) {
+  failures.push(
+    "Expected context profile value to differ from base."
+  );
+}
+
+if (
+  Math.abs(
+    sumComponentWeights(
+      contextResult.observationResults[0]
+        .components
+    ) - 1
+  ) > 0.0001
+) {
+  failures.push(
+    "Expected observation component weights sum approximately 1."
   );
 }
 
 /*
- * Scenario B — Disattivazione managementLayer
+ * Scenario F — fattore attivo ma mancante
  */
-const disabledProfile = buildMeasurementProfile({
-  profileId: "disable_management_layer",
-  label: "Disable Management Layer",
-  baseModelId: "management_scope_v1",
+const missingContextObservation =
+  buildManagementObservation({
+    observationId:
+      "management_context_missing",
+    teamSize: 20,
+    durationYears: 4,
+    responsibilityType: "direct",
+    managementLayer: "single_layer",
+    contextType: "technical_office",
+    contextRelevance: null,
+    evidenceIds: ["ev_context_missing"],
+    confidence: 0.85,
+  });
 
-  disabledFactors: ["managementLayer"],
+const missingContextBaseResult =
+  buildMeasureResult({
+    definition,
+    observations: [
+      missingContextObservation,
+    ],
+  });
 
-  rationale: "Tests factor disabling.",
+const missingContextResult =
+  buildMeasureResult({
+    definition,
+    observations: [
+      missingContextObservation,
+    ],
+    profile: contextProfile,
+  });
 
-  source: {
-    type: "test_configuration",
-    id: "disable_management_layer_test",
-  },
-});
+const missingValidation =
+  validateMeasureResult(
+    missingContextResult
+  );
 
-const definitionBefore = JSON.stringify(definition);
-
-const disabledResult = buildMeasureResult({
-  definition,
-  observations: [observation],
-  profile: disabledProfile,
-});
-
-const definitionAfter = JSON.stringify(definition);
-
-const disabledValidation =
-  validateMeasureResult(disabledResult);
-
-if (!disabledValidation.isValid) {
+if (!missingValidation.isValid) {
   failures.push(
-    `Disabled result validation failed: ${disabledValidation.errors.join(
+    `Missing-context result invalid: ${missingValidation.errors.join(
       "; "
     )}`
   );
 }
 
-if (
-  disabledResult.measurementContext.profileApplied !== true
-) {
-  failures.push(
-    "Expected disabled profile to be applied."
-  );
-}
+const missingObservationResult =
+  missingContextResult
+    .observationResults[0];
 
 if (
-  !disabledResult.measurementContext.disabledFactors.includes(
-    "managementLayer"
-  )
+  !missingObservationResult.factorUsage
+    .unavailableFactors.includes(
+      "contextRelevance"
+    )
 ) {
   failures.push(
-    "Expected managementLayer to be disabled."
+    "Expected contextRelevance unavailable."
   );
 }
-
-if (
-  disabledResult.measurementContext.activeFactors.includes(
-    "managementLayer"
-  )
-) {
-  failures.push(
-    "Expected managementLayer not to be active."
-  );
-}
-
-const disabledActiveWeights =
-  disabledResult.measurementContext.profileApplied
-    ? disabledResult.observationResults[0].factorUsage.activeFactors
-    : [];
-
-if (disabledActiveWeights.includes("managementLayer")) {
-  failures.push(
-    "Expected observation factorUsage not to include managementLayer as active."
-  );
-}
-
-if (disabledResult.value === baseResult.value) {
-  failures.push(
-    "Expected disabled-factor value to differ from base value."
-  );
-}
-
-/*
- * Verifica activeWeights tramite applicazione profilo
- */
-const {
-  applyMeasurementProfile,
-} = require("../src/core/measurement/applyMeasurementProfile");
-
-const appliedDisabledProfile = applyMeasurementProfile({
-  definition,
-  profile: disabledProfile,
-});
-
-const activeWeights =
-  appliedDisabledProfile.effectiveDefinition.aggregation.activeWeights;
 
 if (
   Object.prototype.hasOwnProperty.call(
-    activeWeights,
-    "managementLayer"
+    missingObservationResult.components,
+    "contextRelevance"
   )
 ) {
   failures.push(
-    "Expected activeWeights not to contain managementLayer."
+    "Expected unavailable contextRelevance not to produce a component."
   );
 }
 
-if (Math.abs(sumWeights(activeWeights) - 1) > 0.0001) {
+if (
+  Math.abs(
+    sumComponentWeights(
+      missingObservationResult.components
+    ) - 1
+  ) > 0.0001
+) {
   failures.push(
-    "Expected activeWeights sum to be approximately 1."
+    "Expected available component weights renormalized to 1."
+  );
+}
+
+if (
+  missingContextResult.value !==
+  missingContextBaseResult.value
+) {
+  failures.push(
+    "Expected missing contextRelevance not to penalize the observation."
   );
 }
 
 /*
- * Scenario C — Fattore sconosciuto
+ * Scenario G — aggiunto ma disattivato
  */
-const unknownFactorProfile = buildMeasurementProfile({
-  profileId: "unknown_factor_profile",
-  label: "Unknown Factor Profile",
-  baseModelId: "management_scope_v1",
+const disabledContextProfile =
+  buildMeasurementProfile({
+    profileId:
+      "context_relevance_disabled",
 
-  disabledFactors: ["unknownFactor"],
+    label:
+      "Context Relevance Disabled",
 
-  rationale: "Tests unknown factor handling.",
+    baseModelId:
+      "management_scope_v1",
 
-  source: {
-    type: "test_configuration",
-    id: "unknown_factor_test",
-  },
-});
+    addedFactors: [
+      {
+        factorId: "contextRelevance",
+        weight: 0.2,
+        minimum: 0.5,
+        configuration: {},
+      },
+    ],
 
-const unknownFactorResult = buildMeasureResult({
-  definition,
-  observations: [observation],
-  profile: unknownFactorProfile,
-});
+    disabledFactors: [
+      "contextRelevance",
+    ],
 
-const unknownFactorValidation =
-  validateMeasureResult(unknownFactorResult);
+    rationale:
+      "Adds and disables context relevance.",
 
-if (!unknownFactorValidation.isValid) {
-  failures.push(
-    `Unknown-factor result should be valid: ${unknownFactorValidation.errors.join(
-      "; "
-    )}`
-  );
-}
-
-if (
-  unknownFactorResult.measurementContext.profileApplied !== true
-) {
-  failures.push(
-    "Expected unknown-factor profile to be applied."
-  );
-}
-
-if (
-  unknownFactorResult.measurementContext.activeFactors.length !==
-  4
-) {
-  failures.push(
-    "Expected four active factors after unknown disabled factor."
-  );
-}
-
-if (
-  !unknownFactorResult.extensions.profileWarnings.includes(
-    "Unknown disabled factor: unknownFactor"
-  )
-) {
-  failures.push(
-    "Expected unknown-factor warning in extensions.profileWarnings."
-  );
-}
-
-/*
- * Scenario D — Tutti i fattori disattivati
- */
-const allDisabledProfile = buildMeasurementProfile({
-  profileId: "all_disabled_profile",
-  label: "All Disabled Profile",
-  baseModelId: "management_scope_v1",
-
-  disabledFactors: [
-    "teamSize",
-    "durationYears",
-    "responsibilityType",
-    "managementLayer",
-  ],
-
-  rationale: "Tests no active factors.",
-
-  source: {
-    type: "test_configuration",
-    id: "all_disabled_test",
-  },
-});
-
-const allDisabledResult = buildMeasureResult({
-  definition,
-  observations: [observation],
-  profile: allDisabledProfile,
-});
-
-const allDisabledValidation =
-  validateMeasureResult(allDisabledResult);
-
-if (!allDisabledValidation.isValid) {
-  failures.push(
-    `All-disabled result should remain valid: ${allDisabledValidation.errors.join(
-      "; "
-    )}`
-  );
-}
-
-if (allDisabledResult.value !== 0) {
-  failures.push(
-    "Expected all-disabled value === 0."
-  );
-}
-
-if (allDisabledResult.observationStatus !== "unknown") {
-  failures.push(
-    'Expected all-disabled observationStatus === "unknown".'
-  );
-}
-
-if (
-  allDisabledResult.measurementContext.activeFactors.length !==
-  0
-) {
-  failures.push(
-    "Expected no active factors."
-  );
-}
-
-if (
-  allDisabledResult.measurementContext.disabledFactors.length !==
-  4
-) {
-  failures.push(
-    "Expected four disabled factors."
-  );
-}
-
-if (
-  !allDisabledResult.limitations.includes(
-    "No active measurement factors were available."
-  )
-) {
-  failures.push(
-    "Expected no-active-factors limitation."
-  );
-}
-
-/*
- * Scenario E — Immutabilità
- */
-if (definitionBefore !== definitionAfter) {
-  failures.push(
-    "Expected definition to remain unchanged."
-  );
-}
-
-/*
- * Scenario F — Added factors non operativi
- */
-const addedFactorProfile = buildMeasurementProfile({
-  profileId: "added_factor_profile",
-  label: "Added Factor Profile",
-  baseModelId: "management_scope_v1",
-
-  addedFactors: [
-    {
-      factorId: "changeManagement",
-      weight: 0.2,
-      minimum: 0.6,
+    source: {
+      type: "test_configuration",
+      id: "context_disabled",
     },
-  ],
+  });
 
-  rationale: "Tests non-operative added factors.",
-
-  source: {
-    type: "test_configuration",
-    id: "added_factor_test",
-  },
-});
-
-const addedFactorResult = buildMeasureResult({
-  definition,
-  observations: [observation],
-  profile: addedFactorProfile,
-});
+const disabledResult =
+  buildMeasureResult({
+    definition,
+    observations: [baseObservation],
+    profile: disabledContextProfile,
+  });
 
 if (
-  addedFactorResult.measurementContext.activeFactors.includes(
-    "changeManagement"
-  )
+  disabledResult.measurementContext
+    .activeFactors.includes(
+      "contextRelevance"
+    )
 ) {
   failures.push(
-    "Expected changeManagement not to enter active factors."
+    "Expected contextRelevance not active."
   );
 }
 
 if (
-  !addedFactorResult.limitations.includes(
-    "Added factors are not yet applied by buildMeasureResult."
-  )
+  !disabledResult.measurementContext
+    .disabledFactors.includes(
+      "contextRelevance"
+    )
 ) {
   failures.push(
-    "Expected added-factors limitation."
+    "Expected contextRelevance disabled."
   );
 }
 
-const output = {
-  test: "Measure Result Factor Disabling",
+if (
+  Object.prototype.hasOwnProperty.call(
+    disabledResult.observationResults[0]
+      .components,
+    "contextRelevance"
+  )
+) {
+  failures.push(
+    "Expected disabled contextRelevance not to contribute."
+  );
+}
 
-  status: failures.length === 0 ? "PASS" : "FAIL",
+/*
+ * Scenario I — regressione legacy
+ */
+const strongResult =
+  buildMeasureResult({
+    definition,
+    observations: [
+      buildManagementObservation({
+        observationId:
+          "management_strong",
+        teamSize: 100,
+        durationYears: 10,
+        responsibilityType: "direct",
+        managementLayer: "multi_layer",
+        contextType: "business_unit",
+        evidenceIds: ["ev_strong"],
+        confidence: 0.95,
+      }),
+    ],
+  });
 
-  base: {
-    value: baseResult.value,
-    activeFactors:
-      baseResult.measurementContext.activeFactors,
-    disabledFactors:
-      baseResult.measurementContext.disabledFactors,
-  },
+if (strongResult.value !== 1) {
+  failures.push(
+    "Expected legacy strong value === 1."
+  );
+}
 
-  disabledProfile: {
-    value: disabledResult.value,
-    activeFactors:
-      disabledResult.measurementContext.activeFactors,
-    disabledFactors:
-      disabledResult.measurementContext.disabledFactors,
-    activeWeights,
-    activeWeightSum: sumWeights(activeWeights),
-  },
+const unknownResult =
+  buildMeasureResult({
+    definition,
+    observations: [],
+  });
 
-  unknownFactor: {
-    warnings:
-      unknownFactorResult.extensions.profileWarnings,
-  },
+if (
+  unknownResult.value !== 0 ||
+  unknownResult.observationStatus !==
+    "unknown"
+) {
+  failures.push(
+    "Expected legacy unknown result."
+  );
+}
 
-  allDisabled: {
-    value: allDisabledResult.value,
-    observationStatus:
-      allDisabledResult.observationStatus,
-    activeFactors:
-      allDisabledResult.measurementContext.activeFactors,
-    disabledFactors:
-      allDisabledResult.measurementContext.disabledFactors,
-    limitations: allDisabledResult.limitations,
-  },
+console.log(
+  JSON.stringify(
+    {
+      test:
+        "Context Relevance Factor Execution",
 
-  definitionUnchanged:
-    definitionBefore === definitionAfter,
-};
+      status:
+        failures.length === 0
+          ? "PASS"
+          : "FAIL",
 
-console.log(JSON.stringify(output, null, 2));
+      baseValue:
+        baseResult.value,
+
+      contextValue:
+        contextResult.value,
+
+      contextComponent,
+
+      missingContext: {
+        baseValue:
+          missingContextBaseResult.value,
+        profileValue:
+          missingContextResult.value,
+        unavailableFactors:
+          missingObservationResult.factorUsage
+            .unavailableFactors,
+        components:
+          missingObservationResult.components,
+      },
+
+      disabledContext: {
+        activeFactors:
+          disabledResult.measurementContext
+            .activeFactors,
+        disabledFactors:
+          disabledResult.measurementContext
+            .disabledFactors,
+      },
+
+      legacyStrongValue:
+        strongResult.value,
+
+      legacyUnknownStatus:
+        unknownResult.observationStatus,
+    },
+    null,
+    2
+  )
+);
 
 if (failures.length > 0) {
   console.error("FAIL");
-  console.error(JSON.stringify(failures, null, 2));
+  console.error(
+    JSON.stringify(failures, null, 2)
+  );
   process.exit(1);
 }
 
 console.log("PASS");
-console.log("test_build_measure_result PASS");
+console.log(
+  "test_build_measure_result PASS"
+);

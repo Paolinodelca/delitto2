@@ -1,130 +1,137 @@
 const {
   buildMeasurementDefinition,
 } = require("./buildMeasurementDefinition");
+
 const {
   validateMeasurementDefinition,
 } = require("./validateMeasurementDefinition");
+
 const {
   buildMeasurementProfile,
 } = require("./buildMeasurementProfile");
+
+const {
+  buildManagementObservation,
+} = require("./buildManagementObservation");
+
 const {
   buildMeasureResult,
 } = require("./buildMeasureResult");
+
 const {
   validateMeasureResult,
 } = require("./validateMeasureResult");
 
 function healthBuildMeasureResult() {
-  const definition = buildMeasurementDefinition(
-    "management_scope"
-  );
+  const definition =
+    buildMeasurementDefinition(
+      "management_scope"
+    );
 
-  const definitionBefore = JSON.stringify(definition);
+  const definitionBefore =
+    JSON.stringify(definition);
 
-  const observations = [
-    {
-      observationId: "management_health_001",
+  const observation =
+    buildManagementObservation({
+      observationId:
+        "management_health_001",
       teamSize: 20,
       durationYears: 4,
       responsibilityType: "direct",
       managementLayer: "single_layer",
       contextType: "technical_office",
+      contextRelevance: 0.8,
       evidenceIds: ["ev_health_001"],
       confidence: 0.9,
-    },
-  ];
+    });
 
-  const standardProfile = buildMeasurementProfile({
-    profileId: "management_health_profile",
-    label: "Management Health Profile",
-    baseModelId: "management_scope_v1",
+  const baseResult =
+    buildMeasureResult({
+      definition,
+      observations: [observation],
+    });
 
-    overrides: {
-      weights: {
-        teamSize: 0.5,
-        durationYears: 0.2,
-        responsibilityType: 0.2,
-        managementLayer: 0.1,
+  const baseValidation =
+    validateMeasureResult(baseResult);
+
+  const contextProfile =
+    buildMeasurementProfile({
+      profileId:
+        "management_context_health",
+
+      label:
+        "Management Context Health",
+
+      baseModelId:
+        "management_scope_v1",
+
+      addedFactors: [
+        {
+          factorId:
+            "contextRelevance",
+          weight: 0.2,
+          minimum: 0.5,
+          configuration: {},
+        },
+      ],
+
+      rationale:
+        "Health check for context relevance.",
+
+      source: {
+        type: "health_check",
+        id: "context_health",
       },
-    },
+    });
 
-    rationale: "Health-check profile.",
+  const contextResult =
+    buildMeasureResult({
+      definition,
+      observations: [observation],
+      profile: contextProfile,
+    });
 
-    source: {
-      type: "health_check",
-      id: "measurement_health",
-    },
-  });
+  const contextValidation =
+    validateMeasureResult(contextResult);
 
-  const disabledFactorProfile = buildMeasurementProfile({
-    profileId: "management_disabled_factor_health",
-    label: "Management Disabled Factor Health",
-    baseModelId: "management_scope_v1",
+  const contextObservationResult =
+    contextResult.observationResults[0];
 
-    disabledFactors: ["managementLayer"],
+  const contextComponent =
+    contextObservationResult &&
+    contextObservationResult.components
+      ? contextObservationResult
+          .components.contextRelevance ||
+        null
+      : null;
 
-    rationale: "Checks deterministic factor disabling.",
-
-    source: {
-      type: "health_check",
-      id: "measurement_disabled_factor_health",
-    },
-  });
-
-  const definitionValidation =
-    validateMeasurementDefinition(definition);
-
-  const baseMeasureResult = buildMeasureResult({
-    definition,
-    observations,
-  });
-
-  const baseResultValidation =
-    validateMeasureResult(baseMeasureResult);
-
-  const profileMeasureResult = buildMeasureResult({
-    definition,
-    observations,
-    profile: standardProfile,
-  });
-
-  const profileResultValidation =
-    validateMeasureResult(profileMeasureResult);
-
-  const disabledFactorMeasureResult = buildMeasureResult({
-    definition,
-    observations,
-    profile: disabledFactorProfile,
-  });
-
-  const disabledFactorValidation =
-    validateMeasureResult(disabledFactorMeasureResult);
-
-  const definitionAfter = JSON.stringify(definition);
+  const definitionAfter =
+    JSON.stringify(definition);
 
   const baseDefinitionUnchanged =
     definitionBefore === definitionAfter;
 
-  const disabledContext =
-    disabledFactorMeasureResult.measurementContext;
+  const contextChecksPass =
+    contextResult.measurementContext
+      .profileApplied === true &&
+    contextResult.measurementContext
+      .activeFactors.includes(
+        "contextRelevance"
+      ) &&
+    Boolean(contextComponent) &&
+    contextComponent.normalizedValue ===
+      0.8;
 
-  const disabledFactorChecksPass =
-    disabledContext.profileApplied === true &&
-    disabledContext.disabledFactors.includes(
-      "managementLayer"
-    ) &&
-    !disabledContext.activeFactors.includes(
-      "managementLayer"
-    ) &&
-    disabledContext.activeFactors.length === 3;
+  const definitionValidation =
+    validateMeasurementDefinition(
+      definition
+    );
 
   const status =
     definitionValidation.isValid === true &&
-    baseResultValidation.isValid === true &&
-    profileResultValidation.isValid === true &&
-    disabledFactorValidation.isValid === true &&
-    profileMeasureResult.measurementContext.profileApplied === true &&
-    disabledFactorChecksPass &&
+    baseValidation.isValid === true &&
+    contextValidation.isValid === true &&
+    contextChecksPass &&
     baseDefinitionUnchanged
       ? "PASS"
       : "FAIL";
@@ -134,49 +141,61 @@ function healthBuildMeasureResult() {
 
     status,
 
-    dimensionId: baseMeasureResult.dimensionId,
+    dimensionId:
+      baseResult.dimensionId,
 
-    measureValue: baseMeasureResult.value,
+    measureValue:
+      baseResult.value,
 
-    observationStatus: baseMeasureResult.observationStatus,
+    observationStatus:
+      baseResult.observationStatus,
 
-    confidence: baseMeasureResult.confidence,
+    confidence:
+      baseResult.confidence,
 
-    benchmarkId: baseMeasureResult.benchmarkId,
+    benchmarkId:
+      baseResult.benchmarkId,
 
-    profileApplied:
-      profileMeasureResult.measurementContext.profileApplied,
-
-    profileId:
-      profileMeasureResult.measurementContext.profileId,
-
-    profileMeasureValue: profileMeasureResult.value,
-
-    disabledFactorProfile: {
+    contextRelevanceProfile: {
       profileId:
-        disabledFactorMeasureResult.measurementContext.profileId,
+        contextResult.measurementContext
+          .profileId,
 
-      measureValue: disabledFactorMeasureResult.value,
+      measureValue:
+        contextResult.value,
+
+      contextRelevanceComponent:
+        contextComponent,
 
       activeFactors:
-        disabledFactorMeasureResult.measurementContext.activeFactors,
+        contextResult.measurementContext
+          .activeFactors,
 
-      disabledFactors:
-        disabledFactorMeasureResult.measurementContext.disabledFactors,
+      unavailableFactors:
+        contextObservationResult
+          ? contextObservationResult
+              .factorUsage
+              .unavailableFactors
+          : [],
     },
 
     baseDefinitionUnchanged,
 
     validation: {
-      definition: definitionValidation,
-      baseResult: baseResultValidation,
-      profileResult: profileResultValidation,
-      disabledFactorResult: disabledFactorValidation,
+      definition:
+        definitionValidation,
+
+      baseResult:
+        baseValidation,
+
+      contextRelevanceResult:
+        contextValidation,
     },
 
     metadata: {
-      version: "1.2",
-      createdAt: new Date().toISOString(),
+      version: "1.3",
+      createdAt:
+        new Date().toISOString(),
     },
   };
 }

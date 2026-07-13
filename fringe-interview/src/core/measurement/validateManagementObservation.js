@@ -35,9 +35,7 @@ function validateManagementObservation(observation = {}) {
   }
 
   if (observation.observationType !== "management_scope") {
-    errors.push(
-      'observationType must be "management_scope".'
-    );
+    errors.push('observationType must be "management_scope".');
   }
 
   if (
@@ -53,9 +51,7 @@ function validateManagementObservation(observation = {}) {
     !Number.isFinite(observation.durationYears) ||
     observation.durationYears < 0
   ) {
-    errors.push(
-      "durationYears must be a non-negative number."
-    );
+    errors.push("durationYears must be a non-negative number.");
   }
 
   if (
@@ -67,15 +63,27 @@ function validateManagementObservation(observation = {}) {
   }
 
   if (
-    !ALLOWED_MANAGEMENT_LAYERS.includes(
-      observation.managementLayer
-    )
+    !ALLOWED_MANAGEMENT_LAYERS.includes(observation.managementLayer)
   ) {
     errors.push("managementLayer is not allowed.");
   }
 
   if (typeof observation.contextType !== "string") {
     errors.push("contextType must be a string.");
+  }
+
+  if (
+    observation.contextRelevance !== null &&
+    (
+      typeof observation.contextRelevance !== "number" ||
+      !Number.isFinite(observation.contextRelevance) ||
+      observation.contextRelevance < 0 ||
+      observation.contextRelevance > 1
+    )
+  ) {
+    errors.push(
+      "contextRelevance must be a number between 0 and 1 or null."
+    );
   }
 
   if (!Array.isArray(observation.evidenceIds)) {
@@ -88,9 +96,7 @@ function validateManagementObservation(observation = {}) {
     observation.confidence < 0 ||
     observation.confidence > 1
   ) {
-    errors.push(
-      "confidence must be a number between 0 and 1."
-    );
+    errors.push("confidence must be a number between 0 and 1.");
   }
 
   if (!isObject(observation.metadata)) {
@@ -127,6 +133,10 @@ function validateManagementObservation(observation = {}) {
 
   if (observation.contextType === "unknown") {
     warnings.push("contextType is unknown.");
+  }
+
+  if (observation.contextRelevance === null) {
+    warnings.push("contextRelevance is not available.");
   }
 
   if (

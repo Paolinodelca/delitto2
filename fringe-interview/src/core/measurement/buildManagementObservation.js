@@ -55,6 +55,22 @@ function normalizeContextType(value) {
   return value;
 }
 
+function normalizeContextRelevance(value) {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    return null;
+  }
+
+  if (value < 0) {
+    return 0;
+  }
+
+  if (value > 1) {
+    return 1;
+  }
+
+  return value;
+}
+
 function normalizeEvidenceIds(value) {
   if (!Array.isArray(value)) {
     return [];
@@ -85,6 +101,7 @@ function normalizeConfidence(value) {
 
 function buildManagementObservation(input = {}) {
   const source = isObject(input) ? input : {};
+
   const inputMetadata = isObject(source.metadata)
     ? source.metadata
     : {};
@@ -96,19 +113,19 @@ function buildManagementObservation(input = {}) {
 
     teamSize: normalizeNonNegativeNumber(source.teamSize),
 
-    durationYears: normalizeNonNegativeNumber(
-      source.durationYears
-    ),
+    durationYears: normalizeNonNegativeNumber(source.durationYears),
 
     responsibilityType: normalizeResponsibilityType(
       source.responsibilityType
     ),
 
-    managementLayer: normalizeManagementLayer(
-      source.managementLayer
-    ),
+    managementLayer: normalizeManagementLayer(source.managementLayer),
 
     contextType: normalizeContextType(source.contextType),
+
+    contextRelevance: normalizeContextRelevance(
+      source.contextRelevance
+    ),
 
     evidenceIds: normalizeEvidenceIds(source.evidenceIds),
 

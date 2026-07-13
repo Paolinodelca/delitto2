@@ -14,6 +14,14 @@ function roundToFourDecimals(value) {
   return Math.round(value * 10000) / 10000;
 }
 
+function isValidWeight(value) {
+  return (
+    typeof value === "number" &&
+    Number.isFinite(value) &&
+    value >= 0
+  );
+}
+
 function buildActiveWeights(weights, disabledFactors) {
   const activeEntries = Object.entries(weights).filter(
     ([factorId]) => !disabledFactors.includes(factorId)
@@ -25,14 +33,7 @@ function buildActiveWeights(weights, disabledFactors) {
 
   const totalWeight = activeEntries.reduce(
     (sum, [, weight]) =>
-      sum +
-      (
-        typeof weight === "number" &&
-        Number.isFinite(weight) &&
-        weight >= 0
-          ? weight
-          : 0
-      ),
+      sum + (isValidWeight(weight) ? weight : 0),
     0
   );
 
@@ -46,20 +47,20 @@ function buildActiveWeights(weights, disabledFactors) {
     const isLast = index === activeEntries.length - 1;
 
     if (!isLast) {
-      activeWeights[factorId] =
-        roundToFourDecimals(weight / totalWeight);
+      activeWeights[factorId] = roundToFourDecimals(
+        weight / totalWeight
+      );
       return;
     }
 
-    const assignedTotal = Object.values(
-      activeWeights
-    ).reduce(
+    const assignedTotal = Object.values(activeWeights).reduce(
       (sum, currentWeight) => sum + currentWeight,
       0
     );
 
-    activeWeights[factorId] =
-      roundToFourDecimals(1 - assignedTotal);
+    activeWeights[factorId] = roundToFourDecimals(
+      1 - assignedTotal
+    );
   });
 
   return activeWeights;
@@ -73,13 +74,9 @@ function applyMeasurementProfile({
     ? deepClone(definition)
     : {};
 
-  const normalizedProfile = isObject(profile)
-    ? profile
-    : {};
+  const normalizedProfile = isObject(profile) ? profile : {};
 
-  const overrides = isObject(
-    normalizedProfile.overrides
-  )
+  const overrides = isObject(normalizedProfile.overrides)
     ? normalizedProfile.overrides
     : {};
 
@@ -87,39 +84,27 @@ function applyMeasurementProfile({
     ? overrides.weights
     : {};
 
-  const thresholdOverrides = isObject(
-    overrides.thresholds
-  )
+  const thresholdOverrides = isObject(overrides.thresholds)
     ? overrides.thresholds
     : {};
 
-  const benchmarkOverrides = isObject(
-    overrides.benchmark
-  )
+  const benchmarkOverrides = isObject(overrides.benchmark)
     ? overrides.benchmark
     : {};
 
-  const baseBenchmark = isObject(
-    baseDefinition.benchmark
-  )
+  const baseBenchmark = isObject(baseDefinition.benchmark)
     ? baseDefinition.benchmark
     : {};
 
-  const baseBenchmarkReference = isObject(
-    baseBenchmark.reference
-  )
+  const baseBenchmarkReference = isObject(baseBenchmark.reference)
     ? baseBenchmark.reference
     : {};
 
-  const baseAggregation = isObject(
-    baseDefinition.aggregation
-  )
+  const baseAggregation = isObject(baseDefinition.aggregation)
     ? baseDefinition.aggregation
     : {};
 
-  const baseWeights = isObject(
-    baseAggregation.weights
-  )
+  const baseWeights = isObject(baseAggregation.weights)
     ? baseAggregation.weights
     : {};
 
@@ -128,6 +113,84 @@ function applyMeasurementProfile({
     ...weightOverrides,
   };
 
+  const warnings = [];
+
+  const requestedAddedFactors = Array.isArray(
+    normalizedProfile.addedFactors
+  )
+    ? normalizedProfile.addedFactors
+    : [];
+
+  const appliedAddedFactors = [];
+  const unappliedAddedFactors = [];
+
+  requestedAddedFactors.forEach((addedFactor) => {
+    if (!isObject(addedFactor)) {
+      return;
+    }
+
+    const factorId = addedFactor.factorId;
+
+    const factorDefinition =
+      getMeasurementFactorDefinition(factorId);
+
+    if (
+      factorDefinition.scoring.strategy === "unsupported"
+    ) {
+      warnings.push(`Unsupported added factor: ${factorId}`);
+      unappliedAddedFactors.push(factorId);
+      return;
+    }
+
+    if (
+      !factorDefinition.supportedDimensions.includes(
+        baseDefinition.dimensionId
+      )
+    ) {
+      warnings.push(
+        `Added factor does not support dimension: ${factorId}`
+      );
+      unappliedAddedFactors.push(factorId);
+      return;
+    }
+
+    if (
+      Object.prototype.hasOwnProperty.call(
+        effectiveWeights,
+        factorId
+      )
+    ) {
+      warnings.push(
+        `Added factor already exists in base definition: ${factorId}`
+      );
+      unappliedAddedFactors.push(factorId);
+      return;
+    }
+
+    const operationalWeight = isValidWeight(addedFactor.weight)
+      ? addedFactor.weight
+      : factorDefinition.defaultWeight;
+
+    effectiveWeights[factorId] = operationalWeight;
+
+    appliedAddedFactors.push({
+      factorId,
+      weight: operationalWeight,
+      minimum:
+        typeof addedFactor.minimum === "number"
+          ? addedFactor.minimum
+          : null,
+      configuration: isObject(addedFactor.configuration)
+        ? deepClone(addedFactor.configuration)
+        : {},
+      definition: factorDefinition,
+    });
+  });
+
+  /*
+   * Le disattivazioni vengono applicate dopo gli addedFactors.
+   * Possono quindi disattivare anche contextRelevance.
+   */
   const requestedDisabledFactors = Array.isArray(
     normalizedProfile.disabledFactors
   )
@@ -135,7 +198,6 @@ function applyMeasurementProfile({
     : [];
 
   const validDisabledFactors = [];
-  const warnings = [];
 
   requestedDisabledFactors.forEach((factorId) => {
     if (
@@ -147,11 +209,11 @@ function applyMeasurementProfile({
       if (!validDisabledFactors.includes(factorId)) {
         validDisabledFactors.push(factorId);
       }
-    } else {
-      warnings.push(
-        `Unknown disabled factor: ${factorId}`
-      );
+
+      return;
     }
+
+    warnings.push(`Unknown disabled factor: ${factorId}`);
   });
 
   const activeWeights = buildActiveWeights(
@@ -163,74 +225,8 @@ function applyMeasurementProfile({
     Object.keys(effectiveWeights).length > 0 &&
     Object.keys(activeWeights).length === 0
   ) {
-    warnings.push(
-      "All measurement factors are disabled."
-    );
+    warnings.push("All measurement factors are disabled.");
   }
-
-  const requestedAddedFactors = Array.isArray(
-    normalizedProfile.addedFactors
-  )
-    ? normalizedProfile.addedFactors
-    : [];
-
-  const validAddedFactors = [];
-
-  requestedAddedFactors.forEach((addedFactor) => {
-    if (!isObject(addedFactor)) {
-      return;
-    }
-
-    const factorDefinition =
-      getMeasurementFactorDefinition(
-        addedFactor.factorId
-      );
-
-    if (
-      factorDefinition.scoring.strategy ===
-      "unsupported"
-    ) {
-      warnings.push(
-        `Unsupported added factor: ${addedFactor.factorId}`
-      );
-      return;
-    }
-
-    if (
-      !factorDefinition.supportedDimensions.includes(
-        baseDefinition.dimensionId
-      )
-    ) {
-      warnings.push(
-        `Added factor does not support dimension: ${addedFactor.factorId}`
-      );
-      return;
-    }
-
-    if (
-      Object.prototype.hasOwnProperty.call(
-        effectiveWeights,
-        addedFactor.factorId
-      )
-    ) {
-      warnings.push(
-        `Added factor already exists in base definition: ${addedFactor.factorId}`
-      );
-      return;
-    }
-
-    validAddedFactors.push({
-      factorId: addedFactor.factorId,
-      weight: addedFactor.weight,
-      minimum: addedFactor.minimum,
-      configuration: isObject(
-        addedFactor.configuration
-      )
-        ? deepClone(addedFactor.configuration)
-        : {},
-      definition: factorDefinition,
-    });
-  });
 
   const effectiveDefinition = {
     ...baseDefinition,
@@ -253,9 +249,13 @@ function applyMeasurementProfile({
 
       activeWeights,
 
-      pendingAddedFactors: deepClone(
-        validAddedFactors
-      ),
+      addedFactors: deepClone(appliedAddedFactors),
+
+      /*
+       * I fattori validi non sono più pending:
+       * ora sono operativi.
+       */
+      pendingAddedFactors: [],
     },
 
     thresholds: {
@@ -268,7 +268,7 @@ function applyMeasurementProfile({
     thresholds: Object.keys(thresholdOverrides),
     benchmark: Object.keys(benchmarkOverrides),
     disabledFactors: [...validDisabledFactors],
-    addedFactors: deepClone(validAddedFactors),
+    addedFactors: deepClone(appliedAddedFactors),
   };
 
   if (!normalizedProfile.profileId) {
@@ -276,9 +276,7 @@ function applyMeasurementProfile({
   }
 
   if (!baseDefinition.dimensionId) {
-    warnings.push(
-      "definition.dimensionId is missing."
-    );
+    warnings.push("definition.dimensionId is missing.");
   }
 
   return {
@@ -286,15 +284,12 @@ function applyMeasurementProfile({
       `${baseDefinition.dimensionId || "unknown"}::` +
       `${normalizedProfile.profileId || "unknown"}`,
 
-    baseDefinitionId:
-      baseDefinition.dimensionId || null,
+    baseDefinitionId: baseDefinition.dimensionId || null,
 
-    profileId:
-      normalizedProfile.profileId || null,
+    profileId: normalizedProfile.profileId || null,
 
     label:
-      normalizedProfile.label ||
-      "Unnamed Measurement Profile",
+      normalizedProfile.label || "Unnamed Measurement Profile",
 
     effectiveDefinition,
 
@@ -302,12 +297,14 @@ function applyMeasurementProfile({
 
     disabledFactors: [...validDisabledFactors],
 
-    addedFactors: deepClone(validAddedFactors),
+    addedFactors: deepClone(appliedAddedFactors),
+
+    unappliedAddedFactors: [...unappliedAddedFactors],
 
     warnings,
 
     metadata: {
-      version: "1.2",
+      version: "1.3",
       createdAt: new Date().toISOString(),
     },
 

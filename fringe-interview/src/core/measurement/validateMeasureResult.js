@@ -6,7 +6,9 @@ function isStringArray(value) {
   return (
     Array.isArray(value) &&
     value.every(
-      (item) => typeof item === "string" && item.trim().length > 0
+      (item) =>
+        typeof item === "string" &&
+        item.trim().length > 0
     )
   );
 }
@@ -34,21 +36,28 @@ function validateMeasureResult(measureResult = {}) {
     measureResult.value < 0 ||
     measureResult.value > 1
   ) {
-    errors.push("value must be a number between 0 and 1.");
+    errors.push(
+      "value must be a number between 0 and 1."
+    );
   }
 
   if (!isObject(measureResult.measurementContext)) {
-    errors.push("measurementContext must be an object.");
+    errors.push(
+      "measurementContext must be an object."
+    );
   } else {
-    if (!measureResult.measurementContext.baseDefinitionId) {
+    if (
+      !measureResult.measurementContext
+        .baseDefinitionId
+    ) {
       errors.push(
         "measurementContext.baseDefinitionId is required."
       );
     }
 
     if (
-      typeof measureResult.measurementContext.profileApplied !==
-      "boolean"
+      typeof measureResult.measurementContext
+        .profileApplied !== "boolean"
     ) {
       errors.push(
         "measurementContext.profileApplied must be a boolean."
@@ -56,8 +65,10 @@ function validateMeasureResult(measureResult = {}) {
     }
 
     if (
-      measureResult.measurementContext.profileId !== null &&
-      typeof measureResult.measurementContext.profileId !== "string"
+      measureResult.measurementContext.profileId !==
+        null &&
+      typeof measureResult.measurementContext
+        .profileId !== "string"
     ) {
       errors.push(
         "measurementContext.profileId must be a string or null."
@@ -65,9 +76,10 @@ function validateMeasureResult(measureResult = {}) {
     }
 
     if (
-      measureResult.measurementContext.effectiveModelId !== null &&
-      typeof measureResult.measurementContext.effectiveModelId !==
-        "string"
+      measureResult.measurementContext
+        .effectiveModelId !== null &&
+      typeof measureResult.measurementContext
+        .effectiveModelId !== "string"
     ) {
       errors.push(
         "measurementContext.effectiveModelId must be a string or null."
@@ -76,7 +88,8 @@ function validateMeasureResult(measureResult = {}) {
 
     if (
       !isStringArray(
-        measureResult.measurementContext.activeFactors
+        measureResult.measurementContext
+          .activeFactors
       )
     ) {
       errors.push(
@@ -86,18 +99,28 @@ function validateMeasureResult(measureResult = {}) {
 
     if (
       !isStringArray(
-        measureResult.measurementContext.disabledFactors
+        measureResult.measurementContext
+          .disabledFactors
       )
     ) {
       errors.push(
         "measurementContext.disabledFactors must be an array of non-empty strings."
       );
     }
+
+    if (
+      !isStringArray(
+        measureResult.measurementContext
+          .addedFactors
+      )
+    ) {
+      errors.push(
+        "measurementContext.addedFactors must be an array of non-empty strings."
+      );
+    }
   }
 
-  if (!measureResult.observationStatus) {
-    errors.push("observationStatus is required.");
-  } else if (
+  if (
     !["observed", "inferred", "unknown"].includes(
       measureResult.observationStatus
     )
@@ -112,7 +135,9 @@ function validateMeasureResult(measureResult = {}) {
     measureResult.confidence < 0 ||
     measureResult.confidence > 1
   ) {
-    errors.push("confidence must be a number between 0 and 1.");
+    errors.push(
+      "confidence must be a number between 0 and 1."
+    );
   }
 
   if (!measureResult.benchmarkId) {
@@ -120,7 +145,9 @@ function validateMeasureResult(measureResult = {}) {
   }
 
   if (!Array.isArray(measureResult.observationResults)) {
-    errors.push("observationResults must be an array.");
+    errors.push(
+      "observationResults must be an array."
+    );
   } else {
     measureResult.observationResults.forEach(
       (observationResult, index) => {
@@ -129,6 +156,64 @@ function validateMeasureResult(measureResult = {}) {
             `observationResults[${index}] must be an object.`
           );
           return;
+        }
+
+        if (!isObject(observationResult.components)) {
+          errors.push(
+            `observationResults[${index}].components must be an object.`
+          );
+        } else {
+          Object.entries(
+            observationResult.components
+          ).forEach(
+            ([factorId, component]) => {
+              if (!isObject(component)) {
+                errors.push(
+                  `observationResults[${index}].components.${factorId} must be an object.`
+                );
+                return;
+              }
+
+              if (
+                component.factorId !== factorId
+              ) {
+                errors.push(
+                  `observationResults[${index}].components.${factorId}.factorId must match the component key.`
+                );
+              }
+
+              if (
+                typeof component.normalizedValue !==
+                  "number" ||
+                component.normalizedValue < 0 ||
+                component.normalizedValue > 1
+              ) {
+                errors.push(
+                  `observationResults[${index}].components.${factorId}.normalizedValue must be between 0 and 1.`
+                );
+              }
+
+              if (
+                typeof component.weight !==
+                  "number" ||
+                component.weight < 0 ||
+                component.weight > 1
+              ) {
+                errors.push(
+                  `observationResults[${index}].components.${factorId}.weight must be between 0 and 1.`
+                );
+              }
+
+              if (
+                typeof component.weightedScore !==
+                "number"
+              ) {
+                errors.push(
+                  `observationResults[${index}].components.${factorId}.weightedScore must be a number.`
+                );
+              }
+            }
+          );
         }
 
         if (!isObject(observationResult.factorUsage)) {
@@ -140,7 +225,8 @@ function validateMeasureResult(measureResult = {}) {
 
         if (
           !isStringArray(
-            observationResult.factorUsage.activeFactors
+            observationResult.factorUsage
+              .activeFactors
           )
         ) {
           errors.push(
@@ -150,11 +236,23 @@ function validateMeasureResult(measureResult = {}) {
 
         if (
           !isStringArray(
-            observationResult.factorUsage.disabledFactors
+            observationResult.factorUsage
+              .disabledFactors
           )
         ) {
           errors.push(
             `observationResults[${index}].factorUsage.disabledFactors must be an array of non-empty strings.`
+          );
+        }
+
+        if (
+          !isStringArray(
+            observationResult.factorUsage
+              .unavailableFactors
+          )
+        ) {
+          errors.push(
+            `observationResults[${index}].factorUsage.unavailableFactors must be an array of non-empty strings.`
           );
         }
       }

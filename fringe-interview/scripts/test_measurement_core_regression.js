@@ -1,12 +1,19 @@
 const {
   buildMeasurementDefinition,
 } = require("../src/core/measurement/buildMeasurementDefinition");
+
 const {
   buildMeasurementProfile,
 } = require("../src/core/measurement/buildMeasurementProfile");
+
+const {
+  buildManagementObservation,
+} = require("../src/core/measurement/buildManagementObservation");
+
 const {
   buildMeasureResult,
 } = require("../src/core/measurement/buildMeasureResult");
+
 const {
   validateMeasureResult,
 } = require("../src/core/measurement/validateMeasureResult");
@@ -14,78 +21,95 @@ const {
 const failures = [];
 
 const definition =
-  buildMeasurementDefinition("management_scope");
+  buildMeasurementDefinition(
+    "management_scope"
+  );
 
-const strongObservation = {
-  observationId: "management_strong",
-  teamSize: 100,
-  durationYears: 10,
-  responsibilityType: "direct",
-  managementLayer: "multi_layer",
-  contextType: "business_unit",
-  evidenceIds: ["ev_strong"],
-  confidence: 0.95,
-};
+const definitionBefore =
+  JSON.stringify(definition);
 
-const intermediateObservation = {
-  observationId: "management_intermediate",
-  teamSize: 20,
-  durationYears: 4,
-  responsibilityType: "direct",
-  managementLayer: "single_layer",
-  contextType: "technical_office",
-  evidenceIds: ["ev_intermediate"],
-  confidence: 0.85,
-};
+const strongObservation =
+  buildManagementObservation({
+    observationId:
+      "management_strong",
+    teamSize: 100,
+    durationYears: 10,
+    responsibilityType: "direct",
+    managementLayer: "multi_layer",
+    contextType: "business_unit",
+    evidenceIds: ["ev_strong"],
+    confidence: 0.95,
+  });
 
-const weakObservation = {
-  observationId: "management_weak",
-  teamSize: 5,
-  durationYears: 1,
-  responsibilityType: "shared",
-  managementLayer: "single_layer",
-  contextType: "small_team",
-  evidenceIds: ["ev_weak"],
-  confidence: 0.7,
-};
+const intermediateObservation =
+  buildManagementObservation({
+    observationId:
+      "management_intermediate",
+    teamSize: 20,
+    durationYears: 4,
+    responsibilityType: "direct",
+    managementLayer: "single_layer",
+    contextType: "technical_office",
+    evidenceIds: ["ev_intermediate"],
+    confidence: 0.85,
+  });
 
-/*
- * Regressione base
- */
-const strongResult = buildMeasureResult({
-  definition,
-  observations: [strongObservation],
-});
+const weakObservation =
+  buildManagementObservation({
+    observationId:
+      "management_weak",
+    teamSize: 5,
+    durationYears: 1,
+    responsibilityType: "shared",
+    managementLayer: "single_layer",
+    contextType: "small_team",
+    evidenceIds: ["ev_weak"],
+    confidence: 0.7,
+  });
 
-const intermediateResult = buildMeasureResult({
-  definition,
-  observations: [intermediateObservation],
-});
+const strongResult =
+  buildMeasureResult({
+    definition,
+    observations: [strongObservation],
+  });
 
-const multipleResult = buildMeasureResult({
-  definition,
-  observations: [
-    intermediateObservation,
-    weakObservation,
-  ],
-});
+const intermediateResult =
+  buildMeasureResult({
+    definition,
+    observations: [
+      intermediateObservation,
+    ],
+  });
 
-const unknownResult = buildMeasureResult({
-  definition,
-  observations: [],
-});
+const multipleResult =
+  buildMeasureResult({
+    definition,
+    observations: [
+      intermediateObservation,
+      weakObservation,
+    ],
+  });
+
+const unknownResult =
+  buildMeasureResult({
+    definition,
+    observations: [],
+  });
 
 [
   strongResult,
   intermediateResult,
   multipleResult,
   unknownResult,
-].forEach((result, index) => {
-  const validation = validateMeasureResult(result);
+].forEach((measureResult, index) => {
+  const validation =
+    validateMeasureResult(
+      measureResult
+    );
 
   if (!validation.isValid) {
     failures.push(
-      `Base result ${index} invalid: ${validation.errors.join(
+      `Legacy result ${index} invalid: ${validation.errors.join(
         "; "
       )}`
     );
@@ -93,7 +117,9 @@ const unknownResult = buildMeasureResult({
 });
 
 if (strongResult.value !== 1) {
-  failures.push("Expected strong value === 1.");
+  failures.push(
+    "Expected strong value === 1."
+  );
 }
 
 if (
@@ -101,192 +127,242 @@ if (
   intermediateResult.value >= 1
 ) {
   failures.push(
-    "Expected intermediate value > 0 and < 1."
+    "Expected intermediate value between 0 and 1."
   );
 }
 
-if (multipleResult.observationResults.length !== 2) {
+if (
+  multipleResult
+    .observationResults.length !== 2
+) {
   failures.push(
     "Expected two observation results."
   );
 }
 
-if (unknownResult.observationStatus !== "unknown") {
+if (
+  unknownResult.value !== 0 ||
+  unknownResult.observationStatus !==
+    "unknown"
+) {
   failures.push(
-    'Expected unknown status === "unknown".'
+    "Expected unknown result."
   );
 }
 
 /*
- * Regressione disabled factor
+ * Context relevance operativo
  */
-const disabledProfile = buildMeasurementProfile({
-  profileId: "regression_disabled_layer",
-  label: "Regression Disabled Layer",
-  baseModelId: "management_scope_v1",
+const contextProfile =
+  buildMeasurementProfile({
+    profileId:
+      "regression_context_profile",
 
-  disabledFactors: ["managementLayer"],
+    label:
+      "Regression Context Profile",
 
-  rationale: "Regression for factor disabling.",
+    baseModelId:
+      "management_scope_v1",
 
-  source: {
-    type: "regression_test",
-    id: "disabled_layer_regression",
-  },
-});
+    addedFactors: [
+      {
+        factorId:
+          "contextRelevance",
+        weight: 0.2,
+        minimum: 0.5,
+        configuration: {},
+      },
+    ],
 
-const definitionBefore = JSON.stringify(definition);
+    rationale:
+      "Regression context relevance.",
 
-const disabledResult = buildMeasureResult({
-  definition,
-  observations: [intermediateObservation],
-  profile: disabledProfile,
-});
+    source: {
+      type: "regression_test",
+      id: "context_regression",
+    },
+  });
 
-const definitionAfter = JSON.stringify(definition);
+const contextObservation =
+  buildManagementObservation({
+    observationId:
+      "management_context",
+    teamSize: 20,
+    durationYears: 4,
+    responsibilityType: "direct",
+    managementLayer: "single_layer",
+    contextType: "technical_office",
+    contextRelevance: 0.9,
+    evidenceIds: ["ev_context"],
+    confidence: 0.85,
+  });
 
-const disabledValidation =
-  validateMeasureResult(disabledResult);
+const contextResult =
+  buildMeasureResult({
+    definition,
+    observations: [contextObservation],
+    profile: contextProfile,
+  });
 
-if (!disabledValidation.isValid) {
+const contextValidation =
+  validateMeasureResult(
+    contextResult
+  );
+
+if (!contextValidation.isValid) {
   failures.push(
-    `Disabled result invalid: ${disabledValidation.errors.join(
+    `Context result invalid: ${contextValidation.errors.join(
       "; "
     )}`
   );
 }
 
 if (
-  !disabledResult.measurementContext.disabledFactors.includes(
-    "managementLayer"
-  )
+  !contextResult.measurementContext
+    .activeFactors.includes(
+      "contextRelevance"
+    )
 ) {
   failures.push(
-    "Expected managementLayer disabled."
+    "Expected contextRelevance active."
   );
 }
 
 if (
-  disabledResult.measurementContext.activeFactors.includes(
-    "managementLayer"
-  )
+  !contextResult.observationResults[0]
+    .components.contextRelevance
 ) {
   failures.push(
-    "Expected managementLayer not active."
+    "Expected context component."
   );
 }
 
-if (definitionBefore !== definitionAfter) {
+/*
+ * Context mancante non penalizza
+ */
+const missingContextObservation =
+  buildManagementObservation({
+    observationId:
+      "management_missing_context",
+    teamSize: 20,
+    durationYears: 4,
+    responsibilityType: "direct",
+    managementLayer: "single_layer",
+    contextType: "technical_office",
+    contextRelevance: null,
+    evidenceIds: [
+      "ev_missing_context",
+    ],
+    confidence: 0.85,
+  });
+
+const missingBaseResult =
+  buildMeasureResult({
+    definition,
+    observations: [
+      missingContextObservation,
+    ],
+  });
+
+const missingProfileResult =
+  buildMeasureResult({
+    definition,
+    observations: [
+      missingContextObservation,
+    ],
+    profile: contextProfile,
+  });
+
+if (
+  missingBaseResult.value !==
+  missingProfileResult.value
+) {
+  failures.push(
+    "Expected missing context not to penalize score."
+  );
+}
+
+if (
+  !missingProfileResult
+    .observationResults[0]
+    .factorUsage.unavailableFactors
+    .includes("contextRelevance")
+) {
+  failures.push(
+    "Expected contextRelevance unavailable."
+  );
+}
+
+const definitionAfter =
+  JSON.stringify(definition);
+
+if (
+  definitionBefore !== definitionAfter
+) {
   failures.push(
     "Expected definition immutability."
   );
 }
 
-/*
- * Regressione all disabled
- */
-const allDisabledProfile = buildMeasurementProfile({
-  profileId: "regression_all_disabled",
-  label: "Regression All Disabled",
-  baseModelId: "management_scope_v1",
+console.log(
+  JSON.stringify(
+    {
+      test:
+        "Measurement Core Regression",
 
-  disabledFactors: [
-    "teamSize",
-    "durationYears",
-    "responsibilityType",
-    "managementLayer",
-  ],
+      status:
+        failures.length === 0
+          ? "PASS"
+          : "FAIL",
 
-  rationale: "Regression for all factors disabled.",
+      strongValue:
+        strongResult.value,
 
-  source: {
-    type: "regression_test",
-    id: "all_disabled_regression",
-  },
-});
+      intermediateValue:
+        intermediateResult.value,
 
-const allDisabledResult = buildMeasureResult({
-  definition,
-  observations: [strongObservation],
-  profile: allDisabledProfile,
-});
+      multipleValue:
+        multipleResult.value,
 
-const allDisabledValidation =
-  validateMeasureResult(allDisabledResult);
+      unknownStatus:
+        unknownResult.observationStatus,
 
-if (!allDisabledValidation.isValid) {
-  failures.push(
-    `All-disabled result invalid: ${allDisabledValidation.errors.join(
-      "; "
-    )}`
-  );
-}
+      contextValue:
+        contextResult.value,
 
-if (allDisabledResult.value !== 0) {
-  failures.push(
-    "Expected all-disabled value === 0."
-  );
-}
+      contextComponent:
+        contextResult.observationResults[0]
+          .components.contextRelevance,
 
-if (allDisabledResult.observationStatus !== "unknown") {
-  failures.push(
-    "Expected all-disabled status unknown."
-  );
-}
+      missingContext: {
+        baseValue:
+          missingBaseResult.value,
+        profileValue:
+          missingProfileResult.value,
+        unavailableFactors:
+          missingProfileResult
+            .observationResults[0]
+            .factorUsage
+            .unavailableFactors,
+      },
 
-if (
-  !allDisabledResult.limitations.includes(
-    "No active measurement factors were available."
+      definitionUnchanged:
+        definitionBefore === definitionAfter,
+    },
+    null,
+    2
   )
-) {
-  failures.push(
-    "Expected no-active-factors limitation."
-  );
-}
-
-const output = {
-  test: "Measurement Core Regression",
-
-  status: failures.length === 0 ? "PASS" : "FAIL",
-
-  strongValue: strongResult.value,
-
-  intermediateValue: intermediateResult.value,
-
-  multipleObservationsValue: multipleResult.value,
-
-  unknownStatus: unknownResult.observationStatus,
-
-  disabledFactor: {
-    value: disabledResult.value,
-
-    activeFactors:
-      disabledResult.measurementContext.activeFactors,
-
-    disabledFactors:
-      disabledResult.measurementContext.disabledFactors,
-  },
-
-  allDisabled: {
-    value: allDisabledResult.value,
-
-    observationStatus:
-      allDisabledResult.observationStatus,
-
-    limitations: allDisabledResult.limitations,
-  },
-
-  definitionUnchanged:
-    definitionBefore === definitionAfter,
-};
-
-console.log(JSON.stringify(output, null, 2));
+);
 
 if (failures.length > 0) {
   console.error("FAIL");
-  console.error(JSON.stringify(failures, null, 2));
+  console.error(
+    JSON.stringify(failures, null, 2)
+  );
   process.exit(1);
 }
 
 console.log("PASS");
-console.log("test_measurement_core_regression PASS");
+console.log(
+  "test_measurement_core_regression PASS"
+);

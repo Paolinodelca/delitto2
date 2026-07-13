@@ -1391,6 +1391,25 @@ addCheck("Measurement Core", async () => {
   }
 });
 
+addCheck("Capability Core", async () => {
+  const module = await import(
+    "../src/core/capability/healthBuildCapabilityCore.js"
+  );
+
+  const healthBuildCapabilityCore =
+    module.healthBuildCapabilityCore || module.default;
+
+  const result = healthBuildCapabilityCore();
+
+  if (result.status !== "PASS") {
+    throw new Error(
+      `Capability Core health failed: ${JSON.stringify(
+        result
+      )}`
+    );
+  }
+});
+
 
 addCheck("Role target detection", async () => {
   const module = await import("../src/report/detectRoleTarget.js");

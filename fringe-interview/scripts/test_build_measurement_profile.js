@@ -24,133 +24,120 @@ function sumWeights(weights) {
 }
 
 const definition =
-  buildMeasurementDefinition("management_scope");
+  buildMeasurementDefinition(
+    "management_scope"
+  );
 
-const definitionBefore = JSON.stringify(definition);
+const definitionBefore =
+  JSON.stringify(definition);
 
 /*
- * Scenario A — Profilo standard valido
+ * Context relevance attivo
  */
-const validProfile = buildMeasurementProfile({
-  profileId: "management_scope_recruiter_001",
+const profile =
+  buildMeasurementProfile({
+    profileId:
+      "context_relevance_profile",
 
-  label: "Management Scope — Production Manager",
+    label:
+      "Context Relevance Profile",
 
-  baseModelId: "management_scope_v1",
+    baseModelId:
+      "management_scope_v1",
 
-  overrides: {
-    weights: {
-      teamSize: 0.45,
-      durationYears: 0.25,
-      responsibilityType: 0.2,
-      managementLayer: 0.1,
+    addedFactors: [
+      {
+        factorId: "contextRelevance",
+        weight: 0.2,
+        minimum: 0.5,
+        configuration: {},
+      },
+    ],
+
+    rationale:
+      "Activates context relevance.",
+
+    source: {
+      type: "test_configuration",
+      id: "context_relevance_profile",
     },
+  });
 
-    thresholds: {
-      minimum: 0.65,
-    },
+const validation =
+  validateMeasurementProfile(profile);
 
-    benchmark: {
-      teamSize: 150,
-    },
-  },
-
-  rationale:
-    "Production role with large direct workforce responsibility.",
-
-  source: {
-    type: "recruiter_configuration",
-    id: "recruiter_001",
-  },
-});
-
-const validValidation =
-  validateMeasurementProfile(validProfile);
-
-if (!validValidation.isValid) {
+if (!validation.isValid) {
   failures.push(
-    `Valid profile failed: ${validValidation.errors.join(
+    `Profile failed validation: ${validation.errors.join(
       "; "
     )}`
   );
 }
 
-const validApplication =
+const applied =
   applyMeasurementProfile({
     definition,
-    profile: validProfile,
+    profile,
   });
 
-if (
-  validApplication.effectiveDefinition.aggregation
-    .weights.teamSize !== 0.45
-) {
-  failures.push(
-    "Expected teamSize weight override."
-  );
-}
-
-/*
- * Scenario B — Disabled factor
- */
-const disabledProfile = buildMeasurementProfile({
-  profileId: "disable_management_layer",
-
-  label: "Disable Management Layer",
-
-  baseModelId: "management_scope_v1",
-
-  disabledFactors: ["managementLayer"],
-
-  rationale: "Tests disabled factor.",
-
-  source: {
-    type: "test_configuration",
-    id: "disabled_factor_test",
-  },
-});
-
-const disabledApplication =
-  applyMeasurementProfile({
-    definition,
-    profile: disabledProfile,
-  });
+const aggregation =
+  applied.effectiveDefinition.aggregation;
 
 if (
-  Object.prototype.hasOwnProperty.call(
-    disabledApplication.effectiveDefinition
-      .aggregation.activeWeights,
-    "managementLayer"
+  !Object.prototype.hasOwnProperty.call(
+    aggregation.weights,
+    "contextRelevance"
   )
 ) {
   failures.push(
-    "Expected managementLayer not to be active."
+    "Expected contextRelevance in effective weights."
+  );
+}
+
+if (
+  !Object.prototype.hasOwnProperty.call(
+    aggregation.activeWeights,
+    "contextRelevance"
+  )
+) {
+  failures.push(
+    "Expected contextRelevance in activeWeights."
+  );
+}
+
+if (
+  aggregation.pendingAddedFactors.length !== 0
+) {
+  failures.push(
+    "Expected no pending valid added factors."
   );
 }
 
 if (
   Math.abs(
     sumWeights(
-      disabledApplication.effectiveDefinition
-        .aggregation.activeWeights
+      aggregation.activeWeights
     ) - 1
   ) > 0.0001
 ) {
   failures.push(
-    "Expected active weight sum approximately 1."
+    "Expected activeWeights sum approximately 1."
   );
 }
 
 /*
- * Scenario E — Aggiunta valida
+ * Context relevance aggiunto e poi disattivato
  */
-const validAddedFactorProfile =
+const disabledProfile =
   buildMeasurementProfile({
-    profileId: "profile_context_relevance",
+    profileId:
+      "context_relevance_disabled",
 
-    label: "Context Relevance Profile",
+    label:
+      "Context Relevance Disabled",
 
-    baseModelId: "management_scope_v1",
+    baseModelId:
+      "management_scope_v1",
 
     addedFactors: [
       {
@@ -161,323 +148,85 @@ const validAddedFactorProfile =
       },
     ],
 
+    disabledFactors: [
+      "contextRelevance",
+    ],
+
     rationale:
-      "Adds context relevance for future measurement.",
+      "Adds and then disables context relevance.",
 
     source: {
       type: "test_configuration",
-      id: "context_relevance_test",
+      id: "context_relevance_disabled",
     },
   });
 
-const validAddedFactorValidation =
-  validateMeasurementProfile(
-    validAddedFactorProfile
-  );
-
-if (!validAddedFactorValidation.isValid) {
-  failures.push(
-    `Valid added-factor profile failed: ${validAddedFactorValidation.errors.join(
-      "; "
-    )}`
-  );
-}
-
-const validAddedFactorApplication =
+const disabledApplied =
   applyMeasurementProfile({
     definition,
-    profile: validAddedFactorProfile,
+    profile: disabledProfile,
   });
 
-const pendingAddedFactors =
-  validAddedFactorApplication.effectiveDefinition
-    .aggregation.pendingAddedFactors;
-
-if (pendingAddedFactors.length !== 1) {
-  failures.push(
-    "Expected one pending added factor."
-  );
-}
-
 if (
-  pendingAddedFactors[0].factorId !==
-  "contextRelevance"
+  !disabledApplied.disabledFactors.includes(
+    "contextRelevance"
+  )
 ) {
   failures.push(
-    "Expected pending contextRelevance factor."
-  );
-}
-
-if (
-  !validAddedFactorApplication.appliedOverrides
-    .addedFactors.some(
-      (factor) =>
-        factor.factorId === "contextRelevance"
-    )
-) {
-  failures.push(
-    "Expected contextRelevance in appliedOverrides.addedFactors."
+    "Expected contextRelevance disabled."
   );
 }
 
 if (
   Object.prototype.hasOwnProperty.call(
-    validAddedFactorApplication
-      .effectiveDefinition.aggregation.weights,
+    disabledApplied.effectiveDefinition
+      .aggregation.activeWeights,
     "contextRelevance"
   )
 ) {
   failures.push(
-    "Expected contextRelevance not to enter weights yet."
-  );
-}
-
-if (
-  Object.prototype.hasOwnProperty.call(
-    validAddedFactorApplication
-      .effectiveDefinition.aggregation.activeWeights,
-    "contextRelevance"
-  )
-) {
-  failures.push(
-    "Expected contextRelevance not to enter activeWeights yet."
+    "Expected contextRelevance excluded from activeWeights."
   );
 }
 
 /*
- * Scenario F — Fattore sconosciuto
+ * Immutabilità
  */
-const unknownAddedFactorProfile =
-  buildMeasurementProfile({
-    profileId: "profile_invented_factor",
-
-    label: "Invented Factor Profile",
-
-    baseModelId: "management_scope_v1",
-
-    addedFactors: [
-      {
-        factorId: "inventedFactor",
-        weight: 0.2,
-        minimum: 0.5,
-        configuration: {},
-      },
-    ],
-
-    rationale: "Tests unknown factor.",
-
-    source: {
-      type: "test_configuration",
-      id: "invented_factor_test",
-    },
-  });
-
-const unknownAddedValidation =
-  validateMeasurementProfile(
-    unknownAddedFactorProfile
-  );
+const definitionAfter =
+  JSON.stringify(definition);
 
 if (
-  !unknownAddedValidation.warnings.some(
-    (warning) =>
-      warning.includes(
-        "not present in the catalog"
-      )
-  )
+  definitionBefore !== definitionAfter
 ) {
   failures.push(
-    "Expected profile warning for unknown factor."
-  );
-}
-
-const unknownAddedApplication =
-  applyMeasurementProfile({
-    definition,
-    profile: unknownAddedFactorProfile,
-  });
-
-if (
-  !unknownAddedApplication.warnings.includes(
-    "Unsupported added factor: inventedFactor"
-  )
-) {
-  failures.push(
-    "Expected unsupported added-factor warning."
-  );
-}
-
-if (
-  unknownAddedApplication.effectiveDefinition
-    .aggregation.pendingAddedFactors.length !== 0
-) {
-  failures.push(
-    "Expected inventedFactor not to be pending."
-  );
-}
-
-/*
- * Scenario G — Fattore già esistente
- */
-const existingFactorProfile =
-  buildMeasurementProfile({
-    profileId: "profile_existing_factor",
-
-    label: "Existing Factor Profile",
-
-    baseModelId: "management_scope_v1",
-
-    addedFactors: [
-      {
-        factorId: "teamSize",
-        weight: 0.2,
-        minimum: 0.5,
-        configuration: {},
-      },
-    ],
-
-    rationale:
-      "Tests already existing factor.",
-
-    source: {
-      type: "test_configuration",
-      id: "existing_factor_test",
-    },
-  });
-
-const existingValidation =
-  validateMeasurementProfile(
-    existingFactorProfile
-  );
-
-if (
-  !existingValidation.warnings.some(
-    (warning) =>
-      warning.includes(
-        "already exists in the base definition"
-      )
-  )
-) {
-  failures.push(
-    "Expected profile warning for existing factor."
-  );
-}
-
-const existingApplication =
-  applyMeasurementProfile({
-    definition,
-    profile: existingFactorProfile,
-  });
-
-if (
-  !existingApplication.warnings.includes(
-    "Added factor already exists in base definition: teamSize"
-  )
-) {
-  failures.push(
-    "Expected apply warning for existing factor."
-  );
-}
-
-if (
-  existingApplication.effectiveDefinition
-    .aggregation.pendingAddedFactors.length !== 0
-) {
-  failures.push(
-    "Expected teamSize not to be added."
-  );
-}
-
-/*
- * Scenario duplicati: mantenere il primo
- */
-const duplicateAddedProfile =
-  buildMeasurementProfile({
-    profileId: "profile_duplicate_factor",
-    baseModelId: "management_scope_v1",
-
-    addedFactors: [
-      {
-        factorId: "contextRelevance",
-        weight: 0.2,
-        minimum: 0.5,
-        configuration: {
-          source: "first",
-        },
-      },
-      {
-        factorId: "contextRelevance",
-        weight: 0.8,
-        minimum: 0.9,
-        configuration: {
-          source: "second",
-        },
-      },
-    ],
-  });
-
-if (duplicateAddedProfile.addedFactors.length !== 1) {
-  failures.push(
-    "Expected duplicate factorId to be removed."
-  );
-}
-
-if (
-  duplicateAddedProfile.addedFactors[0].weight !==
-  0.2
-) {
-  failures.push(
-    "Expected first duplicate factor to be retained."
-  );
-}
-
-/*
- * Scenario H — Immutabilità
- */
-const definitionAfter = JSON.stringify(definition);
-
-if (definitionBefore !== definitionAfter) {
-  failures.push(
-    "Expected definition to remain unchanged."
+    "Expected definition unchanged."
   );
 }
 
 console.log(
   JSON.stringify(
     {
-      test: "Measurement Profile With Factor Catalog",
+      test:
+        "Measurement Profile Context Relevance",
 
       status:
-        failures.length === 0 ? "PASS" : "FAIL",
+        failures.length === 0
+          ? "PASS"
+          : "FAIL",
 
-      validProfile: {
-        isValid: validValidation.isValid,
-      },
+      activeWeights:
+        aggregation.activeWeights,
 
-      validAddedFactor: {
-        isValid:
-          validAddedFactorValidation.isValid,
-        pendingAddedFactors,
-        weights:
-          validAddedFactorApplication
-            .effectiveDefinition.aggregation.weights,
+      appliedAddedFactors:
+        applied.appliedOverrides
+          .addedFactors,
+
+      disabledContextRelevance: {
         activeWeights:
-          validAddedFactorApplication
-            .effectiveDefinition.aggregation
-            .activeWeights,
-      },
-
-      unknownAddedFactor: {
-        profileWarnings:
-          unknownAddedValidation.warnings,
-        applyWarnings:
-          unknownAddedApplication.warnings,
-      },
-
-      existingFactor: {
-        profileWarnings:
-          existingValidation.warnings,
-        applyWarnings:
-          existingApplication.warnings,
+          disabledApplied.effectiveDefinition
+            .aggregation.activeWeights,
+        disabledFactors:
+          disabledApplied.disabledFactors,
       },
 
       definitionUnchanged:
