@@ -15,4 +15,15 @@ module.exports = {
   ...require("./validateCapabilityResult"),
 
   ...require("./healthBuildCapabilityCore"),
+
+  ...require("./buildCapabilityDesign"),
+  ...require("./validateCapabilityDesign"),
+
+  ...require("./buildTargetModel"),
+  ...require("./validateTargetModel"),
+
+  ...require("./buildCapabilityProjection"),
+  ...require("./validateCapabilityProjection"),
+
+   ...require("./buildCapabilityDefinitionFromProjection"),
 };
