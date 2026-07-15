@@ -1391,6 +1391,27 @@ addCheck("Measurement Core", async () => {
   }
 });
 
+addCheck("Measurement → Capability Bridge", async () => {
+  const module = await import(
+    "../src/core/capability/adapters/healthMeasurementCapabilityBridge.js"
+  );
+
+  const healthMeasurementCapabilityBridge =
+    module.healthMeasurementCapabilityBridge || module.default;
+
+  const result = healthMeasurementCapabilityBridge();
+
+  if (result.healthy !== true) {
+    throw new Error(
+      `Measurement → Capability Bridge health failed: ${JSON.stringify({
+        checks: result.checks,
+        errors: result.errors,
+      })}`
+    );
+  }
+});
+
+
 addCheck("Capability Core", async () => {
   const module = await import(
     "../src/core/capability/healthBuildCapabilityCore.js"

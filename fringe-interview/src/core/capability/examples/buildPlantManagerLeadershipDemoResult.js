@@ -38,7 +38,19 @@ const {
   validateCapabilityResult,
 } = require("../validateCapabilityResult");
 
-function buildPlantManagerLeadershipDemoContributions() {
+const {
+  buildDecisionAccountabilityObservation,
+} = require("../../measurement/decisionAccountability/buildDecisionAccountabilityObservation");
+
+const {
+  buildDecisionAccountabilityMeasureResult,
+} = require("../../measurement/decisionAccountability/buildDecisionAccountabilityMeasureResult");
+
+const {
+  buildDecisionAccountabilityLeadershipContribution,
+} = require("../adapters/buildDecisionAccountabilityLeadershipContribution");
+
+function buildPlantManagerLeadershipDemoContributions(decisionContribution) {
   return [
     buildCapabilityContribution({
       contributionId:
@@ -128,49 +140,7 @@ function buildPlantManagerLeadershipDemoContributions() {
       },
     }),
 
-    buildCapabilityContribution({
-      contributionId:
-        "leadership_demo_decision_accountability",
-
-      capabilityId:
-        "leadership",
-
-      sourceMeasureId:
-        "decision_accountability",
-
-      sourceMeasureValue:
-        0.9,
-
-      direction:
-        "supporting",
-
-      relevance:
-        0.95,
-
-      inferenceSupport:
-        0.92,
-
-      context: {
-        contextType:
-          "high_operational_authority",
-
-        targetContextType:
-          "high_operational_authority",
-      },
-
-      evidenceIds: [
-        "demo_ev_decision_accountability_01",
-        "demo_ev_decision_accountability_02",
-      ],
-
-      rationale:
-        "The hypothetical profile assumes responsibility for consequential trade-offs affecting production, people, quality and delivery.",
-
-      metadata: {
-        sourceMode:
-          "manual_demo_configuration",
-      },
-    }),
+    decisionContribution,
 
     buildCapabilityContribution({
       contributionId:
@@ -357,8 +327,83 @@ function buildPlantManagerLeadershipDemoResult() {
       projection,
     });
 
+  const decisionObservation =
+    buildDecisionAccountabilityObservation({
+      observationId:
+        "decision_accountability_obs_demo_001",
+
+      decisionAuthority:
+        "final",
+
+      consequenceScope:
+        "site",
+
+      accountabilityEvidence:
+        "explicit_with_outcomes",
+
+      responsibilityContinuityMonths:
+        30,
+
+      context: {
+        roleType:
+          "plant_manager",
+
+        decisionDomain:
+          "industrial_operations",
+
+        organizationType:
+          "corporate_industrial",
+      },
+
+      evidenceIds: [
+        "demo_ev_decision_accountability_01",
+        "demo_ev_decision_accountability_02",
+      ],
+
+      inferenceSupportInputs: {
+        evidenceQuality:
+          0.9,
+
+        sourceConvergence:
+          0.85,
+
+        consistency:
+          0.9,
+
+        coverage:
+          0.8,
+      },
+
+      metadata: {
+        sourceMode:
+          "manual_demo_configuration",
+      },
+    });
+
+  const decisionMeasureResult =
+    buildDecisionAccountabilityMeasureResult({
+      observation:
+        decisionObservation,
+    });
+
+  const decisionContribution =
+    buildDecisionAccountabilityLeadershipContribution({
+      measureResult:
+        decisionMeasureResult,
+
+      projection,
+
+      contributionId:
+        "leadership_demo_decision_accountability",
+
+      rationale:
+        "Observed decision accountability supports Leadership in the Plant Manager transformation target.",
+    });
+
   const contributions =
-    buildPlantManagerLeadershipDemoContributions();
+    buildPlantManagerLeadershipDemoContributions(
+      decisionContribution
+    );
 
   const contributionValidations =
     contributions.map(
@@ -422,6 +467,19 @@ function buildPlantManagerLeadershipDemoResult() {
 
     result,
 
+    measurementTraceability: {
+      decisionAccountability: {
+        observation:
+          decisionObservation,
+
+        measureResult:
+          decisionMeasureResult,
+
+        contribution:
+          decisionContribution,
+      },
+    },
+
     scenarioContext: {
       candidateType:
         "hypothetical_professional_profile",
@@ -438,8 +496,8 @@ function buildPlantManagerLeadershipDemoResult() {
 
     limitations: [
       "The candidate profile is hypothetical.",
-      "Contribution values were configured manually for architecture validation.",
-      "No CV, interview or parser evidence was used.",
+      "Six capability contributions remain manually configured; decision accountability is derived from a deterministic measure result.",
+      "The decision accountability observation is a demonstration input and was not extracted from CV or interview evidence.",
       "The result is not an empirically validated assessment.",
     ],
 
@@ -459,7 +517,7 @@ function buildPlantManagerLeadershipDemoResult() {
 
     metadata: {
       version:
-        "0.1",
+        "0.2",
 
       createdAt:
         new Date().toISOString(),
