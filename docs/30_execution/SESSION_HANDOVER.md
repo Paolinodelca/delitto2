@@ -1,5 +1,25 @@
 # SESSION_HANDOVER — 2026-07-15
 
+## CURRENT PROJECT STATUS
+
+Core Infrastructure
+████████████████████ 98%
+
+Knowledge Layer
+██████░░░░░░░░░░░░░ 25%
+
+Recognition
+██░░░░░░░░░░░░░░░░░ 10%
+
+Runtime Integration
+█████░░░░░░░░░░░░░░ 25%
+
+Report Integration
+████░░░░░░░░░░░░░░░ 20%
+
+Beta Readiness
+███████░░░░░░░░░░░░ 35%
+
 ## Stato generale
 
 È stata completata una milestone centrale del Core IMAGO.
@@ -879,3 +899,749 @@ Da questo momento:
 > Sostituire progressivamente un contribution manuale alla volta con una pipeline reale Observation → MeasureResult → CapabilityContribution.
 
 Non estendere l’architettura generale finché un problema concreto non dimostra che è necessario.
+
+Roadmap immediata
+
+1.
+Execution Through Others Measurement
+
+↓
+
+2.
+Execution Through Others → Leadership Adapter
+
+↓
+
+3.
+Second bridge reale
+
+↓
+
+4.
+Recognition v0.1
+
+↓
+
+5.
+Prima Leadership alimentata da observation reali
+
+↓
+
+6.
+Beta verticale
+
+
+# NOTA: presa decisione per accelerare lo sviluppo. Fare riferiemnto a quanto scritto in ROADMAP_DI_SVILUPPO.md
+
+# Aggiornamento — IMAGO Builder Foundation fino al Task 0098E-1
+
+## Stato generale
+
+È stata completata la prima infrastruttura concreta di autogenerazione di IMAGO.
+
+La strategia adottata distingue:
+
+```text
+IMAGO Core
+=
+elaborazione di evidenze, measurement e capability
+
+IMAGO Builder
+=
+generazione deterministica della carpenteria software
+
+Generated Modules
+=
+moduli generati e successivamente completati semanticamente
+```
+
+L’IMAGO Builder vive nello stesso repository sotto:
+
+```text
+tools/imago-builder/
+```
+
+ma è concettualmente distinto dal Core applicativo.
+
+Non è stato introdotto un Builder Engine universale.
+
+La generalizzazione dovrà emergere progressivamente da plugin concreti e realmente utilizzati.
+
+---
+
+## Principio strategico
+
+La pipeline futura di sviluppo è:
+
+```text
+Knowledge
+↓
+Specification
+↓
+IMAGO Builder
+↓
+Generated Scaffold
+↓
+Semantic Completion
+↓
+Production Module
+```
+
+L’automazione deve produrre:
+
+* file;
+* builder;
+* validator;
+* test;
+* health;
+* regression;
+* export;
+* manifest;
+* controlli strutturali.
+
+Non deve inventare:
+
+* fattori;
+* scoring;
+* benchmark;
+* soglie;
+* explainability;
+* interpretazioni professionali.
+
+La conoscenza resta progettata e revisionata esplicitamente.
+
+---
+
+# Task 0098A — GenerationPlan Foundation
+
+È stato introdotto il primo contratto generico dell’IMAGO Builder:
+
+```text
+GenerationPlan
+```
+
+Il piano descrive deterministicamente:
+
+* generatore;
+* sorgente dichiarativa;
+* target root;
+* file previsti;
+* contenuti;
+* overwrite policy;
+* hash SHA-256;
+* summary;
+* warning;
+* errori;
+* metadata.
+
+Ogni file contiene:
+
+```text
+relativePath
+content
+overwritePolicy
+contentHash
+metadata
+```
+
+Il `GenerationPlan`:
+
+* non scrive filesystem;
+* non deduplica silenziosamente;
+* rileva path duplicati;
+* rifiuta path assoluti e traversal;
+* normalizza i separatori;
+* produce hash stabili;
+* è deterministico salvo `createdAt`.
+
+---
+
+# Task 0098B — MeasurementModuleSpec Foundation
+
+È stato introdotto il contratto dichiarativo:
+
+```text
+MeasurementModuleSpec
+```
+
+La specifica descrive:
+
+* identità della measurement;
+* naming;
+* fattori;
+* valori ammessi;
+* pesi;
+* direction;
+* scoring status;
+* benchmark;
+* thresholds;
+* inference support;
+* policy `not_observed`;
+* artefatti da generare;
+* semantic completion;
+* provenance.
+
+Distinzione stabile:
+
+```text
+MeasurementModuleSpec
+=
+descrive come costruire il modulo software
+
+MeasurementDefinition
+=
+descrive come eseguire la measurement nel Core
+```
+
+La specifica può essere:
+
+```text
+draft
+configuration_required
+ready
+```
+
+È possibile avere:
+
+```text
+readyForGeneration = true
+```
+
+anche quando scoring, benchmark o explainability devono ancora essere completati.
+
+Questo consente di generare prima la carpenteria e completare successivamente la conoscenza.
+
+La prima fixture è:
+
+```text
+execution_through_others
+```
+
+con quattro fattori iniziali:
+
+```text
+delegatedExecutionScope
+collectiveDeliveryEvidence
+managerialLayerUse
+personalInterventionDependence
+```
+
+La fixture è valida ma resta:
+
+```text
+configuration_required
+```
+
+Non rappresenta ancora una measurement produttiva.
+
+---
+
+# Task 0098C — Template Rendering Foundation
+
+È stato introdotto un renderer deterministico e privo di dipendenze.
+
+Sintassi supportata:
+
+```text
+{{UPPER_SNAKE_CASE}}
+```
+
+Non sono supportati:
+
+* condizioni;
+* loop;
+* partial;
+* object path;
+* rendering ricorsivo;
+* `eval`;
+* `Function`;
+* template engine esterni.
+
+La logica viene costruita nel:
+
+```text
+MeasurementTemplateContext
+```
+
+e i template inseriscono soltanto:
+
+* valori scalari;
+* blocchi stringa pre-renderizzati.
+
+Sono disponibili:
+
+```text
+TemplateDefinition
+validateTemplateDefinition()
+renderTemplate()
+buildGeneratedFileEntry()
+buildMeasurementTemplateContext()
+```
+
+Il rendering:
+
+* valida i placeholder;
+* distingue required e optional;
+* impedisce il secondo passaggio ricorsivo;
+* normalizza newline;
+* garantisce una newline finale;
+* produce contenuti hashabili e stabili;
+* non usa filesystem nel codice di produzione.
+
+Sono stati creati template versionati per:
+
+```text
+Observation Builder
+Observation Validator
+Measure Definition
+Measure Result Builder
+Measure Result Validator
+Index
+Health
+Observation Test
+Measure Result Test
+Health Test
+Regression Test
+Generation Manifest
+```
+
+Totale:
+
+```text
+12 template
+```
+
+Il `MeasureResult` generato conserva marker espliciti per il completamento successivo:
+
+```text
+BEGIN SEMANTIC SCORING CONFIGURATION
+END SEMANTIC SCORING CONFIGURATION
+
+BEGIN EXPLAINABILITY CONFIGURATION
+END EXPLAINABILITY CONFIGURATION
+```
+
+Finché la configurazione non è completa, il modulo restituisce:
+
+```text
+resultStatus = configuration_required
+score = 0
+band = not_supported
+```
+
+---
+
+# Task 0098D — Measurement Module Scaffold Dry-Run
+
+È stato realizzato il primo plugin operativo:
+
+```text
+Measurement Module Scaffold Generator
+```
+
+Pipeline:
+
+```text
+MeasurementModuleSpec
+↓
+validation
+↓
+MeasurementTemplateContext
+↓
+extendedContext locale
+↓
+registry privata dei template
+↓
+rendering
+↓
+GeneratedFileEntry[]
+↓
+GenerationPlan
+```
+
+La registry è:
+
+* privata;
+* statica;
+* esplicita;
+* ordinata;
+* guidata esclusivamente dalle generation flag.
+
+Non è stata introdotta una registry globale del Builder Engine.
+
+L’`extendedContext` appartiene al plugin e contiene elementi di orchestrazione come:
+
+```text
+IMPORT_LINES
+EXPORT_LINES
+GENERATED_FILES_JSON
+GENERATED_AT_JSON
+GENERATOR_ID_JSON
+```
+
+Il `MeasurementTemplateContext` generale resta puro.
+
+La fixture `Execution Through Others` produce in memoria:
+
+```text
+7 file source
+4 file test
+1 manifest
+```
+
+Totale:
+
+```text
+12 file
+```
+
+Il manifest:
+
+* viene renderizzato per ultimo;
+* contiene path e hash degli altri 11 file;
+* non elenca sé stesso;
+* usa `generatedAt = null`;
+* non introduce timestamp nel contenuto generato.
+
+L’orchestrazione è atomica a livello di piano:
+
+```text
+un solo template fallisce
+↓
+GenerationPlan invalido
+↓
+files = []
+```
+
+Nessun piano parziale viene esposto pubblicamente.
+
+È disponibile:
+
+```text
+generateMeasurementModuleScaffold()
+```
+
+in modalità esclusivamente:
+
+```text
+dry_run
+```
+
+Il plugin non scrive ancora alcun file.
+
+---
+
+# Task 0098E-1 — Safe Generation Write Preflight
+
+È stato completato il controllo preventivo necessario prima di introdurre il writer.
+
+Pipeline:
+
+```text
+GenerationPlan
++
+rootDirectory
++
+allowOverwrite
+↓
+plan validation
+↓
+root safety
+↓
+target resolution
+↓
+containment
+↓
+filesystem inspection
+↓
+symlink inspection
+↓
+overwrite matrix
+↓
+WritePreflightReport
+```
+
+Il preflight è read-only.
+
+Non crea:
+
+* file;
+* directory;
+* file temporanei;
+* rename;
+* manifest aggiornati.
+
+## Status
+
+```text
+ready
+```
+
+solo quando:
+
+* piano valido;
+* root sicura;
+* target contenuto;
+* containment lessicale valido;
+* containment reale valido;
+* nessun conflitto;
+* nessun errore;
+* tutti i file hanno action `create` o `overwrite`.
+
+```text
+blocked
+```
+
+quando il piano è elaborabile ma esistono conflitti locali.
+
+```text
+invalid
+```
+
+quando piano, root o input non possono essere elaborati in sicurezza.
+
+---
+
+## Root safety
+
+Sono vietati:
+
+```text
+root filesystem
+home directory
+target esterno alla rootDirectory
+target uguale alla root filesystem
+target uguale alla home
+```
+
+Il containment usa:
+
+```text
+path.relative()
+```
+
+e non un semplice confronto `startsWith()`.
+
+Questo protegge da casi come:
+
+```text
+target
+target-other
+```
+
+---
+
+## Parent directory
+
+Il preflight distingue:
+
+```text
+parent esistente
+parent mancante ma creatibile
+segmento intermedio occupato da file
+parent non creatibile in sicurezza
+```
+
+Non verifica ancora i permessi reali mediante scrittura.
+
+---
+
+## Overwrite
+
+La sovrascrittura richiede doppio consenso:
+
+```text
+allowOverwrite === true
+```
+
+e:
+
+```text
+file.overwritePolicy === allow_explicit
+```
+
+Formula:
+
+```text
+overwriteAllowed =
+  allowOverwrite &&
+  overwritePolicy === allow_explicit
+```
+
+Gli scaffold attuali usano:
+
+```text
+overwritePolicy = forbid
+```
+
+e non possono quindi sovrascrivere file esistenti neppure quando `allowOverwrite` è true.
+
+Un file esistente identico non viene ignorato automaticamente.
+
+Non esiste ancora una policy:
+
+```text
+skip_if_identical
+```
+
+---
+
+## Symbolic link safety
+
+Il preflight analizza:
+
+* symlink intermedi;
+* symlink finali;
+* destinazione reale;
+* containment reale;
+* link interni;
+* link esterni;
+* broken link;
+* loop;
+* symlink verso file;
+* symlink verso directory.
+
+Principio:
+
+```text
+symlink interno
++
+real path contenuto
+→ può essere ammesso
+
+symlink esterno
+oppure non risolvibile
+→ blocked
+```
+
+Non viene introdotto un nuovo `existingType`.
+
+Dopo la risoluzione:
+
+```text
+file
+directory
+other
+```
+
+restano i soli tipi pubblici.
+
+I link esterni, broken o loop usano:
+
+```text
+conflictType = external_symlink
+```
+
+---
+
+## Test Windows
+
+Il test tenta di creare veri symbolic link, non junction.
+
+Quando Windows non consente la creazione per assenza di privilegi o Developer Mode, gli scenari vengono registrati come:
+
+```text
+Symlink scenarios: SKIPPED (<motivo>)
+```
+
+Lo skip non è considerato un fallimento.
+
+Non viene simulato un PASS mediante junction o altri meccanismi semanticamente differenti.
+
+Nella sessione corrente gli scenari symlink Windows sono risultati SKIPPED per limitazioni dell’ambiente.
+
+Tutti gli altri test risultano PASS.
+
+---
+
+# Stato operativo raggiunto
+
+L’IMAGO Builder è ora in grado di:
+
+```text
+descrivere una measurement
+↓
+validare la specifica
+↓
+costruire il context
+↓
+renderizzare 12 file
+↓
+produrre hash
+↓
+costruire un manifest
+↓
+costruire un GenerationPlan
+↓
+eseguire un preflight completo e read-only
+```
+
+Il sistema non è ancora autorizzato a scrivere.
+
+Questa è una chiusura intenzionale e sicura.
+
+---
+
+# Prossimo passo
+
+Il prossimo task sarà:
+
+```text
+0098E-2 — Safe Generation Plan Writer
+```
+
+Dovrà introdurre:
+
+```text
+ready WritePreflightReport
+↓
+directory creation
+↓
+file writing
+↓
+post-write hash verification
+↓
+GenerationWriteReport
+```
+
+Prima dell’implementazione dovranno essere definite con precisione:
+
+* scrittura atomica per singolo file;
+* comportamento in caso di errore intermedio;
+* directory create;
+* file temporanei;
+* rename;
+* cleanup;
+* rollback possibile o non possibile;
+* verifica hash;
+* compatibilità Windows;
+* nessuna scrittura senza preflight `ready`.
+
+Non implementare writer e CLI nello stesso sottoblocco.
+
+La CLI arriverà soltanto dopo la stabilizzazione del writer.
+
+---
+
+# Punto di ripartenza sintetico
+
+```text
+Task 0098E-1 completato
+↓
+GenerationPlan valido
+↓
+Measurement Scaffold prodotto in memoria
+↓
+WritePreflight completo
+↓
+containment verificato
+↓
+overwrite protetto
+↓
+symlink safety implementata
+↓
+nessuna scrittura ancora consentita
+↓
+prossimo passo:
+Safe Generation Plan Writer
+```
