@@ -1,0 +1,21 @@
+{
+  "templateId": "measurement.generationManifest",
+  "templateVersion": "1.0",
+  "outputType": "json",
+  "targetCategory": "manifest",
+  "requiredPlaceholders": [
+    "GENERATOR_ID_JSON",
+    "GENERATOR_VERSION_JSON",
+    "MEASURE_ID_JSON",
+    "MODULE_DIRECTORY_JSON",
+    "SPEC_VERSION_JSON",
+    "IMPLEMENTATION_STATUS_JSON",
+    "GENERATED_FILES_JSON",
+    "FACTOR_IDS_JSON",
+    "GENERATED_AT_JSON"
+  ],
+  "optionalPlaceholders": [],
+  "content": "{\n  \"generatorId\": {{GENERATOR_ID_JSON}},\n  \"generatorVersion\": {{GENERATOR_VERSION_JSON}},\n  \"measureId\": {{MEASURE_ID_JSON}},\n  \"moduleDirectory\": {{MODULE_DIRECTORY_JSON}},\n  \"specVersion\": {{SPEC_VERSION_JSON}},\n  \"implementationStatus\": {{IMPLEMENTATION_STATUS_JSON}},\n  \"generatedFiles\": {{GENERATED_FILES_JSON}},\n  \"factorIds\": {{FACTOR_IDS_JSON}},\n  \"generatedAt\": {{GENERATED_AT_JSON}}\n}",
+  "metadata": {},
+  "extensions": {}
+}
