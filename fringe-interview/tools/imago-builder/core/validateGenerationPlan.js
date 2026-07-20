@@ -1,6 +1,10 @@
 const crypto = require("crypto");
 const path = require("path");
 
+const {
+  calculateGenerationPlanIdentity,
+} = require("./calculateGenerationPlanIdentity");
+
 const ALLOWED_PLAN_STATUSES = ["ready", "invalid"];
 const ALLOWED_OVERWRITE_POLICIES = ["forbid", "allow_explicit"];
 const SUMMARY_FIELDS = [
@@ -75,6 +79,14 @@ function validateGenerationPlan(plan = {}) {
     return { isValid: false, errors: ["GenerationPlan must be an object."], warnings: [] };
   }
   if (!isNonEmptyString(plan.planId)) errors.push("planId must be a non-empty string.");
+  if (!isSha256(plan.planIdentity)) {
+    errors.push("planIdentity must be a valid SHA-256 hash.");
+  } else if (
+    calculateGenerationPlanIdentity(plan) !==
+    plan.planIdentity
+  ) {
+    errors.push("planIdentity does not match GenerationPlan content.");
+  }
   if (!ALLOWED_PLAN_STATUSES.includes(plan.planStatus)) errors.push("planStatus must be ready or invalid.");
   if (!isNonEmptyString(plan.generatorId)) errors.push("generatorId must be a non-empty string.");
   if (!isNonEmptyString(plan.targetRoot)) errors.push("targetRoot must be a non-empty string.");

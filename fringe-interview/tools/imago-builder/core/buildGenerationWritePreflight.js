@@ -6,6 +6,10 @@ const {
   validateGenerationPlan,
 } = require("./validateGenerationPlan");
 
+const {
+  calculateGenerationPlanIdentity,
+} = require("./calculateGenerationPlanIdentity");
+
 const CONFLICT_MESSAGES = {
   unsafe_root:
     "The selected root or target root is not safe for generation.",
@@ -679,6 +683,15 @@ function buildInvalidReport({
         ? sourcePlan.planId
         : null,
 
+    planIdentity:
+      isNonEmptyString(
+        sourcePlan.planIdentity
+      )
+        ? sourcePlan.planIdentity
+        : calculateGenerationPlanIdentity(
+            sourcePlan
+          ),
+
     generatorId:
       isNonEmptyString(
         sourcePlan.generatorId
@@ -1165,6 +1178,9 @@ function buildGenerationWritePreflight({
 
       planId:
         plan.planId,
+
+      planIdentity:
+        plan.planIdentity,
 
       generatorId:
         plan.generatorId,

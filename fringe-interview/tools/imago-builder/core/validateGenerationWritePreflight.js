@@ -108,6 +108,9 @@ function validateGenerationWritePreflight(preflight = {}) {
   if (!isNonEmptyString(preflight.planId)) {
     errors.push("planId must be a non-empty string.");
   }
+  if (!isSha256(preflight.planIdentity)) {
+    errors.push("planIdentity must be a valid SHA-256 hash.");
+  }
 
   if (!isNonEmptyString(preflight.generatorId)) {
     errors.push("generatorId must be a non-empty string.");

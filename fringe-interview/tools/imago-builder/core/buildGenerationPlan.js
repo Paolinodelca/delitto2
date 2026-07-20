@@ -1,5 +1,9 @@
 const crypto = require("crypto");
 
+const {
+  calculateGenerationPlanIdentity,
+} = require("./calculateGenerationPlanIdentity");
+
 const ALLOWED_OVERWRITE_POLICIES = ["forbid", "allow_explicit"];
 
 function isObject(value) {
@@ -100,7 +104,7 @@ function buildGenerationPlan(input = {}) {
       ? "invalid"
       : "ready";
   const inputMetadata = isObject(sourceInput.metadata) ? sourceInput.metadata : {};
-  return {
+  const plan = {
     planId,
     planStatus,
     generatorId,
@@ -120,6 +124,12 @@ function buildGenerationPlan(input = {}) {
       ...inputMetadata,
     },
     extensions: {},
+  };
+
+  return {
+    ...plan,
+    planIdentity:
+      calculateGenerationPlanIdentity(plan),
   };
 }
 
