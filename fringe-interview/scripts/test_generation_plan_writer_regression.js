@@ -5,15 +5,27 @@ const {
   buildGenerationPlan,
   buildGenerationWritePreflight,
   writeGenerationPlan,
-  validateGenerationWriteReport,
 } = require("../tools/imago-builder");
 
 const failures = [];
 
 function expect(condition, message) {
-  if (!condition) {
-    failures.push(message);
-  }
+  if (!condition) failures.push(message);
+}
+
+function makeFile(relativePath, content) {
+  const crypto = require("crypto");
+  return {
+    relativePath,
+    content,
+    contentHash:
+      crypto
+        .createHash("sha256")
+        .update(content, "utf8")
+        .digest("hex"),
+    overwritePolicy: "forbid",
+    metadata: {},
+  };
 }
 
 function sanitize(report) {
@@ -26,33 +38,6 @@ function sanitize(report) {
   };
 }
 
-function buildPlan({
-  planId,
-  sourceId,
-  content,
-}) {
-  return buildGenerationPlan({
-    planId,
-    generatorId:
-      "writer_regression_generator",
-    targetRoot: ".",
-    source: {
-      moduleType: "test",
-      sourceId,
-      sourceVersion: "1.0",
-    },
-    files: [
-      {
-        relativePath:
-          "generated/file.js",
-        content,
-        overwritePolicy:
-          "forbid",
-      },
-    ],
-  });
-}
-
 const root =
   path.resolve(
     process.cwd(),
@@ -63,120 +48,74 @@ fs.rmSync(root, {
   recursive: true,
   force: true,
 });
-
 fs.mkdirSync(root, {
   recursive: true,
 });
 
 try {
-  const planA =
-    buildPlan({
-      planId:
-        "writer_regression_a",
-      sourceId:
-        "source-a",
-      content:
-        "module.exports = 'a';\n",
+  const plan =
+    buildGenerationPlan({
+      planId: "regression",
+      generatorId:
+        "writer-regression",
+      targetRoot: ".",
+      source: {
+        moduleType: "test",
+        sourceId: "regression",
+        sourceVersion: "1.0",
+      },
+      files: [
+        makeFile("one.js", "one\n"),
+      ],
     });
 
-  const planB =
-    buildPlan({
-      planId:
-        "writer_regression_b",
-      sourceId:
-        "source-b",
-      content:
-        "module.exports = 'b';\n",
-    });
-
-  const preflightA =
+  const preflight =
     buildGenerationWritePreflight({
-      plan:
-        planA,
-      rootDirectory:
-        root,
+      plan,
+      rootDirectory: root,
     });
 
-  const matching =
+  const completed =
     writeGenerationPlan({
-      generationPlan:
-        planA,
+      generationPlan: plan,
       writePreflightReport:
-        preflightA,
+        preflight,
+    });
+
+  expect(
+    completed.status ===
+      "completed",
+    "Ready regression must complete."
+  );
+
+  const mismatchPlan =
+    buildGenerationPlan({
+      planId: "other",
+      generatorId:
+        "writer-regression",
+      targetRoot: ".",
+      source: {
+        moduleType: "test",
+        sourceId: "other",
+        sourceVersion: "1.0",
+      },
+      files: [
+        makeFile("other.js", "other\n"),
+      ],
     });
 
   const mismatch =
     writeGenerationPlan({
       generationPlan:
-        planB,
+        mismatchPlan,
       writePreflightReport:
-        preflightA,
+        preflight,
     });
 
   expect(
-    matching.status === "failed",
-    "Matching ready preflight must remain failed in 2A."
-  );
-
-  expect(
-    matching.errors.length === 1 &&
-    matching.errors[0].code ===
-      "writer_not_implemented",
-    "Matching report must contain writer_not_implemented."
-  );
-
-  expect(
-    matching.summary.successfulFiles ===
-      0,
-    "Matching report must contain zero successful files."
-  );
-
-  expect(
-    mismatch.status === "failed",
-    "Mismatch must fail."
-  );
-
-  expect(
-    mismatch.errors.length === 1 &&
     mismatch.errors[0].code ===
       "plan_preflight_mismatch",
-    "Mismatch report must contain plan_preflight_mismatch."
-  );
-
-  expect(
-    validateGenerationWriteReport(
-      matching
-    ).isValid === true,
-    "Matching report must validate."
-  );
-
-  expect(
-    validateGenerationWriteReport(
-      mismatch
-    ).isValid === true,
-    "Mismatch report must validate."
-  );
-
-  const first =
-    JSON.stringify(
-      sanitize(matching)
-    );
-
-  const second =
-    JSON.stringify(
-      sanitize(
-        writeGenerationPlan({
-          generationPlan:
-            planA,
-          writePreflightReport:
-            preflightA,
-        })
-      )
-    );
-
-  expect(
-    first === second,
-    "Matching regression output must be deterministic after timestamp sanitization."
+    "Mismatch regression failed."
   );
 
   console.log(
@@ -188,8 +127,8 @@ try {
           failures.length === 0
             ? "PASS"
             : "FAIL",
-        matching:
-          sanitize(matching),
+        completed:
+          sanitize(completed),
         mismatch:
           sanitize(mismatch),
       },

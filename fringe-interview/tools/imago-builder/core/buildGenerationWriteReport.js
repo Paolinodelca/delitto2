@@ -137,6 +137,8 @@ function buildGenerationWriteReport(
         : [],
 
     metadata: {
+      ...inputMetadata,
+
       writerId:
         normalizeString(
           inputMetadata.writerId,
@@ -146,7 +148,7 @@ function buildGenerationWriteReport(
       mode:
         normalizeString(
           inputMetadata.mode,
-          "read_only_guard"
+          "write"
         ),
 
       createdAt:

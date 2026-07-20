@@ -84,17 +84,17 @@ const checks = {
       "validateGenerationFileWriteResult"
     ),
 
-  writerStillDisconnected:
-    writerSource.includes(
+  writerIntegrated:
+    !writerSource.includes(
       "writer_not_implemented"
     ) &&
-    !writerSource.includes(
+    writerSource.includes(
       "writeGenerationFileAtomically"
     ),
 
-  noMultiFileLoop:
-    !/for\s*\([^)]*generationPlan\.files/.test(
-      writerSource
+  multiFileExecutionPresent:
+    writerSource.includes(
+      "stop_on_first_failure"
     ),
 };
 

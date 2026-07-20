@@ -786,12 +786,9 @@ try {
     });
 
   expect(
-    planResult.errors.some(
-      (error) =>
-        error.code ===
-          "writer_not_implemented"
-    ),
-    "writeGenerationPlan was connected prematurely."
+    planResult.status ===
+      "completed",
+    "writeGenerationPlan did not execute a ready plan."
   );
 
   expect(
@@ -800,8 +797,8 @@ try {
         planRoot,
         "guard.js"
       )
-    ) === false,
-    "writeGenerationPlan performed a write."
+    ) === true,
+    "writeGenerationPlan did not write the authorized file."
   );
 
   console.log(
@@ -818,7 +815,7 @@ try {
         overwriteStrategy:
           "same_filesystem_rename",
         writerIntegration:
-          "writer_not_implemented",
+          "multi_file_execution",
       },
       null,
       2
