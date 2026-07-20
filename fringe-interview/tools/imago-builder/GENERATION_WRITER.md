@@ -122,3 +122,91 @@ const report =
 ## Current limits
 
 The Writer has no CLI, global transaction, rollback, backup, recovery journal, resume, parallel execution or continue-on-error mode.
+
+## Command-line interface
+
+The safe Writer CLI accepts an already-built `GenerationPlan` JSON.
+
+Direct Node invocation:
+
+```powershell
+node tools/imago-builder/cli/write-generation-plan.js `
+  --plan .\tmp\generation-plan.json `
+  --target-root .\generated
+```
+
+The default mode is **preflight-only**. It validates the plan, builds the real `WritePreflightReport`, prints the result and does not call `writeGenerationPlan()`.
+
+### Execute a ready plan
+
+Writing requires the explicit `--write` flag:
+
+```powershell
+node tools/imago-builder/cli/write-generation-plan.js `
+  --plan .\tmp\generation-plan.json `
+  --target-root .\generated `
+  --write
+```
+
+A blocked preflight is never converted to ready and is not written.
+
+### Overwrite authorization
+
+Overwrite must be authorized separately:
+
+```powershell
+node tools/imago-builder/cli/write-generation-plan.js `
+  --plan .\tmp\generation-plan.json `
+  --target-root .\generated `
+  --allow-overwrite `
+  --write
+```
+
+`--allow-overwrite` is passed to the real preflight. It does not modify file entries and does not write without `--write`.
+
+### JSON output
+
+Use `--json` for a single machine-readable JSON envelope on stdout:
+
+```powershell
+node tools/imago-builder/cli/write-generation-plan.js `
+  --plan .\tmp\generation-plan.json `
+  --target-root .\generated `
+  --json
+```
+
+### Save the CLI envelope
+
+```powershell
+node tools/imago-builder/cli/write-generation-plan.js `
+  --plan .\tmp\generation-plan.json `
+  --target-root .\generated `
+  --report .\tmp\writer-report.json
+```
+
+The report parent directory must already exist. Existing report files are rejected unless `--overwrite-report` is supplied. This option is independent from `--allow-overwrite`.
+
+### Exit codes
+
+```text
+0  successful operation or ready preflight
+1  invalid arguments, unreadable plan, invalid JSON or invalid plan
+2  blocked preflight
+3  failed write
+4  partial write
+5  CLI report output failure
+```
+
+### Help and version
+
+```powershell
+node tools/imago-builder/cli/write-generation-plan.js --help
+node tools/imago-builder/cli/write-generation-plan.js --version
+```
+
+The version is read from the nearest repository `package.json`. If no package metadata exists in an isolated Builder slice, the CLI reports `unknown` rather than inventing a separate Builder version.
+
+### CLI limits
+
+The CLI has no interactive confirmation, prompt, wizard, YAML input, stdin plan input, watch mode, rollback, resume, parallel execution or global transaction. It receives a `GenerationPlan` that has already been built.
+
