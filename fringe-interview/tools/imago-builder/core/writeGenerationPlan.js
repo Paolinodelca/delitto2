@@ -50,6 +50,97 @@ function hashFile(filePath, fsOps) {
     .digest("hex");
 }
 
+
+function isPathContained({
+  parentPath,
+  candidatePath,
+}) {
+  const relative =
+    path.relative(
+      parentPath,
+      candidatePath
+    );
+
+  return (
+    relative === "" ||
+    (
+      !path.isAbsolute(relative) &&
+      relative !== ".." &&
+      !relative.startsWith(
+        `..${path.sep}`
+      )
+    )
+  );
+}
+
+function verifyPreparedDirectory({
+  directory,
+  resolvedTargetRoot,
+  fsOps,
+}) {
+  const lexicalStat =
+    fsOps.lstatSync(
+      directory
+    );
+
+  if (
+    lexicalStat.isSymbolicLink()
+  ) {
+    const error =
+      new Error(
+        `Directory state changed after preflight: symbolic link at ${directory}`
+      );
+
+    error.writerCode =
+      "filesystem_state_changed";
+
+    throw error;
+  }
+
+  if (
+    !lexicalStat.isDirectory()
+  ) {
+    const error =
+      new Error(
+        `Prepared path is not a directory: ${directory}`
+      );
+
+    error.writerCode =
+      "filesystem_state_changed";
+
+    throw error;
+  }
+
+  const realTargetRoot =
+    fsOps.realpathSync(
+      resolvedTargetRoot
+    );
+
+  const realDirectory =
+    fsOps.realpathSync(
+      directory
+    );
+
+  if (
+    !isPathContained({
+      parentPath:
+        realTargetRoot,
+      candidatePath:
+        realDirectory,
+    })
+  ) {
+    const error =
+      new Error(
+        `Directory state changed after preflight and resolves outside the authorized target root: ${directory}`
+      );
+
+    error.writerCode =
+      "filesystem_state_changed";
+
+    throw error;
+  }
+}
+
 function buildGuardFailure({
   generationPlan,
   writePreflightReport,
@@ -459,18 +550,12 @@ function createGenerationPlanWriter({
           }
         );
 
-        const stat =
-          fsOps.statSync(
-            directory
-          );
-
-        if (
-          !stat.isDirectory()
-        ) {
-          throw new Error(
-            `Prepared path is not a directory: ${directory}`
-          );
-        }
+        verifyPreparedDirectory({
+          directory,
+          resolvedTargetRoot:
+            writePreflightReport.resolvedTargetRoot,
+          fsOps,
+        });
       }
     } catch (error) {
       coherence.pairs.forEach(
@@ -486,7 +571,11 @@ function createGenerationPlanWriter({
 
       errors.push({
         code:
-          "directory_preparation_failed",
+          error &&
+          error.writerCode ===
+            "filesystem_state_changed"
+            ? "filesystem_state_changed"
+            : "directory_preparation_failed",
         message:
           error.message,
       });
