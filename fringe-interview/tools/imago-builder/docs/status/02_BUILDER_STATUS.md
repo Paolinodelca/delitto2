@@ -92,7 +92,11 @@ Available
 - GenerationPlan
 - GenerationWritePreflight
 - GenerationWriteReport
-- MeasurementModuleGenerationResult
+- MeasurementModuleGenerationResult — NOT IMPLEMENTED
+  - il risultato è attualmente composto direttamente da
+    `generateMeasurementModuleScaffold()`;
+  - builder e validator dedicati non sono presenti;
+  - decisione rinviata al consolidamento dell’orchestratore.
 
 ---
 
@@ -123,6 +127,32 @@ Missing
 - High Level Orchestrator
 
 ---
+
+
+## Test location
+
+I test e gli health check del Builder non risiedono dentro
+`tools/imago-builder/tests`.
+
+Sono collocati nella cartella repository-level:
+
+`scripts/`
+
+Le famiglie principali sono:
+
+- `test_build_generation_*`
+- `test_generation_*`
+- `test_measurement_module_*`
+- `health_generation_*`
+- `test_generate_measurement_module_scaffold_dry_run.js`
+
+Qualunque handover operativo del Builder deve includere sia:
+
+- `tools/imago-builder/`
+- `scripts/`
+
+preservandone i percorsi relativi.
+
 
 ## Renderer
 

@@ -6,7 +6,7 @@ Questo documento elenca esclusivamente le API considerate pubbliche.
 
 * buildGenerationPlan()
 * buildGenerationWritePreflight()
-* buildMeasurementModuleGenerationResult()
+
 
 ## Validators
 
@@ -27,7 +27,19 @@ Questo documento elenca esclusivamente le API considerate pubbliche.
 * GenerationPlan
 * GenerationWritePreflight
 * GenerationWriteReport
-* MeasurementModuleGenerationResult
+## Risultato dell’orchestratore
+
+`generateMeasurementModuleScaffold()` restituisce attualmente un oggetto risultato
+costruito direttamente dall’orchestratore.
+
+Non esistono ancora:
+
+- `buildMeasurementModuleGenerationResult()`
+- `validateMeasurementModuleGenerationResult()`
+- un contratto pubblico autonomo `MeasurementModuleGenerationResult`
+
+L’eventuale introduzione di questo contratto richiede una decisione architetturale
+e un task dedicato.
 
 ## Compatibility
 

@@ -502,7 +502,21 @@ GenerationWritePreflight
 
 GenerationWriteReport
 
-MeasurementModuleGenerationResult
+### Risultato della generazione del Measurement Module
+
+L’orchestratore `generateMeasurementModuleScaffold()` restituisce attualmente
+un oggetto risultato non ancora formalizzato mediante un builder e un validator
+dedicati.
+
+`MeasurementModuleGenerationResult` è un contratto candidato, non un contratto
+implementato.
+
+La sua eventuale introduzione deve:
+
+- riutilizzare gli envelope già prodotti dall’orchestratore;
+- preservare la compatibilità dell’API pubblica;
+- non duplicare l’orchestratore esistente;
+- essere coperta da unit test e regression test.
 
 Eventuali contratti futuri dovranno seguire la stessa convenzione.
 
