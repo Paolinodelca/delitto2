@@ -106,7 +106,7 @@ Status
 
 COMPLETE
 
-Validator available for every public contract.
+Validator available for every implemented public contract.
 
 ---
 
@@ -224,7 +224,7 @@ Ogni task completato deve avere:
 | 0098E-2C | ✅ | Multi-file Writer |
 | 0098E-2D | ✅ | Writer Hardening |
 | 0098E-3 | ✅ | Generation Writer CLI |
-| 0098E-4 | ⏳ | Measurement Generator Orchestrator |
+| 0098E-4 | ✅ | Existing Measurement Generator Orchestrator consolidated |
 
 ---
 
@@ -236,13 +236,13 @@ Task
 
 Status
 
-PLANNED
+COMPLETED
 
 Goal
 
-Realizzare il primo orchestratore di alto livello per la generazione
-dei Measurement Module utilizzando esclusivamente i componenti già
-presenti nel repository.
+Consolidare e completare l'orchestratore pubblico
+generateMeasurementModuleScaffold()
+riutilizzando esclusivamente i componenti già presenti.
 
 Prerequisiti
 
@@ -250,14 +250,14 @@ Prerequisiti
 - Nessuna ricostruzione del codice
 - Riuso completo dei Builder esistenti
 
-Deliverable attesi
+Deliverable completati
 
-- High Level Builder
-- Public API
-- Test
-- Regression
-- Health
-- Documentazione
+- orchestratore pubblico esistente consolidato senza introdurne uno nuovo;
+- helper privati per normalizzazione input, diagnostiche, file summary e result envelope;
+- comportamento `dry_run` e API pubblica preservati;
+- test diretto e regression rafforzati solo sui confini interessati;
+- health check esistenti mantenuti, senza nuovo health dedicato;
+- documentazione aggiornata.
 
 ---
 

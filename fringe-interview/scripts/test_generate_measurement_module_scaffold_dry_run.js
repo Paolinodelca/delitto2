@@ -120,17 +120,24 @@ const spec =
 const specBefore =
   JSON.stringify(spec);
 
+const input = {
+  spec,
+  targetRoot,
+
+  write:
+    true,
+
+  allowOverwrite:
+    true,
+};
+
+const inputBefore =
+  JSON.stringify(input);
+
 const result =
-  generateMeasurementModuleScaffold({
-    spec,
-    targetRoot,
-
-    write:
-      true,
-
-    allowOverwrite:
-      true,
-  });
+  generateMeasurementModuleScaffold(
+    input
+  );
 
 expect(
   result.mode === "dry_run",
@@ -146,6 +153,17 @@ expect(
 expect(
   result.generated === true,
   "generated"
+);
+
+expect(
+  result.contextStatus === "ready",
+  "contextStatus"
+);
+
+expect(
+  JSON.stringify(input) ===
+    inputBefore,
+  "input mutated"
 );
 
 expect(
@@ -181,6 +199,19 @@ result.files.forEach(
         "content"
       ) === false,
       `file ${index} must not expose content`
+    );
+
+    expect(
+      JSON.stringify(
+        Object.keys(file)
+      ) ===
+        JSON.stringify([
+          "relativePath",
+          "contentHash",
+          "overwritePolicy",
+          "artifactType",
+        ]),
+      `file ${index} minimal shape`
     );
 
     expect(
@@ -267,6 +298,14 @@ expect(
   "invalid errors"
 );
 
+expect(
+  invalidResult.errors.length ===
+    new Set(
+      invalidResult.errors
+    ).size,
+  "invalid errors deduplicated"
+);
+
 const draftResult =
   generateMeasurementModuleScaffold({
     spec:
@@ -324,6 +363,17 @@ expect(
         "health_test"
   ),
   "reduced excludes health"
+);
+
+const defaultRootResult =
+  generateMeasurementModuleScaffold({
+    spec:
+      buildExecutionThroughOthersMeasurementSpec(),
+  });
+
+expect(
+  defaultRootResult.plan.targetRoot === ".",
+  "default targetRoot"
 );
 
 const first =

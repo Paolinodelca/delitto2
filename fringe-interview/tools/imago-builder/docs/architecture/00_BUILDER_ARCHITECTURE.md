@@ -506,7 +506,12 @@ GenerationWriteReport
 
 L’orchestratore `generateMeasurementModuleScaffold()` restituisce attualmente
 un oggetto risultato non ancora formalizzato mediante un builder e un validator
-dedicati.
+dedicati. L’orchestratore pubblico è unico e opera esclusivamente in modalità
+`dry_run`: normalizza l’input, valida la spec, ricava lo stato del template
+context, delega la costruzione completa del piano a
+`buildMeasurementModulePlan()` e compone una vista minimale dei file senza
+scrivere sul filesystem. Il campo `generated` indica che il `GenerationPlan` è
+`ready`, non che i file siano stati materialmente scritti.
 
 `MeasurementModuleGenerationResult` è un contratto candidato, non un contratto
 implementato.

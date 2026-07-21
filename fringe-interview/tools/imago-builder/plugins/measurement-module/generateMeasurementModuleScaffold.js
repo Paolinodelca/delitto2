@@ -21,6 +21,23 @@ function isObject(value) {
   );
 }
 
+function normalizeMeasurementModuleScaffoldInput(input) {
+  const sourceInput =
+    isObject(input)
+      ? input
+      : {};
+
+  return {
+    spec:
+      sourceInput.spec,
+
+    targetRoot:
+      typeof sourceInput.targetRoot === "string"
+        ? sourceInput.targetRoot
+        : ".",
+  };
+}
+
 function uniqueStrings(values) {
   const result = [];
   const seen = new Set();
@@ -45,19 +62,118 @@ function uniqueStrings(values) {
   return result;
 }
 
+function collectScaffoldDiagnostics({
+  specValidation,
+  contextWarnings,
+  contextErrors,
+  plan,
+}) {
+  return {
+    errors:
+      uniqueStrings([
+        ...specValidation.errors,
+        ...contextErrors,
+        ...(
+          Array.isArray(plan.errors)
+            ? plan.errors
+            : []
+        ),
+      ]),
+
+    warnings:
+      uniqueStrings([
+        ...specValidation.warnings,
+        ...contextWarnings,
+        ...(
+          Array.isArray(plan.warnings)
+            ? plan.warnings
+            : []
+        ),
+      ]),
+  };
+}
+
+function buildGeneratedFileSummary(plan) {
+  if (
+    !plan ||
+    plan.planStatus !== "ready" ||
+    !Array.isArray(plan.files)
+  ) {
+    return [];
+  }
+
+  return plan.files.map(
+    (file) => ({
+      relativePath:
+        file.relativePath,
+
+      contentHash:
+        file.contentHash,
+
+      overwritePolicy:
+        file.overwritePolicy,
+
+      artifactType:
+        file.metadata &&
+        typeof file.metadata.artifactType ===
+          "string"
+          ? file.metadata.artifactType
+          : null,
+    })
+  );
+}
+
+function buildMeasurementModuleScaffoldResult({
+  specValidation,
+  contextStatus,
+  plan,
+  errors,
+  warnings,
+}) {
+  const generated =
+    plan.planStatus === "ready";
+
+  return {
+    mode: "dry_run",
+
+    generatorId:
+      GENERATOR_ID,
+
+    specValidation,
+
+    contextStatus,
+
+    plan,
+
+    // "generated" means that a complete plan was produced; no filesystem
+    // write is performed by this orchestrator.
+    generated,
+
+    files:
+      buildGeneratedFileSummary(
+        plan
+      ),
+
+    errors,
+
+    warnings,
+
+    metadata: {
+      version: "1.0",
+      createdAt:
+        new Date().toISOString(),
+    },
+  };
+}
+
 function generateMeasurementModuleScaffold(input = {}) {
-  const sourceInput =
-    isObject(input)
-      ? input
-      : {};
-
-  const spec =
-    sourceInput.spec;
-
-  const targetRoot =
-    typeof sourceInput.targetRoot === "string"
-      ? sourceInput.targetRoot
-      : ".";
+  const {
+    spec,
+    targetRoot,
+  } =
+    normalizeMeasurementModuleScaffoldInput(
+      input
+    );
 
   const specValidation =
     validateMeasurementModuleSpec(
@@ -96,78 +212,24 @@ function generateMeasurementModuleScaffold(input = {}) {
       targetRoot,
     });
 
-  const errors =
-    uniqueStrings([
-      ...specValidation.errors,
-      ...contextErrors,
-      ...(
-        Array.isArray(plan.errors)
-          ? plan.errors
-          : []
-      ),
-    ]);
-
-  const warnings =
-    uniqueStrings([
-      ...specValidation.warnings,
-      ...contextWarnings,
-      ...(
-        Array.isArray(plan.warnings)
-          ? plan.warnings
-          : []
-      ),
-    ]);
-
-  const generated =
-    plan.planStatus === "ready";
-
-  return {
-    mode: "dry_run",
-
-    generatorId:
-      GENERATOR_ID,
-
-    specValidation,
-
-    contextStatus,
-
-    plan,
-
-    generated,
-
-    files:
-      generated
-        ? plan.files.map(
-            (file) => ({
-              relativePath:
-                file.relativePath,
-
-              contentHash:
-                file.contentHash,
-
-              overwritePolicy:
-                file.overwritePolicy,
-
-              artifactType:
-                file.metadata &&
-                typeof file.metadata.artifactType ===
-                  "string"
-                  ? file.metadata.artifactType
-                  : null,
-            })
-          )
-        : [],
-
+  const {
     errors,
-
     warnings,
+  } =
+    collectScaffoldDiagnostics({
+      specValidation,
+      contextWarnings,
+      contextErrors,
+      plan,
+    });
 
-    metadata: {
-      version: "1.0",
-      createdAt:
-        new Date().toISOString(),
-    },
-  };
+  return buildMeasurementModuleScaffoldResult({
+    specValidation,
+    contextStatus,
+    plan,
+    errors,
+    warnings,
+  });
 }
 
 module.exports = {

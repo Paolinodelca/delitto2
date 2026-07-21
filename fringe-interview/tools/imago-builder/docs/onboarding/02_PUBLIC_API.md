@@ -14,6 +14,14 @@ Questo documento elenca esclusivamente le API considerate pubbliche.
 * validateGenerationWritePreflight()
 * validateGenerationWriteReport()
 
+## Orchestrator
+
+* generateMeasurementModuleScaffold()
+
+L’orchestratore è unico, resta `dry_run` e delega la costruzione del piano a
+`buildMeasurementModulePlan()`. `generated: true` significa che il piano è
+`ready`; non implica scrittura sul filesystem.
+
 ## Writer
 
 * writeGenerationPlan()
