@@ -1469,6 +1469,21 @@ addCheck("Role target detection", async () => {
   });
 });
 
+addCheck("Beta Session Core", async () => {
+  const module = await import("../src/session/index.js");
+  const created = module.createBetaSession({
+    now: () => "2026-07-22T08:00:00.000Z",
+    idFactory: (() => { let i = 0; return () => `health-${++i}`; })(),
+    tokenFactory: () => "health-beta-session-token-".repeat(2)
+  });
+  if (created.session.revision !== 1) throw new Error("Beta Session initial revision mismatch.");
+  if (!module.validateBetaSession(created.session).valid) throw new Error("Created Beta Session is invalid.");
+  const started = module.transitionBetaSession(created.session, {
+    toStatus: "in_progress", interviewStatus: "in_progress", now: () => "2026-07-22T08:01:00.000Z"
+  });
+  if (started.revision !== 2) throw new Error("Beta Session revision did not increment.");
+});
+
 let failed = 0;
 
 console.log("\nFRINGE Health Check\n");
