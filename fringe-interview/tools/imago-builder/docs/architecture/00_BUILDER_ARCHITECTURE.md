@@ -506,12 +506,17 @@ GenerationWriteReport
 
 L’orchestratore `generateMeasurementModuleScaffold()` restituisce attualmente
 un oggetto risultato non ancora formalizzato mediante un builder e un validator
-dedicati. L’orchestratore pubblico è unico e opera esclusivamente in modalità
-`dry_run`: normalizza l’input, valida la spec, ricava lo stato del template
-context, delega la costruzione completa del piano a
-`buildMeasurementModulePlan()` e compone una vista minimale dei file senza
-scrivere sul filesystem. Il campo `generated` indica che il `GenerationPlan` è
-`ready`, non che i file siano stati materialmente scritti.
+dedicati. L’orchestratore pubblico è unico: opera in modalità `dry_run` per
+default e, soltanto con `write: true`, esegue la pipeline reale
+`GenerationPlan → GenerationWritePreflight → Writer`. La costruzione completa
+del piano resta delegata a `buildMeasurementModulePlan()`; preflight e scrittura
+riutilizzano esclusivamente le API Core esistenti. Il Writer non viene mai
+invocato se il piano non è `ready` o se il preflight non è `ready`.
+
+Il campo `generated` indica che il `GenerationPlan` è `ready`. In modalità
+`write`, il campo `written` indica invece che il `GenerationWriteReport` ha
+stato `completed`. `allowOverwrite` autorizza il preflight, ma non supera mai la
+`overwritePolicy` dei singoli artifact.
 
 `MeasurementModuleGenerationResult` è un contratto candidato, non un contratto
 implementato.
@@ -1373,3 +1378,39 @@ rispetto alla rapidità di implementazione.
 ---
 
 END OF DOCUMENT
+---
+
+# Builder State Inventory Foundation
+
+Il Builder dispone di una Foundation interna che ricava fatti strutturali dal
+repository senza interpretazione semantica.
+
+Pipeline:
+
+```text
+Repository Scanner
+↓
+Evidence Collectors
+↓
+Builder State Inventory Builder
+↓
+Builder State Inventory Validator
+↓
+Deterministic JSON Serializer
+```
+
+La Foundation raccoglie esclusivamente:
+
+- struttura del Builder;
+- plugin presenti;
+- entry point pubblici ed export dichiarati;
+- test Builder e regression;
+- health check;
+- documentazione Builder.
+
+L'Inventory è repository-relative, privo di timestamp e percorsi assoluti,
+ordinato deterministicamente e non modifica il repository ispezionato.
+
+La Foundation è interna e non viene esportata dalla Public API. I consumer
+futuri devono ricevere l'Inventory invece di implementare scansioni concorrenti.
+

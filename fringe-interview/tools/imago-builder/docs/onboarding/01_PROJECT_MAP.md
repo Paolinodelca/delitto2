@@ -12,9 +12,9 @@ planning/
 render/
 writer/
 cli/
-tests/
+internal/
+  builder-state-inventory/
 docs/
-handover/
 ```
 
 ---
@@ -49,6 +49,11 @@ CLI
 
 * Public command-line interface.
 
+Internal Foundation
+
+* Repository scanner and deterministic Builder State Inventory.
+* Not exported from the Builder Public API.
+
 Tests
 
 * Unit, Regression, Process, Health.
@@ -82,6 +87,8 @@ Writer
 ↓
 
 CLI
+
+The internal Builder State Inventory is read-only and orthogonal to the generation pipeline.
 
 ---
 

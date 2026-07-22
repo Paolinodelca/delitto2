@@ -651,6 +651,38 @@ Maggiore qualità delle review.
 
 ---
 
+# AD-0018
+
+Title
+
+Builder State Inventory as Shared Post-Beta Foundation
+
+Status
+
+APPROVED
+
+Problem
+
+Documentation Automation, Release Notes, Analytics, Documentation Engine e CLI
+utilities richiedono la stessa rappresentazione oggettiva dello stato del Builder.
+Scansioni indipendenti produrrebbero duplicazione e interpretazioni divergenti.
+
+Decision
+
+Lo stato strutturale verificabile viene raccolto in un Builder State Inventory
+interno, deterministico e repository-relative. La Foundation separa scansione,
+collector, costruzione, validazione e serializzazione.
+
+L'Inventory non è un contratto pubblico e non interpreta roadmap, task history,
+commit o testo narrativo.
+
+Conseguenze
+
+I futuri consumer post-Beta condividono una sola base dati derivata dal
+repository. Le modifiche alla superficie pubblica del Builder restano escluse.
+
+---
+
 # Architectural Principles
 
 Le decisioni contenute in questo documento costituiscono la base

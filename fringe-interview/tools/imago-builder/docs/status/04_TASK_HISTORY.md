@@ -269,7 +269,7 @@ APPROVED
 L'ultimo task completato e approvato è:
 
 ```text
-0098E-3
+0099A-1
 ```
 
 Il task seguente non deve essere inserito nella cronologia finché non
@@ -279,6 +279,203 @@ sarà:
 * testato;
 * verificato;
 * approvato.
+
+---
+
+## 0098E-5
+
+Title
+
+Measurement Module End-to-End Generation
+
+Status
+
+APPROVED
+
+Goal
+
+Estensione dell’orchestratore pubblico esistente con la pipeline controllata
+GenerationPlan → GenerationWritePreflight → Writer, mantenendo il dry-run come
+default e senza introdurre nuove API pubbliche.
+
+Review
+
+APPROVED
+
+---
+
+## 0098E-6
+
+Title
+
+Core Stabilization and End-to-End Release Validation
+
+Status
+
+APPROVED
+
+Goal
+
+Consolidamento della pipeline pubblica end-to-end con verifica di dry-run,
+scrittura reale, hash degli artifact e blocco sicuro dell'overwrite.
+
+Public Contracts
+
+- `GenerationPlan`
+- `GenerationWritePreflight`
+- `GenerationWriteReport`
+
+Known Limitation
+
+La validazione generale `fringe_health_check.js` richiede file applicativi
+`src/` e `config/` non sempre inclusi negli handover del solo Builder.
+
+Review
+
+APPROVED
+
+---
+
+## 0098E-7
+
+Title
+
+Public API Compatibility Regression
+
+Status
+
+APPROVED
+
+Goal
+
+Protezione della superficie API pubblica del Builder e del plugin Measurement
+Module, inclusa la non esposizione degli helper interni e dei contratti candidati
+non implementati.
+
+Public Contracts
+
+Nessun nuovo contratto. Verificata la compatibilità degli export pubblici
+esistenti.
+
+Known Limitation
+
+La snapshot della superficie pubblica deve essere aggiornata intenzionalmente
+quando una futura decisione architetturale modifica gli export.
+
+Review
+
+APPROVED
+
+---
+
+## 0098E-8
+
+Title
+
+Beta Readiness Regression Gate
+
+Status
+
+APPROVED
+
+Goal
+
+Introduzione di un unico gate di regressione per verificare Writer release,
+Measurement Module end-to-end, compatibilità API pubblica e processo CLI prima
+della beta.
+
+Behavior
+
+Il gate riutilizza test esistenti e viene eseguito dal release gate Builder.
+Non modifica il codice produttivo e non introduce nuove API.
+
+Public Contracts
+
+Nessun nuovo contratto pubblico.
+
+Known Limitation
+
+Il gate certifica il perimetro Builder presente nell'handover; non sostituisce
+gli health applicativi che dipendono da `src/` e `config/`.
+
+Review
+
+APPROVED
+
+---
+
+## 0098E-9
+
+Title
+
+IMAGO Builder Beta Release
+
+Status
+
+APPROVED
+
+Goal
+
+Chiusura formale della milestone Beta dopo la verifica positiva del gate di
+readiness già presente nel repository.
+
+Behavior
+
+Il task non introduce nuove funzionalità. Conferma come baseline Beta le API,
+i contratti, l'orchestratore, il Writer e la CLI già protetti dalle regression
+0098E-6, 0098E-7 e 0098E-8.
+
+Public Contracts
+
+Nessun nuovo contratto pubblico.
+
+Known Limitation
+
+La CLI continua a restituire `unknown` per `--version` quando l'handover non
+contiene un `package.json`; questo comportamento è intenzionale e già
+documentato. `scripts/fringe_health_check.js` resta non applicabile agli
+handover privi delle cartelle applicative `src/` e `config/`.
+
+Review
+
+APPROVED
+
+---
+
+## 0099A-1
+
+Title
+
+Builder State Inventory Core Foundation
+
+Status
+
+APPROVED
+
+Goal
+
+Introduzione della Foundation interna e deterministica che costruisce una
+rappresentazione repository-relative dello stato strutturale del Builder.
+
+Behavior
+
+La Foundation scansiona struttura, plugin, entry point pubblici, test, regression,
+health check e documentazione. Valida l'Inventory e lo serializza in JSON stabile
+senza timestamp correnti, percorsi assoluti o mutazioni del repository.
+
+Public Contracts
+
+Nessun nuovo contratto pubblico. Builder, validator e serializer dell'Inventory
+rimangono nel namespace interno e non sono esportati dal root Builder.
+
+Known Limitation
+
+L'Inventory registra esclusivamente evidenze strutturali. Non interpreta testo
+narrativo, non deduce task completati e non aggiorna ancora documentazione.
+
+Review
+
+APPROVED
 
 ---
 

@@ -2,7 +2,7 @@
 
 ## Current Status
 
-Il Builder dispone di una infrastruttura Core stabile.
+Il Builder dispone di una baseline Beta stabile e verificata.
 
 Sono completati:
 
@@ -13,6 +13,10 @@ Sono completati:
 * CLI
 * Test Foundation
 * Documentation Foundation
+* Generator Orchestrator
+* Measurement Module Generation
+* Beta Readiness Gate
+* Beta Release
 
 Il repository rappresenta sempre la Source of Truth.
 
@@ -20,13 +24,11 @@ Il repository rappresenta sempre la Source of Truth.
 
 ## Next Task
 
-Riprendere dal task indicato in:
+La roadmap pre-Beta è completata.
 
-```
-docs/status/02_BUILDER_STATUS.md
-```
-
-Mai assumere che il task successivo sia già iniziato.
+Le evoluzioni successive devono essere selezionate dalla sezione `After Beta`
+di `docs/onboarding/03_ROADMAP.md` e trasformate in task dedicati soltanto dopo
+una verifica del repository reale e del valore operativo atteso.
 
 ---
 

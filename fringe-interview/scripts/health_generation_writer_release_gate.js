@@ -54,6 +54,21 @@ const checks = {
       "scripts/test_generation_writer_release_regression.js"
     ),
 
+  measurementModuleEndToEnd:
+    run(
+      "scripts/test_measurement_module_end_to_end_regression.js"
+    ),
+
+  builderPublicApiRegression:
+    run(
+      "scripts/test_builder_public_api_regression.js"
+    ),
+
+  builderBetaReadinessRegression:
+    run(
+      "scripts/test_builder_beta_readiness_regression.js"
+    ),
+
   generationPlanValidator:
     typeof builder.validateGenerationPlan ===
       "function",
@@ -68,6 +83,10 @@ const checks = {
 
   publicWriter:
     typeof builder.writeGenerationPlan ===
+      "function",
+
+  publicMeasurementOrchestrator:
+    typeof builder.generateMeasurementModuleScaffold ===
       "function",
 
   internalFactoryNotPublic:

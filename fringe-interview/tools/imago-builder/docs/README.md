@@ -84,13 +84,13 @@ vince sempre il repository.
 
 ---
 
-## Beta Philosophy
+## Beta Status
 
-L'obiettivo corrente è raggiungere una Beta stabile.
+La baseline Beta del Builder è stata rilasciata dopo il completamento del gate
+di readiness.
 
-Ogni nuova attività deve essere valutata in funzione del suo contributo al percorso verso la Beta.
-
-Le ottimizzazioni non essenziali vengono pianificate per il post-Beta.
+Le evoluzioni successive devono preservare la compatibilità pubblica e portare
+valore concreto senza indebolire le regression di rilascio esistenti.
 
 ---
 

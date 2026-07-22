@@ -123,12 +123,6 @@ const specBefore =
 const input = {
   spec,
   targetRoot,
-
-  write:
-    true,
-
-  allowOverwrite:
-    true,
 };
 
 const inputBefore =

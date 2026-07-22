@@ -13,22 +13,25 @@
 
 ## Current
 
-Measurement Module Generator Orchestrator
+Documentation Automation Foundation
 
 ---
 
 ## Before Beta
 
-* Generator Orchestrator
-* Measurement Module Generation
-* Core Stabilization
-* End-to-End Validation
-* Beta Release
+* Generator Orchestrator ✅
+* Measurement Module Generation ✅
+* Core Stabilization ✅
+* End-to-End Validation ✅
+* Public API Compatibility Gate ✅
+* Beta Readiness Regression Gate ✅
+* Beta Release ✅
 
 ---
 
 ## After Beta
 
+* Builder State Inventory Core Foundation ✅
 * Documentation Automation
 * Release Notes Generator
 * Builder Analytics
@@ -39,6 +42,7 @@ Measurement Module Generator Orchestrator
 
 ## Guiding Principle
 
-Every activity must shorten the path to a stable Beta.
+The Beta baseline is now released and protected by the existing readiness gate.
 
-If an improvement does not provide a rapid return on investment, postpone it until after the Beta.
+Post-Beta work must prioritize concrete product value, operational reliability
+and low-cost maintainability.

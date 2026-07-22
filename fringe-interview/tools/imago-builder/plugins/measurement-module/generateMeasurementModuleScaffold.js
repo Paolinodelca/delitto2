@@ -10,6 +10,14 @@ const {
   buildMeasurementModulePlan,
 } = require("./buildMeasurementModulePlan");
 
+const {
+  buildGenerationWritePreflight,
+} = require("../../core/buildGenerationWritePreflight");
+
+const {
+  writeGenerationPlan,
+} = require("../../core/writeGenerationPlan");
+
 const GENERATOR_ID =
   "measurement_module_scaffold_v1";
 
@@ -35,6 +43,17 @@ function normalizeMeasurementModuleScaffoldInput(input) {
       typeof sourceInput.targetRoot === "string"
         ? sourceInput.targetRoot
         : ".",
+
+    write:
+      sourceInput.write === true,
+
+    allowOverwrite:
+      sourceInput.allowOverwrite === true,
+
+    rootDirectory:
+      typeof sourceInput.rootDirectory === "string"
+        ? sourceInput.rootDirectory
+        : process.cwd(),
   };
 }
 
@@ -62,11 +81,34 @@ function uniqueStrings(values) {
   return result;
 }
 
+function normalizeDiagnosticMessages(values) {
+  return (
+    Array.isArray(values)
+      ? values
+      : []
+  ).map((value) => {
+    if (typeof value === "string") {
+      return value;
+    }
+
+    if (
+      isObject(value) &&
+      typeof value.message === "string"
+    ) {
+      return value.message;
+    }
+
+    return null;
+  });
+}
+
 function collectScaffoldDiagnostics({
   specValidation,
   contextWarnings,
   contextErrors,
   plan,
+  preflightReport = null,
+  writeReport = null,
 }) {
   return {
     errors:
@@ -78,6 +120,18 @@ function collectScaffoldDiagnostics({
             ? plan.errors
             : []
         ),
+        ...normalizeDiagnosticMessages(
+          preflightReport &&
+          preflightReport.errors
+        ),
+        ...normalizeDiagnosticMessages(
+          preflightReport &&
+          preflightReport.conflicts
+        ),
+        ...normalizeDiagnosticMessages(
+          writeReport &&
+          writeReport.errors
+        ),
       ]),
 
     warnings:
@@ -88,6 +142,14 @@ function collectScaffoldDiagnostics({
           Array.isArray(plan.warnings)
             ? plan.warnings
             : []
+        ),
+        ...normalizeDiagnosticMessages(
+          preflightReport &&
+          preflightReport.warnings
+        ),
+        ...normalizeDiagnosticMessages(
+          writeReport &&
+          writeReport.warnings
         ),
       ]),
   };
@@ -124,17 +186,20 @@ function buildGeneratedFileSummary(plan) {
 }
 
 function buildMeasurementModuleScaffoldResult({
+  mode,
   specValidation,
   contextStatus,
   plan,
+  preflightReport = null,
+  writeReport = null,
   errors,
   warnings,
 }) {
   const generated =
     plan.planStatus === "ready";
 
-  return {
-    mode: "dry_run",
+  const result = {
+    mode,
 
     generatorId:
       GENERATOR_ID,
@@ -145,8 +210,8 @@ function buildMeasurementModuleScaffoldResult({
 
     plan,
 
-    // "generated" means that a complete plan was produced; no filesystem
-    // write is performed by this orchestrator.
+    // "generated" means that a complete plan was produced. In write mode,
+    // materialization status is exposed separately through "written".
     generated,
 
     files:
@@ -157,19 +222,39 @@ function buildMeasurementModuleScaffoldResult({
     errors,
 
     warnings,
-
-    metadata: {
-      version: "1.0",
-      createdAt:
-        new Date().toISOString(),
-    },
   };
+
+  if (mode === "write") {
+    result.preflightReport =
+      preflightReport;
+
+    result.writeReport =
+      writeReport;
+
+    result.written =
+      Boolean(
+        writeReport &&
+        writeReport.status ===
+          "completed"
+      );
+  }
+
+  result.metadata = {
+    version: "1.0",
+    createdAt:
+      new Date().toISOString(),
+  };
+
+  return result;
 }
 
 function generateMeasurementModuleScaffold(input = {}) {
   const {
     spec,
     targetRoot,
+    write,
+    allowOverwrite,
+    rootDirectory,
   } =
     normalizeMeasurementModuleScaffoldInput(
       input
@@ -212,6 +297,34 @@ function generateMeasurementModuleScaffold(input = {}) {
       targetRoot,
     });
 
+  let preflightReport = null;
+  let writeReport = null;
+
+  if (
+    write === true &&
+    plan.planStatus === "ready"
+  ) {
+    preflightReport =
+      buildGenerationWritePreflight({
+        plan,
+        rootDirectory,
+        allowOverwrite,
+      });
+
+    if (
+      preflightReport.preflightStatus ===
+        "ready"
+    ) {
+      writeReport =
+        writeGenerationPlan({
+          generationPlan:
+            plan,
+          writePreflightReport:
+            preflightReport,
+        });
+    }
+  }
+
   const {
     errors,
     warnings,
@@ -221,12 +334,20 @@ function generateMeasurementModuleScaffold(input = {}) {
       contextWarnings,
       contextErrors,
       plan,
+      preflightReport,
+      writeReport,
     });
 
   return buildMeasurementModuleScaffoldResult({
+    mode:
+      write === true
+        ? "write"
+        : "dry_run",
     specValidation,
     contextStatus,
     plan,
+    preflightReport,
+    writeReport,
     errors,
     warnings,
   });

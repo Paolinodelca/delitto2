@@ -4,7 +4,7 @@ Version: 1.0
 
 Status: ACTIVE
 
-Last Updated: YYYY-MM-DD
+Last Updated: 2026-07-21
 
 ---
 
@@ -37,11 +37,11 @@ IMAGO Builder
 
 Stage
 
-Core Infrastructure
+Beta
 
 Overall Status
 
-ACTIVE DEVELOPMENT
+BETA RELEASED
 
 Repository
 
@@ -59,10 +59,11 @@ Repository is considered the Source of Truth.
 | Planning Layer | ✅ |
 | Writer Layer | ✅ |
 | CLI Foundation | ✅ |
-| Documentation Foundation | 🚧 |
-| Generator Orchestrator | ⏳ |
-| Measurement Modules | ⏳ |
+| Documentation Foundation | ✅ |
+| Generator Orchestrator | ✅ |
+| Measurement Modules | ✅ |
 | Builder Automation | ⏳ |
+| Beta Release | ✅ |
 
 Legenda
 
@@ -122,9 +123,9 @@ Available
 - Planning Builders
 - Writer Builders
 
-Missing
+High-level generation
 
-- High Level Orchestrator
+- `generateMeasurementModuleScaffold()` supports dry-run and explicit write mode.
 
 ---
 
@@ -225,6 +226,11 @@ Ogni task completato deve avere:
 | 0098E-2D | ✅ | Writer Hardening |
 | 0098E-3 | ✅ | Generation Writer CLI |
 | 0098E-4 | ✅ | Existing Measurement Generator Orchestrator consolidated |
+| 0098E-5 | ✅ | Measurement Module end-to-end generation |
+| 0098E-6 | ✅ | Core stabilization and end-to-end release validation |
+| 0098E-7 | ✅ | Public API compatibility regression |
+| 0098E-8 | ✅ | Beta readiness regression gate |
+| 0098E-9 | ✅ | IMAGO Builder Beta Release |
 
 ---
 
@@ -232,32 +238,28 @@ Ogni task completato deve avere:
 
 Task
 
-0098E-4
+0098E-9
 
 Status
 
 COMPLETED
 
+Title
+
+IMAGO Builder Beta Release
+
 Goal
 
-Consolidare e completare l'orchestratore pubblico
-generateMeasurementModuleScaffold()
-riutilizzando esclusivamente i componenti già presenti.
-
-Prerequisiti
-
-- Repository inspection
-- Nessuna ricostruzione del codice
-- Riuso completo dei Builder esistenti
+Dichiarare completata la milestone Beta dopo la verifica del gate di readiness
+già presente, senza introdurre nuove funzionalità, contratti o API pubbliche.
 
 Deliverable completati
 
-- orchestratore pubblico esistente consolidato senza introdurne uno nuovo;
-- helper privati per normalizzazione input, diagnostiche, file summary e result envelope;
-- comportamento `dry_run` e API pubblica preservati;
-- test diretto e regression rafforzati solo sui confini interessati;
-- health check esistenti mantenuti, senza nuovo health dedicato;
-- documentazione aggiornata.
+- esecuzione positiva del Beta Readiness Regression Gate;
+- esecuzione positiva degli health check Builder applicabili;
+- roadmap aggiornata con `Beta Release` completata;
+- stato corrente aggiornato a `BETA RELEASED`;
+- cronologia tecnica aggiornata con il confine di rilascio.
 
 ---
 
@@ -310,8 +312,8 @@ Non devono essere esportate.
 | Planning | PASS |
 | Writer | PASS |
 | CLI | PASS |
-| Documentation | IN PROGRESS |
-| Generator | NOT AVAILABLE |
+| Documentation | PASS |
+| Generator | PASS |
 
 ---
 
@@ -356,10 +358,38 @@ Esempio.
 
 | Decisione | Stato |
 |-----------|-------|
-| Measurement Generator Orchestrator | OPEN |
+| Measurement Generator Orchestrator | APPROVED |
 | Builder Automation | OPEN |
+| Builder State Inventory Foundation | APPROVED |
 | Documentation Automation | OPEN |
 
 Le decisioni approvate devono essere spostate nel documento
 03_ARCHITECT_DECISIONS.md.
+---
+
+# Builder State Inventory
+
+Status: FOUNDATION AVAILABLE
+
+Internal components available:
+
+- Repository Scanner;
+- Structure, Plugin, Public Entry Point, Test, Health and Documentation Collectors;
+- Builder State Inventory Builder;
+- Builder State Inventory Validator;
+- deterministic JSON serializer.
+
+Properties verified:
+
+- repository-relative output;
+- deterministic ordering;
+- no current timestamps;
+- no absolute paths;
+- no mutation of inspected repositories;
+- no export from the Builder Public API.
+
+Current limitation:
+
+The Foundation inventories structural evidence only. It does not generate or
+update documentation and does not infer task completion.
 
