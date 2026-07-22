@@ -211,3 +211,24 @@ Infine:
 aggiungere health check.
 
 Mai saltare l'ultimo passaggio.
+
+---
+
+# Beta Session Core
+
+Directory:
+
+`src/session/`
+
+Responsabile di:
+
+* identità tecnica pseudonima della prova Beta
+* lifecycle `created` / `in_progress` / `interrupted` / `completed`
+* riferimenti a input, runtime e risultato canonico
+* persistenza JSON filesystem e recupero tramite resume token
+
+Il Beta Session Core è distinto da `interviewSession` e `interviewRuntime` e non è esportato da `src/app/index.js`.
+
+Documento tecnico:
+
+`notes/BETA_SESSION_CORE.md`
