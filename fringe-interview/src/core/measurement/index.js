@@ -17,3 +17,5 @@ module.exports = {
   ...require("./validateMeasureResult"),
   ...require("./healthBuildMeasureResult"),
 };
+// Neutral measurement/observation foundation (Task 0100B-1).
+Object.assign(module.exports, require("../observation"));

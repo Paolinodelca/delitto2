@@ -1469,6 +1469,40 @@ addCheck("Role target detection", async () => {
   });
 });
 
+addCheck("Measurement and Observation Foundation", async () => {
+  const imported = await import("../src/core/observation/index.js");
+  const api = imported.default || imported;
+  const at = "2026-07-22T12:00:00.000Z";
+  const measurement = api.buildMeasurement({ id:"health-m", type:"answer_analysis", sourceRefs:[{type:"input_source",id:"health-source"}], scope:{type:"source_segment"}, targetIds:["signal"], method:{id:"health",version:"1.0"}, status:"completed", createdAt:at, completedAt:at });
+  if (!api.validateMeasurement(measurement).valid) throw new Error("Measurement invalid.");
+  const make = (id, group) => api.buildObservation({ id, measurementId:"health-m", sourceRef:{type:"input_source",id:"health-source"}, characteristicId:"signal", signalType:"example", observationStatus:"observed", direction:"positive", strength:.8, confidence:.8, evidenceQuality:.9, sourceReliability:.8, independenceGroup:group, observedAt:at, extractedBy:"health" });
+  const a=make("ha","g1"), b=make("hb","g2");
+  if (!api.validateObservation(a).valid) throw new Error("Observation invalid.");
+  const base=api.normalizeMeasurementResult({measurement,observations:[a,b],characteristicId:"signal"});
+  const duplicated=api.normalizeMeasurementResult({measurement,observations:[a,b,{...a,id:"ha-copy"},{...b,id:"hb-copy"}],characteristicId:"signal"});
+  if (!api.validateMeasurementResult(base).valid) throw new Error("MeasurementResult invalid.");
+  if (base.normalizedValue !== duplicated.normalizedValue) throw new Error("Duplicate observations inflated normalized value.");
+});
+
+addCheck("Beta Runtime Session Integration", async () => {
+  const integration = await import("../src/app/betaRuntimeSessionIntegration.js");
+  let i = 0;
+  const now = () => `2026-07-22T09:0${i++}:00.000Z`;
+  const created = integration.createBetaRuntimeSession({
+    runtime: { currentStep: { phaseName: "OPENING" }, runtimeState: { isCompleted: false } },
+    now,
+    idFactory: (() => { let n=0; return () => `runtime-health-${++n}`; })(),
+    tokenFactory: () => "runtime-health-token-123456789012345678901"
+  });
+  const progressed = integration.syncBetaRuntimeProgress(created.session, {
+    runtime: { currentStep: { phaseName: "CASE_1" }, runtimeState: { isCompleted: false } },
+    now
+  });
+  if (progressed.currentStep !== "CASE_1" || progressed.revision !== 4) {
+    throw new Error("Beta Runtime Session progress integration mismatch.");
+  }
+});
+
 addCheck("Beta Session Core", async () => {
   const module = await import("../src/session/index.js");
   const created = module.createBetaSession({
