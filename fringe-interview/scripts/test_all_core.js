@@ -14,6 +14,9 @@ const testGroups = [
 
 
 "node scripts/test_build_plant_manager_leadership_capability_projection.js",
+"node scripts/test_build_decision_accountability_leadership_contribution.js",
+"node scripts/test_health_measurement_capability_bridge.js",
+"node scripts/test_measurement_capability_bridge_regression.js",
 "node scripts/test_build_plant_manager_leadership_demo_result.js",
 "node scripts/test_build_plant_manager_leadership_scenario_comparison.js",
 "node scripts/test_build_capability_projection.js",
@@ -39,6 +42,85 @@ const testGroups = [
     ],
   },
   {
+    name: "Dimension Contribution Core",
+    commands: [
+      "node scripts/test_build_dimension_contribution.js",
+      "node scripts/test_dimension_contribution_regression.js",
+      "node scripts/test_health_dimension_contribution.js",
+    ],
+  },
+  {
+    name: "Measurement-to-Dimension Mapping Core",
+    commands: [
+      "node scripts/test_build_measurement_dimension_mapping.js",
+      "node scripts/test_map_measurement_result_to_dimension_contributions.js",
+      "node scripts/test_measurement_dimension_mapping_regression.js",
+      "node scripts/test_health_measurement_dimension_mapping.js",
+    ],
+  },
+  {
+    name: "Dimension Knowledge State Core",
+    commands: [
+      "node scripts/test_build_dimension_knowledge_state.js",
+      "node scripts/test_dimension_knowledge_state_regression.js",
+      "node scripts/test_health_dimension_knowledge_state.js",
+    ],
+  },
+  {
+    name: "Elementary Dimension Aggregation Core",
+    commands: [
+      "node scripts/test_aggregate_dimension_contributions.js",
+      "node scripts/test_dimension_aggregation_regression.js",
+      "node scripts/test_health_dimension_aggregation.js",
+    ],
+  },
+  {
+    name: "Knowledge Ledger and Snapshot Core",
+    commands: [
+      "node scripts/test_knowledge_ledger.js",
+      "node scripts/test_knowledge_snapshot.js",
+      "node scripts/test_knowledge_ledger_snapshot_regression.js",
+      "node scripts/test_health_knowledge_ledger_snapshot.js",
+    ],
+  },
+  {
+    name: "Derived Knowledge Core",
+    commands: [
+      "node scripts/test_derived_knowledge_rule.js",
+      "node scripts/test_derived_knowledge_result.js",
+      "node scripts/test_evaluate_derived_knowledge_rules.js",
+      "node scripts/test_derived_knowledge_regression.js",
+      "node scripts/test_health_derived_knowledge.js",
+    ],
+  },
+  {
+    name: "Capability Recipe Execution Core",
+    commands: [
+      "node scripts/test_capability_recipe.js",
+      "node scripts/test_capability_execution_result.js",
+      "node scripts/test_execute_capability_recipe.js",
+      "node scripts/test_capability_recipe_execution_regression.js",
+      "node scripts/test_health_capability_recipe_execution.js",
+    ],
+  },
+  {
+    name: "Derived Dimension State Core",
+    commands: [
+      "node scripts/test_derived_dimension_knowledge_state.js",
+      "node scripts/test_build_derived_dimension_knowledge_states.js",
+      "node scripts/test_derived_dimension_state_regression.js",
+      "node scripts/test_health_derived_dimension_state.js",
+    ],
+  },
+  {
+    name: "Person Knowledge Matrix Core",
+    commands: [
+      "node scripts/test_person_knowledge_matrix.js",
+      "node scripts/test_person_knowledge_matrix_regression.js",
+      "node scripts/test_health_person_knowledge_matrix.js",
+    ],
+  },
+  {
     name: "Measurement Core",
     commands: [
       "node scripts/test_build_decision_accountability_observation.js",
@@ -51,6 +133,19 @@ const testGroups = [
       "node scripts/test_measurement_core_regression.js",
     ],
   },
+
+    {
+      name: "IMAGO Builder Foundation",
+      commands: [
+        "node scripts/test_build_generation_plan.js",
+        "node scripts/test_generation_plan_regression.js",
+         "node scripts/test_build_measurement_module_spec.js",
+        "node scripts/test_validate_measurement_module_spec.js",
+        "node scripts/test_measurement_module_spec_regression.js",
+      ],
+    },
+
+
   {
     name: "Runtime and General Health",
     commands: [

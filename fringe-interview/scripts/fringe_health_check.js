@@ -1469,6 +1469,76 @@ addCheck("Role target detection", async () => {
   });
 });
 
+addCheck("Dimension Contribution core", async () => {
+  const imported = await import("../src/core/dimension/healthBuildDimensionContribution.js");
+  const api = imported.default || imported;
+  const result = api.healthBuildDimensionContribution();
+  if (!result || result.ok !== true) {
+    throw new Error(result?.error || "Dimension Contribution health failed.");
+  }
+});
+
+addCheck("Measurement-to-Dimension Mapping core", async () => {
+  const imported = await import("../src/core/dimension/healthMeasurementDimensionMapping.js");
+  const api = imported.default || imported;
+  const result = api.healthMeasurementDimensionMapping();
+  if (!result || result.ok !== true) {
+    throw new Error(result?.error || "Measurement-to-Dimension Mapping health failed.");
+  }
+});
+
+addCheck("Dimension Knowledge State core", async () => {
+  const imported = await import("../src/core/dimension/index.js");
+  const api = imported.default || imported;
+  const result = api.healthBuildDimensionKnowledgeState();
+  if (!result || result.ok !== true) {
+    throw new Error(result?.error || "Dimension Knowledge State health failed.");
+  }
+});
+
+addCheck("Elementary Dimension Aggregation core", async () => {
+  const imported = await import("../src/core/dimension/healthDimensionAggregation.js");
+  const api = imported.default || imported;
+  const result = api.healthDimensionAggregation();
+  if (!result || result.ok !== true) {
+    throw new Error(result?.error || "Elementary Dimension Aggregation health failed.");
+  }
+});
+
+addCheck("Knowledge Ledger and Snapshot core", async () => {
+  const imported = await import("../src/core/dimension/healthKnowledgeLedgerSnapshot.js");
+  const api = imported.default || imported;
+  const result = api.healthKnowledgeLedgerSnapshot();
+  if (!result || result.ok !== true) {
+    throw new Error(result?.error || "Knowledge Ledger and Snapshot health failed.");
+  }
+});
+
+addCheck("Derived Knowledge core", async () => {
+  const imported = await import("../src/core/dimension/healthDerivedKnowledge.js");
+  const api = imported.default || imported;
+  const result = api.healthDerivedKnowledge();
+  if (!result || result.ok !== true) {
+    throw new Error(result?.error || "Derived Knowledge health failed.");
+  }
+});
+
+addCheck("Capability Recipe Execution core", async () => {
+  const imported = await import("../src/core/capability/healthCapabilityRecipeExecution.js");
+  const api = imported.default || imported;
+  const result = api.healthCapabilityRecipeExecution();
+  if (!result || result.ok !== true) {
+    throw new Error(result?.error || "Capability Recipe Execution health failed.");
+  }
+});
+addCheck("Derived Dimension State core", async () => {
+  const imported = await import("../src/core/dimension/healthDerivedDimensionState.js");
+  const api = imported.default || imported;
+  const result = await api.healthDerivedDimensionState();
+  if (!result?.ok) throw new Error(result?.error || "Derived Dimension State health failed.");
+});
+
+
 addCheck("Measurement and Observation Foundation", async () => {
   const imported = await import("../src/core/observation/index.js");
   const api = imported.default || imported;
@@ -1516,6 +1586,11 @@ addCheck("Beta Session Core", async () => {
     toStatus: "in_progress", interviewStatus: "in_progress", now: () => "2026-07-22T08:01:00.000Z"
   });
   if (started.revision !== 2) throw new Error("Beta Session revision did not increment.");
+});
+
+addCheck("Person Knowledge Matrix core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_person_knowledge_matrix.js"], { stdio: "pipe" });
 });
 
 let failed = 0;

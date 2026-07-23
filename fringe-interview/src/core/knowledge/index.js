@@ -1,0 +1,1 @@
+module.exports={buildPersonKnowledgeMatrix:require('./buildPersonKnowledgeMatrix').buildPersonKnowledgeMatrix,validatePersonKnowledgeMatrix:require('./validatePersonKnowledgeMatrix').validatePersonKnowledgeMatrix};

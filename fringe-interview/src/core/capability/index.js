@@ -26,4 +26,9 @@ module.exports = {
   ...require("./validateCapabilityProjection"),
 
    ...require("./buildCapabilityDefinitionFromProjection"),
+  ...require('./buildCapabilityRecipe'),
+  ...require('./validateCapabilityRecipe'),
+  ...require('./buildCapabilityExecutionResult'),
+  ...require('./validateCapabilityExecutionResult'),
+  ...require('./executeCapabilityRecipe'),
 };

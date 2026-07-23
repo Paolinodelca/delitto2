@@ -1,0 +1,1 @@
+const assert=require('assert');const {healthCapabilityRecipeExecution}=require('../src/core/capability/healthCapabilityRecipeExecution');const r=healthCapabilityRecipeExecution();assert.strictEqual(r.ok,true,r.error);console.log('Capability Recipe Execution health PASSED');

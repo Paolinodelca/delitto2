@@ -1,0 +1,17 @@
+const assert=require("assert");
+const dimension=require("../src/core/dimension");
+const observation=require("../src/core/observation");
+const at="2026-07-23T10:00:00.000Z";
+const result=observation.buildMeasurementResult({id:"result_1",measurementId:"measurement_1",characteristicId:"signal",observationRefs:[{type:"observation",id:"obs_1"}],normalizedValue:-0.8,direction:"negative",confidence:0.75,coverage:0.5,evidenceQuality:0.8,sourceReliability:0.9,independence:1,consistency:0.9,status:"calculated",calculatedAt:at,calculatedBy:"test"});
+const mapping=dimension.buildMeasurementDimensionMapping({id:"mapping_1",measurementId:"measurement_1",targets:[{dimensionId:"ownership",contributionType:"contradicting",weight:0.5},{dimensionId:"decision_clarity",contributionType:"supporting",confidenceFactor:0.8}],metadata:{createdAt:at,updatedAt:at}},{now:at});
+const rs=JSON.parse(JSON.stringify(result)), ms=JSON.parse(JSON.stringify(mapping));
+const first=dimension.mapMeasurementResultToDimensionContributions(result,mapping);
+const second=dimension.mapMeasurementResultToDimensionContributions(result,mapping);
+assert.deepStrictEqual(result,rs);assert.deepStrictEqual(mapping,ms);assert.deepStrictEqual(first,second);
+assert.strictEqual(first.length,2);assert.strictEqual(first[0].dimensionId,"ownership");assert.strictEqual(first[0].contributionValue,0.4);assert.strictEqual(first[0].confidence,0.75);assert.strictEqual(first[1].confidence,0.6);
+assert.strictEqual(first[0].provenance.measurementResultRef,"result_1");assert.ok(first[0].provenance.sourceRefs.includes("mapping:mapping_1"));assert.ok(first[0].provenance.sourceRefs.includes("observation:obs_1"));
+first.forEach(x=>assert.strictEqual(dimension.validateDimensionContribution(x).valid,true));
+assert.throws(()=>dimension.mapMeasurementResultToDimensionContributions(result,{...mapping,measurementId:"other"}),e=>e.code==="INCOMPATIBLE_MEASUREMENT_MAPPING");
+assert.throws(()=>dimension.mapMeasurementResultToDimensionContributions({...result,confidence:2},mapping),e=>e.code==="INVALID_MEASUREMENT_RESULT");
+assert.throws(()=>dimension.mapMeasurementResultToDimensionContributions(result,{...mapping,targets:[]}),e=>e.code==="INVALID_MEASUREMENT_DIMENSION_MAPPING");
+console.log("test_map_measurement_result_to_dimension_contributions PASS");

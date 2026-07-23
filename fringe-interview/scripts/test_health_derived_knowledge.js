@@ -1,0 +1,1 @@
+const assert=require("assert");const {healthDerivedKnowledge}=require("../src/core/dimension/healthDerivedKnowledge");assert.strictEqual(healthDerivedKnowledge().ok,true);console.log("Derived Knowledge health PASSED");

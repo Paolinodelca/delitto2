@@ -1,0 +1,1 @@
+const assert=require('assert');const {healthDerivedDimensionState}=require('../src/core/dimension/healthDerivedDimensionState');healthDerivedDimensionState().then(result=>{assert(result.ok,result.error);console.log('Derived Dimension State health PASSED')}).catch(error=>{console.error(error);process.exit(1)});

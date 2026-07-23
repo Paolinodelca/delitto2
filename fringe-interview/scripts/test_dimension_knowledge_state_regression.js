@@ -1,0 +1,26 @@
+const assert=require("assert");
+const {buildDimensionKnowledgeState,validateDimensionKnowledgeState}=require("../src/core/dimension");
+const now="2026-07-22T15:00:00.000Z";
+const valid=buildDimensionKnowledgeState({dimensionId:"ownership",dimensionType:"elementary",stateType:"observed",estimate:.7,direction:"supporting",coverage:.5,confidence:.6,consistency:.8,measurementCount:1,independentMeasurementCount:1,resultCount:1,sourceDiversity:1,supportingMeasurementResultRefs:["mr_1"],metadata:{createdAt:now,updatedAt:now}},{now});
+function rejects(mutator,field){const value=JSON.parse(JSON.stringify(valid));mutator(value);const result=validateDimensionKnowledgeState(value);assert.strictEqual(result.valid,false,field);assert(result.errors.some(e=>e.includes(field)),`${field}: ${result.errors.join(" | ")}`)}
+rejects(v=>delete v.dimensionId,"dimensionId");
+rejects(v=>v.dimensionType="other","dimensionType");
+rejects(v=>v.stateType="other","stateType");
+rejects(v=>v.stateType="derived","incompatible");
+rejects(v=>v.estimate=2,"estimate");
+rejects(v=>v.estimate=null,"estimate");
+rejects(v=>{v.stateType="unknown";v.estimate=.2;v.direction="unknown"},"estimate");
+rejects(v=>{v.stateType="unknown";v.estimate=null;v.direction="supporting"},"direction");
+rejects(v=>v.confidence=1.2,"confidence");
+rejects(v=>v.measurementCount=-1,"measurementCount");
+rejects(v=>v.independentMeasurementCount=2,"independentMeasurementCount");
+rejects(v=>v.supportingMeasurementResultRefs=[""],"supportingMeasurementResultRefs[0]");
+rejects(v=>v.contextDistribution={},"contextDistribution");
+rejects(v=>v.contradictions=[{}],"contradictions[0]");
+rejects(v=>delete v.metadata,"metadata");
+rejects(v=>v.metadata.updatedAt="not-a-date","metadata.updatedAt");
+rejects(v=>v.extensions=[],"extensions");
+rejects(v=>v.extra=true,"extra");
+const duplicate={...valid,supportingMeasurementResultRefs:["mr_1","mr_1"]};
+assert.strictEqual(validateDimensionKnowledgeState(duplicate).valid,false);
+console.log("test_dimension_knowledge_state_regression PASS");

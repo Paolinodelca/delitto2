@@ -1,0 +1,1 @@
+const assert=require("assert");const {healthKnowledgeLedgerSnapshot}=require("../src/core/dimension/healthKnowledgeLedgerSnapshot");const result=healthKnowledgeLedgerSnapshot();assert.strictEqual(result.ok,true,result.error);console.log("Knowledge Ledger/Snapshot health PASSED");
