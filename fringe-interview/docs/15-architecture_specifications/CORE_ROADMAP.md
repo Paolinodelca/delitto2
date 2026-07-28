@@ -745,3 +745,11 @@ The Design introduces new semantics through a mechanism-neutral `solutionShape`:
 Status: **PLANNED**
 
 No Query Foundation, collection evaluator, capability matching, planning, generation, runtime, execution, observation, satisfaction or update layer is assumed automatically.
+
+## 0100E-4 completed — Knowledge Acquisition Capability Match Foundation
+
+Frozen pipeline extension:
+
+`KnowledgeAcquisitionRequirement -> KnowledgeAcquisitionDesign -> KnowledgeAcquisitionCapabilityMatch`
+
+Cardinality: one Design may yield zero or more independent Matches, one candidate per builder invocation. Core performs deterministic semantic matching only. Application owns discovery, availability, policy, ranking, selection, configuration and execution. `indeterminate` means a structurally valid snapshot lacks a necessary declarative fact and no explicit incompatibility is already known. Measurement is an optional capability family; question generation and LLM execution remain downstream.

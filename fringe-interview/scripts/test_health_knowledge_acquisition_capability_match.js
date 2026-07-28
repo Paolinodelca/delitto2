@@ -1,0 +1,1 @@
+const assert=require('assert');const {healthKnowledgeAcquisitionCapabilityMatch}=require('../src/core/knowledge');const f=require('./knowledge_acquisition_capability_match_fixture');const result=healthKnowledgeAcquisitionCapabilityMatch(f);assert(result.ok,JSON.stringify(result));console.log('Knowledge Acquisition Capability Match health PASSED');

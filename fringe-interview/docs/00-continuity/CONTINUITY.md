@@ -724,3 +724,11 @@ derived_knowledge_availability_required
 The Design adds mechanism-neutral solution semantics through target knowledge, output topology, contribution requirements, prerequisite topology and abstract capability obligations. Elementary Designs require primary knowledge contributions and no prerequisite topology. Derived Designs require an explicit, non-empty prerequisite topology derived from the resolved Coverage context.
 
 No Plan, capability match, capability selection, source or method selection, question or artifact generation, runtime, execution, observation, result, satisfaction state or knowledge update was introduced. The public API adds only `buildKnowledgeAcquisitionDesign`, `validateKnowledgeAcquisitionDesign` and `healthKnowledgeAcquisitionDesign`.
+
+## Task 0100E-4 — Knowledge Acquisition Capability Match Foundation
+
+Completed the pure deterministic `KnowledgeAcquisitionCapabilityMatch` boundary:
+
+`KnowledgeAcquisitionDesign -> 0..N KnowledgeAcquisitionCapabilityMatch`
+
+Each invocation evaluates one immutable capability candidate snapshot. Discovery and selection remain Application concerns. The Match evaluates eligibility, obligations, output/prerequisite topology, conservative constraints, explicit reasons, and the strict states `compatible`, `incompatible`, `indeterminate`. It introduces no registry access, ranking, planning, recipe, execution, result, satisfaction, Measurement dependency, question generation, or LLM invocation.
