@@ -1,0 +1,1 @@
+const assert=require('assert');const {healthKnowledgeAcquisitionRequirement}=require('../src/core/knowledge');const r=healthKnowledgeAcquisitionRequirement();assert(r.ok,JSON.stringify(r));console.log('Knowledge Acquisition Requirement health PASSED');

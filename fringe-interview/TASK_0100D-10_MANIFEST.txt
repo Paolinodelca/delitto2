@@ -1,0 +1,20 @@
+TASK_0100D-10 — Knowledge Acquisition Boundary Consolidation and Freeze
+
+CREATED
+scripts/fixtures/expected_knowledge_core_exports.js
+scripts/test_knowledge_acquisition_boundary_freeze.js
+scripts/test_health_knowledge_acquisition_boundary.js
+docs/15-architecture_specifications/KNOWLEDGE_ACQUISITION_BOUNDARY_FREEZE.md
+TASK_0100D-10_IMPLEMENTATION_REPORT.md
+TASK_0100D-10_MANIFEST.txt
+
+MODIFIED
+src/core/knowledge/validateKnowledgeOpportunityCollection.js
+scripts/test_knowledge_opportunity_regression.js
+scripts/test_person_knowledge_matrix_regression.js
+scripts/test_person_knowledge_matrix_query_regression.js
+scripts/test_knowledge_coverage_regression.js
+scripts/test_all_core.js
+scripts/fringe_health_check.js
+docs/00-continuity/CONTINUITY.md
+docs/15-architecture_specifications/CORE_ROADMAP.md

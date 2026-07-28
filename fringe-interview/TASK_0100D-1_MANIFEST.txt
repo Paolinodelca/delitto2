@@ -1,0 +1,24 @@
+TASK 0100D-1 — OVERLAY MANIFEST
+Root: repository/
+
+CREATED
+src/core/knowledge/buildKnowledgeOpportunity.js
+src/core/knowledge/validateKnowledgeOpportunity.js
+src/core/knowledge/evaluateKnowledgeOpportunities.js
+src/core/knowledge/validateKnowledgeOpportunityCollection.js
+src/core/knowledge/healthKnowledgeOpportunity.js
+scripts/test_knowledge_opportunity.js
+scripts/test_knowledge_opportunity_regression.js
+scripts/test_health_knowledge_opportunity.js
+TASK_0100D-1_IMPLEMENTATION_REPORT.md
+TASK_0100D-1_MANIFEST.txt
+
+MODIFIED
+src/core/knowledge/index.js
+scripts/test_person_knowledge_matrix_regression.js
+scripts/test_person_knowledge_matrix_query_regression.js
+scripts/test_knowledge_coverage_regression.js
+scripts/test_all_core.js
+scripts/fringe_health_check.js
+docs/00-continuity/CONTINUITY.md
+docs/15-architecture_specifications/CORE_ROADMAP.md

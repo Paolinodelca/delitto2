@@ -1,0 +1,12 @@
+const {validateKnowledgeCoverage}=require('./validateKnowledgeCoverage');
+const {buildKnowledgeCoverageQuery}=require('./buildKnowledgeCoverageQuery');
+const {validateKnowledgeCoverageQueryResult}=require('./validateKnowledgeCoverageQueryResult');
+function clone(v){if(Array.isArray(v))return v.map(clone);if(v&&typeof v==='object')return Object.fromEntries(Object.entries(v).map(([k,x])=>[k,clone(x)]));return v;}
+function fail(code,msg,details){const e=new Error(msg);e.code=code;e.details=details;throw e;}
+function queryKnowledgeCoverage(coverage,query){const cv=validateKnowledgeCoverage(coverage);if(!cv.valid)fail('INVALID_KNOWLEDGE_COVERAGE',cv.errors.join(' | '),cv);const filters=buildKnowledgeCoverageQuery(query);const overallMatch=!filters.overallCoverageState||coverage.overallCoverage.state===filters.overallCoverageState;
+let dimensions=overallMatch?coverage.dimensionCoverage.filter(d=>(!filters.dimensionId||d.dimensionId===filters.dimensionId)&&(!filters.capabilityId||d.capabilityIds.includes(filters.capabilityId))&&(!filters.coverageState||d.coverageState===filters.coverageState)&&(!filters.knowledgeLayer||(filters.knowledgeLayer==='elementary'?d.elementaryStateCount>0:d.derivedStateCount>0))):[];
+let capabilities=overallMatch?coverage.capabilityCoverage.filter(c=>(!filters.capabilityId||c.capabilityId===filters.capabilityId)&&(!filters.dimensionId||c.dimensionIds.includes(filters.dimensionId))&&(!filters.coverageState||c.coverageState===filters.coverageState)&&(!filters.knowledgeLayer||filters.knowledgeLayer==='derived')):[];
+dimensions=dimensions.map(clone).sort((a,b)=>a.dimensionId.localeCompare(b.dimensionId));capabilities=capabilities.map(clone).sort((a,b)=>a.capabilityId.localeCompare(b.capabilityId));
+const result={coverageRef:`knowledgeCoverage:${coverage.id}`,filters:clone(filters),overallCoverage:overallMatch?clone(coverage.overallCoverage):null,dimensionCoverage:dimensions,capabilityCoverage:capabilities,summary:{dimensionCount:dimensions.length,capabilityCount:capabilities.length,empty:dimensions.length===0&&capabilities.length===0,overallCoverageState:coverage.overallCoverage.state},metadata:{contractVersion:'1.0',queryStrategyVersion:'1.0',readOnly:true},extensions:{}};
+const rv=validateKnowledgeCoverageQueryResult(result);if(!rv.valid)fail('INVALID_GENERATED_KNOWLEDGE_COVERAGE_QUERY_RESULT',rv.errors.join(' | '),rv);return result;}
+module.exports={queryKnowledgeCoverage};

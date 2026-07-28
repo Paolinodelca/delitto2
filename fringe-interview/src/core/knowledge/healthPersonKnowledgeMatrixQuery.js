@@ -1,0 +1,3 @@
+const {buildPersonKnowledgeQuery}=require('./buildPersonKnowledgeQuery');const {queryPersonKnowledgeMatrix}=require('./queryPersonKnowledgeMatrix');const {validatePersonKnowledgeQueryResult}=require('./validatePersonKnowledgeQueryResult');
+function healthPersonKnowledgeMatrixQuery(matrix){const query=buildPersonKnowledgeQuery({knowledgeLayer:'derived'});const result=queryPersonKnowledgeMatrix(matrix,query);const validation=validatePersonKnowledgeQueryResult(result);if(!validation.valid)throw new Error(validation.errors.join(' | '));return{ok:true,result}}
+module.exports={healthPersonKnowledgeMatrixQuery};

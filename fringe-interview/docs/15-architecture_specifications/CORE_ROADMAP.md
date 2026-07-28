@@ -182,9 +182,89 @@ The repository now provides the tested pipeline from Observation through PersonK
 
 ## 0100C-1 — Person Knowledge Matrix Query Foundation
 
+Status: COMPLETED
+
+Introduced deterministic, validated and read-only queries over PersonKnowledgeMatrix using allowlisted filters for Dimension, knowledge layer, Capability, Recipe and Recipe version. Multiple filters use AND semantics; results preserve elementary/derived separation, canonical ordering and caller-owned input immutability, without scoring, ranking, inference, LLM or network access.
+
+Pipeline introduced:
+
+PersonKnowledgeMatrix
+↓
+PersonKnowledgeQuery
+↓
+PersonKnowledgeQueryResult
+
+## 0100C-2 — Knowledge Coverage Foundation
+
+Status: COMPLETED
+
+Introduced deterministic, read-only KnowledgeCoverage evaluation over a validated PersonKnowledgeMatrix, optionally restricted through the existing PersonKnowledgeQuery. Coverage describes only the amount and structure of knowledge currently available through categorical states, technical counts, existing state coverage/confidence references, compact lineage and deterministic identity. It does not evaluate the person and introduces no score, ranking, recommendation, inference, LLM, network access or persistence.
+
+Pipeline introduced:
+
+PersonKnowledgeMatrix
+↓
+PersonKnowledgeQuery (optional)
+↓
+KnowledgeCoverage
+
+## 0100C-3 — Knowledge Coverage Query Foundation
+
+Status: COMPLETED
+
+Introduced deterministic, validated and read-only queries over KnowledgeCoverage using allowlisted filters for Dimension, Capability, coverage state, knowledge layer and overall coverage state. Multiple filters use AND semantics; results are deep-cloned, canonically ordered and descriptive only, without scoring, ranking, priority, recommendation, inference, LLM, network access or persistence.
+
+Pipeline introduced:
+
+KnowledgeCoverage
+↓
+KnowledgeCoverageQuery
+↓
+KnowledgeCoverageQueryResult
+
+## 0100D-1 — Knowledge Opportunity Foundation
+
+Status: COMPLETED
+
+Introduced deterministic, neutral and read-only KnowledgeOpportunity and KnowledgeOpportunityCollection contracts derived exclusively from validated KnowledgeCoverage states. The implemented opportunity types are `elementary_layer_only` and `derived_layer_only`; `knowledge_not_available` was not introduced because the current KnowledgeCoverage contract does not retain absent Dimension or Capability entities. Opportunities describe only non-composed knowledge availability and never a gap, weakness or insufficiency of the person. No ranking, priority, weighting, recommendation, question strategy, acquisition strategy, inference, LLM, network access or persistence was introduced.
+
+Pipeline introduced:
+
+KnowledgeCoverage
+↓
+KnowledgeOpportunity
+↓
+KnowledgeOpportunityCollection
+
+## 0100D-2 — Knowledge Opportunity Query Foundation
+
+Status: COMPLETED
+
+Implemented deterministic read-only querying of KnowledgeOpportunityCollection through allowlisted filters and AND semantics.
+
+## 0100D-3 — Knowledge Acquisition Need Foundation
+
+Status: COMPLETED
+
+Implemented deterministic KnowledgeAcquisitionNeed and KnowledgeAcquisitionNeedCollection contracts derived exclusively from validated KnowledgeOpportunity entities. Effective mappings are `elementary_layer_only → derived_knowledge_required` and `derived_layer_only → elementary_knowledge_required`. Each source opportunity produces exactly one traceable need. No acquisition method, strategy, question, selection, ranking, priority, scoring, inference, LLM, network access or persistence was introduced.
+
+## 0100D-4 — Knowledge Acquisition Need Query Foundation
+
+Status: COMPLETED
+
+Implemented deterministic, read-only querying of KnowledgeAcquisitionNeedCollection through eight allowlisted filters and AND semantics. Query results are validated, deep-cloned, canonically ordered and descriptive only. `sourceOpportunityType` is treated exclusively as a derived technical traceability and contract-validation field. No ranking, priority, recommendation, selection, strategy, method, question, inference, LLM, network access or persistence was introduced.
+
+## 0100D-5 — Knowledge Acquisition Strategy Foundation
+
+Status: COMPLETED
+
+Implemented deterministic KnowledgeAcquisitionStrategy and KnowledgeAcquisitionStrategyCollection contracts derived exclusively from validated KnowledgeAcquisitionNeed entities. Effective mappings are `elementary_knowledge_required → elementary_knowledge_acquisition → elementary` and `derived_knowledge_required → derived_knowledge_composition → derived`. Each source need produces exactly one traceable strategy category. The Foundation does not execute acquisition or composition and introduces no plan, method, channel, question, selection, ranking, priority, recommendation, inference, LLM, network access or persistence.
+
+## 0100D-6 — To be defined by Architect
+
 Status: PLANNED
 
-Introduce deterministic, read-only queries over PersonKnowledgeMatrix by Dimension, knowledge layer, Capability, and Recipe without mutating the matrix or adding application-level interpretation.
+No implementation has been started and no perimeter has been assigned.
 
 ---
 
@@ -540,3 +620,87 @@ Il Capability Core non viene sostituito ma ridefinito come Recipe Engine del sis
 La Person Knowledge Matrix diventa l'asset principale della piattaforma.
 
 Il valore persistente di IMAGO non risiede nei punteggi, ma nella raccolta strutturata, spiegabile e ricostruibile delle evidenze professionali.
+---
+
+## 0100D-6 — Knowledge Acquisition Strategy Query Foundation
+
+Status: **COMPLETED**
+
+Implemented the deterministic, read-only query layer:
+
+```text
+KnowledgeAcquisitionStrategyCollection
+        ↓
+KnowledgeAcquisitionStrategyQuery
+        ↓
+KnowledgeAcquisitionStrategyQueryResult
+```
+
+The query uses the consolidated flat allowlisted-filter convention, exact comparison and AND-only semantics. Supported filters: `strategyType`, `sourceNeedType`, `scope`, `scopeRef`, `targetKnowledgeLayer`, `reasonCode`, `sourceNeedRef`, `sourceOpportunityRef`, `sourceCoverageRef`.
+
+No strategy evaluation, ranking, priority, recommendation, plan, execution, method, channel, question generation, inference or runtime is implemented.
+
+## 0100D-7 — Knowledge Acquisition Requirement Foundation
+
+Status: **COMPLETED**
+
+Implemented the deterministic declarative post-condition layer:
+
+```text
+KnowledgeAcquisitionStrategy
+        ↓
+KnowledgeAcquisitionRequirement
+```
+
+Mappings are `elementary_knowledge_acquisition → elementary_knowledge_availability_required → elementary` and `derived_knowledge_composition → derived_knowledge_availability_required → derived`. Cardinality is strictly `1 Strategy → 1 Requirement`. `sourceStrategyRef` is the direct causal reference; Need, Opportunity and Coverage references are transitive traceability only. No satisfaction state, planning, execution, methods, channels, sources, questions, ranking or priority is implemented.
+
+## 0100D-8 — Knowledge Acquisition Requirement Query Foundation
+
+Status: **COMPLETED**
+
+Implemented the deterministic, read-only query layer:
+
+```text
+KnowledgeAcquisitionRequirementCollection
+        ↓
+KnowledgeAcquisitionRequirementQuery
+        ↓
+KnowledgeAcquisitionRequirementQueryResult
+```
+
+The query is flat, requires at least one allowlisted filter, uses exact matching and AND-only semantics, preserves canonical ordering, deep-clones results, and treats empty results as valid. No satisfaction state, ranking, priority, planning, runtime or execution is implemented.
+
+## 0100D-9 — Knowledge Acquisition Pipeline Boundary Review
+
+Status: **COMPLETED**  
+Type: **ARCHITECTURE REVIEW**
+
+Repository-first review confirmed that the declarative Knowledge Analysis boundary terminates correctly at `KnowledgeAcquisitionRequirement`. The complete block is:
+
+```text
+PersonKnowledgeMatrix
+        ↓
+KnowledgeCoverage
+        ↓
+KnowledgeOpportunity
+        ↓
+KnowledgeAcquisitionNeed
+        ↓
+KnowledgeAcquisitionStrategy
+        ↓
+KnowledgeAcquisitionRequirement
+```
+
+Decision: **Knowledge pipeline complete — freeze the boundary**. Future acquisition planning, source or method selection, execution, evidence ingestion and requirement-satisfaction evaluation belong to downstream Application, Runtime, Adapter or separately justified deterministic services; they are not additional fields of the Requirement contract.
+
+## 0100D-10 — Knowledge Acquisition Boundary Consolidation and Freeze
+
+Status: **COMPLETED**
+
+Boundary status: **FROZEN**
+
+Completed the non-semantic hardening of the Knowledge Acquisition block: Opportunity summary validation now recalculates `byOpportunityType`; the explicit public-export allowlist is shared by historical regressions; mapping, cardinality, causality, Requirement and Query invariants are protected by a dedicated freeze regression and health gate; the declarative boundary is formally documented and frozen.
+
+## Next architecture phase — To be defined by Architect
+
+Status: **PLANNED**

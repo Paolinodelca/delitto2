@@ -1,0 +1,25 @@
+TASK 0100D-9 — Knowledge Acquisition Pipeline Boundary Review
+Overlay root: repository/
+
+CREATED
+TASK_0100D-9_ARCHITECTURE_BOUNDARY_REVIEW.md
+TASK_0100D-9_MANIFEST.txt
+
+MODIFIED
+docs/15-architecture_specifications/CORE_ROADMAP.md
+
+APPLICATION / CORE CODE MODIFIED
+None
+
+TEST CODE MODIFIED
+None
+
+DECISION
+A. Knowledge pipeline complete — freeze the boundary
+
+CLASSIFICATION
+CONFORMING WITH NON-BLOCKING NOTES
+
+NEXT TASK
+0100D-10 — Knowledge Acquisition Boundary Consolidation and Freeze
+Status: PLANNED

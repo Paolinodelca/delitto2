@@ -1,0 +1,19 @@
+TASK 0100B-5 — IMAGO Elementary Dimension Aggregation Foundation
+OVERLAY ROOT: repository/
+
+CREATED
+src/core/dimension/aggregateDimensionContributions.js
+src/core/dimension/healthDimensionAggregation.js
+scripts/test_aggregate_dimension_contributions.js
+scripts/test_dimension_aggregation_regression.js
+scripts/test_health_dimension_aggregation.js
+TASK_0100B-5_MANIFEST.txt
+
+MODIFIED
+src/core/dimension/index.js
+scripts/test_all_core.js
+scripts/fringe_health_check.js
+repository/docs/15-architecture_specifications/CORE_ROADMAP.md
+
+REPORT
+TASK_0100B-5_IMPLEMENTATION_REPORT.md

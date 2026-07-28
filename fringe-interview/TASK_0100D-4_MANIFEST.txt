@@ -1,0 +1,29 @@
+TASK 0100D-4 — IMAGO Knowledge Acquisition Need Query Foundation
+Overlay root: repository/
+
+CREATED
+repository/src/core/knowledge/buildKnowledgeAcquisitionNeedQuery.js
+repository/src/core/knowledge/validateKnowledgeAcquisitionNeedQuery.js
+repository/src/core/knowledge/queryKnowledgeAcquisitionNeeds.js
+repository/src/core/knowledge/validateKnowledgeAcquisitionNeedQueryResult.js
+repository/src/core/knowledge/healthKnowledgeAcquisitionNeedQuery.js
+repository/scripts/test_knowledge_acquisition_need_query.js
+repository/scripts/test_knowledge_acquisition_need_query_regression.js
+repository/scripts/test_health_knowledge_acquisition_need_query.js
+repository/TASK_0100D-4_IMPLEMENTATION_REPORT.md
+repository/TASK_0100D-4_MANIFEST.txt
+
+MODIFIED
+repository/src/core/knowledge/index.js
+repository/scripts/test_all_core.js
+repository/scripts/fringe_health_check.js
+repository/scripts/test_person_knowledge_matrix_regression.js
+repository/scripts/test_person_knowledge_matrix_query_regression.js
+repository/scripts/test_knowledge_coverage_regression.js
+repository/docs/00-continuity/CONTINUITY.md
+repository/docs/15-architecture_specifications/CORE_ROADMAP.md
+
+FINAL GATES
+node scripts/test_all_core.js — PASS
+node scripts/fringe_health_check.js — PASS
+Architecture classification — CONFORMING

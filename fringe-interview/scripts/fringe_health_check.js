@@ -1593,6 +1593,66 @@ addCheck("Person Knowledge Matrix core", async () => {
   execFileSync(process.execPath, ["scripts/test_health_person_knowledge_matrix.js"], { stdio: "pipe" });
 });
 
+addCheck("Person Knowledge Matrix Query core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_person_knowledge_matrix_query.js"], { stdio: "pipe" });
+});
+
+addCheck("Knowledge Coverage core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_coverage.js"], { stdio: "pipe" });
+});
+
+addCheck("Knowledge Coverage Query core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_coverage_query.js"], { stdio: "pipe" });
+});
+
+addCheck("Knowledge Opportunity core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_opportunity.js"], { stdio: "pipe" });
+});
+
+addCheck("Knowledge Opportunity Query core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_opportunity_query.js"], { stdio: "pipe" });
+});
+
+addCheck("Knowledge Acquisition Need core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_need.js"], { stdio: "pipe" });
+});
+
+addCheck("Knowledge Acquisition Need Query core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_need_query.js"], { stdio: "pipe" });
+});
+
+addCheck("Knowledge Acquisition Strategy core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_strategy.js"], { stdio: "pipe" });
+});
+
+addCheck("Knowledge Acquisition Strategy Query core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_strategy_query.js"], { stdio: "pipe" });
+});
+
+addCheck("Knowledge Acquisition Requirement core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_requirement.js"], { stdio: "pipe" });
+});
+
+addCheck("Knowledge Acquisition Requirement Query core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_requirement_query.js"], { stdio: "pipe" });
+addCheck("Knowledge Acquisition Boundary Freeze", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_boundary.js"], { stdio: "pipe" });
+});
+
+});
+
 let failed = 0;
 
 console.log("\nFRINGE Health Check\n");

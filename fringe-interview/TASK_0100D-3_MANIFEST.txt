@@ -1,0 +1,25 @@
+TASK 0100D-3 — IMAGO Knowledge Acquisition Need Foundation
+Overlay root: repository/
+Classification: CONFORMING
+
+CREATED
+src/core/knowledge/buildKnowledgeAcquisitionNeed.js
+src/core/knowledge/validateKnowledgeAcquisitionNeed.js
+src/core/knowledge/evaluateKnowledgeAcquisitionNeeds.js
+src/core/knowledge/validateKnowledgeAcquisitionNeedCollection.js
+src/core/knowledge/healthKnowledgeAcquisitionNeed.js
+scripts/test_knowledge_acquisition_need.js
+scripts/test_knowledge_acquisition_need_regression.js
+scripts/test_health_knowledge_acquisition_need.js
+TASK_0100D-3_IMPLEMENTATION_REPORT.md
+TASK_0100D-3_MANIFEST.txt
+
+MODIFIED
+src/core/knowledge/index.js
+scripts/test_all_core.js
+scripts/fringe_health_check.js
+scripts/test_person_knowledge_matrix_regression.js
+scripts/test_person_knowledge_matrix_query_regression.js
+scripts/test_knowledge_coverage_regression.js
+docs/00-continuity/CONTINUITY.md
+docs/15-architecture_specifications/CORE_ROADMAP.md

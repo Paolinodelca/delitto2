@@ -1,0 +1,25 @@
+TASK 0100D-2 — KNOWLEDGE OPPORTUNITY QUERY FOUNDATION
+STATUS: COMPLETED
+ROOT: repository/
+
+CREATED
+src/core/knowledge/buildKnowledgeOpportunityQuery.js
+src/core/knowledge/validateKnowledgeOpportunityQuery.js
+src/core/knowledge/queryKnowledgeOpportunities.js
+src/core/knowledge/validateKnowledgeOpportunityQueryResult.js
+src/core/knowledge/healthKnowledgeOpportunityQuery.js
+scripts/test_knowledge_opportunity_query.js
+scripts/test_knowledge_opportunity_query_regression.js
+scripts/test_health_knowledge_opportunity_query.js
+TASK_0100D-2_IMPLEMENTATION_REPORT.md
+TASK_0100D-2_MANIFEST.txt
+
+MODIFIED
+src/core/knowledge/index.js
+scripts/test_all_core.js
+scripts/fringe_health_check.js
+scripts/test_person_knowledge_matrix_regression.js
+scripts/test_person_knowledge_matrix_query_regression.js
+scripts/test_knowledge_coverage_regression.js
+docs/00-continuity/CONTINUITY.md
+docs/15-architecture_specifications/CORE_ROADMAP.md

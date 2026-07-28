@@ -1,0 +1,23 @@
+TASK 0100D-5 — IMAGO Knowledge Acquisition Strategy Foundation
+
+CREATED
+src/core/knowledge/buildKnowledgeAcquisitionStrategy.js
+src/core/knowledge/validateKnowledgeAcquisitionStrategy.js
+src/core/knowledge/evaluateKnowledgeAcquisitionStrategies.js
+src/core/knowledge/validateKnowledgeAcquisitionStrategyCollection.js
+src/core/knowledge/healthKnowledgeAcquisitionStrategy.js
+scripts/test_knowledge_acquisition_strategy.js
+scripts/test_knowledge_acquisition_strategy_regression.js
+scripts/test_health_knowledge_acquisition_strategy.js
+TASK_0100D-5_IMPLEMENTATION_REPORT.md
+TASK_0100D-5_MANIFEST.txt
+
+MODIFIED
+src/core/knowledge/index.js
+scripts/test_all_core.js
+scripts/fringe_health_check.js
+scripts/test_person_knowledge_matrix_regression.js
+scripts/test_person_knowledge_matrix_query_regression.js
+scripts/test_knowledge_coverage_regression.js
+docs/00-continuity/CONTINUITY.md
+docs/15-architecture_specifications/CORE_ROADMAP.md

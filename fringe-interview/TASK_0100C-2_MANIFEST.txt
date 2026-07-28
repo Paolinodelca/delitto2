@@ -1,0 +1,24 @@
+TASK 0100C-2 — KNOWLEDGE COVERAGE FOUNDATION
+OVERLAY APPLICATION ROOT: repository/
+
+CREATED
+src/core/knowledge/buildKnowledgeCoverage.js
+src/core/knowledge/validateKnowledgeCoverage.js
+src/core/knowledge/evaluateKnowledgeCoverage.js
+src/core/knowledge/healthKnowledgeCoverage.js
+scripts/test_knowledge_coverage.js
+scripts/test_knowledge_coverage_regression.js
+scripts/test_health_knowledge_coverage.js
+TASK_0100C-2_MANIFEST.txt
+
+MODIFIED
+src/core/knowledge/index.js
+scripts/test_person_knowledge_matrix_regression.js
+scripts/test_person_knowledge_matrix_query_regression.js
+scripts/test_all_core.js
+scripts/fringe_health_check.js
+docs/00-continuity/CONTINUITY.md
+docs/15-architecture_specifications/CORE_ROADMAP.md
+
+REPORT
+TASK_0100C-2_IMPLEMENTATION_REPORT.md

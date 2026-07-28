@@ -1,1 +1,16 @@
-const assert=require('assert');const fs=require('fs');const know=require('../src/core/knowledge');const api=Object.keys(know).sort();assert.deepStrictEqual(api,['buildPersonKnowledgeMatrix','validatePersonKnowledgeMatrix']);const build=fs.readFileSync('src/core/knowledge/buildPersonKnowledgeMatrix.js','utf8');assert(build.includes("validateKnowledgeSnapshot"));assert(build.includes("validateDimensionKnowledgeState"));assert(build.includes("validateDerivedDimensionKnowledgeState"));assert(!/eval\s*\(|new Function|require\(['\"]fs['\"]\)|https?:\/\//.test(build));assert(!/overallScore|personScore|professionalScore|employability|potentialScore|readiness|ranking|recommendation/.test(build));assert(!fs.readFileSync('src/core/dimension/index.js','utf8').includes('PersonKnowledgeMatrix'));assert(!fs.readFileSync('src/core/capability/index.js','utf8').includes('PersonKnowledgeMatrix'));console.log('PersonKnowledgeMatrix regression PASSED');
+const assert = require('assert');
+const fs = require('fs');
+const know = require('../src/core/knowledge');
+const expected = require('./fixtures/expected_knowledge_core_exports');
+
+assert.deepStrictEqual(Object.keys(know).sort(), expected);
+
+const build = fs.readFileSync('src/core/knowledge/buildPersonKnowledgeMatrix.js', 'utf8');
+assert(build.includes('validateKnowledgeSnapshot'));
+assert(build.includes('validateDimensionKnowledgeState'));
+assert(build.includes('validateDerivedDimensionKnowledgeState'));
+assert(!/eval\s*\(|new Function|require\(['"]fs['"]\)|https?:\/\//.test(build));
+assert(!/overallScore|personScore|professionalScore|employability|potentialScore|readiness|ranking|recommendation/.test(build));
+assert(!fs.readFileSync('src/core/dimension/index.js', 'utf8').includes('PersonKnowledgeMatrix'));
+assert(!fs.readFileSync('src/core/capability/index.js', 'utf8').includes('PersonKnowledgeMatrix'));
+console.log('PersonKnowledgeMatrix regression PASSED');

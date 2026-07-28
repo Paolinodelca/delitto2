@@ -1,0 +1,6 @@
+const FIELDS=['dimensionId','capabilityId','coverageState','knowledgeLayer','overallCoverageState'];
+const COVERAGE_STATES=['empty','elementary_only','derived_only','composed','available'];
+const OVERALL_STATES=['empty','elementary_only','derived_only','composed'];
+function s(v){return typeof v==='string'&&v.trim().length>0&&v===v.trim();}
+function validateKnowledgeCoverageQuery(q){const errors=[],warnings=[];if(!q||typeof q!=='object'||Array.isArray(q))return{valid:false,errors:['KnowledgeCoverageQuery must be an object.'],warnings};const keys=Object.keys(q);for(const k of keys)if(!FIELDS.includes(k))errors.push(`Unknown property: ${k}.`);if(!keys.some(k=>FIELDS.includes(k)))errors.push('At least one query filter is required.');for(const k of ['dimensionId','capabilityId'])if(q[k]!==undefined&&!s(q[k]))errors.push(`${k} must be a non-empty canonical string.`);if(q.coverageState!==undefined&&!COVERAGE_STATES.includes(q.coverageState))errors.push('coverageState is invalid.');if(q.knowledgeLayer!==undefined&&!['elementary','derived'].includes(q.knowledgeLayer))errors.push('knowledgeLayer is invalid.');if(q.overallCoverageState!==undefined&&!OVERALL_STATES.includes(q.overallCoverageState))errors.push('overallCoverageState is invalid.');return{valid:errors.length===0,errors,warnings};}
+module.exports={validateKnowledgeCoverageQuery};

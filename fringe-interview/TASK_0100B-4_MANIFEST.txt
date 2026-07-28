@@ -1,0 +1,22 @@
+TASK 0100B-4 — MANIFEST
+
+CREATED
+src/core/dimension/buildMeasurementDimensionMapping.js
+src/core/dimension/validateMeasurementDimensionMapping.js
+src/core/dimension/mapMeasurementResultToDimensionContributions.js
+src/core/dimension/healthMeasurementDimensionMapping.js
+scripts/test_build_measurement_dimension_mapping.js
+scripts/test_map_measurement_result_to_dimension_contributions.js
+scripts/test_measurement_dimension_mapping_regression.js
+scripts/test_health_measurement_dimension_mapping.js
+
+MODIFIED
+src/core/dimension/index.js
+scripts/test_dimension_contribution_regression.js
+scripts/test_all_core.js
+scripts/fringe_health_check.js
+repository/docs/15-architecture_specifications/CORE_ROADMAP.md
+
+REPORT
+TASK_0100B-4_IMPLEMENTATION_REPORT.md
+TASK_0100B-4_MANIFEST.txt

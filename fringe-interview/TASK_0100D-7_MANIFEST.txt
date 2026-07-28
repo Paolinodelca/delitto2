@@ -1,0 +1,22 @@
+TASK 0100D-7 OVERLAY MANIFEST
+Root: repository/
+Status: COMPLETED
+
+src/core/knowledge/buildKnowledgeAcquisitionRequirement.js
+src/core/knowledge/validateKnowledgeAcquisitionRequirement.js
+src/core/knowledge/evaluateKnowledgeAcquisitionRequirements.js
+src/core/knowledge/validateKnowledgeAcquisitionRequirementCollection.js
+src/core/knowledge/healthKnowledgeAcquisitionRequirement.js
+src/core/knowledge/index.js
+scripts/test_knowledge_acquisition_requirement.js
+scripts/test_knowledge_acquisition_requirement_regression.js
+scripts/test_health_knowledge_acquisition_requirement.js
+scripts/test_all_core.js
+scripts/fringe_health_check.js
+scripts/test_person_knowledge_matrix_regression.js
+scripts/test_person_knowledge_matrix_query_regression.js
+scripts/test_knowledge_coverage_regression.js
+docs/00-continuity/CONTINUITY.md
+docs/15-architecture_specifications/CORE_ROADMAP.md
+TASK_0100D-7_IMPLEMENTATION_REPORT.md
+TASK_0100D-7_MANIFEST.txt

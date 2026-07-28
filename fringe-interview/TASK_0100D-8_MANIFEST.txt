@@ -1,0 +1,23 @@
+TASK 0100D-8 — Knowledge Acquisition Requirement Query Foundation
+
+CREATED
+src/core/knowledge/buildKnowledgeAcquisitionRequirementQuery.js
+src/core/knowledge/validateKnowledgeAcquisitionRequirementQuery.js
+src/core/knowledge/queryKnowledgeAcquisitionRequirements.js
+src/core/knowledge/validateKnowledgeAcquisitionRequirementQueryResult.js
+src/core/knowledge/healthKnowledgeAcquisitionRequirementQuery.js
+scripts/test_knowledge_acquisition_requirement_query.js
+scripts/test_knowledge_acquisition_requirement_query_regression.js
+scripts/test_health_knowledge_acquisition_requirement_query.js
+TASK_0100D-8_IMPLEMENTATION_REPORT.md
+TASK_0100D-8_MANIFEST.txt
+
+MODIFIED
+src/core/knowledge/index.js
+scripts/test_all_core.js
+scripts/fringe_health_check.js
+scripts/test_person_knowledge_matrix_regression.js
+scripts/test_person_knowledge_matrix_query_regression.js
+scripts/test_knowledge_coverage_regression.js
+docs/00-continuity/CONTINUITY.md
+docs/15-architecture_specifications/CORE_ROADMAP.md

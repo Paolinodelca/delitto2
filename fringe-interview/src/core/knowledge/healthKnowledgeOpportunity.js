@@ -1,0 +1,3 @@
+const {evaluateKnowledgeOpportunities}=require('./evaluateKnowledgeOpportunities');const {validateKnowledgeOpportunityCollection}=require('./validateKnowledgeOpportunityCollection');
+function healthKnowledgeOpportunity(coverage){const before=JSON.stringify(coverage);const a=evaluateKnowledgeOpportunities(coverage);const b=evaluateKnowledgeOpportunities(coverage);const v=validateKnowledgeOpportunityCollection(a);if(!v.valid)throw new Error(v.errors.join(' | '));if(JSON.stringify(coverage)!==before)throw new Error('KnowledgeCoverage mutated.');if(JSON.stringify(a)!==JSON.stringify(b))throw new Error('Non-deterministic result.');return{ok:true,result:a}}
+module.exports={healthKnowledgeOpportunity};

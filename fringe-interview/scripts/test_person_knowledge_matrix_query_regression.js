@@ -1,0 +1,5 @@
+const assert=require('assert');const fs=require('fs');const path=require('path');const know=require('../src/core/knowledge');
+const expected = require('./fixtures/expected_knowledge_core_exports');assert.deepStrictEqual(Object.keys(know).sort(),expected);for(const name of expected)assert.strictEqual(typeof know[name],'function');
+const q=know.buildPersonKnowledgeQuery({recipeVersion:'1.2.3',recipeId:'capabilityRecipe:test'});assert.deepStrictEqual(q,{recipeId:'capabilityRecipe:test',recipeVersion:'1.2.3'});assert(!know.validatePersonKnowledgeQuery({...q,score:1}).valid);
+for(const file of ['buildPersonKnowledgeQuery.js','validatePersonKnowledgeQuery.js','queryPersonKnowledgeMatrix.js','validatePersonKnowledgeQueryResult.js']){const text=fs.readFileSync(path.join(__dirname,'../src/core/knowledge',file),'utf8');assert(!/\beval\s*\(/.test(text));assert(!/openai|groq|fetch\s*\(|https?:\/\//i.test(text));assert(!/score|ranking|recommendation/i.test(text));}
+console.log('PersonKnowledgeMatrix query regression PASSED');

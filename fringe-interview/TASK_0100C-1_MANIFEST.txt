@@ -1,0 +1,23 @@
+TASK 0100C-1 — OVERLAY MANIFEST
+
+CREATED
+repository/src/core/knowledge/buildPersonKnowledgeQuery.js
+repository/src/core/knowledge/validatePersonKnowledgeQuery.js
+repository/src/core/knowledge/queryPersonKnowledgeMatrix.js
+repository/src/core/knowledge/validatePersonKnowledgeQueryResult.js
+repository/src/core/knowledge/healthPersonKnowledgeMatrixQuery.js
+repository/scripts/test_person_knowledge_matrix_query.js
+repository/scripts/test_person_knowledge_matrix_query_regression.js
+repository/scripts/test_health_person_knowledge_matrix_query.js
+
+MODIFIED
+repository/src/core/knowledge/index.js
+repository/scripts/test_person_knowledge_matrix_regression.js
+repository/scripts/test_all_core.js
+repository/scripts/fringe_health_check.js
+repository/docs/00-continuity/CONTINUITY.md
+repository/repository/docs/15-architecture_specifications/CORE_ROADMAP.md
+
+REPORT
+repository/TASK_0100C-1_IMPLEMENTATION_REPORT.md
+repository/TASK_0100C-1_MANIFEST.txt
