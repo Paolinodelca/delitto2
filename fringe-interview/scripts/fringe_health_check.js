@@ -1646,11 +1646,16 @@ addCheck("Knowledge Acquisition Requirement core", async () => {
 addCheck("Knowledge Acquisition Requirement Query core", async () => {
   const { execFileSync } = await import("child_process");
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_requirement_query.js"], { stdio: "pipe" });
+});
+
+addCheck("Knowledge Acquisition Design core", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_design.js"], { stdio: "pipe" });
+});
+
 addCheck("Knowledge Acquisition Boundary Freeze", async () => {
   const { execFileSync } = await import("child_process");
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_boundary.js"], { stdio: "pipe" });
-});
-
 });
 
 let failed = 0;

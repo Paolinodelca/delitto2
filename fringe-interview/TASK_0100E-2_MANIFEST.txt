@@ -1,0 +1,20 @@
+TASK 0100E-2 — Knowledge Acquisition Design Foundation
+
+CREATED
+src/core/knowledge/buildKnowledgeAcquisitionDesign.js
+src/core/knowledge/validateKnowledgeAcquisitionDesign.js
+src/core/knowledge/healthKnowledgeAcquisitionDesign.js
+scripts/knowledge_acquisition_design_fixture.js
+scripts/test_knowledge_acquisition_design.js
+scripts/test_knowledge_acquisition_design_regression.js
+scripts/test_health_knowledge_acquisition_design.js
+TASK_0100E-2_IMPLEMENTATION_REPORT.md
+TASK_0100E-2_MANIFEST.txt
+
+MODIFIED
+src/core/knowledge/index.js
+scripts/fixtures/expected_knowledge_core_exports.js
+scripts/test_all_core.js
+scripts/fringe_health_check.js
+docs/00-continuity/CONTINUITY.md
+docs/15-architecture_specifications/CORE_ROADMAP.md

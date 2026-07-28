@@ -693,3 +693,34 @@ PersonKnowledgeMatrix
 ```
 
 The task introduced no new domain contract and no new public API. It hardened standalone Opportunity summary validation, consolidated the explicit test-only public export allowlist, added a boundary freeze regression and health gate, and documented the semantic invariants. New Core declarative levels, mapping changes, cardinality changes, Requirement satisfaction state, and Plan/Action/Execution APIs require a new Architecture Review.
+
+---
+
+## Verified Core State — Task 0100E-2
+
+Status: **COMPLETED**
+
+`KnowledgeAcquisitionDesign` is the first approved declarative consumer downstream of `KnowledgeAcquisitionRequirement`:
+
+```text
+KnowledgeAcquisitionRequirement
+→ KnowledgeAcquisitionDesign
+```
+
+The builder receives an explicit `{ requirement, resolvedContext }` bundle containing the causally linked Strategy, Need, Opportunity, Coverage and PersonKnowledgeMatrix. It validates the complete direct causal chain and never performs implicit resolution, persistence access, network access or global lookup.
+
+The Foundation supports exactly two deterministic mappings:
+
+```text
+elementary_knowledge_availability_required
+→ elementary_acquisition_design
+```
+
+```text
+derived_knowledge_availability_required
+→ derived_acquisition_design
+```
+
+The Design adds mechanism-neutral solution semantics through target knowledge, output topology, contribution requirements, prerequisite topology and abstract capability obligations. Elementary Designs require primary knowledge contributions and no prerequisite topology. Derived Designs require an explicit, non-empty prerequisite topology derived from the resolved Coverage context.
+
+No Plan, capability match, capability selection, source or method selection, question or artifact generation, runtime, execution, observation, result, satisfaction state or knowledge update was introduced. The public API adds only `buildKnowledgeAcquisitionDesign`, `validateKnowledgeAcquisitionDesign` and `healthKnowledgeAcquisitionDesign`.

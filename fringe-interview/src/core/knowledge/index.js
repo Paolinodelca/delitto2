@@ -56,5 +56,8 @@ module.exports={
  validateKnowledgeAcquisitionRequirementQuery:require('./validateKnowledgeAcquisitionRequirementQuery').validateKnowledgeAcquisitionRequirementQuery,
  queryKnowledgeAcquisitionRequirements:require('./queryKnowledgeAcquisitionRequirements').queryKnowledgeAcquisitionRequirements,
  validateKnowledgeAcquisitionRequirementQueryResult:require('./validateKnowledgeAcquisitionRequirementQueryResult').validateKnowledgeAcquisitionRequirementQueryResult,
- healthKnowledgeAcquisitionRequirementQuery:require('./healthKnowledgeAcquisitionRequirementQuery').healthKnowledgeAcquisitionRequirementQuery
+ healthKnowledgeAcquisitionRequirementQuery:require('./healthKnowledgeAcquisitionRequirementQuery').healthKnowledgeAcquisitionRequirementQuery,
+ buildKnowledgeAcquisitionDesign:require('./buildKnowledgeAcquisitionDesign').buildKnowledgeAcquisitionDesign,
+ validateKnowledgeAcquisitionDesign:require('./validateKnowledgeAcquisitionDesign').validateKnowledgeAcquisitionDesign,
+ healthKnowledgeAcquisitionDesign:require('./healthKnowledgeAcquisitionDesign').healthKnowledgeAcquisitionDesign
 };

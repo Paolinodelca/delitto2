@@ -704,3 +704,44 @@ Completed the non-semantic hardening of the Knowledge Acquisition block: Opportu
 ## Next architecture phase — To be defined by Architect
 
 Status: **PLANNED**
+
+## 0100E-1 — Post-Requirement Downstream Architecture Review
+
+Status: **COMPLETED**
+Type: **ARCHITECTURE REVIEW**
+
+Decision: **APPROVED DIRECTION — Knowledge Acquisition Design**.
+
+The review established that the first legitimate downstream consumer of `KnowledgeAcquisitionRequirement` is a mechanism-neutral declarative Design. It describes the abstract form of a valid acquisition solution before capability matching, planning, artifact generation, execution, observation, satisfaction evaluation or knowledge update.
+
+## 0100E-2 — Knowledge Acquisition Design Foundation
+
+Status: **COMPLETED**
+
+Implemented the deterministic Core Foundation:
+
+```text
+KnowledgeAcquisitionRequirement
+        ↓
+KnowledgeAcquisitionDesign
+```
+
+Initial cardinality is strictly `1 Requirement → 1 Design`. Supported mappings are:
+
+```text
+elementary_knowledge_availability_required
+→ elementary_acquisition_design
+```
+
+```text
+derived_knowledge_availability_required
+→ derived_acquisition_design
+```
+
+The Design introduces new semantics through a mechanism-neutral `solutionShape`: elementary contribution requirements or derived prerequisite topology. It does not select capabilities, sources, methods or channels; it does not generate artifacts; and it does not plan, execute, observe, evaluate satisfaction or update knowledge.
+
+## Next architecture phase — To be defined by Architect
+
+Status: **PLANNED**
+
+No Query Foundation, collection evaluator, capability matching, planning, generation, runtime, execution, observation, satisfaction or update layer is assumed automatically.
