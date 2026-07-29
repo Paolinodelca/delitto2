@@ -27,7 +27,18 @@ Responsabilità:
 - costruzione scenario di colloquio
 - rendering report utili al candidato
 
-### 3. Content / Config Layer
+### 3. Beta Session Layer
+Ciclo di vita operativo della prova esterna, separato dalla sessione di dominio dell'intervista.
+
+Responsabilità:
+- identificativi tecnici pseudonimi
+- stato della prova
+- riferimenti a input, runtime e risultato
+- persistenza e recupero tramite adapter
+
+Il layer non contiene account, dati di contatto, UI o contenuto duplicato dei report.
+
+### 4. Content / Config Layer
 Materiale modificabile senza toccare il core.
 
 Responsabilità:

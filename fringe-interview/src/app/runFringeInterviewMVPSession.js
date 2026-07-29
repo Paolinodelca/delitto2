@@ -5,6 +5,13 @@ import {
   buildFinalCandidateReport
 } from "../interview/index.js";
 
+import {
+  buildBetaRuntimeResumeState,
+  completeBetaRuntimeSession,
+  createBetaRuntimeSession,
+  resumeBetaRuntimeSession,
+  syncBetaRuntimeProgress
+} from "./betaRuntimeSessionIntegration.js";
 function ensureArray(value) {
   return Array.isArray(value) ? value : [];
 }
@@ -117,7 +124,11 @@ export async function runFringeInterviewMVPSession({
   uiLocale = "it",
   sessionLocale = "it",
   inputSource = "upload",
-  frictionType = "none"
+  frictionType = "none",
+  betaSession = null,
+  betaSessionNow = () => new Date(),
+  betaSessionIdFactory,
+  betaSessionTokenFactory
 }) {
   const safeCvText = ensureString(cvText, "");
   const safeJdText = ensureString(jdText, "");
@@ -184,6 +195,28 @@ export async function runFringeInterviewMVPSession({
 
   const interviewSession = mvp.interviewSession;
 
+  let betaSessionEnvelope;
+  let activeBetaSession;
+  if (betaSession) {
+    activeBetaSession = resumeBetaRuntimeSession(betaSession, {
+      runtime,
+      now: betaSessionNow
+    });
+    betaSessionEnvelope = { session: activeBetaSession, resumeToken: null };
+  } else {
+    betaSessionEnvelope = createBetaRuntimeSession({
+      inputRefs: [
+        { type: "candidate_input", id: "cv" },
+        { type: "target_input", id: safeJdText ? "job_description" : "target_role" }
+      ],
+      runtime,
+      now: betaSessionNow,
+      idFactory: betaSessionIdFactory,
+      tokenFactory: betaSessionTokenFactory
+    });
+    activeBetaSession = betaSessionEnvelope.session;
+  }
+
   for (const answerText of ensureArray(answers)) {
     const stepType = runtime?.currentStep?.stepType;
 
@@ -199,6 +232,10 @@ export async function runFringeInterviewMVPSession({
     });
 
     runtime = advanced.interviewRuntime;
+    activeBetaSession = syncBetaRuntimeProgress(activeBetaSession, {
+      runtime,
+      now: betaSessionNow
+    });
   }
 
   const interviewReport = collectInterviewReport({
@@ -211,6 +248,17 @@ export async function runFringeInterviewMVPSession({
     jobFitAnalysis: mvp.parserResult.jobFitAnalysis,
     interviewReport: interviewReport.interviewReport
   });
+
+  if (runtime?.runtimeState?.isCompleted) {
+    activeBetaSession = completeBetaRuntimeSession(activeBetaSession, {
+      runtime,
+      resultRef: {
+        type: "final_candidate_report",
+        id: `${activeBetaSession.sessionId}_final_candidate_report`
+      },
+      now: betaSessionNow
+    });
+  }
 
   return {
     fringeInterviewMVPSession: {
@@ -230,6 +278,9 @@ export async function runFringeInterviewMVPSession({
       interviewRuntime: runtime,
       interviewReport: interviewReport.interviewReport,
       finalCandidateReport: finalCandidateReport.finalCandidateReport,
+      betaSession: activeBetaSession,
+      betaSessionResumeState: buildBetaRuntimeResumeState(activeBetaSession),
+      resumeToken: betaSessionEnvelope.resumeToken,
       meta: {
         scenarioType: resolvedScenarioType,
         inputMode: resolvedInputMode,
