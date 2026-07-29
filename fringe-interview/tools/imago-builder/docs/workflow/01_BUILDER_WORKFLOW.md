@@ -366,17 +366,64 @@ Lo Static Audit è parte integrante del task.
 
 ---
 
-# STEP 9 — Documentazione
+# STEP 9 — Documentazione e stato
 
-Ogni nuovo componente pubblico deve aggiornare la documentazione pertinente.
+Ogni task deve aggiornare esclusivamente la documentazione realmente interessata dall’implementazione.
 
-Aggiornare soltanto i documenti realmente interessati.
+La documentazione non costituisce un allegato facoltativo del task: quando il repository contiene documenti che descrivono il componente modificato, il loro aggiornamento fa parte del completamento del task.
+
+## Documentazione applicativa IMAGO
+
+Per i task che modificano il prodotto IMAGO, il Core, il Runtime, la Session, il Measurement Engine, il Capability Engine o altri domini applicativi:
+
+* aggiornare le specifiche architetturali realmente interessate;
+* aggiornare la roadmap applicativa soltanto quando il task modifica lo stato o la pianificazione;
+* aggiornare eventuali documenti di contratto o pipeline coinvolti;
+* non modificare i documenti di stato del Builder, salvo che il Builder stesso sia stato modificato.
+
+La roadmap applicativa corrente è:
+
+```text
+notes/BETA_ROADMAP.md
+```
+
+## Documentazione del Builder
+
+I documenti:
+
+```text
+tools/imago-builder/docs/status/02_BUILDER_STATUS.md
+tools/imago-builder/docs/status/04_TASK_HISTORY.md
+tools/imago-builder/docs/onboarding/03_ROADMAP.md
+```
+
+descrivono esclusivamente IMAGO Builder.
+
+Devono essere aggiornati quando il task modifica il Builder o una sua capacità operativa.
+
+Quando applicabile, il Builder deve:
+
+1. aggiornare `02_BUILDER_STATUS.md` affinché rappresenti lo stato corrente reale;
+2. aggiungere in fondo a `04_TASK_HISTORY.md` una entry relativa al task completato e approvato;
+3. aggiornare `03_ROADMAP.md` soltanto se cambia lo stato di una milestone Builder;
+4. aggiornare `03_ARCHITECT_DECISIONS.md` soltanto in presenza di una decisione architetturale approvata relativa al Builder.
+
+Non registrare nei documenti di stato del Builder task esclusivamente applicativi.
+
+## Regole generali
+
+Aggiornare soltanto documenti verificati nel repository reale.
+
+Non creare documenti paralleli quando ne esiste già uno con la stessa responsabilità.
 
 Non duplicare contenuti.
 
 Preferire riferimenti tra documenti piuttosto che copie.
 
-Quando viene introdotta una nuova pipeline, documentarla con un diagramma semplice.
+Quando viene introdotta o modificata una pipeline, documentarla con un diagramma semplice.
+
+Ogni documento dichiarato come aggiornato deve comparire nell’elenco dei file modificati del report finale.
+
 
 ---
 
@@ -406,6 +453,42 @@ Mai dichiarare modificati file non realmente modificati.
 Mai simulare un PASS.
 
 ---
+
+## Deliverable del task
+
+Il Builder non deve restituire automaticamente una copia completa del repository.
+
+Salvo richiesta esplicita contraria, il deliverable deve contenere esclusivamente:
+
+* file nuovi;
+* file modificati;
+* report di implementazione del task;
+* eventuale manifest dei file consegnati.
+
+Non includere:
+
+* file invariati;
+* cartelle temporanee;
+* output di test non richiesti;
+* precedenti handover;
+* copie complete del repository;
+* dipendenze installate;
+* artifact generati non necessari all’applicazione delle modifiche.
+
+Ogni file consegnato deve preservare il proprio percorso relativo rispetto alla root del repository.
+
+Il report finale deve distinguere chiaramente:
+
+```text
+Files Created
+Files Modified
+Files Delivered
+```
+
+`Files Delivered` deve normalmente corrispondere all’unione di `Files Created` e `Files Modified`, oltre al report di implementazione.
+
+
+
 
 # Gestione delle anomalie
 
@@ -472,11 +555,20 @@ Static Audit
 
 □ Nessuna violazione architetturale rilevata.
 
-Documentazione
+Documentation
 
-□ Documentazione aggiornata.
+□ Documentazione applicativa interessata aggiornata.
 
-□ Nessuna duplicazione inutile.
+□ Roadmap applicativa aggiornata, se il task ne modifica stato o pianificazione.
+
+□ Stato e cronologia del Builder aggiornati, se il task modifica IMAGO Builder.
+
+□ Nessun documento Builder modificato per task esclusivamente applicativi.
+
+□ Nessuna duplicazione documentale inutile.
+
+□ Tutti i documenti dichiarati come aggiornati figurano tra i file modificati.
+
 
 Report
 
