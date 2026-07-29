@@ -13,6 +13,10 @@ async function run() {
     "../src/core/interview/buildInitialCoverageState.js"
   );
 
+  const { validateCoverageState } = await import(
+    "../src/core/interview/validateCoverageState.js"
+  );
+
   const roleCredibilityMap = buildRoleCredibilityMap({
     targetContext: {
       targetRole: "Product Operations Manager",
@@ -26,6 +30,28 @@ async function run() {
   const initialCoverageState = buildInitialCoverageState({
     evidenceCollectionPlan,
   });
+
+  const validation = validateCoverageState(initialCoverageState);
+
+  if (validation.valid !== true) {
+    console.error("❌ Initial Coverage State validation failed");
+    console.error(
+      JSON.stringify(
+        {
+          errors: validation.errors,
+          warnings: validation.warnings,
+        },
+        null,
+        2
+      )
+    );
+  }
+
+  assert.strictEqual(
+    validation.valid,
+    true,
+    "Expected Initial Coverage State to be valid"
+  );
 
   assert.strictEqual(
     initialCoverageState.overallCoverage,
@@ -88,6 +114,7 @@ async function run() {
       {
         goals: initialCoverageState.goals.length,
         signals: initialCoverageState.signals.length,
+        validationWarnings: validation.warnings.length,
         nextRecommendation: initialCoverageState.nextRecommendation,
       },
       null,
