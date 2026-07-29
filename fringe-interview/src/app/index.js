@@ -6,4 +6,17 @@ export { default as renderFringeInterviewReportHtml } from "./renderFringeInterv
 
 
 export { default as renderInteractiveInterviewShellHtml } from "./renderInteractiveInterviewShellHtml.js";
-export { buildInteractiveSessionPayload } from "./buildInteractiveSessionPayload.js";
+export { buildInteractiveSessionPayload } from "./buildInteractiveSessionPayload.js";export {
+  createBetaRuntimeSession,
+  resumeBetaRuntimeSession,
+  syncBetaRuntimeProgress,
+  interruptBetaRuntimeSession,
+  completeBetaRuntimeSession,
+  buildBetaRuntimeResumeState
+} from "./betaRuntimeSessionIntegration.js";
+
+export {
+  buildKnowledgeAcquisitionSolutionDecision,
+  validateKnowledgeAcquisitionSolutionDecision,
+  healthKnowledgeAcquisitionSolutionDecision
+} from "./knowledge/publicApi.js";

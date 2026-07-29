@@ -1,0 +1,5 @@
+module.exports={
+ buildKnowledgeAcquisitionSolutionDecision:require('./buildKnowledgeAcquisitionSolutionDecision').buildKnowledgeAcquisitionSolutionDecision,
+ validateKnowledgeAcquisitionSolutionDecision:require('./validateKnowledgeAcquisitionSolutionDecision').validateKnowledgeAcquisitionSolutionDecision,
+ healthKnowledgeAcquisitionSolutionDecision:require('./healthKnowledgeAcquisitionSolutionDecision').healthKnowledgeAcquisitionSolutionDecision
+};

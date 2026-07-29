@@ -98,3 +98,15 @@ The freeze is protected by:
 - specific Foundation and Query regression suites
 - `scripts/test_all_core.js`
 - `scripts/fringe_health_check.js`
+
+## Post-Match boundary — Task 0100E-6
+
+```text
+Capability Discovery → Application
+Capability Candidate Resolution → Application
+Immutable Candidate Snapshots → Application boundary input
+KnowledgeAcquisitionCapabilityMatch → Core
+KnowledgeAcquisitionSolutionDecision → Application
+```
+
+La Solution Decision non è una selezione necessariamente singola: può riferirsi a zero, una o più capability. Non contiene composizione operativa, configuration, planning, recipe, execution o runtime. Non vengono introdotti `CapabilityCandidateCollection` o `KnowledgeAcquisitionCapabilityMatchCollection` nel Core.

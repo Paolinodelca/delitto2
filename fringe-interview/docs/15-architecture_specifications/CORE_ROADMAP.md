@@ -753,3 +753,15 @@ Frozen pipeline extension:
 `KnowledgeAcquisitionRequirement -> KnowledgeAcquisitionDesign -> KnowledgeAcquisitionCapabilityMatch`
 
 Cardinality: one Design may yield zero or more independent Matches, one candidate per builder invocation. Core performs deterministic semantic matching only. Application owns discovery, availability, policy, ranking, selection, configuration and execution. `indeterminate` means a structurally valid snapshot lacks a necessary declarative fact and no explicit incompatibility is already known. Measurement is an optional capability family; question generation and LLM execution remain downstream.
+
+### 0100E-6 — Knowledge Acquisition Solution Decision Foundation
+
+Implementata sul lato Application la decisione successiva al Match Core:
+
+```text
+KnowledgeAcquisitionCapabilityMatch
+        ↓
+KnowledgeAcquisitionSolutionDecision
+```
+
+La Decision supporta zero/una/più capability (`none`, `deferred`, `single`, `composed`). L'eventuale Capability Composition Design rimane un dominio successivo, non ancora collocato tra Core e Application.

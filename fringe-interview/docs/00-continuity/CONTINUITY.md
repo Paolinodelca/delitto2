@@ -732,3 +732,16 @@ Completed the pure deterministic `KnowledgeAcquisitionCapabilityMatch` boundary:
 `KnowledgeAcquisitionDesign -> 0..N KnowledgeAcquisitionCapabilityMatch`
 
 Each invocation evaluates one immutable capability candidate snapshot. Discovery and selection remain Application concerns. The Match evaluates eligibility, obligations, output/prerequisite topology, conservative constraints, explicit reasons, and the strict states `compatible`, `incompatible`, `indeterminate`. It introduces no registry access, ranking, planning, recipe, execution, result, satisfaction, Measurement dependency, question generation, or LLM invocation.
+
+## Task 0100E-6 — Knowledge Acquisition Solution Decision Foundation
+
+Boundary congelato:
+
+```text
+Discovery → Application
+Candidate Resolution → Application
+Matching → Core
+Solution Decision → Application
+```
+
+`KnowledgeAcquisitionSolutionDecision` è un contratto applicativo deterministico e auditabile. Può adottare zero, una o più capability tramite i mode `single`, `composed`, `none`, `deferred`. Non introduce CandidateCollection o MatchCollection nel Core e non progetta la composizione, la configurazione, il planning, recipe, execution o runtime. Il candidate snapshot resta Application-owned e viene usato come boundary input immutabile.

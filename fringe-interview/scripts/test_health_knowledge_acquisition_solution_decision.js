@@ -1,0 +1,1 @@
+const assert=require('assert');const {healthKnowledgeAcquisitionSolutionDecision}=require('../src/app/knowledge');const fixture=require('./knowledge_acquisition_solution_decision_fixture');const r=healthKnowledgeAcquisitionSolutionDecision(fixture);assert(r.ok,JSON.stringify(r));console.log('Knowledge Acquisition Solution Decision health PASSED');

@@ -1,0 +1,4 @@
+import knowledgeDecisionApi from './index.js';
+export const buildKnowledgeAcquisitionSolutionDecision=knowledgeDecisionApi.buildKnowledgeAcquisitionSolutionDecision;
+export const validateKnowledgeAcquisitionSolutionDecision=knowledgeDecisionApi.validateKnowledgeAcquisitionSolutionDecision;
+export const healthKnowledgeAcquisitionSolutionDecision=knowledgeDecisionApi.healthKnowledgeAcquisitionSolutionDecision;
