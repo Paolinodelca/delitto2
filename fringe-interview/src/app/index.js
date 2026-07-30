@@ -34,3 +34,10 @@ export {
   validateKnowledgeAcquisitionPlanContext,
   healthKnowledgeAcquisitionPlan
 } from "./knowledge/publicApi.js";
+
+export {
+  buildKnowledgeAcquisitionRuntimeSession,
+  validateKnowledgeAcquisitionRuntimeSession,
+  validateKnowledgeAcquisitionRuntimeSessionContext,
+  healthKnowledgeAcquisitionRuntimeSession
+} from "./knowledge/publicApi.js";

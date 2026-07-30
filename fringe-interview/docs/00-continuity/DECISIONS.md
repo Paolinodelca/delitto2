@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-13**
+Verified through: **Task 0100E-14**
 
 ## Foundation decisions
 
@@ -143,4 +143,4 @@ No intermediate readiness, binding or normalized-composition contract is require
 
 Task 0100E-13 approves `KnowledgeAcquisitionRuntimeSession` as the Application-owned first operational boundary. One immutable Plan may cause zero or more Sessions; each Session refers to exactly one Plan and contains exactly one operational item-state projection per Plan Item. Session identity is distinct from Plan identity so resume/reconstruction preserves an existing Session while a rerun creates a new Session.
 
-The Session owns lifecycle, progress, active-item selection and operational timestamps. It is pre-Execution: attempts, retry policy, provider/adapter binding, invocation, errors, outputs, results, event persistence, Requirement satisfaction and Knowledge Update remain separate downstream concerns. A Runtime Definition is not introduced because it would duplicate the already authoritative Plan. Task 0100E-14 may implement only this Runtime Session Foundation.
+The Session owns lifecycle, progress, active-item selection and operational timestamps. It is pre-Execution: attempts, retry policy, provider/adapter binding, invocation, errors, outputs, results, event persistence, Requirement satisfaction and Knowledge Update remain separate downstream concerns. A Runtime Definition is not introduced because it would duplicate the already authoritative Plan. Task 0100E-14 implements this Runtime Session Foundation with the closed lifecycle `created`, `active`, `suspended`, `completed`, `abandoned`, stable identity and exact Plan Item state projections; ADR-030 remains unchanged.

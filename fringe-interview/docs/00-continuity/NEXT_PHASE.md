@@ -1,20 +1,20 @@
-# Next Phase — IMAGO 0100E-14
+# Next Phase — IMAGO 0100E-15
 
 Status: **CURRENT**
 
-Task type: **FOUNDATION**
+Task type: **ARCHITECTURE REVIEW**
 
 ## Task
 
 ```text
-0100E-14 — Knowledge Acquisition Runtime Session Foundation
+0100E-15 — Post-Runtime-Session Downstream Architecture Review
 Status: PLANNED
 ```
 
 ## Purpose
 
-Implement the Application-owned `KnowledgeAcquisitionRuntimeSession` approved by Task 0100E-13 as the first operational, Plan-scoped and pre-Execution boundary.
+Review repository evidence to identify the first legitimate consumer downstream of the implemented Application-owned `KnowledgeAcquisitionRuntimeSession`.
 
-The Foundation is limited to exact Plan/Plan Item causality, distinct Session identity, lifecycle, item-state progress, active-item selection, operational timestamps, immutable snapshots, validation, tests, health and minimal Application exports.
+No Execution, attempt, Scheduler, Queue, Retry, Provider, Adapter, Registry, invocation, result, event persistence, Reporting, satisfaction, Knowledge Update or integration Foundation is pre-approved by this gate.
 
-No Execution, attempt model, Scheduler, Queue, Retry, Provider, Adapter, Registry, invocation, result, event persistence, Reporting, satisfaction, Knowledge Update or integration Foundation is approved by this gate. `KnowledgeAcquisitionCapabilityConfiguration` and `KnowledgeAcquisitionPlan` remain IMPLEMENTED and unchanged.
+`KnowledgeAcquisitionCapabilityConfiguration`, `KnowledgeAcquisitionPlan` and `KnowledgeAcquisitionRuntimeSession` remain IMPLEMENTED and unchanged.

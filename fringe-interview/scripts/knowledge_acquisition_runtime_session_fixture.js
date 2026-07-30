@@ -1,0 +1,5 @@
+const A=require('../src/app/knowledge');const P=require('./knowledge_acquisition_plan_fixture');
+const now='2026-07-30T16:00:00.000Z',later='2026-07-30T16:05:00.000Z';
+function state(ref,status,timestamps={}){return{sourcePlanItemRef:ref,status,activatedAt:timestamps.activatedAt||null,suspendedAt:timestamps.suspendedAt||null,completedAt:timestamps.completedAt||null,abandonedAt:timestamps.abandonedAt||null}}
+function buildFixture(){const upstream=P.buildFixture(),plan=A.buildKnowledgeAcquisitionPlan(upstream.composed.input),refs=plan.planItems.map(x=>x.planItemRef),created={input:{knowledgeAcquisitionPlan:plan,sessionKey:'runtime-session-fixture-001',extensions:{fixture:true}}};return{now,later,plan,refs,created,active:{input:{knowledgeAcquisitionPlan:plan,sessionKey:'runtime-session-fixture-001',status:'active',activePlanItemRef:refs[0],itemStates:refs.map((r,i)=>state(r,i===0?'active':'pending',i===0?{activatedAt:later}:{})),lifecycle:{createdAt:now,updatedAt:later,activatedAt:later,suspendedAt:null,completedAt:null,abandonedAt:null}}},upstream}}
+module.exports={buildFixture,state};

@@ -1,0 +1,1 @@
+const assert=require('assert');const {healthKnowledgeAcquisitionRuntimeSession}=require('../src/app/knowledge');const result=healthKnowledgeAcquisitionRuntimeSession(require('./knowledge_acquisition_runtime_session_fixture'));assert.equal(result.ok,true,JSON.stringify(result));console.log('Knowledge Acquisition Runtime Session health passed.');

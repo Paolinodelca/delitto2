@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-13**
+Verified through: **Task 0100E-14**
 
 ## Principle
 
@@ -35,7 +35,7 @@ Input / Evidence                                      [Core]
 → KnowledgeAcquisitionCapabilityCompositionDesign     [Application; composed only]
 → KnowledgeAcquisitionCapabilityConfiguration         [Application; single/composed]
 → KnowledgeAcquisitionPlan                            [Application; implemented]
-→ KnowledgeAcquisitionRuntimeSession                  [Application; approved, not implemented]
+→ KnowledgeAcquisitionRuntimeSession                  [Application; implemented, stateful, pre-Execution]
 ```
 
 Query Foundations provide deterministic, read-only access for Matrix, Coverage, Opportunity, Need, Strategy and Requirement without reinterpreting upstream semantics.
@@ -117,13 +117,12 @@ Task 0100E-12 implements `KnowledgeAcquisitionPlan` as the first consumer of a v
 
 ## Knowledge Acquisition Runtime Session
 
-Task 0100E-13 approves `KnowledgeAcquisitionRuntimeSession` as the first operational boundary and first consumer of a valid Plan. It is Application-owned and holds a distinct session identity, exact Plan/Plan Item causal refs, lifecycle, item-state progress, active-item selection and operational timestamps. One Plan may cause zero or more Sessions; each Session refers to exactly one Plan. Resume preserves Session identity, while a new run creates a new Session for the same immutable Plan.
+Task 0100E-13 approves and E-14 implements `KnowledgeAcquisitionRuntimeSession` as the first operational boundary and first consumer of a valid Plan. It is Application-owned and holds a distinct stable session identity, exact Plan/Plan Item causal refs, closed lifecycle, item-state progress, active-item selection and explicit operational timestamps. One Plan may cause zero or more Sessions; each Session refers to exactly one Plan. Resume/reconstruction preserves Session identity, while a new `sessionKey` creates a new Session for the same immutable Plan.
 
 The Session is pre-Execution. It does not bind providers, create invocation payloads, execute, retry, collect results, persist events, update knowledge or assess Requirement satisfaction. No declarative Runtime Definition is required between Plan and Session.
 
 ## Not approved or implemented downstream
 
-- Knowledge Acquisition Runtime Session Foundation (approved direction, not implemented);
 - acquisition Action or executable Recipe;
 - provider/adapter resolution;
 - runtime orchestration and execution;
@@ -132,7 +131,7 @@ The Session is pre-Execution. It does not bind providers, create invocation payl
 - Knowledge Update;
 - Runtime/Reporting legacy integration.
 
-The next gate is the Runtime Session Foundation only; it does not authorize Execution, provider binding, invocation, persistence or results.
+The next gate is a post-Runtime-Session architecture review only; it does not pre-authorize Execution, provider binding, invocation, persistence or results.
 
 ## Dependency direction
 

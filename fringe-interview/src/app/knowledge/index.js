@@ -13,5 +13,9 @@ module.exports={
  buildKnowledgeAcquisitionPlan:require('./buildKnowledgeAcquisitionPlan').buildKnowledgeAcquisitionPlan,
  validateKnowledgeAcquisitionPlan:require('./validateKnowledgeAcquisitionPlan').validateKnowledgeAcquisitionPlan,
  validateKnowledgeAcquisitionPlanContext:require('./validateKnowledgeAcquisitionPlanContext').validateKnowledgeAcquisitionPlanContext,
- healthKnowledgeAcquisitionPlan:require('./healthKnowledgeAcquisitionPlan').healthKnowledgeAcquisitionPlan
+ healthKnowledgeAcquisitionPlan:require('./healthKnowledgeAcquisitionPlan').healthKnowledgeAcquisitionPlan,
+ buildKnowledgeAcquisitionRuntimeSession:require('./buildKnowledgeAcquisitionRuntimeSession').buildKnowledgeAcquisitionRuntimeSession,
+ validateKnowledgeAcquisitionRuntimeSession:require('./validateKnowledgeAcquisitionRuntimeSession').validateKnowledgeAcquisitionRuntimeSession,
+ validateKnowledgeAcquisitionRuntimeSessionContext:require('./validateKnowledgeAcquisitionRuntimeSessionContext').validateKnowledgeAcquisitionRuntimeSessionContext,
+ healthKnowledgeAcquisitionRuntimeSession:require('./healthKnowledgeAcquisitionRuntimeSession').healthKnowledgeAcquisitionRuntimeSession
 };
