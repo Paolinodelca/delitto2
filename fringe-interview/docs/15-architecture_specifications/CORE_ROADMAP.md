@@ -4,6 +4,12 @@ Version: 1.0
 
 Status: COMPLETED
 
+## 0100E-8 — Knowledge Acquisition Capability Composition Design Foundation
+
+Status: **COMPLETED**
+
+Implemented in the Application Knowledge boundary. A valid `composed` `KnowledgeAcquisitionSolutionDecision` produces exactly one deterministic declarative `KnowledgeAcquisitionCapabilityCompositionDesign`; `single`, `none`, and `deferred` are rejected as not applicable. The contract covers selected capability roles, contribution responsibilities, logical dependencies, intermediate/final contributions, declarative conditions, and source Design solution-shape satisfaction. Operational concerns remain excluded.
+
 Owner: Architect
 
 Last Updated: 2026-07-23
@@ -764,4 +770,4 @@ KnowledgeAcquisitionCapabilityMatch
 KnowledgeAcquisitionSolutionDecision
 ```
 
-La Decision supporta zero/una/più capability (`none`, `deferred`, `single`, `composed`). L'eventuale Capability Composition Design rimane un dominio successivo, non ancora collocato tra Core e Application.
+La Decision supporta zero/una/più capability (`none`, `deferred`, `single`, `composed`). Il successivo Capability Composition Design per il solo caso `composed` è collocato in Application / Knowledge, con validazione locale dell'artefatto e validazione contestuale rispetto a Decision e Design.

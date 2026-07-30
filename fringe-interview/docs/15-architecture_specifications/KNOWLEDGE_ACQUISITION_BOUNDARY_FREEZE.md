@@ -2,6 +2,10 @@
 
 Status: **FROZEN**
 
+## Post-Decision composed boundary — Task 0100E-8
+
+`KnowledgeAcquisitionCapabilityCompositionDesign` is Application-owned and exists exactly once for a valid `composed` `KnowledgeAcquisitionSolutionDecision`; it does not exist for `single`, `none`, or `deferred`. It records only selected capability roles, declarative contributions, logical dependencies, composition conditions, and declared conformance with the source `KnowledgeAcquisitionDesign`. Its local validator proves only self-contained invariants; a separate pure Application contextual validator proves correspondence with the supplied Decision and Design. Capability reselection, providers, adapters, configuration, planning, recipe, executable ordering, runtime orchestration, persistence, observation, satisfaction state, and Knowledge Update remain forbidden.
+
 ## Purpose
 
 This document protects the public semantic boundary of IMAGO Knowledge Analysis. The boundary describes knowledge coverage, incompleteness, missing layer, general transformation category and final required knowledge availability. It does not implement acquisition planning or execution.
