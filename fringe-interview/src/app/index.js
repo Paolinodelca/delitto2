@@ -20,3 +20,10 @@ export {
   validateKnowledgeAcquisitionSolutionDecision,
   healthKnowledgeAcquisitionSolutionDecision
 } from "./knowledge/publicApi.js";
+
+export {
+  buildKnowledgeAcquisitionCapabilityConfiguration,
+  validateKnowledgeAcquisitionCapabilityConfiguration,
+  validateKnowledgeAcquisitionCapabilityConfigurationContext,
+  healthKnowledgeAcquisitionCapabilityConfiguration
+} from "./knowledge/publicApi.js";

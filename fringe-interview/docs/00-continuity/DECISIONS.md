@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-9**
+Verified through: **Task 0100E-10**
 
 ## Foundation decisions
 
@@ -131,4 +131,4 @@ Configuration, Planning, Runtime, Execution, Requirement satisfaction and Knowle
 
 Task 0100E-9 approved `KnowledgeAcquisitionCapabilityConfiguration` as an Application-owned, declarative and immutable pre-planning artifact. One Configuration may exist for an applicable `single` or `composed` Solution Decision; `none` and `deferred` produce none. For `composed`, the corresponding Composition Design is a mandatory direct causal source. `single` is not normalized as a composition of cardinality one.
 
-Configuration may bind only explicit non-secret declarative values to already selected capability references. It may not discover or reselect capabilities, mutate Decision or Composition Design, resolve provider/adapter/availability, contain credentials or secret references, order invocations, plan, retry, orchestrate or execute. The decision approves direction only; implementation is deferred to Task 0100E-10.
+Configuration may bind only explicit non-secret declarative values to already selected capability references. It may not discover or reselect capabilities, mutate Decision or Composition Design, resolve provider/adapter/availability, contain credentials or secret references, order invocations, plan, retry, orchestrate or execute. Task 0100E-10 implements this approved direction without changing the decision.

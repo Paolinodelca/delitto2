@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-9**
+Verified through: **Task 0100E-10**
 
 ## Principle
 
@@ -33,6 +33,7 @@ Input / Evidence                                      [Core]
 → KnowledgeAcquisitionCapabilityMatch                 [Core]
 → KnowledgeAcquisitionSolutionDecision                [Application]
 → KnowledgeAcquisitionCapabilityCompositionDesign     [Application; composed only]
+→ KnowledgeAcquisitionCapabilityConfiguration         [Application; single/composed]
 ```
 
 Query Foundations provide deterministic, read-only access for Matrix, Coverage, Opportunity, Need, Strategy and Requirement without reinterpreting upstream semantics.
@@ -102,9 +103,9 @@ The repository contains existing, health-checked Runtime, Beta Session and Repor
 
 Their existence does not imply integration with Knowledge Acquisition. Any connection requires an explicitly reviewed Application/Runtime/Adapter boundary.
 
-## Approved but not implemented downstream
+## Capability Configuration
 
-Task 0100E-9 approved `KnowledgeAcquisitionCapabilityConfiguration` as one unified Application-owned declarative artifact for applicable `single` and `composed` Decisions. The composed path requires the corresponding Composition Design; the single path does not fabricate one. `none` and `deferred` produce no Configuration.
+Task 0100E-10 implements `KnowledgeAcquisitionCapabilityConfiguration` as one unified Application-owned declarative artifact for applicable `single` and `composed` Decisions. The composed path requires the corresponding Composition Design; the single path does not fabricate one. `none` and `deferred` produce no Configuration.
 
 Configuration binds only explicit non-secret declarative values to already selected capability references. It does not repeat composition topology, resolve providers or adapters, order invocations, plan or execute.
 
@@ -118,7 +119,7 @@ Configuration binds only explicit non-secret declarative values to already selec
 - Knowledge Update;
 - Runtime/Reporting legacy integration.
 
-The Configuration Foundation remains unimplemented and is the planned Task 0100E-10.
+The next gate is the post-Configuration downstream architecture review; it does not authorize Planning or Runtime.
 
 ## Dependency direction
 
@@ -134,7 +135,7 @@ Lower layers must not import higher composed views. Core does not discover Appli
 
 ## Guardrails
 
-Without an explicit implementation task, do not introduce person scoring, ranking, recommendation, diagnosis, automatic decision-making, Configuration, Planning, Execution, Requirement satisfaction or Knowledge Update.
+Without an explicit implementation task, do not introduce person scoring, ranking, recommendation, diagnosis, automatic decision-making, Planning, Execution, Requirement satisfaction or Knowledge Update.
 
 `not observed` does not mean `absent`.
 

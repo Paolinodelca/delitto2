@@ -1,0 +1,45 @@
+TASK 0100E-10 — Knowledge Acquisition Capability Configuration Foundation
+
+STATUS
+FOUNDATION IMPLEMENTED
+SELF-REVIEW CONFORMING
+
+OWNERSHIP
+Application
+
+NATURE
+Immutable
+Declarative
+Pre-planning
+Pre-runtime
+
+MODES
+single: one Configuration, no Composition Design
+composed: one Configuration, exact Composition Design required
+none: rejected, no Configuration
+deferred: rejected, no Configuration
+
+PUBLIC APPLICATION API
+buildKnowledgeAcquisitionCapabilityConfiguration
+validateKnowledgeAcquisitionCapabilityConfiguration
+validateKnowledgeAcquisitionCapabilityConfigurationContext
+healthKnowledgeAcquisitionCapabilityConfiguration
+
+VERIFICATION
+Dedicated tests: PASS
+Context tests: PASS
+Regression: PASS
+Public API boundary: PASS
+Health: PASS
+Continuity governance: PASS
+Core aggregate suite: PASS
+Overall health: PASS
+
+CONTINUITY IMPACT
+ARCHITECTURE (includes STATUS; upstream freeze unchanged)
+
+NEXT GATE
+0100E-11 — Post-Configuration Downstream Architecture Review
+
+OUT OF SCOPE
+Planning, Runtime, Execution, Provider, Adapter, Registry, Invocation, Recipe, Result, Satisfaction, Knowledge Update, Reporting, Persistence, Secrets, Environment Lookup, Retry, Timeout and Failure Policy.

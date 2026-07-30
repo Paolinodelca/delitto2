@@ -173,6 +173,11 @@ const testGroups = [
       "node scripts/test_knowledge_acquisition_capability_composition_design_context.js",
       "node scripts/test_knowledge_acquisition_capability_composition_design_public_api.js",
       "node scripts/test_health_knowledge_acquisition_capability_composition_design.js",
+      "node scripts/test_knowledge_acquisition_capability_configuration.js",
+      "node scripts/test_knowledge_acquisition_capability_configuration_regression.js",
+      "node scripts/test_knowledge_acquisition_capability_configuration_context.js",
+      "node scripts/test_knowledge_acquisition_capability_configuration_public_api.js",
+      "node scripts/test_health_knowledge_acquisition_capability_configuration.js",
     ],
   },
   {

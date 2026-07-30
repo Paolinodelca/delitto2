@@ -4,9 +4,9 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-9**
+Verified through: **Task 0100E-10**
 
-Next gate: **0100E-10**
+Next gate: **0100E-11**
 
 Last updated: 2026-07-30 (`GOV-REALIGN-001`)
 
@@ -29,7 +29,7 @@ Input / Evidence
 → Design and Capability Match
 → Application Solution Decision
 → Application Composition Design (composed only)
-→ Application Capability Configuration (approved; not implemented)
+→ Application Capability Configuration (implemented)
 ```
 
 Evidence is authoritative; knowledge and composed views are reconstructable. Runtime execution and Reporting integration are not implied by this roadmap.
@@ -120,6 +120,7 @@ Requirement is a declarative post-condition. It has no satisfaction, priority, s
 | 0100E-7 | Architecture Review | COMPLETED | composed-only Composition Design direction approved |
 | 0100E-8 | Foundation | COMPLETED | Capability Composition Design |
 | 0100E-9 | Architecture Review | COMPLETED | unified Application Capability Configuration direction approved |
+| 0100E-10 | Foundation | COMPLETED | unified declarative Application Capability Configuration |
 
 Current implemented extension:
 
@@ -131,19 +132,19 @@ KnowledgeAcquisitionRequirement
 → KnowledgeAcquisitionCapabilityCompositionDesign  [Application; composed only]
 ```
 
-Discovery and candidate resolution remain Application-owned. Local and contextual Composition Design validation have distinct guarantees. Configuration, Planning and Execution are excluded.
+Discovery and candidate resolution remain Application-owned. Local and contextual validation have distinct guarantees. Planning and Execution are excluded.
 
 ## Current gate
 
-### 0100E-10 — Knowledge Acquisition Capability Configuration Foundation
+### 0100E-11 — Post-Configuration Downstream Architecture Review
 
-Type: **FOUNDATION IMPLEMENTATION**
+Type: **ARCHITECTURE REVIEW**
 
 Status: **PLANNED**
 
 | Task | Type | Status | Result |
 |---|---|---|---|
-| 0100E-10 | Foundation | PLANNED | implement unified declarative Application Configuration |
+| 0100E-11 | Architecture Review | PLANNED | review the first legitimate downstream consumer after Configuration |
 
 Approved cardinality:
 

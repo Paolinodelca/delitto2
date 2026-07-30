@@ -122,14 +122,11 @@ export function inspectContinuityGovernance(root = applicationRoot) {
   if (!currentStateText.includes("KnowledgeAcquisitionCapabilityConfiguration")) {
     errors.push("CURRENT documents must identify KnowledgeAcquisitionCapabilityConfiguration.");
   }
-  if (!/KnowledgeAcquisitionCapabilityConfiguration[\s\S]{0,500}\bapproved\b/i.test(currentStateText)) {
-    errors.push("KnowledgeAcquisitionCapabilityConfiguration must be described as APPROVED in CURRENT documents.");
+  if (!/KnowledgeAcquisitionCapabilityConfiguration[\s\S]{0,500}\bimplemented\b/i.test(currentStateText)) {
+    errors.push("KnowledgeAcquisitionCapabilityConfiguration must be described as IMPLEMENTED in CURRENT documents.");
   }
-  if (!/KnowledgeAcquisitionCapabilityConfiguration[\s\S]{0,500}\bnot implemented\b/i.test(currentStateText)) {
-    errors.push("KnowledgeAcquisitionCapabilityConfiguration must be described as not implemented in CURRENT documents.");
-  }
-  if (/KnowledgeAcquisitionCapabilityConfiguration\s*(?::|is)\s*(?:\*\*)?(?:IMPLEMENTED|COMPLETED)\b/i.test(currentStateText)) {
-    errors.push("KnowledgeAcquisitionCapabilityConfiguration must not be described as IMPLEMENTED or COMPLETED.");
+  if (/KnowledgeAcquisitionCapabilityConfiguration[\s\S]{0,200}\bnot implemented\b/i.test(currentStateText)) {
+    errors.push("KnowledgeAcquisitionCapabilityConfiguration must not be described as not implemented.");
   }
 
   return {
