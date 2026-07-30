@@ -1,5 +1,9 @@
 # CONTINUITY — IMAGO CORE
 
+## Current repository-first execution protocol
+
+Codex is the repository-first executor for new IMAGO tasks. `IMAGO_CODEX_WORKFLOW.md` is the current operational protocol for preflight, implementation, verification, review and explicitly authorized Git operations. It governs execution only: the architectural state, decisions and frozen domain boundaries recorded in this continuity package remain authoritative.
+
 ## Task 0100E-8 — Knowledge Acquisition Capability Composition Design Foundation
 
 Completed the Application-owned declarative branch `KnowledgeAcquisitionSolutionDecision (composed) → KnowledgeAcquisitionCapabilityCompositionDesign`. The builder consumes the composed Decision, its normative source Design, and exactly the selected capability snapshots; transferred structures are deep-cloned, without runtime freezing. Local validation covers only self-contained contract invariants; a separate pure contextual validator checks exact correspondence with the supplied Decision and Design. The builder performs no discovery, matching, or selection. `single`, `none`, and `deferred` are rejected with `COMPOSITION_DESIGN_NOT_APPLICABLE`. Runtime, orchestration, providers, adapters, recipes, execution, satisfaction, persistence, and Knowledge Update remain excluded.
