@@ -4,9 +4,9 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-11**
+Verified through: **Task 0100E-12**
 
-Next gate: **0100E-12**
+Next gate: **0100E-13**
 
 Last updated: 2026-07-30 (`GOV-REALIGN-001`)
 
@@ -30,7 +30,7 @@ Input / Evidence
 → Application Solution Decision
 → Application Composition Design (composed only)
 → Application Capability Configuration (implemented)
-→ Application Knowledge Acquisition Plan (approved, implementation pending)
+→ Application Knowledge Acquisition Plan (implemented)
 ```
 
 Evidence is authoritative; knowledge and composed views are reconstructable. Runtime execution and Reporting integration are not implied by this roadmap.
@@ -123,6 +123,7 @@ Requirement is a declarative post-condition. It has no satisfaction, priority, s
 | 0100E-9 | Architecture Review | COMPLETED | unified Application Capability Configuration direction approved |
 | 0100E-10 | Foundation | COMPLETED | unified declarative Application Capability Configuration |
 | 0100E-11 | Architecture Review | COMPLETED | declarative Application Knowledge Acquisition Plan direction approved |
+| 0100E-12 | Foundation | COMPLETED | declarative Application Knowledge Acquisition Plan |
 
 Current implemented extension:
 
@@ -138,15 +139,15 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 ## Current gate
 
-### 0100E-12 — Knowledge Acquisition Plan Foundation
+### 0100E-13 — Post-Plan Downstream Architecture Review
 
-Type: **FOUNDATION**
+Type: **ARCHITECTURE REVIEW**
 
 Status: **PLANNED**
 
 | Task | Type | Status | Result |
 |---|---|---|---|
-| 0100E-12 | Foundation | PLANNED | implement only the approved declarative Application Plan boundary |
+| 0100E-13 | Architecture Review | PLANNED | review the first legitimate downstream consumer after Plan |
 
 Approved cardinality:
 

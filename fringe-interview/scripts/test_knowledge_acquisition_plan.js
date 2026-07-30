@@ -1,0 +1,5 @@
+const assert=require('assert');const A=require('../src/app/knowledge');const F=require('./knowledge_acquisition_plan_fixture');
+const f=F.buildFixture(),before=JSON.stringify(f),single=A.buildKnowledgeAcquisitionPlan(f.single.input),composed=A.buildKnowledgeAcquisitionPlan(f.composed.input);
+assert(A.validateKnowledgeAcquisitionPlan(single).valid);assert(A.validateKnowledgeAcquisitionPlan(composed).valid);assert.equal(single.planItems.length,1);assert.equal(single.planDependencies.length,0);assert.equal(composed.planItems.length,composed.selectedCapabilityRefs.length);assert(composed.planDependencies.length>0);assert.deepEqual(composed.planItems.map(x=>x.capabilityRef),[...composed.selectedCapabilityRefs].sort());assert(Object.isFrozen(composed)&&Object.isFrozen(composed.planItems[0]));assert.equal(JSON.stringify(f),before);
+const reversed={...f.composed.input,capabilityConfiguration:{...f.composed.capabilityConfiguration,selectedCapabilityRefs:[...f.composed.capabilityConfiguration.selectedCapabilityRefs].reverse()}};assert.throws(()=>A.buildKnowledgeAcquisitionPlan(reversed));
+console.log('Knowledge Acquisition Plan builder tests passed.');

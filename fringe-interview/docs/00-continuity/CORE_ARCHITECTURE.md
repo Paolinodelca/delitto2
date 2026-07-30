@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-11**
+Verified through: **Task 0100E-12**
 
 ## Principle
 
@@ -34,7 +34,7 @@ Input / Evidence                                      [Core]
 → KnowledgeAcquisitionSolutionDecision                [Application]
 → KnowledgeAcquisitionCapabilityCompositionDesign     [Application; composed only]
 → KnowledgeAcquisitionCapabilityConfiguration         [Application; single/composed]
-→ KnowledgeAcquisitionPlan                            [Application; approved, implementation pending]
+→ KnowledgeAcquisitionPlan                            [Application; implemented]
 ```
 
 Query Foundations provide deterministic, read-only access for Matrix, Coverage, Opportunity, Need, Strategy and Requirement without reinterpreting upstream semantics.
@@ -110,9 +110,9 @@ Task 0100E-10 implements `KnowledgeAcquisitionCapabilityConfiguration` as one un
 
 Configuration binds only explicit non-secret declarative values to already selected capability references. It does not repeat composition topology, resolve providers or adapters, order invocations, plan or execute.
 
-## Approved downstream direction
+## Knowledge Acquisition Plan
 
-Task 0100E-11 approves `KnowledgeAcquisitionPlan` as the first consumer of a valid Configuration. It is an Application-owned declarative organization of one unit per selected capability. It preserves Configuration and composed dependency semantics but contains no provider binding, invocation payload, executable ordering, scheduling or Runtime behavior. No intermediate contract is required. Foundation implementation is pending.
+Task 0100E-12 implements `KnowledgeAcquisitionPlan` as the first consumer of a valid Configuration. It is an immutable Application-owned declarative organization of one item per selected capability. Plan scope is exactly the Configuration capability scope; Plan Dependencies reference and preserve composed logical dependencies without converting them into executable ordering. The Plan contains no state, scheduling, Runtime, execution, results, provider binding or invocation payload. No intermediate contract is introduced.
 
 ## Not approved or implemented downstream
 

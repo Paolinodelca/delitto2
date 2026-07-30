@@ -1,0 +1,1 @@
+const assert=require('assert');const {healthKnowledgeAcquisitionPlan}=require('../src/app/knowledge');const result=healthKnowledgeAcquisitionPlan(require('./knowledge_acquisition_plan_fixture'));assert.equal(result.ok,true,JSON.stringify(result));console.log('Knowledge Acquisition Plan health passed.');

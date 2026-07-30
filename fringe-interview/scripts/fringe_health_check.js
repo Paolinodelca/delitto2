@@ -1673,6 +1673,11 @@ addCheck("Knowledge Acquisition Capability Configuration application", async () 
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_capability_configuration.js"], { stdio: "pipe" });
 });
 
+addCheck("Knowledge Acquisition Plan application", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_plan.js"], { stdio: "pipe" });
+});
+
 addCheck("Knowledge Acquisition Boundary Freeze", async () => {
   const { execFileSync } = await import("child_process");
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_boundary.js"], { stdio: "pipe" });

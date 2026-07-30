@@ -1,0 +1,5 @@
+const assert=require('assert');const A=require('../src/app/knowledge');const F=require('./knowledge_acquisition_plan_fixture');const f=F.buildFixture(),p=A.buildKnowledgeAcquisitionPlan(f.composed.input);
+assert(A.validateKnowledgeAcquisitionPlanContext({knowledgeAcquisitionPlan:p,capabilityConfiguration:f.composed.capabilityConfiguration,capabilityCompositionDesign:f.composed.capabilityCompositionDesign}).valid);
+const wrong=F.buildFixture().single.capabilityConfiguration;assert(!A.validateKnowledgeAcquisitionPlanContext({knowledgeAcquisitionPlan:p,capabilityConfiguration:wrong,capabilityCompositionDesign:f.composed.capabilityCompositionDesign}).valid);
+const mutated=JSON.parse(JSON.stringify(p));mutated.planDependencies[0].prerequisitePlanItemRefs=[mutated.planDependencies[0].dependentPlanItemRef];assert(!A.validateKnowledgeAcquisitionPlanContext({knowledgeAcquisitionPlan:mutated,capabilityConfiguration:f.composed.capabilityConfiguration,capabilityCompositionDesign:f.composed.capabilityCompositionDesign}).valid);
+console.log('Knowledge Acquisition Plan contextual validator tests passed.');

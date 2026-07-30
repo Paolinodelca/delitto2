@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-11**
+Verified through: **Task 0100E-12**
 
 ## Foundation decisions
 
@@ -137,4 +137,4 @@ Configuration may bind only explicit non-secret declarative values to already se
 
 Task 0100E-11 approves `KnowledgeAcquisitionPlan` as an Application-owned, immutable, post-Configuration and pre-Runtime boundary. Exactly one Plan may be built from one valid `single` or `composed` Configuration; `none` and `deferred` cannot reach this boundary. The Plan has exactly one declarative unit per selected capability and preserves, without duplicating or operationalizing, Configuration values and composed logical dependencies.
 
-No intermediate readiness, binding or normalized-composition contract is required. The Plan may not resolve registry, provider or adapter, produce invocation payloads, define executable ordering or scheduling, orchestrate or execute, collect results, assess Requirement satisfaction or update knowledge. Task 0100E-12 may implement only this declarative Plan Foundation.
+No intermediate readiness, binding or normalized-composition contract is required. The Plan may not resolve registry, provider or adapter, produce invocation payloads, define executable ordering or scheduling, orchestrate or execute, collect results, assess Requirement satisfaction or update knowledge. Task 0100E-12 implements only this declarative Plan Foundation and does not change ADR-029.
