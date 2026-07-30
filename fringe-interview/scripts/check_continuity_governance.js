@@ -9,10 +9,12 @@ export function inspectContinuityGovernance(root = applicationRoot) {
   const continuityDirectory = path.join(root, "docs", "00-continuity");
   const workflowPath = path.join(continuityDirectory, "IMAGO_CODEX_WORKFLOW.md");
   const readmePath = path.join(continuityDirectory, "README.md");
+  const continuityPath = path.join(continuityDirectory, "CONTINUITY.md");
+  const nextPhasePath = path.join(continuityDirectory, "NEXT_PHASE.md");
   const roadmapPath = path.join(root, "docs", "15-architecture_specifications", "CORE_ROADMAP.md");
   const errors = [];
 
-  for (const requiredPath of [continuityDirectory, workflowPath, readmePath, roadmapPath]) {
+  for (const requiredPath of [continuityDirectory, workflowPath, readmePath, continuityPath, nextPhasePath, roadmapPath]) {
     if (!fs.existsSync(requiredPath)) {
       errors.push(`Missing required path: ${path.relative(root, requiredPath)}`);
     }
@@ -73,14 +75,68 @@ export function inspectContinuityGovernance(root = applicationRoot) {
     taskStatuses.set(task, status);
   }
 
-  if (!taskStatuses.has("0100E-9") || taskStatuses.get("0100E-9") !== "PLANNED") {
-    errors.push("Roadmap must list 0100E-9 exactly once as PLANNED.");
+  const plannedTasks = [...taskStatuses.entries()]
+    .filter(([, status]) => status === "PLANNED")
+    .map(([task]) => task);
+  if (plannedTasks.length !== 1) {
+    errors.push(`Roadmap must contain exactly one PLANNED next task; found ${plannedTasks.length}.`);
+  }
+
+  const nextPhase = fs.readFileSync(nextPhasePath, "utf8");
+  const nextPhaseHeading = nextPhase.match(/^# Next Phase[^\n]*\b(0100[A-Z]-[^\s]+)\s*$/m);
+  const nextPhaseTask = nextPhaseHeading?.[1] || null;
+  if (!nextPhaseTask) {
+    errors.push("NEXT_PHASE.md must identify one task in its title.");
+  } else {
+    if (plannedTasks.length === 1 && nextPhaseTask !== plannedTasks[0]) {
+      errors.push(`NEXT_PHASE task ${nextPhaseTask} does not match roadmap PLANNED task ${plannedTasks[0]}.`);
+    }
+    if (taskStatuses.get(nextPhaseTask) !== "PLANNED") {
+      errors.push(`NEXT_PHASE task ${nextPhaseTask} must be PLANNED in the roadmap.`);
+    }
+  }
+  if (!/^Status:\s*\*\*CURRENT\*\*\s*$/m.test(nextPhase)) {
+    errors.push("NEXT_PHASE.md must be marked CURRENT.");
+  }
+  if (!/^Status:\s*PLANNED\s*$/m.test(nextPhase)) {
+    errors.push("NEXT_PHASE.md must declare its task as PLANNED.");
+  }
+
+  const continuity = fs.readFileSync(continuityPath, "utf8");
+  const continuityNextTasks = [...continuity.matchAll(/\bnext planned task is\s+`?(0100[A-Z]-[^\s`—]+)/gi)]
+    .map((match) => match[1]);
+  if (continuityNextTasks.length !== 1) {
+    errors.push(`CONTINUITY.md must identify exactly one next planned task; found ${continuityNextTasks.length}.`);
+  } else if (plannedTasks.length === 1 && continuityNextTasks[0] !== plannedTasks[0]) {
+    errors.push(`CONTINUITY next task ${continuityNextTasks[0]} does not match roadmap PLANNED task ${plannedTasks[0]}.`);
+  }
+
+  const verifiedThrough = continuity.match(/Verified through:\s*\*\*Task\s+(0100[A-Z]-[^*\s]+)\*\*/)?.[1];
+  if (!verifiedThrough) {
+    errors.push("CONTINUITY.md must declare the task verified through.");
+  } else if (taskStatuses.get(verifiedThrough) !== "COMPLETED") {
+    errors.push(`CONTINUITY verified-through task ${verifiedThrough} must be COMPLETED in the roadmap.`);
+  }
+
+  const currentStateText = `${continuity}\n${nextPhase}\n${roadmap}`;
+  if (!currentStateText.includes("KnowledgeAcquisitionCapabilityConfiguration")) {
+    errors.push("CURRENT documents must identify KnowledgeAcquisitionCapabilityConfiguration.");
+  }
+  if (!/KnowledgeAcquisitionCapabilityConfiguration[\s\S]{0,500}\bapproved\b/i.test(currentStateText)) {
+    errors.push("KnowledgeAcquisitionCapabilityConfiguration must be described as APPROVED in CURRENT documents.");
+  }
+  if (!/KnowledgeAcquisitionCapabilityConfiguration[\s\S]{0,500}\bnot implemented\b/i.test(currentStateText)) {
+    errors.push("KnowledgeAcquisitionCapabilityConfiguration must be described as not implemented in CURRENT documents.");
+  }
+  if (/KnowledgeAcquisitionCapabilityConfiguration\s*(?::|is)\s*(?:\*\*)?(?:IMPLEMENTED|COMPLETED)\b/i.test(currentStateText)) {
+    errors.push("KnowledgeAcquisitionCapabilityConfiguration must not be described as IMPLEMENTED or COMPLETED.");
   }
 
   return {
     status: errors.length === 0 ? "PASS" : "FAIL",
     currentDocumentCount: currentRows.length,
     roadmapTaskCount: taskStatuses.size,
+    plannedTask: plannedTasks.length === 1 ? plannedTasks[0] : null,
     checkedMarkdownFileCount: markdownFiles.length,
     errors,
   };

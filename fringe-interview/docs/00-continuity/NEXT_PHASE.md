@@ -1,72 +1,59 @@
-# Next Phase — IMAGO 0100E-9
+# Next Phase — IMAGO 0100E-10
 
 Status: **CURRENT**
 
-Task type: **ARCHITECTURE REVIEW — NO IMPLEMENTATION**
+Task type: **FOUNDATION IMPLEMENTATION**
 
 ## Task
 
 ```text
-0100E-9 — Post-Capability-Composition-Design Downstream Architecture Review
+0100E-10 — Knowledge Acquisition Capability Configuration Foundation
 Status: PLANNED
+Ownership: Application
 ```
 
-## Objective
+## Approved direction
 
-Perform a repository-first review after Task 0100E-8 and determine the first legitimate downstream consumer common to the `single` and `composed` Solution Decision modes.
+Implement one unified declarative `KnowledgeAcquisitionCapabilityConfiguration` contract for applicable `single` and `composed` Solution Decisions.
 
-Capability Configuration is a candidate to evaluate. It is not an approved contract, layer, ownership decision or implementation task.
+- `single`: Decision + exact selected capability snapshots + explicit configuration definition/context → one Configuration;
+- `composed`: Decision + exact Composition Design + exact selected capability snapshots + explicit configuration definition/context → one Configuration;
+- `none` and `deferred`: builder rejection and no Configuration.
 
-## Required inputs
+This is an approved direction, not current implementation. The exact contract must be derived repository-first within the invariants frozen by the E-9 review.
 
-- current continuity package and Core roadmap;
-- Knowledge Acquisition boundary freeze;
-- reports/reviews E-5, E-6, E-7 and E-8;
-- `KnowledgeAcquisitionDesign`;
-- `KnowledgeAcquisitionCapabilityMatch`;
-- `KnowledgeAcquisitionSolutionDecision`;
-- `KnowledgeAcquisitionCapabilityCompositionDesign`;
-- local and contextual Composition Design validators;
-- passing Core aggregate suite and overall health check.
+## Minimum scope
 
-## Questions to decide
+- deterministic Application builder;
+- local validator;
+- pure Application contextual validator against Decision and, when composed, Composition Design;
+- declarative parameter allowlist/type/requiredness checks from explicit caller-supplied definitions;
+- deterministic identity, canonical ordering, provenance and input immutability;
+- fixture, focused tests, regression, public Application export check and health integration;
+- continuity impact assessment.
 
-1. What is the first valid consumer of both `single` and `composed` Decisions?
-2. Is a declarative Capability Configuration layer necessary?
-3. Which layer owns it: Application, Runtime or another explicitly justified boundary?
-4. What are its cardinality, identity, causal references and validation context?
-5. How does `single` proceed without a Composition Design?
-6. Which information remains provider/runtime-specific and therefore excluded?
-7. What must be regression-protected before any implementation?
-
-## Deliverables
-
-- repository-first architecture review report;
-- explicit `APPROVED DIRECTION`, `DEFERRED` or `STOP` decision;
-- boundary diagram for all Solution Decision modes;
-- responsibility matrix for Core, Application, Runtime and Adapter layers;
-- approved invariants, cardinality, causality, public API and exclusions, if any;
-- regression risks and required tests;
-- exact next task name and perimeter only if a direction is approved;
-- aligned roadmap, continuity and decisions.
+Candidate public API is limited to build, local validate, contextual validate and health. No query or collection API is approved.
 
 ## Out of scope
 
-- new Foundation implementation;
-- changes to existing contracts, mappings, cardinalities or public exports;
-- capability discovery or reselection;
-- provider or adapter implementation;
-- acquisition planning, recipe or executable ordering;
-- runtime orchestration or execution;
-- Requirement satisfaction or Knowledge Update;
-- Runtime/Reporting legacy integration;
-- persistence, network or LLM integration.
+- Core contract or export changes;
+- candidate discovery, registry lookup, selection or reselection;
+- provider/adapter resolution or availability;
+- credentials, secrets or secret references;
+- environment lookup, endpoint, payload, prompt or model;
+- fallback, retry, timeout or failure policy;
+- invocation, ordering, planning, recipe, orchestration or execution;
+- result collection, satisfaction or Knowledge Update;
+- Runtime, Beta Session or Reporting integration;
+- persistence, network, UI or LLM invocation.
 
 ## Completion criteria
 
-- current repository state and tests verified;
-- all Decision modes explicitly covered;
-- Configuration remains a candidate unless approved by the review;
-- frozen boundaries preserved;
-- next implementation is not started;
-- Continuity Impact Assessment completed.
+- single and composed paths preserve their distinct causal inputs under one contract;
+- no one-node composition is created for single;
+- none/deferred produce no artifact;
+- composed Configuration exactly references its Composition Design;
+- no Composition Design topology is duplicated;
+- local and contextual validation guarantees remain separate;
+- upstream contracts and freeze remain unchanged;
+- dedicated, aggregate, health and continuity governance checks pass.

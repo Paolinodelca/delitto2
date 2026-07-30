@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-8**
+Verified through: **Task 0100E-9**
 
 Operational milestone: `origin/milestone/0100b-knowledge-foundation`
 
@@ -23,10 +23,10 @@ Completed task sequence:
 0100B-1 … 0100B-10
 0100C-1 … 0100C-3
 0100D-1 … 0100D-10
-0100E-1 … 0100E-8
+0100E-1 … 0100E-9
 ```
 
-Tasks D-9, E-1, E-3, E-5 and E-7 are architecture reviews. D-10 is consolidation and freeze. E-2, E-4, E-6 and E-8 are the approved downstream Foundations.
+Tasks D-9, E-1, E-3, E-5, E-7 and E-9 are architecture reviews. D-10 is consolidation and freeze. E-2, E-4, E-6 and E-8 are the implemented downstream Foundations.
 
 ## Knowledge Foundation
 
@@ -89,17 +89,13 @@ The repository contains verified historical Runtime, Beta Session and Reporting 
 
 No current documentation may represent `KnowledgeAcquisitionSolutionDecision` or Composition Design as already driving runtime orchestration, providers, adapters, reports, Requirement satisfaction or Knowledge Update.
 
-## Next gate
+## Approved downstream direction
 
-The next task is:
+Task 0100E-9 approved, but did not implement, `KnowledgeAcquisitionCapabilityConfiguration`: one unified Application-owned declarative artifact for `single` and `composed`. The composed path requires its Composition Design as a direct causal source; `single` is not normalized as a one-capability composition. `none` and `deferred` produce no Configuration.
 
-```text
-0100E-9 — Post-Capability-Composition-Design Downstream Architecture Review
-Status: PLANNED
-Type: architecture review; no implementation
-```
+`KnowledgeAcquisitionCapabilityConfiguration` is **APPROVED** and not implemented.
 
-Its purpose is to determine the first legitimate downstream consumer common to `single` and `composed`. Capability Configuration is a candidate only; it is not approved architecture. See `NEXT_PHASE.md`.
+Configuration may contain only explicitly supplied non-secret declarative values. It may not resolve providers, order invocations, plan or execute. The next planned task is `0100E-10 — Knowledge Acquisition Capability Configuration Foundation`. See `NEXT_PHASE.md`.
 
 ## Current authoritative documents
 
@@ -124,7 +120,7 @@ Earlier continuity text referenced governance files not present in this branch. 
 ## Frozen boundaries and risks
 
 - Changes to D mappings, cardinality, direct causality, public exports or Requirement semantics require an explicit architecture task.
-- Configuration, Planning, Runtime, Execution, Satisfaction and Knowledge Update are not approved downstream layers.
+- Capability Configuration is approved but not implemented; Planning, Runtime, Execution, Satisfaction and Knowledge Update remain unapproved downstream layers.
 - Runtime and Reporting legacy integration requires an explicit boundary and adapters.
 - The default GitHub branch must not be assumed to be the operational Core base.
 - Every task must pass the Continuity Impact Assessment in `IMAGO_CODEX_WORKFLOW.md`.

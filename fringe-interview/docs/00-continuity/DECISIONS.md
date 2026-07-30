@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-8**
+Verified through: **Task 0100E-9**
 
 ## Foundation decisions
 
@@ -126,3 +126,9 @@ The local Composition Design validator checks self-contained invariants. A separ
 ### ADR-027 — No downstream operational layer before E-9
 
 Configuration, Planning, Runtime, Execution, Requirement satisfaction and Knowledge Update are not approved as the next layer. Task 0100E-9 must review the first legitimate consumer common to `single` and `composed`. Configuration is a candidate, not a decision.
+
+### ADR-028 — Unified declarative Capability Configuration is the approved next direction
+
+Task 0100E-9 approved `KnowledgeAcquisitionCapabilityConfiguration` as an Application-owned, declarative and immutable pre-planning artifact. One Configuration may exist for an applicable `single` or `composed` Solution Decision; `none` and `deferred` produce none. For `composed`, the corresponding Composition Design is a mandatory direct causal source. `single` is not normalized as a composition of cardinality one.
+
+Configuration may bind only explicit non-secret declarative values to already selected capability references. It may not discover or reselect capabilities, mutate Decision or Composition Design, resolve provider/adapter/availability, contain credentials or secret references, order invocations, plan, retry, orchestrate or execute. The decision approves direction only; implementation is deferred to Task 0100E-10.

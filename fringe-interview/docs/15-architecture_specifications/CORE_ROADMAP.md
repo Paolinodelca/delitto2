@@ -4,9 +4,9 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-8**
+Verified through: **Task 0100E-9**
 
-Next gate: **0100E-9**
+Next gate: **0100E-10**
 
 Last updated: 2026-07-30 (`GOV-REALIGN-001`)
 
@@ -29,6 +29,7 @@ Input / Evidence
 → Design and Capability Match
 → Application Solution Decision
 → Application Composition Design (composed only)
+→ Application Capability Configuration (approved; not implemented)
 ```
 
 Evidence is authoritative; knowledge and composed views are reconstructable. Runtime execution and Reporting integration are not implied by this roadmap.
@@ -118,6 +119,7 @@ Requirement is a declarative post-condition. It has no satisfaction, priority, s
 | 0100E-6 | Foundation | COMPLETED | Knowledge Acquisition Solution Decision |
 | 0100E-7 | Architecture Review | COMPLETED | composed-only Composition Design direction approved |
 | 0100E-8 | Foundation | COMPLETED | Capability Composition Design |
+| 0100E-9 | Architecture Review | COMPLETED | unified Application Capability Configuration direction approved |
 
 Current implemented extension:
 
@@ -133,25 +135,30 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 ## Current gate
 
-### 0100E-9 — Post-Capability-Composition-Design Downstream Architecture Review
+### 0100E-10 — Knowledge Acquisition Capability Configuration Foundation
 
-Type: **ARCHITECTURE REVIEW — NO IMPLEMENTATION**
+Type: **FOUNDATION IMPLEMENTATION**
 
 Status: **PLANNED**
 
 | Task | Type | Status | Result |
 |---|---|---|---|
-| 0100E-9 | Architecture Review | PLANNED | determine the first legitimate downstream consumer |
+| 0100E-10 | Foundation | PLANNED | implement unified declarative Application Configuration |
 
-Objective: determine the first legitimate downstream consumer common to `single` and `composed` Solution Decision modes.
+Approved cardinality:
 
-Capability Configuration is a candidate to assess; it is not approved architecture. E-9 must define or reject its ownership, cardinality, identity, causal inputs, validation context and exclusions before any Foundation begins.
+```text
+single   Decision → 0 Composition Design → 1 Configuration
+composed Decision → 1 Composition Design → 1 Configuration
+none/deferred     → 0 Configuration
+```
+
+Configuration is Application-owned, declarative, immutable and pre-planning. It may bind explicit non-secret values to already selected capability refs, but may not resolve providers, order invocations, plan or execute.
 
 ## Not approved
 
 The following are not roadmap commitments and must not be implemented automatically:
 
-- Capability Configuration;
 - acquisition Planning, Action or executable Recipe;
 - provider or adapter resolution;
 - Runtime orchestration or Execution;
