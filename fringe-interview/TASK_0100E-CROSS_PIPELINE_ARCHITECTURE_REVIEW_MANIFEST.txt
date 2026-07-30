@@ -1,0 +1,42 @@
+TASK 0100E — CROSS-PIPELINE ARCHITECTURE REVIEW
+
+OUTCOME
+CHANGES REQUIRED
+
+BASE / HEAD
+origin/milestone/0100b-knowledge-foundation
+0000f6937723bd0f7b5ea437590826adce7e0bf3
+
+FILES CREATED
+TASK_0100E-CROSS_PIPELINE_ARCHITECTURE_REVIEW.md
+TASK_0100E-CROSS_PIPELINE_ARCHITECTURE_REVIEW_MANIFEST.txt
+
+FILES MODIFIED
+None.
+
+CODE / CONTRACT / API / TEST CHANGES
+None.
+
+CONTINUITY CHANGES
+None. Existing continuity already identifies 0100E-15 as a review-only gate;
+this review does not authorize a Foundation or change roadmap status.
+
+CONFORMING AREAS
+Unique responsibilities; Core/Application ownership; causal references and
+cardinalities; declarative/decision/configuration/plan/runtime separation;
+Runtime Session state isolation; absence of premature Execution and forbidden
+Execution, attempt, retry, timeout, provider, adapter, invocation, result,
+event, persistence and Knowledge Update structures in Runtime Session.
+
+REQUIRED CHANGE
+Uniformly enforce structural immutability and identity/content coherence for
+all declarative pipeline artifacts before entering Execution. Need, Strategy,
+Requirement, Design, Solution Decision and Capability Configuration are not
+deep-frozen; the first five also lack local identity recalculation.
+
+0100E-15 GUARDRAIL
+Architecture review only. Do not authorize Execution implementation until the
+immutability and stale-identity gap is resolved and regression-tested.
+
+GIT DELIVERY
+No staging, commit, push or milestone integration.
