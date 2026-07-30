@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-12**
+Verified through: **Task 0100E-13**
 
 ## Principle
 
@@ -35,6 +35,7 @@ Input / Evidence                                      [Core]
 → KnowledgeAcquisitionCapabilityCompositionDesign     [Application; composed only]
 → KnowledgeAcquisitionCapabilityConfiguration         [Application; single/composed]
 → KnowledgeAcquisitionPlan                            [Application; implemented]
+→ KnowledgeAcquisitionRuntimeSession                  [Application; approved, not implemented]
 ```
 
 Query Foundations provide deterministic, read-only access for Matrix, Coverage, Opportunity, Need, Strategy and Requirement without reinterpreting upstream semantics.
@@ -114,8 +115,15 @@ Configuration binds only explicit non-secret declarative values to already selec
 
 Task 0100E-12 implements `KnowledgeAcquisitionPlan` as the first consumer of a valid Configuration. It is an immutable Application-owned declarative organization of one item per selected capability. Plan scope is exactly the Configuration capability scope; Plan Dependencies reference and preserve composed logical dependencies without converting them into executable ordering. The Plan contains no state, scheduling, Runtime, execution, results, provider binding or invocation payload. No intermediate contract is introduced.
 
+## Knowledge Acquisition Runtime Session
+
+Task 0100E-13 approves `KnowledgeAcquisitionRuntimeSession` as the first operational boundary and first consumer of a valid Plan. It is Application-owned and holds a distinct session identity, exact Plan/Plan Item causal refs, lifecycle, item-state progress, active-item selection and operational timestamps. One Plan may cause zero or more Sessions; each Session refers to exactly one Plan. Resume preserves Session identity, while a new run creates a new Session for the same immutable Plan.
+
+The Session is pre-Execution. It does not bind providers, create invocation payloads, execute, retry, collect results, persist events, update knowledge or assess Requirement satisfaction. No declarative Runtime Definition is required between Plan and Session.
+
 ## Not approved or implemented downstream
 
+- Knowledge Acquisition Runtime Session Foundation (approved direction, not implemented);
 - acquisition Action or executable Recipe;
 - provider/adapter resolution;
 - runtime orchestration and execution;
@@ -124,7 +132,7 @@ Task 0100E-12 implements `KnowledgeAcquisitionPlan` as the first consumer of a v
 - Knowledge Update;
 - Runtime/Reporting legacy integration.
 
-The next gate is the Plan Foundation only; it does not authorize Runtime, provider binding, invocation or execution.
+The next gate is the Runtime Session Foundation only; it does not authorize Execution, provider binding, invocation, persistence or results.
 
 ## Dependency direction
 

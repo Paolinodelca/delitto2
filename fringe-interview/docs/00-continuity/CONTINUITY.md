@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-12**
+Verified through: **Task 0100E-13**
 
 Operational milestone: `origin/milestone/0100b-knowledge-foundation`
 
@@ -23,10 +23,10 @@ Completed task sequence:
 0100B-1 … 0100B-10
 0100C-1 … 0100C-3
 0100D-1 … 0100D-10
-0100E-1 … 0100E-12
+0100E-1 … 0100E-13
 ```
 
-Tasks D-9, E-1, E-3, E-5, E-7, E-9 and E-11 are architecture reviews. D-10 is consolidation and freeze. E-2, E-4, E-6, E-8, E-10 and E-12 are the implemented downstream Foundations.
+Tasks D-9, E-1, E-3, E-5, E-7, E-9, E-11 and E-13 are architecture reviews. D-10 is consolidation and freeze. E-2, E-4, E-6, E-8, E-10 and E-12 are the implemented downstream Foundations.
 
 ## Knowledge Foundation
 
@@ -97,7 +97,9 @@ Task 0100E-10 implements `KnowledgeAcquisitionCapabilityConfiguration`: one unif
 
 Configuration contains only explicitly supplied non-secret declarative values. It does not resolve providers, order invocations, plan or execute.
 
-Task 0100E-12 implements `KnowledgeAcquisitionPlan` as the first downstream consumer. The immutable Application-owned Plan is declarative, post-Configuration and pre-Runtime. It preserves exact capability/configuration scope and composed logical dependencies without executable order, state, scheduling, runtime or results. It is **IMPLEMENTED**. The next planned task is `0100E-13 — Post-Plan Downstream Architecture Review`. See `NEXT_PHASE.md`.
+Task 0100E-12 implements `KnowledgeAcquisitionPlan` as the first downstream consumer. The immutable Application-owned Plan is declarative, post-Configuration and pre-Runtime. It preserves exact capability/configuration scope and composed logical dependencies without executable order, state, scheduling, runtime or results. It is **IMPLEMENTED**.
+
+Task 0100E-13 approves `KnowledgeAcquisitionRuntimeSession` as the first operational consumer of the Plan. It is Application-owned, Plan-scoped and stateful, with session/item lifecycle and progress, but remains pre-Execution. The Plan is never mutated. Execution, attempts, provider/adapter invocation, results, events, persistence, satisfaction and Knowledge Update remain downstream. The next planned task is `0100E-14 — Knowledge Acquisition Runtime Session Foundation`. See `NEXT_PHASE.md`.
 
 ## Current authoritative documents
 
@@ -122,7 +124,7 @@ Earlier continuity text referenced governance files not present in this branch. 
 ## Frozen boundaries and risks
 
 - Changes to D mappings, cardinality, direct causality, public exports or Requirement semantics require an explicit architecture task.
-- Capability Configuration and the declarative Plan are implemented. Runtime, Execution, Satisfaction and Knowledge Update remain unapproved downstream layers.
+- Capability Configuration and the declarative Plan are implemented. Runtime Session is approved but not implemented; Execution, Satisfaction and Knowledge Update remain unapproved downstream layers.
 - Runtime and Reporting legacy integration requires an explicit boundary and adapters.
 - The default GitHub branch must not be assumed to be the operational Core base.
 - Every task must pass the Continuity Impact Assessment in `IMAGO_CODEX_WORKFLOW.md`.
