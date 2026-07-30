@@ -1,121 +1,72 @@
-# NEXT PHASE — IMAGO 0100C
+# Next Phase — IMAGO 0100E-9
 
-## Stato
+Status: **CURRENT**
 
-```text
-0100B — Knowledge Engine Foundation
-Status: COMPLETED
-```
+Task type: **ARCHITECTURE REVIEW — NO IMPLEMENTATION**
 
-Nuovo task:
+## Task
 
 ```text
-0100C-1 — Person Knowledge Matrix Query Foundation
+0100E-9 — Post-Capability-Composition-Design Downstream Architecture Review
 Status: PLANNED
 ```
 
-## Obiettivo
+## Objective
 
-Introdurre query deterministiche, read-only, validate e non interpretative sulla PersonKnowledgeMatrix.
+Perform a repository-first review after Task 0100E-8 and determine the first legitimate downstream consumer common to the `single` and `composed` Solution Decision modes.
 
-Possibili capability:
+Capability Configuration is a candidate to evaluate. It is not an approved contract, layer, ownership decision or implementation task.
 
-```text
-get states by dimension
-get states by knowledge layer
-get states by capability
-get states by recipe
-get states by recipe version
-get shared dimensions
-get matrix technical status
-```
+## Required inputs
 
-## Principio
+- current continuity package and Core roadmap;
+- Knowledge Acquisition boundary freeze;
+- reports/reviews E-5, E-6, E-7 and E-8;
+- `KnowledgeAcquisitionDesign`;
+- `KnowledgeAcquisitionCapabilityMatch`;
+- `KnowledgeAcquisitionSolutionDecision`;
+- `KnowledgeAcquisitionCapabilityCompositionDesign`;
+- local and contextual Composition Design validators;
+- passing Core aggregate suite and overall health check.
 
-```text
-Query Foundation reads the matrix.
-It does not reinterpret the person.
-```
+## Questions to decide
 
-## Decisioni da prendere
+1. What is the first valid consumer of both `single` and `composed` Decisions?
+2. Is a declarative Capability Configuration layer necessary?
+3. Which layer owns it: Application, Runtime or another explicitly justified boundary?
+4. What are its cardinality, identity, causal references and validation context?
+5. How does `single` proceed without a Composition Design?
+6. Which information remains provider/runtime-specific and therefore excluded?
+7. What must be regression-protected before any implementation?
 
-1. Query unica dichiarativa oppure funzioni dedicate.
-2. Contratto `PersonKnowledgeQuery`.
-3. Contratto `PersonKnowledgeQueryResult`.
-4. Semantica AND tra filtri multipli.
-5. Ordinamento canonico.
-6. Empty result valido.
-7. Duplicate handling.
-8. Stati completi oppure reference.
-9. Immutabilità del risultato.
-10. Public API minima.
-11. Dependency direction senza cicli.
+## Deliverables
 
-## Fuori scope
+- repository-first architecture review report;
+- explicit `APPROVED DIRECTION`, `DEFERRED` or `STOP` decision;
+- boundary diagram for all Solution Decision modes;
+- responsibility matrix for Core, Application, Runtime and Adapter layers;
+- approved invariants, cardinality, causality, public API and exclusions, if any;
+- regression risks and required tests;
+- exact next task name and perimeter only if a direction is approved;
+- aligned roadmap, continuity and decisions.
 
-- linguaggio naturale;
-- semantic search;
-- embedding;
-- vector database;
-- fuzzy search;
-- scoring;
-- ranking;
-- recommendations;
-- matching;
-- role fit;
-- readiness;
-- report;
-- guidance;
-- action plan;
-- conflict resolution;
-- state supersession;
-- matrix history;
-- persistence;
-- rete;
-- LLM.
+## Out of scope
 
-## Test indispensabili
-
-- query per Dimension;
-- query per elementary;
-- query per derived;
-- query per Capability;
-- query per Recipe;
-- query con filtri multipli;
-- empty result;
-- invalid filter;
-- unknown property;
-- deterministic ordering;
-- input e matrix immutability;
-- separation regression;
-- no-score regression;
-- integration con PersonKnowledgeMatrix;
-- aggregate Core test;
-- Health Check.
-
-## Rischi principali
-
-1. Query che reinterpretano.
-2. API troppo ampia.
-3. Esposizione della struttura interna.
-4. Filtri non allowlisted.
-5. Ordinamento instabile.
-6. Fusione implicita dei layer.
+- new Foundation implementation;
+- changes to existing contracts, mappings, cardinalities or public exports;
+- capability discovery or reselection;
+- provider or adapter implementation;
+- acquisition planning, recipe or executable ordering;
+- runtime orchestration or execution;
+- Requirement satisfaction or Knowledge Update;
+- Runtime/Reporting legacy integration;
+- persistence, network or LLM integration.
 
 ## Completion criteria
 
-- repository reale ispezionato;
-- query contract definito;
-- API pubblica limitata;
-- filtri allowlisted;
-- output deterministico;
-- empty result valido;
-- matrix read-only;
-- stati non mutati;
-- elementary/derived distinti;
-- nessuna aggregazione tra layer;
-- nessuno score;
-- nessun LLM;
-- test e Health positivi;
-- roadmap aggiornata;
-- task successivo non iniziato.
+- current repository state and tests verified;
+- all Decision modes explicitly covered;
+- Configuration remains a candidate unless approved by the review;
+- frozen boundaries preserved;
+- next implementation is not started;
+- Continuity Impact Assessment completed.

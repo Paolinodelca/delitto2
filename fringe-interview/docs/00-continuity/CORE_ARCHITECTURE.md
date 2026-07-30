@@ -1,261 +1,141 @@
-# IMAGO CORE — ARCHITECTURE MAP
+# IMAGO Core — Architecture Map
 
-## Principio generale
+Status: **CURRENT**
 
-IMAGO non valuta la persona in assoluto.
+Verified through: **Task 0100E-8**
 
-Il Core organizza evidenze e conoscenza ricostruibile preservando origine, confidence, versione, provenance e dipendenze.
+## Principle
+
+IMAGO does not evaluate a person in the absolute. The Core organizes reconstructable knowledge while preserving evidence, origin, confidence, version, provenance and dependencies.
 
 ```text
 Evidence → Measurement → Knowledge → Derived Knowledge → Composed View
 ```
 
-## Pipeline completa
+Evidence remains authoritative. Knowledge is reconstructable. Elementary and derived knowledge remain distinct. Deterministic Foundations do not introduce person scores, implicit evaluation or LLM inference.
+
+## Current end-to-end map
 
 ```text
-Input Sources
-    ↓
-Observation
-    ↓
-MeasurementResult
-    ↓
-MeasurementDimensionMapping
-    ↓
-DimensionContribution
-    ↓
-KnowledgeLedger
-    ↓
-KnowledgeSnapshot
-    ↓
-Elementary DimensionKnowledgeState[]
-    ↓
-DerivedKnowledgeRule[]
-    ↓
-CapabilityRecipe
-    ↓
-CapabilityExecutionResult
-    ↓
-DerivedDimensionMapping
-    ↓
-DerivedDimensionKnowledgeState[]
-    ↓
-PersonKnowledgeMatrix
+Input / Evidence                                      [Core]
+→ Observation                                         [Core]
+→ MeasurementResult / MeasurementDimensionMapping    [Core]
+→ DimensionContribution / KnowledgeLedger             [Core]
+→ KnowledgeSnapshot / DimensionKnowledgeState         [Core]
+→ CapabilityRecipe / DerivedDimensionKnowledgeState   [Core]
+→ PersonKnowledgeMatrix                               [Core]
+→ KnowledgeCoverage                                   [Core]
+→ KnowledgeOpportunity                                [Core]
+→ KnowledgeAcquisitionNeed                            [Core]
+→ KnowledgeAcquisitionStrategy                        [Core]
+→ KnowledgeAcquisitionRequirement                     [Core]
+→ KnowledgeAcquisitionDesign                          [Core]
+→ KnowledgeAcquisitionCapabilityMatch                 [Core]
+→ KnowledgeAcquisitionSolutionDecision                [Application]
+→ KnowledgeAcquisitionCapabilityCompositionDesign     [Application; composed only]
 ```
 
-## Evidence Layer
+Query Foundations provide deterministic, read-only access for Matrix, Coverage, Opportunity, Need, Strategy and Requirement without reinterpreting upstream semantics.
 
-Responsabilità:
+## Core-owned layers
 
-- ricevere fonti;
-- preservare provenienza;
-- estrarre evidenze;
-- distinguere raw source e structured input.
+### Evidence, Measurement and Contribution
 
-Contratti Foundation già presenti includono:
+`InputBundle`, sources, Evidence, Observation, MeasurementResult, declarative mappings and DimensionContribution preserve the distinction between facts, measures and contributions. Raw source content is not copied into PersonKnowledgeMatrix.
 
-```text
-InputBundle
-InputSource
-Evidence
-EvidenceStore
-EvidenceSummary
-Observation
-```
-
-Il contenuto raw non deve essere copiato nella PersonKnowledgeMatrix.
-
-## Measurement Layer
-
-Contratti:
-
-```text
-MeasurementResult
-MeasurementDimensionMapping
-```
-
-Un mapping deve essere dichiarativo. Una misura non decide direttamente lo stato della persona.
-
-## Contribution Layer
-
-Contratto:
-
-```text
-DimensionContribution
-```
-
-Una Contribution è un contributo a una Dimension, non ancora conoscenza aggregata.
-
-## Elementary Knowledge Layer
+### Elementary and derived knowledge
 
 ```text
 DimensionContribution[]
-    ↓
-KnowledgeLedger
-    ↓
-KnowledgeSnapshot
-    ↓
-DimensionKnowledgeState[]
-```
-
-Responsabilità:
-
-- mantenere la storia ricostruibile;
-- aggregare deterministicamente;
-- produrre lo stato elementare corrente;
-- non introdurre conoscenza derivata.
-
-## Derived Knowledge Layer
-
-```text
-KnowledgeSnapshot
-    ↓
-DerivedKnowledgeRule
-    ↓
-DerivedKnowledgeResult
-```
-
-Non muta Snapshot o Ledger e non produce automaticamente Contribution.
-
-## Capability Layer
-
-```text
-DerivedKnowledgeRule[]
-    ↓
-CapabilityRecipe
-    ↓
-executeCapabilityRecipe
-    ↓
-CapabilityExecutionResult
-```
-
-Strategia Foundation:
-
-```text
-evaluate_all_rules
-```
-
-Nessun evaluator duplicato, chaining, ricorsione o multi-pass implicito.
-
-## Derived Dimension Layer
-
-```text
-CapabilityExecutionResult
-    +
-DerivedDimensionMapping
-    ↓
-DerivedDimensionKnowledgeState[]
-```
-
-Aggregazione corrente:
-
-```text
-Σ(mappingEstimate × resultConfidence)
-────────────────────────────────────
-Σ(resultConfidence)
-```
-
-Confidence finale: minimo delle confidence realmente usate.
-
-Coverage e consistency non sono calcolate senza semantica sufficiente.
-
-## Knowledge Composition Layer
-
-Namespace:
-
-```text
-src/core/knowledge/
+→ KnowledgeLedger
+→ KnowledgeSnapshot
+→ DimensionKnowledgeState[]
 ```
 
 ```text
 KnowledgeSnapshot
-    +
-DerivedDimensionKnowledgeState[]
-    +
-subjectRef
-    ↓
+→ DerivedKnowledgeRule / CapabilityRecipe
+→ CapabilityExecutionResult
+→ DerivedDimensionKnowledgeState[]
+```
+
+Ledger and Snapshot are not mutated. Derived states are not appended to the elementary Contribution Ledger.
+
+### PersonKnowledgeMatrix
+
+The matrix is a deterministic, reconstructable materialized view. It preserves elementary and derived layers, shared dimensions without fusion, lineage, version context and dependency references. It is not an evidence store and does not create a person-level score.
+
+### Declarative Knowledge Acquisition boundary
+
+```text
 PersonKnowledgeMatrix
+→ Coverage
+→ Opportunity
+→ Need
+→ Strategy
+→ Requirement
 ```
 
-La matrice compone, indicizza e preserva lineage e version context.
+This boundary describes available knowledge, incomplete composition, the missing layer, a general transformation category and the required knowledge availability. It does not prescribe method, source, channel, priority, plan or execution. Its mappings, cardinality and causality are frozen by `KNOWLEDGE_ACQUISITION_BOUNDARY_FREEZE.md`.
 
-Non interpreta, non media, non sceglie versioni e non crea score.
+### Design and Match
+
+`KnowledgeAcquisitionDesign` is the mechanism-neutral declarative consumer of Requirement. It receives explicitly resolved causal context and performs no lookup.
+
+`KnowledgeAcquisitionCapabilityMatch` evaluates one immutable candidate snapshot per invocation. It returns `compatible`, `incompatible` or `indeterminate`. Discovery, availability, ranking and selection are not Core responsibilities.
+
+## Application-owned layers
+
+### Solution Decision
+
+Application owns candidate discovery/resolution and the deterministic, auditable `KnowledgeAcquisitionSolutionDecision`. Supported modes are `single`, `composed`, `none` and `deferred`. The Decision does not configure, plan or execute a solution.
+
+### Capability Composition Design
+
+For `composed` only, Application builds exactly one declarative Composition Design from the Decision, source Design and selected capability snapshots. It records roles, contribution responsibilities, logical dependencies and declarative conditions.
+
+Local validation proves only self-contained contract invariants. Contextual validation separately proves correspondence with the supplied Decision and Design. Neither validation performs discovery, matching or reselection.
+
+## Runtime and Reporting legacy
+
+The repository contains existing, health-checked Runtime, Beta Session and Reporting pipelines. They predate the Phase D/E downstream architecture and are not currently consumers of Solution Decision or Composition Design.
+
+Their existence does not imply integration with Knowledge Acquisition. Any connection requires an explicitly reviewed Application/Runtime/Adapter boundary.
+
+## Not approved or implemented downstream
+
+- Capability Configuration;
+- acquisition Plan, Action or executable Recipe;
+- provider/adapter resolution;
+- runtime orchestration and execution;
+- execution result and observation ingestion for this boundary;
+- Requirement satisfaction;
+- Knowledge Update;
+- Runtime/Reporting legacy integration.
+
+Configuration is only a candidate for Task 0100E-9 review.
 
 ## Dependency direction
 
-Consentito:
+Lower layers must not import higher composed views. Core does not discover Application candidates. Application decisions may consume immutable Core outputs. Runtime concerns must not be added to Core contracts to absorb downstream ambiguity.
 
-```text
-Knowledge Composition
-    ↓
-Snapshot / Dimension / Derived Dimension
-```
+## Identity, versioning and immutability
 
-Vietato:
+- contract version and instance identity remain distinct;
+- identities are deterministic, canonical and independent of input order and timestamps;
+- inputs are not mutated in place;
+- transferred structures are caller-owned deep clones where the contracts require it;
+- runtime freezing is not inferred from immutability guarantees.
 
-```text
-Dimension → PersonKnowledgeMatrix
-Capability → PersonKnowledgeMatrix
-```
+## Guardrails
 
-## Separazione fondamentale
+Without an explicit architecture task, do not introduce person scoring, ranking, recommendation, diagnosis, automatic decision-making, Configuration, Planning, Execution, Requirement satisfaction or Knowledge Update.
 
-```text
-DimensionKnowledgeState
-≠
-DerivedDimensionKnowledgeState
-≠
-PersonKnowledgeMatrix
-```
+`not observed` does not mean `absent`.
 
-## Identity e versioning
-
-Distinguere sempre:
-
-```text
-contract version
-instance identity
-```
-
-Identity:
-
-- deterministiche;
-- canoniche;
-- indipendenti dall’ordine;
-- prive di UUID casuali;
-- non dipendenti dal timestamp.
-
-## Immutabilità
-
-Nessuna mutazione in-place di Observation, MeasurementResult, Contribution, Ledger, Snapshot, stati, execution result o matrice.
-
-## Guardrail semantici
-
-Il Core non deve introdurre senza task specifico:
-
-- valutazione assoluta;
-- employability score;
-- potential score;
-- readiness;
-- fit;
-- ranking;
-- diagnosi;
-- decisione automatizzata;
-- recommendation;
-- report narrativo;
-- inferenze LLM nelle Foundation.
-
-`not observed` non equivale a `absent`.
-
-## Test generali
+## Verification
 
 ```powershell
 node scripts/test_all_core.js
 node scripts/fringe_health_check.js
-```
-
-Esiti attesi:
-
-```text
-IMAGO Core all tests PASSED
-All health checks passed
 ```

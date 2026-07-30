@@ -1,0 +1,33 @@
+TASK: GOV-REALIGN-001
+TYPE: documentation and governance
+BASE: 4c9f2e4034ae055dfbafa83ca83e6af516af5e90
+BRANCH: task/gov-realign-001
+
+FILES CREATED
+fringe-interview/docs/00-continuity/README.md
+fringe-interview/docs/00-continuity/reviews/REPOSITORY_ARCHITECTURE_REVIEW_2026-07-30.md
+fringe-interview/docs/00-continuity/reviews/CONTINUITY_ALIGNMENT_REPORT_2026-07-30.md
+fringe-interview/docs/00-continuity/reviews/NEXT_ARCHITECTURAL_STEP_2026-07-30.md
+fringe-interview/scripts/check_continuity_governance.js
+fringe-interview/scripts/test_continuity_governance.js
+fringe-interview/TASK_GOV_REALIGN_001_CONTINUITY_AUTHORITY_REPORT.md
+fringe-interview/TASK_GOV_REALIGN_001_MANIFEST.txt
+
+FILES MODIFIED
+fringe-interview/docs/00-continuity/IMAGO_CODEX_WORKFLOW.md
+fringe-interview/docs/00-continuity/CONTINUITY.md
+fringe-interview/docs/00-continuity/CORE_ARCHITECTURE.md
+fringe-interview/docs/00-continuity/DECISIONS.md
+fringe-interview/docs/00-continuity/NEXT_PHASE.md
+fringe-interview/docs/00-continuity/GIT_MILESTONE_GUIDE.md
+fringe-interview/docs/15-architecture_specifications/CORE_ROADMAP.md
+
+VERIFICATION
+node scripts/test_continuity_governance.js: PASS
+node scripts/check_continuity_governance.js: PASS
+node scripts/test_all_core.js: PASS
+node scripts/fringe_health_check.js: PASS
+git diff --check: PASS
+
+NEXT TASK
+0100E-9 — Post-Capability-Composition-Design Downstream Architecture Review

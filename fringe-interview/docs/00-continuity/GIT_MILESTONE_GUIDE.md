@@ -1,4 +1,8 @@
-# GIT MILESTONE GUIDE — PHASE 0100B
+# Git Milestone Guide — Phase 0100B
+
+Status: **HISTORICAL — MILESTONE-SPECIFIC GUIDE FOR 0100B**
+
+This document preserves the procedure used for the 0100B milestone. It is not the current general Git policy and must not be used to select the base of a new task. For the observed current branch topology and integration history, read [`GIT_BRANCHING_MODEL.md`](GIT_BRANCHING_MODEL.md). For operational authorization rules, read [`IMAGO_CODEX_WORKFLOW.md`](IMAGO_CODEX_WORKFLOW.md).
 
 Eseguire i comandi dalla root applicativa reale del repository.
 

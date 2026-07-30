@@ -142,6 +142,50 @@ Il report finale registra almeno:
 
 Quando il repository prevede manifest o report di milestone, essi descrivono esclusivamente fatti verificati. Non si dichiarano implementate capacità strategiche, ipotetiche o differite.
 
+## 13A. Continuity Impact Assessment
+
+Ogni task deve classificare il proprio impatto documentale prima della consegna:
+
+- `NONE`: nessun documento di continuità è reso falso o incompleto;
+- `STATUS`: cambia lo stato di un task o di una milestone;
+- `ARCHITECTURE`: cambia la mappa o la responsabilità di un componente;
+- `DECISION`: introduce, modifica o supera una decisione approvata;
+- `BOUNDARY`: cambia ownership, dipendenze, cardinalità, causalità, semantica pubblica o freeze.
+
+La classificazione più alta applicabile governa il gate. Codex verifica, quando pertinenti:
+
+- `CONTINUITY.md`;
+- la roadmap corrente;
+- la architecture map;
+- ADR o `DECISIONS.md`;
+- freeze applicabili;
+- task report e manifest;
+- handover e task history;
+- riferimenti a documenti inesistenti;
+- documenti diventati storici o superati.
+
+Regole obbligatorie:
+
+1. aggiornare nello stesso task i documenti direttamente resi falsi;
+2. non duplicare lo stesso stato in più documenti senza necessità;
+3. non modificare documenti non impattati;
+4. non inventare decisioni che richiedono autorità architetturale;
+5. classificare i documenti indicizzati come `CURRENT`, `HISTORICAL` o `SUPERSEDED`;
+6. inserire nel report finale una matrice `documento | impatto | azione | motivazione`;
+7. dichiarare esplicitamente `No continuity update required.` quando la classificazione è `NONE`.
+
+Checklist obbligatoria:
+
+- [ ] Continuity impact classificato
+- [ ] Roadmap riallineata, se cambia lo stato
+- [ ] Architecture/ADR riallineate, se cambia il boundary
+- [ ] CONTINUITY riallineata, se cambia la milestone
+- [ ] Task report e manifest prodotti
+- [ ] Riferimenti continuity esistenti e validi
+- [ ] Documenti storici marcati come tali
+
+Il gate non autorizza modifiche architetturali: se il riallineamento richiede una decisione non concessa, Codex registra il blocker e si ferma.
+
 ## 14. Controlli prima del commit
 
 Prima di chiedere autorizzazione al commit:
@@ -219,6 +263,13 @@ Le approvazioni automatiche non sono lo standard corrente. Quando l'ambiente ric
 - [ ] Autorizzazione esplicita ottenuta prima del push
 - [ ] Pull Request e merge trattati come fasi separate
 - [ ] Report finale basato su evidenze
+- [ ] Continuity Impact Assessment completato
+
+## 22A. Repository editing e base operativa
+
+Codex esegue normalmente le modifiche direttamente nel repository e nel worktree assegnato. VS Code è opzionale e serve per ispezione o rare modifiche manuali; non è un passaggio obbligatorio del workflow.
+
+I task operativi partono dalla milestone autorevole indicata nel task e verificata dopo `git fetch`. Il default branch GitHub non deve essere assunto automaticamente come linea di sviluppo. Se un branch è già occupato da un altro worktree, Codex crea o usa un worktree pulito derivato dalla base autorizzata senza alterare il worktree esistente, la sua storia o le modifiche locali.
 
 ## 23. Template sintetici
 

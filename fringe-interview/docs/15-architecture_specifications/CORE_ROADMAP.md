@@ -1,773 +1,179 @@
 # IMAGO Knowledge Engine Roadmap
 
-Version: 1.0
+Version: 2.0
 
-Status: COMPLETED
+Status: **CURRENT**
 
-## 0100E-8 — Knowledge Acquisition Capability Composition Design Foundation
+Verified through: **Task 0100E-8**
 
-Status: **COMPLETED**
+Next gate: **0100E-9**
 
-Implemented in the Application Knowledge boundary. A valid `composed` `KnowledgeAcquisitionSolutionDecision` produces exactly one deterministic declarative `KnowledgeAcquisitionCapabilityCompositionDesign`; `single`, `none`, and `deferred` are rejected as not applicable. The contract covers selected capability roles, contribution responsibilities, logical dependencies, intermediate/final contributions, declarative conditions, and source Design solution-shape satisfaction. Operational concerns remain excluded.
+Last updated: 2026-07-30 (`GOV-REALIGN-001`)
 
-Owner: Architect
+## Purpose
 
-Last Updated: 2026-07-23
+This is the current architectural and implementation roadmap for the IMAGO Knowledge Engine. Each task appears once with one status. Detailed specifications and historical completion evidence remain in task reports, manifests and Git.
 
----
+This is not the Product/Beta roadmap and not the IMAGO Builder roadmap.
 
-# Purpose
+## Architectural direction
 
-Questo documento rappresenta la roadmap architetturale e implementativa
-del Knowledge Engine di IMAGO.
+```text
+Input / Evidence
+→ Observation
+→ Measurement / Dimension Contribution
+→ Knowledge Snapshot
+→ elementary and derived knowledge
+→ PersonKnowledgeMatrix
+→ Knowledge Acquisition analysis
+→ Design and Capability Match
+→ Application Solution Decision
+→ Application Composition Design (composed only)
+```
 
-Non descrive la roadmap del Builder.
+Evidence is authoritative; knowledge and composed views are reconstructable. Runtime execution and Reporting integration are not implied by this roadmap.
 
-Non sostituisce le specifiche dei singoli task.
+## Completed Foundations
 
-Non rappresenta lo storico completo del prodotto FRINGE Interview.
+### Phase 0100A — Preliminary Foundations
 
-Il repository reale rimane la fonte di verità per lo stato implementativo.
+| Task | Status | Result |
+|---|---|---|
+| 0100A-1B | COMPLETED | preliminary Foundation recorded by task report |
+| 0100A-2 | COMPLETED | preliminary Foundation recorded by task report |
 
----
+### Phase 0100B — Knowledge Engine Foundation
 
-# Architectural Direction
+| Task | Status | Result |
+|---|---|---|
+| 0100B-1 | COMPLETED | Measurement and Capability Foundation |
+| 0100B-2 | COMPLETED | Dimension Knowledge State Foundation |
+| 0100B-3 | COMPLETED | Dimension Contribution Foundation |
+| 0100B-4 | COMPLETED | Measurement-to-Dimension Mapping Foundation |
+| 0100B-5 | COMPLETED | Elementary Dimension Aggregation Foundation |
+| 0100B-6 | COMPLETED | Knowledge Ledger and Snapshot Foundation |
+| 0100B-7 | COMPLETED | Derived Knowledge Foundation |
+| 0100B-8 | COMPLETED | Capability Recipe Execution Foundation |
+| 0100B-9 | COMPLETED | Derived Dimension State Foundation |
+| 0100B-10 | COMPLETED | Person Knowledge Matrix Foundation |
 
+Verified outcome:
+
+```text
 Observation
-↓
-MeasurementResult
-↓
-DimensionContribution
-↓
-Elementary DimensionKnowledgeState
-↓
-KnowledgeSnapshot
-↓
-CapabilityRecipe
-↓
-DerivedKnowledgeResult
-↓
-Derived DimensionKnowledgeState
-↓
-Person Knowledge Matrix
-
----
-
-# Persistence Direction
-
-Authoritative history:
-
-Observation Ledger
-↓
-Dimension Contribution Ledger
-
-Reconstructable state:
-
-DimensionKnowledgeState
-CapabilityResult
-Person Knowledge Matrix Snapshot
-
----
-
-# Completed Foundation
-
-## 0100B-1 — Measurement and Capability Foundation
-
-Status: COMPLETED
-
-[breve descrizione coerente col repository]
-
-## 0100B-2 — Dimension Knowledge State Foundation
-
-Status: COMPLETED
-
-[breve descrizione coerente col repository]
-
-
-## 0100B-3 — Dimension Contribution Foundation
-
-Status: COMPLETED
-
-Introduced the immutable, deterministic DimensionContribution contract connecting one Measurement and its normalized MeasurementResult provenance to one Dimension without aggregation or automatic mapping.
-
----
-
-## 0100B-4 — Measurement-to-Dimension Mapping Foundation
-
-Status: COMPLETED
-
-Introduced a deterministic, declarative mapping contract and mapper that converts a valid MeasurementResult into one or more validated DimensionContribution objects without updating DimensionKnowledgeState.
-
----
-
-## 0100B-5 — Elementary Dimension Aggregation Foundation
-
-Status: COMPLETED
-
-Introduced deterministic aggregation of validated DimensionContribution objects into a valid elementary DimensionKnowledgeState, preserving declarative direction, stable provenance, order independence, and conservative coverage.
-
----
-
-## 0100B-6 — Knowledge Ledger and Snapshot Foundation
-
-Status: COMPLETED
-
-Introduced an immutable in-memory KnowledgeLedger with canonical ordering and duplicate protection, plus deterministic KnowledgeSnapshot reconstruction through the existing elementary dimension aggregator.
-
----
-
-## 0100B-7 — Derived Knowledge Foundation
-
-Status: COMPLETED
-
-Introduced declarative derived-knowledge rules evaluated deterministically over a validated KnowledgeSnapshot, producing explicit DerivedKnowledgeResult objects with conservative confidence, compact dependency tracking, derived provenance, single-pass execution, and no Capability integration or automatic Ledger append.
-
-Pipeline introduced:
-
-KnowledgeSnapshot
-↓
-DerivedKnowledgeRule[]
-↓
-DerivedKnowledgeResult[]
-
----
-
-## 0100B-8 — Capability Recipe Execution Foundation
-
-Status: COMPLETED
-
-Introduced versioned CapabilityRecipe execution over KnowledgeSnapshot through the existing Derived Knowledge evaluator, producing validated CapabilityExecutionResult objects without mutating source knowledge or creating derived DimensionKnowledgeState objects.
-
-Pipeline introduced:
-
-KnowledgeSnapshot
-↓
-CapabilityRecipe
-↓
-DerivedKnowledgeRule[]
-↓
-CapabilityExecutionResult
-
----
-
-## 0100B-9 — Derived Dimension State Foundation
-
-Status: COMPLETED
-
-Introduced explicit DerivedDimensionKnowledgeState objects reconstructed from validated CapabilityExecutionResult objects through declarative derived-dimension mappings, deterministic grouping and aggregation, conservative confidence, versioned Capability/Recipe provenance, and no mutation of elementary knowledge or Contribution Ledger append.
-
-Pipeline introduced:
-
-CapabilityExecutionResult
-↓
-DerivedDimensionKnowledgeState[]
-
-Elementary DimensionKnowledgeState remains reconstructed from evidence, while DerivedDimensionKnowledgeState is reconstructed from KnowledgeSnapshot + CapabilityRecipe + rule versions.
-
----
-
-## 0100B-10 — Person Knowledge Matrix Foundation
-
-Status: COMPLETED
-
-Introduced a deterministic, reconstructable PersonKnowledgeMatrix composed from one validated KnowledgeSnapshot, a minimal technical subject reference, and validated DerivedDimensionKnowledgeState objects. The matrix preserves explicit elementary and derived layers, shared dimensions without fusion, compact indexes, technical summary, lineage, version context, provenance, and dependency references. It does not modify the Ledger or Snapshot and does not introduce a person-level score.
-
-Pipeline introduced:
-
-KnowledgeSnapshot + DerivedDimensionKnowledgeState[] + subjectRef
-↓
-PersonKnowledgeMatrix
-
-Phase 0100B — Knowledge Engine Foundation
-
-Status: COMPLETED
-
-The repository now provides the tested pipeline from Observation through PersonKnowledgeMatrix.
-
-# Current Task
-
-## 0100C-1 — Person Knowledge Matrix Query Foundation
-
-Status: COMPLETED
-
-Introduced deterministic, validated and read-only queries over PersonKnowledgeMatrix using allowlisted filters for Dimension, knowledge layer, Capability, Recipe and Recipe version. Multiple filters use AND semantics; results preserve elementary/derived separation, canonical ordering and caller-owned input immutability, without scoring, ranking, inference, LLM or network access.
-
-Pipeline introduced:
-
-PersonKnowledgeMatrix
-↓
-PersonKnowledgeQuery
-↓
-PersonKnowledgeQueryResult
-
-## 0100C-2 — Knowledge Coverage Foundation
-
-Status: COMPLETED
-
-Introduced deterministic, read-only KnowledgeCoverage evaluation over a validated PersonKnowledgeMatrix, optionally restricted through the existing PersonKnowledgeQuery. Coverage describes only the amount and structure of knowledge currently available through categorical states, technical counts, existing state coverage/confidence references, compact lineage and deterministic identity. It does not evaluate the person and introduces no score, ranking, recommendation, inference, LLM, network access or persistence.
-
-Pipeline introduced:
-
-PersonKnowledgeMatrix
-↓
-PersonKnowledgeQuery (optional)
-↓
-KnowledgeCoverage
-
-## 0100C-3 — Knowledge Coverage Query Foundation
-
-Status: COMPLETED
-
-Introduced deterministic, validated and read-only queries over KnowledgeCoverage using allowlisted filters for Dimension, Capability, coverage state, knowledge layer and overall coverage state. Multiple filters use AND semantics; results are deep-cloned, canonically ordered and descriptive only, without scoring, ranking, priority, recommendation, inference, LLM, network access or persistence.
-
-Pipeline introduced:
-
-KnowledgeCoverage
-↓
-KnowledgeCoverageQuery
-↓
-KnowledgeCoverageQueryResult
-
-## 0100D-1 — Knowledge Opportunity Foundation
-
-Status: COMPLETED
-
-Introduced deterministic, neutral and read-only KnowledgeOpportunity and KnowledgeOpportunityCollection contracts derived exclusively from validated KnowledgeCoverage states. The implemented opportunity types are `elementary_layer_only` and `derived_layer_only`; `knowledge_not_available` was not introduced because the current KnowledgeCoverage contract does not retain absent Dimension or Capability entities. Opportunities describe only non-composed knowledge availability and never a gap, weakness or insufficiency of the person. No ranking, priority, weighting, recommendation, question strategy, acquisition strategy, inference, LLM, network access or persistence was introduced.
-
-Pipeline introduced:
-
-KnowledgeCoverage
-↓
-KnowledgeOpportunity
-↓
-KnowledgeOpportunityCollection
-
-## 0100D-2 — Knowledge Opportunity Query Foundation
-
-Status: COMPLETED
-
-Implemented deterministic read-only querying of KnowledgeOpportunityCollection through allowlisted filters and AND semantics.
-
-## 0100D-3 — Knowledge Acquisition Need Foundation
-
-Status: COMPLETED
-
-Implemented deterministic KnowledgeAcquisitionNeed and KnowledgeAcquisitionNeedCollection contracts derived exclusively from validated KnowledgeOpportunity entities. Effective mappings are `elementary_layer_only → derived_knowledge_required` and `derived_layer_only → elementary_knowledge_required`. Each source opportunity produces exactly one traceable need. No acquisition method, strategy, question, selection, ranking, priority, scoring, inference, LLM, network access or persistence was introduced.
-
-## 0100D-4 — Knowledge Acquisition Need Query Foundation
-
-Status: COMPLETED
-
-Implemented deterministic, read-only querying of KnowledgeAcquisitionNeedCollection through eight allowlisted filters and AND semantics. Query results are validated, deep-cloned, canonically ordered and descriptive only. `sourceOpportunityType` is treated exclusively as a derived technical traceability and contract-validation field. No ranking, priority, recommendation, selection, strategy, method, question, inference, LLM, network access or persistence was introduced.
-
-## 0100D-5 — Knowledge Acquisition Strategy Foundation
-
-Status: COMPLETED
-
-Implemented deterministic KnowledgeAcquisitionStrategy and KnowledgeAcquisitionStrategyCollection contracts derived exclusively from validated KnowledgeAcquisitionNeed entities. Effective mappings are `elementary_knowledge_required → elementary_knowledge_acquisition → elementary` and `derived_knowledge_required → derived_knowledge_composition → derived`. Each source need produces exactly one traceable strategy category. The Foundation does not execute acquisition or composition and introduces no plan, method, channel, question, selection, ranking, priority, recommendation, inference, LLM, network access or persistence.
-
-## 0100D-6 — To be defined by Architect
-
-Status: PLANNED
-
-No implementation has been started and no perimeter has been assigned.
-
----
-
-# Architectural Guardrails
-
-[...]
-
----
-
-# Maintenance Rules
-
-- Il Builder aggiorna questo documento quando un task cambia stato.
-- I task completati restano visibili.
-- Non registrare come completato ciò che non è presente e testato nel repository.
-- Non duplicare qui la specifica completa del task.
-- Le modifiche di direzione architetturale sono approvate dall’Architect.
-
-
-Phase 0100B — Knowledge Engine Foundation (Revised)
-Vision
-
-The objective of this phase is to transform IMAGO from an interview analysis engine into a general-purpose Knowledge Engine.
-
-The system must not simply calculate scores.
-
-Its primary responsibility is to progressively build a structured and explainable representation of a person's professional knowledge.
-
-The fundamental architectural principle becomes:
-
-Observations are immutable.
-
-Knowledge evolves.
-
-Models evolve.
-
-Recipes evolve.
-
-Knowledge can always be recomputed.
-
-The persistent value of IMAGO is therefore the accumulated evidence, not the temporary interpretation produced by a specific model version.
-
-Knowledge Engine Pipeline
-
-The complete pipeline becomes:
-
-                 INPUT SOURCES
-
- CV
- JD
- Interview
- LinkedIn
- Assessments
- Tests
- Future Sources
-        │
-        ▼
-
- Observation Layer
-        │
-        ▼
-
- Measurement Engine
-        │
-        ▼
-
- MeasurementResult
-        │
-        ▼
-
- DimensionContribution
-        │
-        ▼
-
- Elementary DimensionKnowledgeState
-        │
-        ▼
-
- Capability Engine
- (Recipe Engine)
-        │
-        ▼
-
- Derived DimensionKnowledgeState
-        │
-        ▼
-
- Person Knowledge Matrix
-        │
-        ▼
-
- Reports
- Matching
- Guidance
- Future AI Services
-Architectural Principles
-
-The following principles become permanent design constraints.
-
-Evidence is immutable
-
-Observations represent historical facts.
-
-They must never be rewritten.
-
-Knowledge is reconstructable
-
-Knowledge must always be rebuildable from stored evidence.
-
-No derived state becomes the single source of truth.
-
-Recipes are versioned
-
-Every capability represents an interpretation model.
-
-Interpretation models may evolve without invalidating historical evidence.
-
-Separation of responsibilities
-
-Each architectural layer has one responsibility only.
-
-Observation
-
-captures facts
-
-Measurement
-
-evaluates observations
-
-Contribution
-
-connects measurements to Dimensions
-
-Dimension
-
-accumulates knowledge
-
-Capability
-
-interprets knowledge
-
-Person Model
-
-represents the complete professional profile
-Phase 0100B Roadmap
-0100B-3
-Dimension Contribution Foundation
-Objective
-
-Introduce the fundamental contract connecting measurements to elementary Dimensions.
-
-A single MeasurementResult may contribute to one or multiple Dimensions.
-
-DimensionContribution becomes the smallest reusable unit of professional knowledge.
-
-Responsibilities
-
-Introduce:
-
-DimensionContribution
-
-Builder
-
-Validator
-
-Health Check
-
-Public API
-
-Regression Tests
-
-Guarantee:
-
-immutability
-provenance
-deterministic behaviour
-one-to-many support
-version compatibility
-Deliverable
-MeasurementResult
-
-↓
-
-DimensionContribution[]
-0100B-4
-Measurement Mapping Foundation
-Objective
-
-Create the deterministic mapper converting MeasurementResult objects into DimensionContribution collections.
-
-Responsibilities
-
-Implement:
-
-Measurement → Dimension mapping
-multiple contributions
-contribution direction
-contribution strength
-contribution confidence
-source reliability
-evidence quality
-context binding
-mapper versioning
-Deliverable
-MeasurementResult
-
-↓
-
-DimensionContribution[]
-0100B-5
-Elementary Knowledge Aggregation Foundation
-Objective
-
-Build the elementary knowledge matrix.
-
-This task transforms multiple contributions into a coherent DimensionKnowledgeState.
-
-Responsibilities
-
-Implement:
-
-contribution grouping
-duplicate detection
-independence groups
-aggregation
-contradiction management
-estimate computation
-confidence computation
-coverage computation
-stability computation
-consistency computation
-deterministic updates
-Deliverable
-DimensionContribution[]
-
-↓
-
-DimensionKnowledgeState
-0100B-6
-Knowledge Ledger & Snapshot Foundation
-Objective
-
-Separate immutable history from reconstructed knowledge.
-
-The system stores:
-
-observations
-contributions
-reconstructable knowledge
-optional snapshots
-Responsibilities
-
-Introduce:
-
-Observation Ledger
-
-Contribution Ledger
-
-Knowledge Snapshot
-
-Snapshot Versioning
-
-Historical Reconstruction
-
-Deliverable
-Observation Ledger
-
-↓
-
-Contribution Ledger
-
-↓
-
-Knowledge Snapshot
-0100B-7
-Derived Knowledge Foundation
-Objective
-
-Connect the Capability Core with the Knowledge Engine.
-
-Capabilities become recipe executors producing derived professional knowledge.
-
-Responsibilities
-
-Implement:
-
-CapabilityResult integration
-Derived DimensionKnowledgeState
-provenance
-recipe versioning
-explainability
-dependency tracking
-Deliverable
-Elementary Knowledge Matrix
-
-↓
-
-Capability Engine
-
-↓
-
-Derived Knowledge Matrix
-Architectural Guardrails
-
-The following rules become permanent.
-
-Knowledge is never directly edited
-
-Knowledge is always produced from evidence.
-
-Contributions are never manually aggregated
-
-Aggregation is performed only by deterministic aggregators.
-
-Capability models never overwrite evidence
-
-Changing a recipe changes only derived knowledge.
-
-Historical evidence remains untouched.
-
-Every derived result is reproducible
-
-Every score must always be reproducible from:
-
-Observations
-
-↓
-
-Measurements
-
-↓
-
-Contributions
-
-↓
-
-Recipe Version
-Long-Term Vision
-
-The final objective is not to compute interview scores.
-
-The final objective is to build the Person Knowledge Matrix.
-
-The Person Knowledge Matrix represents the complete structured professional knowledge available about an individual.
-
-Reports, interview simulations, career guidance, matching algorithms, role comparisons and future AI assistants become different views over the same underlying knowledge base.
-
-Note Architetturale (Decisione 2026-07-23)
-
-Da questa data il Knowledge Engine diventa il centro dell'architettura IMAGO.
-
-Il Capability Core non viene sostituito ma ridefinito come Recipe Engine del sistema: il suo ruolo è interpretare la conoscenza elementare per produrre conoscenza derivata.
-
-La Person Knowledge Matrix diventa l'asset principale della piattaforma.
-
-Il valore persistente di IMAGO non risiede nei punteggi, ma nella raccolta strutturata, spiegabile e ricostruibile delle evidenze professionali.
----
-
-## 0100D-6 — Knowledge Acquisition Strategy Query Foundation
-
-Status: **COMPLETED**
-
-Implemented the deterministic, read-only query layer:
-
-```text
-KnowledgeAcquisitionStrategyCollection
-        ↓
-KnowledgeAcquisitionStrategyQuery
-        ↓
-KnowledgeAcquisitionStrategyQueryResult
+→ MeasurementResult
+→ DimensionContribution
+→ KnowledgeLedger / KnowledgeSnapshot
+→ elementary and derived knowledge
+→ PersonKnowledgeMatrix
 ```
 
-The query uses the consolidated flat allowlisted-filter convention, exact comparison and AND-only semantics. Supported filters: `strategyType`, `sourceNeedType`, `scope`, `scopeRef`, `targetKnowledgeLayer`, `reasonCode`, `sourceNeedRef`, `sourceOpportunityRef`, `sourceCoverageRef`.
+### Phase 0100C — Matrix Query and Coverage
 
-No strategy evaluation, ranking, priority, recommendation, plan, execution, method, channel, question generation, inference or runtime is implemented.
+| Task | Status | Result |
+|---|---|---|
+| 0100C-1 | COMPLETED | Person Knowledge Matrix Query Foundation |
+| 0100C-2 | COMPLETED | Knowledge Coverage Foundation |
+| 0100C-3 | COMPLETED | Knowledge Coverage Query Foundation |
 
-## 0100D-7 — Knowledge Acquisition Requirement Foundation
+Queries are deterministic, read-only, allowlisted and non-interpretative. Coverage describes available knowledge without scoring or evaluating the person.
 
-Status: **COMPLETED**
+### Phase 0100D — Declarative Knowledge Acquisition Boundary
 
-Implemented the deterministic declarative post-condition layer:
+| Task | Type | Status | Result |
+|---|---|---|---|
+| 0100D-1 | Foundation | COMPLETED | Knowledge Opportunity |
+| 0100D-2 | Foundation | COMPLETED | Opportunity Query |
+| 0100D-3 | Foundation | COMPLETED | Acquisition Need |
+| 0100D-4 | Foundation | COMPLETED | Need Query |
+| 0100D-5 | Foundation | COMPLETED | Acquisition Strategy |
+| 0100D-6 | Foundation | COMPLETED | Strategy Query |
+| 0100D-7 | Foundation | COMPLETED | Acquisition Requirement |
+| 0100D-8 | Foundation | COMPLETED | Requirement Query |
+| 0100D-9 | Architecture Review | COMPLETED | boundary termination at Requirement confirmed |
+| 0100D-10 | Consolidation / Freeze | COMPLETED | declarative boundary frozen and regression-protected |
+
+Frozen pipeline:
 
 ```text
-KnowledgeAcquisitionStrategy
-        ↓
+PersonKnowledgeMatrix
+→ KnowledgeCoverage
+→ KnowledgeOpportunity
+→ KnowledgeAcquisitionNeed
+→ KnowledgeAcquisitionStrategy
+→ KnowledgeAcquisitionRequirement
+```
+
+Requirement is a declarative post-condition. It has no satisfaction, priority, source, method, plan or execution state.
+
+### Phase 0100E — Post-Requirement Design and Decision
+
+| Task | Type | Status | Result |
+|---|---|---|---|
+| 0100E-1 | Architecture Review | COMPLETED | Design approved as first downstream consumer |
+| 0100E-2 | Foundation | COMPLETED | Knowledge Acquisition Design |
+| 0100E-3 | Architecture Review | COMPLETED | Capability Match direction approved |
+| 0100E-4 | Foundation | COMPLETED | Knowledge Acquisition Capability Match |
+| 0100E-5 | Architecture Review | COMPLETED | Application Solution Decision direction approved |
+| 0100E-6 | Foundation | COMPLETED | Knowledge Acquisition Solution Decision |
+| 0100E-7 | Architecture Review | COMPLETED | composed-only Composition Design direction approved |
+| 0100E-8 | Foundation | COMPLETED | Capability Composition Design |
+
+Current implemented extension:
+
+```text
 KnowledgeAcquisitionRequirement
+→ KnowledgeAcquisitionDesign                       [Core]
+→ KnowledgeAcquisitionCapabilityMatch              [Core]
+→ KnowledgeAcquisitionSolutionDecision             [Application]
+→ KnowledgeAcquisitionCapabilityCompositionDesign  [Application; composed only]
 ```
 
-Mappings are `elementary_knowledge_acquisition → elementary_knowledge_availability_required → elementary` and `derived_knowledge_composition → derived_knowledge_availability_required → derived`. Cardinality is strictly `1 Strategy → 1 Requirement`. `sourceStrategyRef` is the direct causal reference; Need, Opportunity and Coverage references are transitive traceability only. No satisfaction state, planning, execution, methods, channels, sources, questions, ranking or priority is implemented.
+Discovery and candidate resolution remain Application-owned. Local and contextual Composition Design validation have distinct guarantees. Configuration, Planning and Execution are excluded.
 
-## 0100D-8 — Knowledge Acquisition Requirement Query Foundation
+## Current gate
 
-Status: **COMPLETED**
+### 0100E-9 — Post-Capability-Composition-Design Downstream Architecture Review
 
-Implemented the deterministic, read-only query layer:
-
-```text
-KnowledgeAcquisitionRequirementCollection
-        ↓
-KnowledgeAcquisitionRequirementQuery
-        ↓
-KnowledgeAcquisitionRequirementQueryResult
-```
-
-The query is flat, requires at least one allowlisted filter, uses exact matching and AND-only semantics, preserves canonical ordering, deep-clones results, and treats empty results as valid. No satisfaction state, ranking, priority, planning, runtime or execution is implemented.
-
-## 0100D-9 — Knowledge Acquisition Pipeline Boundary Review
-
-Status: **COMPLETED**  
-Type: **ARCHITECTURE REVIEW**
-
-Repository-first review confirmed that the declarative Knowledge Analysis boundary terminates correctly at `KnowledgeAcquisitionRequirement`. The complete block is:
-
-```text
-PersonKnowledgeMatrix
-        ↓
-KnowledgeCoverage
-        ↓
-KnowledgeOpportunity
-        ↓
-KnowledgeAcquisitionNeed
-        ↓
-KnowledgeAcquisitionStrategy
-        ↓
-KnowledgeAcquisitionRequirement
-```
-
-Decision: **Knowledge pipeline complete — freeze the boundary**. Future acquisition planning, source or method selection, execution, evidence ingestion and requirement-satisfaction evaluation belong to downstream Application, Runtime, Adapter or separately justified deterministic services; they are not additional fields of the Requirement contract.
-
-## 0100D-10 — Knowledge Acquisition Boundary Consolidation and Freeze
-
-Status: **COMPLETED**
-
-Boundary status: **FROZEN**
-
-Completed the non-semantic hardening of the Knowledge Acquisition block: Opportunity summary validation now recalculates `byOpportunityType`; the explicit public-export allowlist is shared by historical regressions; mapping, cardinality, causality, Requirement and Query invariants are protected by a dedicated freeze regression and health gate; the declarative boundary is formally documented and frozen.
-
-## Next architecture phase — To be defined by Architect
+Type: **ARCHITECTURE REVIEW — NO IMPLEMENTATION**
 
 Status: **PLANNED**
 
-## 0100E-1 — Post-Requirement Downstream Architecture Review
+| Task | Type | Status | Result |
+|---|---|---|---|
+| 0100E-9 | Architecture Review | PLANNED | determine the first legitimate downstream consumer |
 
-Status: **COMPLETED**
-Type: **ARCHITECTURE REVIEW**
+Objective: determine the first legitimate downstream consumer common to `single` and `composed` Solution Decision modes.
 
-Decision: **APPROVED DIRECTION — Knowledge Acquisition Design**.
+Capability Configuration is a candidate to assess; it is not approved architecture. E-9 must define or reject its ownership, cardinality, identity, causal inputs, validation context and exclusions before any Foundation begins.
 
-The review established that the first legitimate downstream consumer of `KnowledgeAcquisitionRequirement` is a mechanism-neutral declarative Design. It describes the abstract form of a valid acquisition solution before capability matching, planning, artifact generation, execution, observation, satisfaction evaluation or knowledge update.
+## Not approved
 
-## 0100E-2 — Knowledge Acquisition Design Foundation
+The following are not roadmap commitments and must not be implemented automatically:
 
-Status: **COMPLETED**
+- Capability Configuration;
+- acquisition Planning, Action or executable Recipe;
+- provider or adapter resolution;
+- Runtime orchestration or Execution;
+- Requirement satisfaction;
+- Knowledge Update;
+- integration with Runtime or Reporting legacy;
+- Synthetic Evaluation Platform;
+- Learning Engine.
 
-Implemented the deterministic Core Foundation:
+## Guardrails
 
-```text
-KnowledgeAcquisitionRequirement
-        ↓
-KnowledgeAcquisitionDesign
+- preserve the Phase D freeze;
+- keep Core matching separate from Application discovery and decisions;
+- do not add downstream ambiguity to upstream contracts;
+- keep elementary and derived knowledge separate;
+- preserve deterministic identity, canonical ordering, provenance and caller-owned input immutability;
+- no person score, ranking, recommendation, network, persistence or LLM in deterministic Foundations unless explicitly approved;
+- perform the Continuity Impact Assessment for every task.
+
+## Verification baseline
+
+```powershell
+node scripts/test_all_core.js
+node scripts/fringe_health_check.js
 ```
-
-Initial cardinality is strictly `1 Requirement → 1 Design`. Supported mappings are:
-
-```text
-elementary_knowledge_availability_required
-→ elementary_acquisition_design
-```
-
-```text
-derived_knowledge_availability_required
-→ derived_acquisition_design
-```
-
-The Design introduces new semantics through a mechanism-neutral `solutionShape`: elementary contribution requirements or derived prerequisite topology. It does not select capabilities, sources, methods or channels; it does not generate artifacts; and it does not plan, execute, observe, evaluate satisfaction or update knowledge.
-
-## Next architecture phase — To be defined by Architect
-
-Status: **PLANNED**
-
-No Query Foundation, collection evaluator, capability matching, planning, generation, runtime, execution, observation, satisfaction or update layer is assumed automatically.
-
-## 0100E-4 completed — Knowledge Acquisition Capability Match Foundation
-
-Frozen pipeline extension:
-
-`KnowledgeAcquisitionRequirement -> KnowledgeAcquisitionDesign -> KnowledgeAcquisitionCapabilityMatch`
-
-Cardinality: one Design may yield zero or more independent Matches, one candidate per builder invocation. Core performs deterministic semantic matching only. Application owns discovery, availability, policy, ranking, selection, configuration and execution. `indeterminate` means a structurally valid snapshot lacks a necessary declarative fact and no explicit incompatibility is already known. Measurement is an optional capability family; question generation and LLM execution remain downstream.
-
-### 0100E-6 — Knowledge Acquisition Solution Decision Foundation
-
-Implementata sul lato Application la decisione successiva al Match Core:
-
-```text
-KnowledgeAcquisitionCapabilityMatch
-        ↓
-KnowledgeAcquisitionSolutionDecision
-```
-
-La Decision supporta zero/una/più capability (`none`, `deferred`, `single`, `composed`). Il successivo Capability Composition Design per il solo caso `composed` è collocato in Application / Knowledge, con validazione locale dell'artefatto e validazione contestuale rispetto a Decision e Design.
