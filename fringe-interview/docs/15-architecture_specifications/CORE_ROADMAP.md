@@ -4,9 +4,9 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-10**
+Verified through: **Task 0100E-11**
 
-Next gate: **0100E-11**
+Next gate: **0100E-12**
 
 Last updated: 2026-07-30 (`GOV-REALIGN-001`)
 
@@ -30,6 +30,7 @@ Input / Evidence
 → Application Solution Decision
 → Application Composition Design (composed only)
 → Application Capability Configuration (implemented)
+→ Application Knowledge Acquisition Plan (approved, implementation pending)
 ```
 
 Evidence is authoritative; knowledge and composed views are reconstructable. Runtime execution and Reporting integration are not implied by this roadmap.
@@ -121,6 +122,7 @@ Requirement is a declarative post-condition. It has no satisfaction, priority, s
 | 0100E-8 | Foundation | COMPLETED | Capability Composition Design |
 | 0100E-9 | Architecture Review | COMPLETED | unified Application Capability Configuration direction approved |
 | 0100E-10 | Foundation | COMPLETED | unified declarative Application Capability Configuration |
+| 0100E-11 | Architecture Review | COMPLETED | declarative Application Knowledge Acquisition Plan direction approved |
 
 Current implemented extension:
 
@@ -136,15 +138,15 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 ## Current gate
 
-### 0100E-11 — Post-Configuration Downstream Architecture Review
+### 0100E-12 — Knowledge Acquisition Plan Foundation
 
-Type: **ARCHITECTURE REVIEW**
+Type: **FOUNDATION**
 
 Status: **PLANNED**
 
 | Task | Type | Status | Result |
 |---|---|---|---|
-| 0100E-11 | Architecture Review | PLANNED | review the first legitimate downstream consumer after Configuration |
+| 0100E-12 | Foundation | PLANNED | implement only the approved declarative Application Plan boundary |
 
 Approved cardinality:
 
@@ -156,11 +158,13 @@ none/deferred     → 0 Configuration
 
 Configuration is Application-owned, declarative, immutable and pre-planning. It may bind explicit non-secret values to already selected capability refs, but may not resolve providers, order invocations, plan or execute.
 
+Task 0100E-11 approved exactly one declarative `KnowledgeAcquisitionPlan` per valid Configuration, with one unit per selected capability. The Plan is Application-owned and pre-Runtime; no intermediate contract, provider binding, invocation semantics or executable ordering is approved.
+
 ## Not approved
 
 The following are not roadmap commitments and must not be implemented automatically:
 
-- acquisition Planning, Action or executable Recipe;
+- acquisition Action or executable Recipe beyond the approved declarative Plan;
 - provider or adapter resolution;
 - Runtime orchestration or Execution;
 - Requirement satisfaction;

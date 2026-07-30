@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-10**
+Verified through: **Task 0100E-11**
 
 Operational milestone: `origin/milestone/0100b-knowledge-foundation`
 
@@ -23,10 +23,10 @@ Completed task sequence:
 0100B-1 … 0100B-10
 0100C-1 … 0100C-3
 0100D-1 … 0100D-10
-0100E-1 … 0100E-9
+0100E-1 … 0100E-11
 ```
 
-Tasks D-9, E-1, E-3, E-5, E-7 and E-9 are architecture reviews. D-10 is consolidation and freeze. E-2, E-4, E-6 and E-8 are the implemented downstream Foundations.
+Tasks D-9, E-1, E-3, E-5, E-7, E-9 and E-11 are architecture reviews. D-10 is consolidation and freeze. E-2, E-4, E-6, E-8 and E-10 are the implemented downstream Foundations.
 
 ## Knowledge Foundation
 
@@ -95,7 +95,9 @@ Task 0100E-10 implements `KnowledgeAcquisitionCapabilityConfiguration`: one unif
 
 `KnowledgeAcquisitionCapabilityConfiguration` is **IMPLEMENTED** as an immutable pre-planning Foundation with deterministic identity, canonical items, local validation and separate contextual validation.
 
-Configuration contains only explicitly supplied non-secret declarative values. It does not resolve providers, order invocations, plan or execute. The next planned task is `0100E-11 — Post-Configuration Downstream Architecture Review`. See `NEXT_PHASE.md`.
+Configuration contains only explicitly supplied non-secret declarative values. It does not resolve providers, order invocations, plan or execute.
+
+Task 0100E-11 approved `KnowledgeAcquisitionPlan` as the first downstream consumer. The Plan is Application-owned, declarative, post-Configuration and pre-Runtime. It preserves exact capability/configuration causality and composed logical semantics without executable order. It is **APPROVED, NOT IMPLEMENTED**. The next planned task is `0100E-12 — Knowledge Acquisition Plan Foundation`. See `NEXT_PHASE.md`.
 
 ## Current authoritative documents
 
@@ -120,7 +122,7 @@ Earlier continuity text referenced governance files not present in this branch. 
 ## Frozen boundaries and risks
 
 - Changes to D mappings, cardinality, direct causality, public exports or Requirement semantics require an explicit architecture task.
-- Capability Configuration is implemented; Planning, Runtime, Execution, Satisfaction and Knowledge Update remain unapproved downstream layers.
+- Capability Configuration is implemented. The declarative Plan boundary is approved with implementation pending; Runtime, Execution, Satisfaction and Knowledge Update remain unapproved downstream layers.
 - Runtime and Reporting legacy integration requires an explicit boundary and adapters.
 - The default GitHub branch must not be assumed to be the operational Core base.
 - Every task must pass the Continuity Impact Assessment in `IMAGO_CODEX_WORKFLOW.md`.

@@ -8,9 +8,9 @@ import { inspectContinuityGovernance } from "./check_continuity_governance.js";
 const applicationRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repositoryResult = inspectContinuityGovernance(applicationRoot);
 assert.equal(repositoryResult.status, "PASS", repositoryResult.errors.join("\n"));
-assert.equal(repositoryResult.plannedTask, "0100E-11");
+assert.equal(repositoryResult.plannedTask, "0100E-12");
 
-function buildFixture({ roadmapRows, nextTask = "0100E-11", nextStatus = "PLANNED", continuityNextTask = "0100E-11", configurationState = "IMPLEMENTED", workflowText = "# Workflow\nContinuity Impact Assessment\n", readmeText = "| `CONTINUITY.md` | CURRENT | state |\n| `NEXT_PHASE.md` | CURRENT | next |\n" }) {
+function buildFixture({ roadmapRows, nextTask = "0100E-12", nextStatus = "PLANNED", continuityNextTask = "0100E-12", configurationState = "IMPLEMENTED", workflowText = "# Workflow\nContinuity Impact Assessment\n", readmeText = "| `CONTINUITY.md` | CURRENT | state |\n| `NEXT_PHASE.md` | CURRENT | next |\n" }) {
   const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "imago-continuity-check-"));
   const continuityDirectory = path.join(fixtureRoot, "docs", "00-continuity");
   const architectureDirectory = path.join(fixtureRoot, "docs", "15-architecture_specifications");
@@ -25,7 +25,7 @@ function buildFixture({ roadmapRows, nextTask = "0100E-11", nextStatus = "PLANNE
   );
   fs.writeFileSync(
     path.join(continuityDirectory, "CONTINUITY.md"),
-    `# Continuity\nVerified through: **Task 0100E-10**\nThe next planned task is \`${continuityNextTask}\`.\nKnowledgeAcquisitionCapabilityConfiguration: ${configurationState}.\n`
+    `# Continuity\nVerified through: **Task 0100E-11**\nThe next planned task is \`${continuityNextTask}\`.\nKnowledgeAcquisitionCapabilityConfiguration: ${configurationState}.\n`
   );
   fs.writeFileSync(
     path.join(continuityDirectory, "NEXT_PHASE.md"),
@@ -51,10 +51,10 @@ function inspectFixture(options) {
   }
 }
 
-const validRows = "| 0100E-9 | Architecture Review | COMPLETED | reviewed |\n| 0100E-10 | Foundation | COMPLETED | implemented |\n| 0100E-11 | Architecture Review | PLANNED | next |";
+const validRows = "| 0100E-9 | Architecture Review | COMPLETED | reviewed |\n| 0100E-10 | Foundation | COMPLETED | implemented |\n| 0100E-11 | Architecture Review | COMPLETED | reviewed |\n| 0100E-12 | Foundation | PLANNED | next |";
 const validResult = inspectFixture({ roadmapRows: validRows });
 assert.equal(validResult.status, "PASS", validResult.errors.join("\n"));
-assert.equal(validResult.plannedTask, "0100E-11");
+assert.equal(validResult.plannedTask, "0100E-12");
 
 const duplicateTransition = inspectFixture({
   roadmapRows: `${validRows}\n| 0100E-9 | Architecture Review | PLANNED | stale |`,
@@ -62,18 +62,18 @@ const duplicateTransition = inspectFixture({
 assert.equal(duplicateTransition.status, "FAIL");
 assert(duplicateTransition.errors.some((error) => error.includes("incompatible states")));
 
-const nextPhaseMismatch = inspectFixture({ roadmapRows: validRows, nextTask: "0100E-12" });
+const nextPhaseMismatch = inspectFixture({ roadmapRows: validRows, nextTask: "0100E-13" });
 assert.equal(nextPhaseMismatch.status, "FAIL");
 assert(nextPhaseMismatch.errors.some((error) => error.includes("does not match roadmap PLANNED task")));
 
 const twoPlanned = inspectFixture({
-  roadmapRows: `${validRows}\n| 0100E-12 | Foundation | PLANNED | extra |`,
+  roadmapRows: `${validRows}\n| 0100E-13 | Architecture Review | PLANNED | extra |`,
 });
 assert.equal(twoPlanned.status, "FAIL");
 assert(twoPlanned.errors.some((error) => error.includes("exactly one PLANNED next task")));
 
 const missingNextTask = inspectFixture({
-  roadmapRows: "| 0100E-9 | Architecture Review | COMPLETED | reviewed |\n| 0100E-10 | Foundation | COMPLETED | implemented |",
+  roadmapRows: "| 0100E-9 | Architecture Review | COMPLETED | reviewed |\n| 0100E-10 | Foundation | COMPLETED | implemented |\n| 0100E-11 | Architecture Review | COMPLETED | reviewed |",
   nextStatus: "IMPLEMENTED",
   configurationState: "IMPLEMENTED",
 });

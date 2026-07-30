@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-10**
+Verified through: **Task 0100E-11**
 
 ## Principle
 
@@ -34,6 +34,7 @@ Input / Evidence                                      [Core]
 → KnowledgeAcquisitionSolutionDecision                [Application]
 → KnowledgeAcquisitionCapabilityCompositionDesign     [Application; composed only]
 → KnowledgeAcquisitionCapabilityConfiguration         [Application; single/composed]
+→ KnowledgeAcquisitionPlan                            [Application; approved, implementation pending]
 ```
 
 Query Foundations provide deterministic, read-only access for Matrix, Coverage, Opportunity, Need, Strategy and Requirement without reinterpreting upstream semantics.
@@ -109,9 +110,13 @@ Task 0100E-10 implements `KnowledgeAcquisitionCapabilityConfiguration` as one un
 
 Configuration binds only explicit non-secret declarative values to already selected capability references. It does not repeat composition topology, resolve providers or adapters, order invocations, plan or execute.
 
+## Approved downstream direction
+
+Task 0100E-11 approves `KnowledgeAcquisitionPlan` as the first consumer of a valid Configuration. It is an Application-owned declarative organization of one unit per selected capability. It preserves Configuration and composed dependency semantics but contains no provider binding, invocation payload, executable ordering, scheduling or Runtime behavior. No intermediate contract is required. Foundation implementation is pending.
+
 ## Not approved or implemented downstream
 
-- acquisition Plan, Action or executable Recipe;
+- acquisition Action or executable Recipe;
 - provider/adapter resolution;
 - runtime orchestration and execution;
 - execution result and observation ingestion for this boundary;
@@ -119,7 +124,7 @@ Configuration binds only explicit non-secret declarative values to already selec
 - Knowledge Update;
 - Runtime/Reporting legacy integration.
 
-The next gate is the post-Configuration downstream architecture review; it does not authorize Planning or Runtime.
+The next gate is the Plan Foundation only; it does not authorize Runtime, provider binding, invocation or execution.
 
 ## Dependency direction
 

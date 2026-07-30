@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-10**
+Verified through: **Task 0100E-11**
 
 ## Foundation decisions
 
@@ -132,3 +132,9 @@ Configuration, Planning, Runtime, Execution, Requirement satisfaction and Knowle
 Task 0100E-9 approved `KnowledgeAcquisitionCapabilityConfiguration` as an Application-owned, declarative and immutable pre-planning artifact. One Configuration may exist for an applicable `single` or `composed` Solution Decision; `none` and `deferred` produce none. For `composed`, the corresponding Composition Design is a mandatory direct causal source. `single` is not normalized as a composition of cardinality one.
 
 Configuration may bind only explicit non-secret declarative values to already selected capability references. It may not discover or reselect capabilities, mutate Decision or Composition Design, resolve provider/adapter/availability, contain credentials or secret references, order invocations, plan, retry, orchestrate or execute. Task 0100E-10 implements this approved direction without changing the decision.
+
+### ADR-029 — Declarative Knowledge Acquisition Plan is the first Configuration consumer
+
+Task 0100E-11 approves `KnowledgeAcquisitionPlan` as an Application-owned, immutable, post-Configuration and pre-Runtime boundary. Exactly one Plan may be built from one valid `single` or `composed` Configuration; `none` and `deferred` cannot reach this boundary. The Plan has exactly one declarative unit per selected capability and preserves, without duplicating or operationalizing, Configuration values and composed logical dependencies.
+
+No intermediate readiness, binding or normalized-composition contract is required. The Plan may not resolve registry, provider or adapter, produce invocation payloads, define executable ordering or scheduling, orchestrate or execute, collect results, assess Requirement satisfaction or update knowledge. Task 0100E-12 may implement only this declarative Plan Foundation.

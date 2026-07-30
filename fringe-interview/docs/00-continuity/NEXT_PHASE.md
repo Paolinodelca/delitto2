@@ -1,34 +1,35 @@
-# Next Phase — IMAGO 0100E-11
+# Next Phase — IMAGO 0100E-12
 
 Status: **CURRENT**
 
-Task type: **ARCHITECTURE REVIEW**
+Task type: **FOUNDATION**
 
 ## Task
 
 ```text
-0100E-11 — Post-Configuration Downstream Architecture Review
+0100E-12 — Knowledge Acquisition Plan Foundation
 Status: PLANNED
 ```
 
 ## Purpose
 
-Review repository-first the first legitimate downstream consumer of the implemented `KnowledgeAcquisitionCapabilityConfiguration` boundary. The review may approve, reject or defer a direction; it does not implement one.
+Implement only the Application-owned declarative `KnowledgeAcquisitionPlan` boundary approved by Task 0100E-11.
 
-## Current boundary
+## Authorized scope
 
-- `single`: Decision + selected capability snapshots + explicit Configuration Definition + explicit Application Configuration Input → one Configuration;
-- `composed`: the same inputs plus the exact Composition Design → one Configuration;
-- `none` and `deferred`: no Configuration;
-- local and contextual validation remain separate;
-- identity and item ordering are deterministic.
+- one Plan per valid `single` or `composed` Capability Configuration;
+- exactly one declarative plan unit per selected capability;
+- exact Configuration causality and composed logical-dependency preservation;
+- deterministic identity, canonical ordering and immutability;
+- separate local and contextual validators;
+- minimal Application exports, tests, regression and health.
 
-## Out of scope until reviewed
+## Out of scope
 
-- Planning, Action, Recipe, orchestration and invocation;
-- Runtime and Execution;
-- provider, adapter or registry resolution;
-- execution results, Requirement satisfaction and Knowledge Update;
-- Runtime, Beta Session or Reporting integration.
+- Runtime, execution, scheduler and orchestrator;
+- provider, adapter, registry and availability resolution;
+- invocation request, payload, ordering, retry, timeout and failure policy;
+- results, Requirement satisfaction and Knowledge Update;
+- persistence, API, UI and Reporting integration.
 
-No downstream operational component is approved by completion of Task 0100E-10.
+`KnowledgeAcquisitionCapabilityConfiguration` remains IMPLEMENTED and unchanged. `KnowledgeAcquisitionPlan` is APPROVED with implementation pending.
