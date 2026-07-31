@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-22**
+Verified through: **Task 0100E-23**
 
 ## Principle
 
@@ -38,6 +38,10 @@ Input / Evidence                                      [Core]
 → KnowledgeAcquisitionRuntimeSession                  [Application; implemented, stateful, pre-Execution]
 → KnowledgeAcquisitionExecution                       [Application; implemented, pre-invocation]
 → KnowledgeAcquisitionInvocationBoundary              [Application outbound port; implemented, effect-free contract]
+→ Structured Input Invocation Adapter / Provider      [Infrastructure; Adapter implemented, Provider role only]
+→ KnowledgeAcquisitionProviderResult                  [Infrastructure; implemented technical boundary]
+→ Provider Result Evidence Extractor                  [Infrastructure; approved, not implemented]
+→ Evidence[]                                          [Core; semantic boundary]
 ```
 
 Query Foundations provide deterministic, read-only access for Matrix, Coverage, Opportunity, Need, Strategy and Requirement without reinterpreting upstream semantics.
@@ -150,6 +154,8 @@ Task 0100E-21 approves Infrastructure-owned `KnowledgeAcquisitionProviderResult`
 - Runtime/Reporting legacy integration.
 
 Task 0100E-22 implements the Infrastructure-owned `KnowledgeAcquisitionProviderResult` as a closed, deeply immutable, ephemeral technical result. Its sole authorized state is `succeeded`; it carries an opaque cloned `providerPayload`, the exact Invocation Input fingerprint and a deterministic integrity fingerprint. The Adapter validates contextual causality and returns the same result. Provider throws/rejections remain errors rather than embedded failure states.
+
+Task 0100E-23 approves a capability-specific Infrastructure Provider Result Evidence Extractor as the first semantic crossing. It validates the technical result/context, understands only the structured-input payload schema and materializes zero or more existing Core-owned Evidence values. Infrastructure technical processing ends at this anti-corruption crossing; the semantic domain begins at Evidence. Core does not import Provider Result or provider schema. Direct Knowledge, Knowledge Candidate, generic normalization, state updates and Requirement satisfaction are excluded. E-24 may implement only the effect-free extractor Foundation without changing existing Provider, Adapter, Provider Result or Evidence contracts.
 
 The next gate is `0100E-23 — Post-Provider-Result Downstream Architecture Review`. It does not authorize a concrete Provider, transport, dynamic selection, registry, generic routing, external I/O, error normalization, Invocation Result, persistence, satisfaction or Knowledge Update.
 

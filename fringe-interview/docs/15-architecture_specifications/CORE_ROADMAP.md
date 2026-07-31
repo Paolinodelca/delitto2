@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-22**
+Verified through: **Task 0100E-23**
 
-Next gate: **0100E-23**
+Next gate: **0100E-24**
 
-Last updated: 2026-07-31 (`0100E-22`)
+Last updated: 2026-07-31 (`0100E-23`)
 
 ## Purpose
 
@@ -145,7 +145,7 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 ## Current gate
 
-### 0100E-23 — Post-Provider-Result Downstream Architecture Review
+### 0100E-24 — Structured Input Provider Result Evidence Extractor Foundation
 
 Type: **ARCHITECTURE REVIEW**
 
@@ -160,7 +160,8 @@ Status: **PLANNED**
 | 0100E-20 | Foundation | COMPLETED | structured-input capability-specific Invocation Adapter, injected Provider contract, validation, public API and in-memory effect tests implemented |
 | 0100E-21 | Architecture Review | COMPLETED | Infrastructure Provider Result approved before any concrete Provider integration |
 | 0100E-22 | Foundation | COMPLETED | immutable technical Provider Result, deterministic integrity and Adapter return enforcement |
-| 0100E-23 | Architecture Review | PLANNED | repository-first review of the first legitimate downstream consumer after Provider Result |
+| 0100E-23 | Architecture Review | COMPLETED | capability-specific Provider Result Evidence Extractor approved as the crossing into Core Evidence |
+| 0100E-24 | Foundation | PLANNED | effect-free structured-input Provider Result Evidence Extractor using the existing Core Evidence contract |
 
 Approved cardinality:
 
@@ -180,7 +181,7 @@ Task E-20 implements the first Adapter for `capability:structured-input-v1`, wit
 
 Task E-21 approves `KnowledgeAcquisitionProviderResult` as the first new downstream boundary. The existing Provider role remains the Adapter's direct consumer; a future Provider returns one Infrastructure-owned technical result causally bound to the Invocation Input fingerprint. Raw response, Invocation Result, acquired knowledge and Knowledge Update remain separate. E-22 may implement only the effect-free result contract and its Provider/Adapter enforcement, with no concrete Provider, transport, error normalization or semantic extraction.
 
-Task E-22 implements that result with one `succeeded` state, opaque cloned `providerPayload`, exact Invocation Input fingerprint causality and deterministic integrity. The Adapter validates and returns it unchanged. E-23 is the sole planned repository-first downstream review; it does not pre-authorize concrete integration or semantic transformation.
+Task E-22 implements that result with one `succeeded` state, opaque cloned `providerPayload`, exact Invocation Input fingerprint causality and deterministic integrity. The Adapter validates and returns it unchanged. E-23 approves a capability-specific Infrastructure Provider Result Evidence Extractor as the first semantic crossing, producing zero or more existing Core Evidence values. It rejects direct Knowledge, Knowledge Candidate and generic normalized-result layers. E-24 is the sole planned Foundation and remains effect-free; it may not modify existing contracts, implement a Provider/transport, execute ingestion/update flows or create Knowledge.
 
 ## Not approved
 

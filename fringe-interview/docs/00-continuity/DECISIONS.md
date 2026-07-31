@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-22**
+Verified through: **Task 0100E-23**
 
 ## Foundation decisions
 
@@ -184,3 +184,11 @@ Raw vendor response remains private to a future integration. Provider Result is 
 Task 0100E-22 implements the Provider Result as a closed Infrastructure value with `resultVersion`, technical `type`, sole state `succeeded`, `capabilityRef`, exact `invocationInputFingerprint`, opaque cloned `providerPayload` and deterministic `integrityFingerprint`. No autonomous or persistent ID, timestamps, lifecycle or duplicated Execution/Session/Plan references are introduced because Invocation Input already preserves that causal chain.
 
 The Adapter validates the returned result structurally and against the original Invocation Input, then returns the same value unchanged. Provider throws and rejected promises continue to propagate unchanged, so no `failed`, `rejected` or `unavailable` result state and no failure taxonomy is authorized. Task 0100E-23 is a repository-first downstream review; concrete integration remains unapproved.
+
+### ADR-037 — Provider Result enters the semantic domain through capability-specific Evidence extraction
+
+Task 0100E-23 approves a capability-specific Provider Result Evidence Extractor as the first semantic crossing after `KnowledgeAcquisitionProviderResult`. The extractor implementation is Infrastructure-owned because it consumes the Infrastructure result and understands the structured-input provider payload. Its output is zero or more existing Core-owned Evidence values; Evidence, not the opaque payload, is where the semantic domain begins.
+
+Direct Knowledge creation is rejected because Evidence is authoritative and Knowledge is reconstructed through Observation, Measurement, Dimension Contribution, Ledger and Snapshot. A Knowledge Candidate or generic normalized Provider response is also rejected because neither contract exists and both would duplicate or blur established boundaries. Core never imports Provider Result or provider schema; Infrastructure depends inward on the Core Evidence contract.
+
+Task 0100E-24 may implement only an effect-free extractor for `capability:structured-input-v1`, contextual validation, minimal fixture-backed payload decoding and existing Evidence construction/validation. It may not modify Provider/Adapter/Provider Result/Evidence contracts, implement external I/O, update stores/Ledger/Matrix/Coverage, create Knowledge, decide confidence/quality/satisfaction, normalize Provider errors or mutate Runtime artifacts.
