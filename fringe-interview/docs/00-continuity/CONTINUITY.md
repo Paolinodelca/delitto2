@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-15**
+Verified through: **Task 0100E-16**
 
 Operational milestone: `origin/milestone/0100b-knowledge-foundation`
 
@@ -23,7 +23,7 @@ Completed task sequence:
 0100B-1 … 0100B-10
 0100C-1 … 0100C-3
 0100D-1 … 0100D-10
-0100E-1 … 0100E-15
+0100E-1 … 0100E-16
 ```
 
 Tasks D-9, E-1, E-3, E-5, E-7, E-9, E-11, E-13 and E-15 are architecture reviews. D-10 is consolidation and freeze. E-2, E-4, E-6, E-8, E-10, E-12 and E-14 are the implemented downstream Foundations.
@@ -101,7 +101,7 @@ Task 0100E-12 implements `KnowledgeAcquisitionPlan` as the first downstream cons
 
 Task 0100E-13 approves and Task 0100E-14 implements `KnowledgeAcquisitionRuntimeSession` as the first operational consumer of the Plan. It is Application-owned, Plan-scoped and stateful, with stable Session identity, closed lifecycle, exact item-state projections and explicit timestamps, but remains pre-Execution. The Plan is never mutated.
 
-Task 0100E-15 approves Application-owned `KnowledgeAcquisitionExecution` as the first direct Session consumer and one semantic attempt for one exact active Session item. Execution remains effect-neutral. The first observable external effect is the separately reviewed Knowledge Acquisition Invocation Boundary, where infrastructure may invoke a provider adapter. The next planned task is `0100E-16 — Knowledge Acquisition Execution Foundation`; it does not authorize invocation, provider/adapter binding, retry, orchestration, persistence, results, satisfaction or Knowledge Update. See `NEXT_PHASE.md`.
+Task 0100E-15 approves and Task 0100E-16 implements Application-owned `KnowledgeAcquisitionExecution` as the first direct Session consumer and one semantic attempt for one exact active Session item. Its closed pre-invocation lifecycle is `created`, `selected`, `ready_for_invocation`; it is deeply immutable, identity-safe and effect-neutral. The next planned task is `0100E-17 — Post-Execution Downstream Architecture Review`; it must review the downstream boundary before any invocation Foundation is authorized. See `NEXT_PHASE.md`.
 
 ## Current authoritative documents
 

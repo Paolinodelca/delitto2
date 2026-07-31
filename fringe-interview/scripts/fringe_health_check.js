@@ -1683,6 +1683,11 @@ addCheck("Knowledge Acquisition Runtime Session application", async () => {
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_runtime_session.js"], { stdio: "pipe" });
 });
 
+addCheck("Knowledge Acquisition Execution application", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_execution.js"], { stdio: "pipe" });
+});
+
 addCheck("Knowledge Acquisition Boundary Freeze", async () => {
   const { execFileSync } = await import("child_process");
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_boundary.js"], { stdio: "pipe" });

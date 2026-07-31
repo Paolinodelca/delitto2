@@ -1,0 +1,1 @@
+const assert=require('assert');const {healthKnowledgeAcquisitionExecution}=require('../src/app/knowledge');const F=require('./knowledge_acquisition_execution_fixture');const result=healthKnowledgeAcquisitionExecution(F);assert.equal(result.ok,true,JSON.stringify(result));console.log('Knowledge Acquisition Execution health check passed.');

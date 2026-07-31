@@ -4,9 +4,9 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-15**
+Verified through: **Task 0100E-16**
 
-Next gate: **0100E-16**
+Next gate: **0100E-17**
 
 Last updated: 2026-07-30 (`GOV-REALIGN-001`)
 
@@ -144,15 +144,16 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 ## Current gate
 
-### 0100E-16 — Knowledge Acquisition Execution Foundation
+### 0100E-17 — Post-Execution Downstream Architecture Review
 
-Type: **FOUNDATION**
+Type: **ARCHITECTURE REVIEW**
 
 Status: **PLANNED**
 
 | Task | Type | Status | Result |
 |---|---|---|---|
-| 0100E-16 | Foundation | PLANNED | implement one provider-neutral semantic Execution attempt per active Session item |
+| 0100E-16 | Foundation | COMPLETED | implemented immutable pre-invocation Execution lifecycle |
+| 0100E-17 | Architecture Review | PLANNED | review the downstream consumer and Invocation Boundary after Execution |
 
 Approved cardinality:
 
@@ -166,7 +167,7 @@ Configuration is Application-owned, declarative, immutable and pre-planning. It 
 
 Task 0100E-11 approved and E-12 implemented exactly one declarative `KnowledgeAcquisitionPlan` per valid Configuration, with one unit per selected capability. Task E-13 approved and E-14 implemented `KnowledgeAcquisitionRuntimeSession` as its first operational consumer: one Plan may cause zero or more Sessions, each Session refers to exactly one Plan, and each Plan Item has one Session item-state projection. No intermediate Runtime Definition is required.
 
-Task E-15 approves `KnowledgeAcquisitionExecution` as the Application-owned first direct Session consumer and one provider-neutral semantic attempt for one exact active Session item. E-16 may implement only that Foundation. The separate Knowledge Acquisition Invocation Boundary is the first observable external effect and remains unapproved pending a later repository-first architecture review.
+Task E-15 approves and E-16 implements `KnowledgeAcquisitionExecution` as the Application-owned first direct Session consumer and one integration-neutral semantic attempt for one exact active Session item. The separate Knowledge Acquisition Invocation Boundary remains unapproved pending Task E-17 repository-first architecture review.
 
 ## Not approved
 

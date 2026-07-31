@@ -8,7 +8,10 @@ import { inspectContinuityGovernance } from "./check_continuity_governance.js";
 const applicationRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repositoryResult = inspectContinuityGovernance(applicationRoot);
 assert.equal(repositoryResult.status, "PASS", repositoryResult.errors.join("\n"));
-assert.equal(repositoryResult.plannedTask, "0100E-15");
+const repositoryNextPhase = fs.readFileSync(path.join(applicationRoot, "docs", "00-continuity", "NEXT_PHASE.md"), "utf8");
+const repositoryNextTask = repositoryNextPhase.match(/\b(0100E-\d+)\s+.+\nStatus:\s+PLANNED/)?.[1];
+assert(repositoryNextTask, "NEXT_PHASE.md must expose one explicitly PLANNED 0100E task.");
+assert.equal(repositoryResult.plannedTask, repositoryNextTask);
 
 function buildFixture({ roadmapRows, nextTask = "0100E-12", nextStatus = "PLANNED", continuityNextTask = "0100E-12", configurationState = "IMPLEMENTED", workflowText = "# Workflow\nContinuity Impact Assessment\n", readmeText = "| `CONTINUITY.md` | CURRENT | state |\n| `NEXT_PHASE.md` | CURRENT | next |\n" }) {
   const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "imago-continuity-check-"));

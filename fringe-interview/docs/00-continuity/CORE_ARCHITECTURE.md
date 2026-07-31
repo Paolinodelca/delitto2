@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-15**
+Verified through: **Task 0100E-16**
 
 ## Principle
 
@@ -36,6 +36,7 @@ Input / Evidence                                      [Core]
 → KnowledgeAcquisitionCapabilityConfiguration         [Application; single/composed]
 → KnowledgeAcquisitionPlan                            [Application; implemented]
 → KnowledgeAcquisitionRuntimeSession                  [Application; implemented, stateful, pre-Execution]
+→ KnowledgeAcquisitionExecution                       [Application; implemented, pre-invocation]
 ```
 
 Query Foundations provide deterministic, read-only access for Matrix, Coverage, Opportunity, Need, Strategy and Requirement without reinterpreting upstream semantics.
@@ -125,7 +126,7 @@ The Session is pre-Execution. It does not bind providers, create invocation payl
 
 Task 0100E-15 approves `KnowledgeAcquisitionExecution` as the Application-owned first direct Session consumer. It represents one explicitly authorized semantic attempt for one exact active Session item and preserves exact Session and Plan Item causality. No intermediate readiness, preparation, action or execution-request contract is required.
 
-Execution remains an immutable, provider-neutral description. The first observable external effect occurs only at the separate Knowledge Acquisition Invocation Boundary, where infrastructure translates an authorized Execution through a concrete provider adapter. Task 0100E-16 may implement only the semantic Execution Foundation; invocation and every external effect require a later repository-first architecture review.
+Task 0100E-16 implements Execution as an immutable, integration-neutral description with stable causal identity and the closed lifecycle `created`, `selected`, `ready_for_invocation`. It never mutates Session or Plan and stops before the separate Knowledge Acquisition Invocation Boundary. Invocation and every external effect require the repository-first Task 0100E-17 architecture review.
 
 ## Not approved or implemented downstream
 

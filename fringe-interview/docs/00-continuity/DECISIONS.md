@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-15**
+Verified through: **Task 0100E-16**
 
 ## Foundation decisions
 
@@ -150,3 +150,5 @@ The Session owns lifecycle, progress, active-item selection and operational time
 Task 0100E-15 approves Application-owned `KnowledgeAcquisitionExecution` as the first direct consumer downstream of Runtime Session. One Execution represents one explicitly authorized attempt for exactly one active Session item and preserves exact Session and Plan Item causality. No readiness, preparation, action or execution-request contract is required between Session and Execution.
 
 Execution remains a provider-neutral semantic attempt snapshot. The first observable external effect arises only at the separate Knowledge Acquisition Invocation Boundary, where infrastructure translates an authorized Execution through a concrete adapter/provider. Task 0100E-16 may implement only the Execution Foundation. Provider selection, adapter binding, invocation, retry, timeout, scheduler, queue, orchestration, persistence, events, results, Reporting, Requirement satisfaction and Knowledge Update remain unapproved; a new repository-first review is required before the Invocation Boundary.
+
+Task 0100E-16 implements this decision with a stable identity derived from Session reference, Plan Item reference and explicit `executionKey`; exact Plan and Session causality; and the closed pre-invocation state machine `created` → `selected` → `ready_for_invocation`. Multiple explicit keys may represent multiple Executions for one Session item without defining retry semantics. Task 0100E-17 is the required post-Execution downstream architecture review.
