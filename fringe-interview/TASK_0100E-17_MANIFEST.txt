@@ -1,0 +1,39 @@
+TASK 0100E-17 — POST-EXECUTION DOWNSTREAM ARCHITECTURE REVIEW
+
+OUTCOME
+APPROVED WITH NOTES
+
+BASE
+origin/milestone/0100b-knowledge-foundation
+90ac6395fad21c38ab027060eb847ba23ca33cce
+
+CREATED
+TASK_0100E-17_POST_EXECUTION_DOWNSTREAM_ARCHITECTURE_REVIEW.md
+TASK_0100E-17_MANIFEST.txt
+
+MODIFIED
+docs/00-continuity/CONTINUITY.md
+docs/00-continuity/CORE_ARCHITECTURE.md
+docs/00-continuity/DECISIONS.md
+docs/00-continuity/NEXT_PHASE.md
+docs/15-architecture_specifications/CORE_ROADMAP.md
+
+NEXT AUTHORIZED COMPONENT
+KnowledgeAcquisitionInvocationBoundary
+Application-owned outbound port and minimal invocation input contract
+
+NEXT TASK
+0100E-18 — Knowledge Acquisition Invocation Boundary Foundation
+
+FIRST OBSERVABLE SIDE-EFFECT
+Infrastructure Adapter invokes an external capability/provider.
+
+EXCLUSIONS
+No production code, contract, validator, builder, API, test, Core or Execution
+change. No concrete provider, adapter, registry, transport, network, HTTP, REST,
+MCP, plugin, prompt, model, vendor, retry, timeout, scheduler, queue,
+orchestration, persistence, event, result, Reporting, satisfaction or Knowledge
+Update implementation.
+
+GIT
+No staging, commit, push or milestone integration.

@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-16**
+Verified through: **Task 0100E-17**
 
 ## Principle
 
@@ -37,6 +37,7 @@ Input / Evidence                                      [Core]
 → KnowledgeAcquisitionPlan                            [Application; implemented]
 → KnowledgeAcquisitionRuntimeSession                  [Application; implemented, stateful, pre-Execution]
 → KnowledgeAcquisitionExecution                       [Application; implemented, pre-invocation]
+→ KnowledgeAcquisitionInvocationBoundary              [Application outbound port; approved, not implemented]
 ```
 
 Query Foundations provide deterministic, read-only access for Matrix, Coverage, Opportunity, Need, Strategy and Requirement without reinterpreting upstream semantics.
@@ -128,17 +129,19 @@ Task 0100E-15 approves `KnowledgeAcquisitionExecution` as the Application-owned 
 
 Task 0100E-16 implements Execution as an immutable, integration-neutral description with stable causal identity and the closed lifecycle `created`, `selected`, `ready_for_invocation`. It never mutates Session or Plan and stops before the separate Knowledge Acquisition Invocation Boundary. Invocation and every external effect require the repository-first Task 0100E-17 architecture review.
 
+Task 0100E-17 approves `KnowledgeAcquisitionInvocationBoundary` as an Application-owned outbound port with an ephemeral, technology-neutral input contract. An Infrastructure Adapter is its first technological consumer; a Provider remains behind the Adapter. Task 0100E-18 may implement only the port, contextual validation and an effect-free test double. Concrete adapters, providers and real external effects remain unapproved.
+
 ## Not approved or implemented downstream
 
 - acquisition Action or executable Recipe beyond the approved semantic Execution;
-- provider/adapter resolution;
-- invocation and runtime orchestration;
+- provider/adapter resolution and concrete binding;
+- concrete invocation and runtime orchestration;
 - execution result and observation ingestion for this boundary;
 - Requirement satisfaction;
 - Knowledge Update;
 - Runtime/Reporting legacy integration.
 
-The next gate is a post-Runtime-Session architecture review only; it does not pre-authorize Execution, provider binding, invocation, persistence or results.
+The next gate is the Invocation Boundary Foundation only; it does not pre-authorize a concrete Adapter, Provider, external effect, persistence or results.
 
 ## Dependency direction
 

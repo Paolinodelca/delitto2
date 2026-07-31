@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-16**
+Verified through: **Task 0100E-17**
 
 ## Foundation decisions
 
@@ -152,3 +152,9 @@ Task 0100E-15 approves Application-owned `KnowledgeAcquisitionExecution` as the 
 Execution remains a provider-neutral semantic attempt snapshot. The first observable external effect arises only at the separate Knowledge Acquisition Invocation Boundary, where infrastructure translates an authorized Execution through a concrete adapter/provider. Task 0100E-16 may implement only the Execution Foundation. Provider selection, adapter binding, invocation, retry, timeout, scheduler, queue, orchestration, persistence, events, results, Reporting, Requirement satisfaction and Knowledge Update remain unapproved; a new repository-first review is required before the Invocation Boundary.
 
 Task 0100E-16 implements this decision with a stable identity derived from Session reference, Plan Item reference and explicit `executionKey`; exact Plan and Session causality; and the closed pre-invocation state machine `created` → `selected` → `ready_for_invocation`. Multiple explicit keys may represent multiple Executions for one Session item without defining retry semantics. Task 0100E-17 is the required post-Execution downstream architecture review.
+
+### ADR-032 — Invocation is an Application-owned port, not a Provider or Adapter
+
+Task 0100E-17 approves `KnowledgeAcquisitionInvocationBoundary` as the first boundary after a `ready_for_invocation` Execution. Application owns the outbound port and the minimal ephemeral input semantics; Infrastructure owns its concrete implementation. The input consumes explicit, contextually consistent Execution, Runtime Session, Plan, Capability Configuration and selected capability context without copying technology into Execution.
+
+The first observable effect occurs only when a concrete Infrastructure Adapter invokes an external capability or Provider. No persistent Invocation aggregate is justified. Task 0100E-18 may implement only the port, contextual validation and an effect-free test double. Provider/adapter discovery or selection, concrete adapters, transport, network, HTTP, REST, MCP, plugins, prompts, models, vendors, retries, persistence and results remain unapproved.

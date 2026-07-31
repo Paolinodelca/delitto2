@@ -1,22 +1,22 @@
-# Next Phase — IMAGO 0100E-17
+# Next Phase — IMAGO 0100E-18
 
 Status: **CURRENT**
 
-Task type: **ARCHITECTURE REVIEW**
+Task type: **FOUNDATION**
 
 ## Task
 
 ```text
-0100E-17 — Post-Execution Downstream Architecture Review
+0100E-18 — Knowledge Acquisition Invocation Boundary Foundation
 Status: PLANNED
 ```
 
 ## Purpose
 
-Review the first legitimate downstream consumer of the implemented Application-owned `KnowledgeAcquisitionExecution` and reassess the exact location, ownership and contract of the Knowledge Acquisition Invocation Boundary.
+Implement the minimum Application-owned outbound `KnowledgeAcquisitionInvocationBoundary` port and ephemeral input contract approved by Task 0100E-17.
 
-The review must begin from the implemented `ready_for_invocation` boundary, preserve exact Runtime Session and Plan Item causality, and determine whether any further semantic contract is justified before the first observable external effect.
+The Foundation must begin from one valid `ready_for_invocation` `KnowledgeAcquisitionExecution`, accept explicit resolved Runtime Session, Plan, Capability Configuration and selected capability context, and validate exact causality without modifying any upstream artifact.
 
-No Provider, Adapter, Registry, invocation, callback, Retry, Timeout, Scheduler, Queue, orchestration, persistence, event, result, Reporting, satisfaction, Knowledge Update or integration Foundation is authorized automatically. The review may approve, reject or refine a later Foundation but must not implement it.
+It may use only an effect-free fake or test double. No concrete Provider, Adapter, Registry, selection, transport, network, HTTP, REST, MCP, plugin, prompt, LLM, model, vendor, retry, timeout, scheduler, queue, orchestration, persistence, event, result, Reporting, satisfaction, Knowledge Update or external invocation is authorized.
 
-`KnowledgeAcquisitionCapabilityConfiguration`, `KnowledgeAcquisitionPlan`, `KnowledgeAcquisitionRuntimeSession` and `KnowledgeAcquisitionExecution` remain IMPLEMENTED.
+`KnowledgeAcquisitionCapabilityConfiguration`, `KnowledgeAcquisitionPlan`, `KnowledgeAcquisitionRuntimeSession` and `KnowledgeAcquisitionExecution` remain IMPLEMENTED and unchanged.
