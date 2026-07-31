@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-18**
+Verified through: **Task 0100E-19**
 
 Operational milestone: `origin/milestone/0100b-knowledge-foundation`
 
@@ -23,10 +23,10 @@ Completed task sequence:
 0100B-1 … 0100B-10
 0100C-1 … 0100C-3
 0100D-1 … 0100D-10
-0100E-1 … 0100E-17
+0100E-1 … 0100E-19
 ```
 
-Tasks D-9, E-1, E-3, E-5, E-7, E-9, E-11, E-13, E-15 and E-17 are architecture reviews. D-10 is consolidation and freeze. E-2, E-4, E-6, E-8, E-10, E-12, E-14 and E-16 are the implemented downstream Foundations.
+Tasks D-9, E-1, E-3, E-5, E-7, E-9, E-11, E-13, E-15, E-17 and E-19 are architecture reviews. D-10 is consolidation and freeze. E-2, E-4, E-6, E-8, E-10, E-12, E-14, E-16 and E-18 are the implemented downstream Foundations.
 
 ## Knowledge Foundation
 
@@ -101,7 +101,7 @@ Task 0100E-12 implements `KnowledgeAcquisitionPlan` as the first downstream cons
 
 Task 0100E-13 approves and Task 0100E-14 implements `KnowledgeAcquisitionRuntimeSession` as the first operational consumer of the Plan. It is Application-owned, Plan-scoped and stateful, with stable Session identity, closed lifecycle, exact item-state projections and explicit timestamps, but remains pre-Execution. The Plan is never mutated.
 
-Task 0100E-15 approves and Task 0100E-16 implements Application-owned `KnowledgeAcquisitionExecution` as the first direct Session consumer and one semantic attempt for one exact active Session item. Its closed pre-invocation lifecycle is `created`, `selected`, `ready_for_invocation`; it is deeply immutable, identity-safe and effect-neutral. Task 0100E-17 approves and Task 0100E-18 implements `KnowledgeAcquisitionInvocationBoundary` as an Application-owned structural outbound port plus an ephemeral, immutable and integrity-fingerprinted input. The next planned task is `0100E-19 — Post-Invocation-Boundary Downstream Architecture Review`; it must decide the first authorized Infrastructure consumer without pre-authorizing an Adapter or Provider. See `NEXT_PHASE.md`.
+Task 0100E-15 approves and Task 0100E-16 implements Application-owned `KnowledgeAcquisitionExecution` as the first direct Session consumer and one semantic attempt for one exact active Session item. Its closed pre-invocation lifecycle is `created`, `selected`, `ready_for_invocation`; it is deeply immutable, identity-safe and effect-neutral. Task 0100E-17 approves and Task 0100E-18 implements `KnowledgeAcquisitionInvocationBoundary` as an Application-owned structural outbound port plus an ephemeral, immutable and integrity-fingerprinted input. Task 0100E-19 approves a capability-specific Infrastructure Invocation Adapter as the first consumer and concrete implementer of that port. Adapter and Provider are distinct; composition/bootstrap Infrastructure selects or injects both before `invoke`, with no dynamic resolution, registry or generic routing during the call. The Adapter is the first location of a future real side-effect, but E-19 implements and authorizes no Adapter, Provider or side-effect. The next planned task is `0100E-20 — Knowledge Acquisition Capability-Specific Invocation Adapter Foundation`. See `NEXT_PHASE.md`.
 
 ## Current authoritative documents
 
@@ -126,7 +126,7 @@ Earlier continuity text referenced governance files not present in this branch. 
 ## Frozen boundaries and risks
 
 - Changes to D mappings, cardinality, direct causality, public exports or Requirement semantics require an explicit architecture task.
-- Capability Configuration, declarative Plan, Runtime Session and Execution are implemented. The Invocation port contract is approved for E-18; concrete Adapter/Provider invocation, Satisfaction and Knowledge Update remain unapproved downstream layers.
+- Capability Configuration, declarative Plan, Runtime Session, Execution and the Invocation port contract are implemented. E-19 approves the capability-specific Adapter direction only; concrete Adapter/Provider invocation, Satisfaction and Knowledge Update remain unimplemented downstream layers pending their explicit gates.
 - Runtime and Reporting legacy integration requires an explicit boundary and adapters.
 - The default GitHub branch must not be assumed to be the operational Core base.
 - Every task must pass the Continuity Impact Assessment in `IMAGO_CODEX_WORKFLOW.md`.

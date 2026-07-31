@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-18**
+Verified through: **Task 0100E-19**
 
 ## Principle
 
@@ -133,17 +133,19 @@ Task 0100E-17 approves `KnowledgeAcquisitionInvocationBoundary` as an Applicatio
 
 Task 0100E-18 implements the effect-free Application boundary as a structural `invoke` port contract and an ephemeral, deeply immutable input with causal refs, resolved acquisition semantics and an integrity fingerprint. It introduces no persistent identity, lifecycle, Infrastructure implementation, result or outcome. Task 0100E-19 must review the first authorized downstream Infrastructure component.
 
+Task 0100E-19 approves a capability-specific Infrastructure Invocation Adapter as the first consumer and concrete implementer of the Application-owned port. The Adapter and Provider are distinct responsibility levels: the Adapter translates the technology-neutral input and is the first future location of a real side-effect; the Provider exposes or performs the external mechanism behind it. Composition/bootstrap Infrastructure selects or injects the Adapter and Provider before `invoke`. No dynamic resolution, registry or generic routing occurs during the call, a generic Adapter is excluded, and no additional semantic boundary is required before the Provider. E-19 is review-only and implements or authorizes no concrete Adapter, Provider or side-effect.
+
 ## Not approved or implemented downstream
 
 - acquisition Action or executable Recipe beyond the approved semantic Execution;
-- provider/adapter resolution and concrete binding;
+- dynamic provider/adapter resolution, registry or generic routing;
 - concrete invocation and runtime orchestration;
 - execution result and observation ingestion for this boundary;
 - Requirement satisfaction;
 - Knowledge Update;
 - Runtime/Reporting legacy integration.
 
-The next gate is the Invocation Boundary Foundation only; it does not pre-authorize a concrete Adapter, Provider, external effect, persistence or results.
+The next gate is `0100E-20 — Knowledge Acquisition Capability-Specific Invocation Adapter Foundation`. It does not pre-authorize a Provider abstraction, dynamic selection, registry, generic routing, persistence, results, satisfaction or Knowledge Update.
 
 ## Dependency direction
 

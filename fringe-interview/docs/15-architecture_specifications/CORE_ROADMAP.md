@@ -4,9 +4,9 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-18**
+Verified through: **Task 0100E-19**
 
-Next gate: **0100E-19**
+Next gate: **0100E-20**
 
 Last updated: 2026-07-30 (`GOV-REALIGN-001`)
 
@@ -145,9 +145,9 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 ## Current gate
 
-### 0100E-19 — Post-Invocation-Boundary Downstream Architecture Review
+### 0100E-20 — Knowledge Acquisition Capability-Specific Invocation Adapter Foundation
 
-Type: **ARCHITECTURE REVIEW**
+Type: **FOUNDATION**
 
 Status: **PLANNED**
 
@@ -156,7 +156,8 @@ Status: **PLANNED**
 | 0100E-16 | Foundation | COMPLETED | implemented immutable pre-invocation Execution lifecycle |
 | 0100E-17 | Architecture Review | COMPLETED | Invocation approved as Application-owned outbound port; Adapter/Provider remain downstream |
 | 0100E-18 | Foundation | COMPLETED | technology-neutral Invocation port and ephemeral effect-free input contract |
-| 0100E-19 | Architecture Review | PLANNED | determine the first authorized Infrastructure consumer of the port |
+| 0100E-19 | Architecture Review | COMPLETED | capability-specific Invocation Adapter approved as first Infrastructure consumer and concrete port implementation; no implementation or side-effect |
+| 0100E-20 | Foundation | PLANNED | establish the minimum capability-specific Invocation Adapter under ADR-033 guardrails |
 
 Approved cardinality:
 
@@ -170,14 +171,14 @@ Configuration is Application-owned, declarative, immutable and pre-planning. It 
 
 Task 0100E-11 approved and E-12 implemented exactly one declarative `KnowledgeAcquisitionPlan` per valid Configuration, with one unit per selected capability. Task E-13 approved and E-14 implemented `KnowledgeAcquisitionRuntimeSession` as its first operational consumer: one Plan may cause zero or more Sessions, each Session refers to exactly one Plan, and each Plan Item has one Session item-state projection. No intermediate Runtime Definition is required.
 
-Task E-15 approves and E-16 implements `KnowledgeAcquisitionExecution` as the Application-owned first direct Session consumer and one integration-neutral semantic attempt for one exact active Session item. Task E-17 approves and E-18 implements the separate `KnowledgeAcquisitionInvocationBoundary` as an Application-owned outbound port with an ephemeral effect-free input contract. Concrete Adapters, Providers and external effects remain unapproved pending E-19 review.
+Task E-15 approves and E-16 implements `KnowledgeAcquisitionExecution` as the Application-owned first direct Session consumer and one integration-neutral semantic attempt for one exact active Session item. Task E-17 approves and E-18 implements the separate `KnowledgeAcquisitionInvocationBoundary` as an Application-owned outbound port with an ephemeral effect-free input contract. E-19 approves a capability-specific Infrastructure Invocation Adapter as the first consumer and concrete port implementation. Adapter and Provider are distinct and are selected or injected by Infrastructure composition/bootstrap before `invoke`; dynamic resolution, registry, generic routing and an additional semantic boundary are excluded. E-19 implements and authorizes no concrete Adapter, Provider or side-effect.
 
 ## Not approved
 
 The following are not roadmap commitments and must not be implemented automatically:
 
 - acquisition Action or executable Recipe beyond the approved declarative Plan;
-- provider or adapter resolution;
+- dynamic provider or adapter resolution, registry or generic routing;
 - provider invocation or Runtime orchestration beyond the approved semantic Execution Foundation;
 - Requirement satisfaction;
 - Knowledge Update;

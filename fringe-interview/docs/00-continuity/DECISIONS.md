@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-17**
+Verified through: **Task 0100E-19**
 
 ## Foundation decisions
 
@@ -160,3 +160,11 @@ Task 0100E-17 approves `KnowledgeAcquisitionInvocationBoundary` as the first bou
 The first observable effect occurs only when a concrete Infrastructure Adapter invokes an external capability or Provider. No persistent Invocation aggregate is justified. Task 0100E-18 may implement only the port, contextual validation and an effect-free test double. Provider/adapter discovery or selection, concrete adapters, transport, network, HTTP, REST, MCP, plugins, prompts, models, vendors, retries, persistence and results remain unapproved.
 
 Task 0100E-18 implements ADR-032 as a structural Application port exposing only `invoke`, plus a deeply immutable ephemeral `KnowledgeAcquisitionInvocationInput`. The input has exact Execution, Runtime Session, Plan and Plan Item causal refs, a resolved technology-neutral acquisition operation, and a deterministic integrity fingerprint rather than an autonomous persistent identity. It has no lifecycle, result or outcome. The next gate is the repository-first Task 0100E-19 post-boundary architecture review; no Infrastructure component is pre-authorized.
+
+### ADR-033 — A capability-specific Invocation Adapter is the first Infrastructure consumer
+
+Task 0100E-19 approves a capability-specific Infrastructure Invocation Adapter as the first consumer and concrete implementer of the Application-owned `KnowledgeAcquisitionInvocationPort`. The Adapter translates the technology-neutral invocation input for one already selected capability and is the first component in which a future real side-effect may occur when it invokes an external capability or Provider.
+
+Adapter and Provider remain distinct responsibility levels even if a future technical module co-locates them: the Adapter implements the Application port and protects its semantics, while the Provider exposes or performs the external mechanism. Composition/bootstrap Infrastructure selects or injects both before the call. `invoke` performs no dynamic provider/adapter resolution, registry lookup or generic routing. A generic Adapter is excluded because it would require unapproved dispatch infrastructure, and no additional semantic boundary is required before the Provider.
+
+E-19 is review-only. It implements and authorizes no concrete Adapter, Provider, transport or side-effect. Task 0100E-20 is the next Foundation gate and remains bound by the exclusions for dynamic selection, registry, retry, persistence, Result, Outcome, Requirement satisfaction and Knowledge Update.
