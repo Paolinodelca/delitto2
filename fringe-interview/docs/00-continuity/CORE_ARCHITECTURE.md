@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-21**
+Verified through: **Task 0100E-22**
 
 ## Principle
 
@@ -149,7 +149,9 @@ Task 0100E-21 approves Infrastructure-owned `KnowledgeAcquisitionProviderResult`
 - Knowledge Update;
 - Runtime/Reporting legacy integration.
 
-The next gate is `0100E-22 — Knowledge Acquisition Provider Result Boundary Foundation`. It does not authorize a concrete Provider, transport, dynamic selection, registry, generic routing, external I/O, error normalization, Invocation Result, persistence, satisfaction or Knowledge Update.
+Task 0100E-22 implements the Infrastructure-owned `KnowledgeAcquisitionProviderResult` as a closed, deeply immutable, ephemeral technical result. Its sole authorized state is `succeeded`; it carries an opaque cloned `providerPayload`, the exact Invocation Input fingerprint and a deterministic integrity fingerprint. The Adapter validates contextual causality and returns the same result. Provider throws/rejections remain errors rather than embedded failure states.
+
+The next gate is `0100E-23 — Post-Provider-Result Downstream Architecture Review`. It does not authorize a concrete Provider, transport, dynamic selection, registry, generic routing, external I/O, error normalization, Invocation Result, persistence, satisfaction or Knowledge Update.
 
 ## Dependency direction
 

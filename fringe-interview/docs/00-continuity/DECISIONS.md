@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-21**
+Verified through: **Task 0100E-22**
 
 ## Foundation decisions
 
@@ -178,3 +178,9 @@ Task 0100E-20 implements the Infrastructure-owned `StructuredInputKnowledgeAcqui
 Task 0100E-21 determines that the direct downstream consumer already exists as the Infrastructure Structured Input Provider role, but its return semantics are intentionally undefined. The first new boundary is therefore `KnowledgeAcquisitionProviderResult`, owned by Infrastructure and returned by a compatible Provider through the Adapter. It is a closed, immutable, ephemeral technical result causally bound to the originating Invocation Input fingerprint.
 
 Raw vendor response remains private to a future integration. Provider Result is not an Application Invocation Result, acquired knowledge, Evidence, Requirement satisfaction or Knowledge Update. Provider throws/rejections propagate without mapping; retry, timeout, normalization and resilience policies remain excluded. Task 0100E-22 may implement only the effect-free Provider Result Foundation and minimum Provider/Adapter return enforcement. It may not implement a concrete Provider, client, transport, external I/O or semantic transformation.
+
+### ADR-036 — Provider Result has one successful technical state and deterministic integrity
+
+Task 0100E-22 implements the Provider Result as a closed Infrastructure value with `resultVersion`, technical `type`, sole state `succeeded`, `capabilityRef`, exact `invocationInputFingerprint`, opaque cloned `providerPayload` and deterministic `integrityFingerprint`. No autonomous or persistent ID, timestamps, lifecycle or duplicated Execution/Session/Plan references are introduced because Invocation Input already preserves that causal chain.
+
+The Adapter validates the returned result structurally and against the original Invocation Input, then returns the same value unchanged. Provider throws and rejected promises continue to propagate unchanged, so no `failed`, `rejected` or `unavailable` result state and no failure taxonomy is authorized. Task 0100E-23 is a repository-first downstream review; concrete integration remains unapproved.

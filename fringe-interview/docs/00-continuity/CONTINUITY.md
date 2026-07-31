@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-21**
+Verified through: **Task 0100E-22**
 
 Operational milestone: `origin/milestone/0100b-knowledge-foundation`
 
@@ -101,7 +101,7 @@ Task 0100E-12 implements `KnowledgeAcquisitionPlan` as the first downstream cons
 
 Task 0100E-13 approves and Task 0100E-14 implements `KnowledgeAcquisitionRuntimeSession` as the first operational consumer of the Plan. It is Application-owned, Plan-scoped and stateful, with stable Session identity, closed lifecycle, exact item-state projections and explicit timestamps, but remains pre-Execution. The Plan is never mutated.
 
-Task 0100E-15 approves and Task 0100E-16 implements Application-owned `KnowledgeAcquisitionExecution` as the first direct Session consumer and one semantic attempt for one exact active Session item. Its closed pre-invocation lifecycle is `created`, `selected`, `ready_for_invocation`; it is deeply immutable, identity-safe and effect-neutral. Task 0100E-17 approves and Task 0100E-18 implements `KnowledgeAcquisitionInvocationBoundary` as an Application-owned structural outbound port plus an ephemeral, immutable and integrity-fingerprinted input. Task 0100E-19 approves and Task 0100E-20 implements the first capability-specific Infrastructure Invocation Adapter for `capability:structured-input-v1`. Task 0100E-21 approves `KnowledgeAcquisitionProviderResult` as the first new downstream boundary: Infrastructure-owned, technical, immutable, ephemeral and causally bound to the Invocation Input fingerprint. It remains distinct from raw response, Invocation Result, acquired knowledge and Knowledge Update. No concrete Provider, transport, error normalization, semantic extraction or Knowledge Update exists. The next planned task is `0100E-22 — Knowledge Acquisition Provider Result Boundary Foundation`. See `NEXT_PHASE.md`.
+Task 0100E-15 approves and Task 0100E-16 implements Application-owned `KnowledgeAcquisitionExecution` as the first direct Session consumer and one semantic attempt for one exact active Session item. Its closed pre-invocation lifecycle is `created`, `selected`, `ready_for_invocation`; it is deeply immutable, identity-safe and effect-neutral. Task 0100E-17 approves and Task 0100E-18 implements `KnowledgeAcquisitionInvocationBoundary` as an Application-owned structural outbound port plus an ephemeral, immutable and integrity-fingerprinted input. Task 0100E-19 approves and Task 0100E-20 implements the first capability-specific Infrastructure Invocation Adapter for `capability:structured-input-v1`. Task 0100E-21 approves and Task 0100E-22 implements `KnowledgeAcquisitionProviderResult`: an Infrastructure-owned, technical, deeply immutable, ephemeral `succeeded` result causally bound to the Invocation Input fingerprint, with cloned `providerPayload` and deterministic integrity. Provider throws/rejections remain errors. No concrete Provider, transport, failure normalization, semantic extraction or Knowledge Update exists. The next planned task is `0100E-23 — Post-Provider-Result Downstream Architecture Review`. See `NEXT_PHASE.md`.
 
 ## Current authoritative documents
 

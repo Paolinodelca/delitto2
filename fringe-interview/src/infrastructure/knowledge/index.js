@@ -1,4 +1,12 @@
 module.exports = {
+  buildKnowledgeAcquisitionProviderResult:
+    require('./buildKnowledgeAcquisitionProviderResult').buildKnowledgeAcquisitionProviderResult,
+  validateKnowledgeAcquisitionProviderResult:
+    require('./validateKnowledgeAcquisitionProviderResult').validateKnowledgeAcquisitionProviderResult,
+  validateKnowledgeAcquisitionProviderResultContext:
+    require('./validateKnowledgeAcquisitionProviderResultContext').validateKnowledgeAcquisitionProviderResultContext,
+  healthKnowledgeAcquisitionProviderResult:
+    require('./healthKnowledgeAcquisitionProviderResult').healthKnowledgeAcquisitionProviderResult,
   createStructuredInputKnowledgeAcquisitionInvocationAdapter:
     require('./createStructuredInputKnowledgeAcquisitionInvocationAdapter')
       .createStructuredInputKnowledgeAcquisitionInvocationAdapter,

@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-21**
+Verified through: **Task 0100E-22**
 
-Next gate: **0100E-22**
+Next gate: **0100E-23**
 
-Last updated: 2026-07-30 (`GOV-REALIGN-001`)
+Last updated: 2026-07-31 (`0100E-22`)
 
 ## Purpose
 
@@ -145,9 +145,9 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 ## Current gate
 
-### 0100E-22 — Knowledge Acquisition Provider Result Boundary Foundation
+### 0100E-23 — Post-Provider-Result Downstream Architecture Review
 
-Type: **FOUNDATION**
+Type: **ARCHITECTURE REVIEW**
 
 Status: **PLANNED**
 
@@ -159,7 +159,8 @@ Status: **PLANNED**
 | 0100E-19 | Architecture Review | COMPLETED | capability-specific Invocation Adapter approved as first Infrastructure consumer and concrete port implementation; no implementation or side-effect |
 | 0100E-20 | Foundation | COMPLETED | structured-input capability-specific Invocation Adapter, injected Provider contract, validation, public API and in-memory effect tests implemented |
 | 0100E-21 | Architecture Review | COMPLETED | Infrastructure Provider Result approved before any concrete Provider integration |
-| 0100E-22 | Foundation | PLANNED | effect-free Knowledge Acquisition Provider Result boundary and minimum Provider/Adapter return enforcement |
+| 0100E-22 | Foundation | COMPLETED | immutable technical Provider Result, deterministic integrity and Adapter return enforcement |
+| 0100E-23 | Architecture Review | PLANNED | repository-first review of the first legitimate downstream consumer after Provider Result |
 
 Approved cardinality:
 
@@ -178,6 +179,8 @@ Task E-15 approves and E-16 implements `KnowledgeAcquisitionExecution` as the Ap
 Task E-20 implements the first Adapter for `capability:structured-input-v1`, with a bootstrap-injected Provider exposing only `acquireKnowledge`. The Adapter validates the exact immutable Invocation Input and capability, then delegates without output normalization or upstream mutation. Concrete Providers, transports and operational policy remain deferred to E-21 review.
 
 Task E-21 approves `KnowledgeAcquisitionProviderResult` as the first new downstream boundary. The existing Provider role remains the Adapter's direct consumer; a future Provider returns one Infrastructure-owned technical result causally bound to the Invocation Input fingerprint. Raw response, Invocation Result, acquired knowledge and Knowledge Update remain separate. E-22 may implement only the effect-free result contract and its Provider/Adapter enforcement, with no concrete Provider, transport, error normalization or semantic extraction.
+
+Task E-22 implements that result with one `succeeded` state, opaque cloned `providerPayload`, exact Invocation Input fingerprint causality and deterministic integrity. The Adapter validates and returns it unchanged. E-23 is the sole planned repository-first downstream review; it does not pre-authorize concrete integration or semantic transformation.
 
 ## Not approved
 

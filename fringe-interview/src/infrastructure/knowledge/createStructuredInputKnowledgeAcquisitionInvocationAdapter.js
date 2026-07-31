@@ -5,6 +5,9 @@ const {
 const {
   validateStructuredInputKnowledgeAcquisitionProvider
 } = require('./validateStructuredInputKnowledgeAcquisitionProvider');
+const {
+  validateKnowledgeAcquisitionProviderResultContext
+} = require('./validateKnowledgeAcquisitionProviderResultContext');
 
 const SUPPORTED_CAPABILITY_REF = 'capability:structured-input-v1';
 
@@ -44,7 +47,22 @@ function createStructuredInputKnowledgeAcquisitionInvocationAdapter({ provider }
         );
       }
 
-      return provider.acquireKnowledge(knowledgeAcquisitionInvocationInput);
+      const validateResult = result => {
+        const resultValidation = validateKnowledgeAcquisitionProviderResultContext({
+          knowledgeAcquisitionProviderResult: result,
+          knowledgeAcquisitionInvocationInput
+        });
+        if (!resultValidation.valid) {
+          fail(
+            'INVALID_KNOWLEDGE_ACQUISITION_PROVIDER_RESULT',
+            resultValidation.errors.join(' | '),
+            resultValidation
+          );
+        }
+        return result;
+      };
+      const result = provider.acquireKnowledge(knowledgeAcquisitionInvocationInput);
+      return result && typeof result.then === 'function' ? result.then(validateResult) : validateResult(result);
     }
   };
 

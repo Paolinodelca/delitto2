@@ -14,7 +14,10 @@ const {
   const provider = {
     acquireKnowledge(value) {
       calls.push(value);
-      return Promise.resolve(undefined);
+      return Promise.resolve(I.buildKnowledgeAcquisitionProviderResult({
+        knowledgeAcquisitionInvocationInput: value,
+        providerPayload: { format: 'structured_input' }
+      }));
     }
   };
   const adapter = I.createStructuredInputKnowledgeAcquisitionInvocationAdapter({ provider });
@@ -28,11 +31,17 @@ const {
     error => error.code === 'INVALID_STRUCTURED_INPUT_KNOWLEDGE_ACQUISITION_PROVIDER'
   );
 
-  await adapter.invoke(input);
+  const result = await adapter.invoke(input);
   assert.strictEqual(calls.length, 1);
   assert.strictEqual(calls[0], input);
   assert.strictEqual(JSON.stringify(input), before);
   assert(Object.isFrozen(input) && Object.isFrozen(input.operation));
+  assert.strictEqual(result.invocationInputFingerprint, input.integrityFingerprint);
+
+  const invalidAdapter = I.createStructuredInputKnowledgeAcquisitionInvocationAdapter({
+    provider: { acquireKnowledge() { return undefined; } }
+  });
+  assert.throws(() => invalidAdapter.invoke(input), error => error.code === 'INVALID_KNOWLEDGE_ACQUISITION_PROVIDER_RESULT');
 
   assert.throws(
     () => adapter.invoke({ ...input, integrityFingerprint: '0'.repeat(64) }),

@@ -1698,6 +1698,11 @@ addCheck("Structured Input Knowledge Acquisition Invocation Adapter infrastructu
   execFileSync(process.execPath, ["scripts/test_health_structured_input_knowledge_acquisition_invocation_adapter.js"], { stdio: "pipe" });
 });
 
+addCheck("Knowledge Acquisition Provider Result infrastructure", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_provider_result.js"], { stdio: "pipe" });
+});
+
 addCheck("Knowledge Acquisition Boundary Freeze", async () => {
   const { execFileSync } = await import("child_process");
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_boundary.js"], { stdio: "pipe" });

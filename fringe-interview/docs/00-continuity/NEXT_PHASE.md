@@ -1,22 +1,22 @@
-# Next Phase — IMAGO 0100E-22
+# Next Phase — IMAGO 0100E-23
 
 Status: **CURRENT**
 
 ## Task
 
-0100E-22 — Knowledge Acquisition Provider Result Boundary Foundation
+0100E-23 — Post-Provider-Result Downstream Architecture Review
 Status: PLANNED
 
 ## Objective
 
-Implement the Infrastructure-owned, effect-free `KnowledgeAcquisitionProviderResult` boundary approved by Task 0100E-21.
+Review repository-first the first legitimate downstream consumer or boundary after the implemented Infrastructure-owned `KnowledgeAcquisitionProviderResult`.
 
 ## Current State
 
-Task 0100E-21 approves a closed, immutable and ephemeral technical Provider Result as the first new boundary after the existing Provider role. A Provider creates it, the Adapter validates and passes it through, and exact causality is preserved through the Invocation Input fingerprint. It is not a raw external response, Invocation Result, acquired knowledge, Evidence or Knowledge Update.
+Task 0100E-22 implements a closed, deeply immutable and ephemeral successful technical result. It preserves exact Invocation Input fingerprint causality, capability and opaque cloned `providerPayload`, plus deterministic integrity. The Structured Input Adapter validates and returns the Provider result unchanged. Provider throws/rejections remain unnormalized errors.
 
 ## Guardrails
 
-E-22 may implement only the Provider Result builder/validator/integrity rules and the minimum Provider/Adapter validation, tests, health and Infrastructure API changes needed to require and pass it through. It does not authorize a concrete Provider, HTTP, REST, SDK, MCP, vendor integration, client/transport, raw-response mapping, registry, resolver, runtime routing, retry, timeout, error normalization, Invocation Result, persistence, Requirement satisfaction or Knowledge Update.
+E-23 is architecture-review only. It must compare downstream candidates and ownership before authorizing any new contract. It does not automatically authorize a concrete Provider, vendor, client, transport, network, raw-response mapping, retry, timeout, failure normalization, Invocation Result, acquired knowledge, Evidence, persistence, Requirement satisfaction or Knowledge Update.
 
 KnowledgeAcquisitionCapabilityConfiguration is IMPLEMENTED and remains declarative.
