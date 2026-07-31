@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-14**
+Verified through: **Task 0100E-15**
 
 ## Foundation decisions
 
@@ -144,3 +144,9 @@ No intermediate readiness, binding or normalized-composition contract is require
 Task 0100E-13 approves `KnowledgeAcquisitionRuntimeSession` as the Application-owned first operational boundary. One immutable Plan may cause zero or more Sessions; each Session refers to exactly one Plan and contains exactly one operational item-state projection per Plan Item. Session identity is distinct from Plan identity so resume/reconstruction preserves an existing Session while a rerun creates a new Session.
 
 The Session owns lifecycle, progress, active-item selection and operational timestamps. It is pre-Execution: attempts, retry policy, provider/adapter binding, invocation, errors, outputs, results, event persistence, Requirement satisfaction and Knowledge Update remain separate downstream concerns. A Runtime Definition is not introduced because it would duplicate the already authoritative Plan. Task 0100E-14 implements this Runtime Session Foundation with the closed lifecycle `created`, `active`, `suspended`, `completed`, `abandoned`, stable identity and exact Plan Item state projections; ADR-030 remains unchanged.
+
+### ADR-031 — Execution is the first Session consumer; Invocation is the first side-effect
+
+Task 0100E-15 approves Application-owned `KnowledgeAcquisitionExecution` as the first direct consumer downstream of Runtime Session. One Execution represents one explicitly authorized attempt for exactly one active Session item and preserves exact Session and Plan Item causality. No readiness, preparation, action or execution-request contract is required between Session and Execution.
+
+Execution remains a provider-neutral semantic attempt snapshot. The first observable external effect arises only at the separate Knowledge Acquisition Invocation Boundary, where infrastructure translates an authorized Execution through a concrete adapter/provider. Task 0100E-16 may implement only the Execution Foundation. Provider selection, adapter binding, invocation, retry, timeout, scheduler, queue, orchestration, persistence, events, results, Reporting, Requirement satisfaction and Knowledge Update remain unapproved; a new repository-first review is required before the Invocation Boundary.

@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-14**
+Verified through: **Task 0100E-15**
 
 ## Principle
 
@@ -121,11 +121,17 @@ Task 0100E-13 approves and E-14 implements `KnowledgeAcquisitionRuntimeSession` 
 
 The Session is pre-Execution. It does not bind providers, create invocation payloads, execute, retry, collect results, persist events, update knowledge or assess Requirement satisfaction. No declarative Runtime Definition is required between Plan and Session.
 
+## Approved Execution Direction and Side-Effect Boundary
+
+Task 0100E-15 approves `KnowledgeAcquisitionExecution` as the Application-owned first direct Session consumer. It represents one explicitly authorized semantic attempt for one exact active Session item and preserves exact Session and Plan Item causality. No intermediate readiness, preparation, action or execution-request contract is required.
+
+Execution remains an immutable, provider-neutral description. The first observable external effect occurs only at the separate Knowledge Acquisition Invocation Boundary, where infrastructure translates an authorized Execution through a concrete provider adapter. Task 0100E-16 may implement only the semantic Execution Foundation; invocation and every external effect require a later repository-first architecture review.
+
 ## Not approved or implemented downstream
 
-- acquisition Action or executable Recipe;
+- acquisition Action or executable Recipe beyond the approved semantic Execution;
 - provider/adapter resolution;
-- runtime orchestration and execution;
+- invocation and runtime orchestration;
 - execution result and observation ingestion for this boundary;
 - Requirement satisfaction;
 - Knowledge Update;
