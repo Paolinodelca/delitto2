@@ -4,9 +4,9 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-20**
+Verified through: **Task 0100E-21**
 
-Next gate: **0100E-21**
+Next gate: **0100E-22**
 
 Last updated: 2026-07-30 (`GOV-REALIGN-001`)
 
@@ -145,7 +145,7 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 ## Current gate
 
-### 0100E-20 — Knowledge Acquisition Capability-Specific Invocation Adapter Foundation
+### 0100E-22 — Knowledge Acquisition Provider Result Boundary Foundation
 
 Type: **FOUNDATION**
 
@@ -158,7 +158,8 @@ Status: **PLANNED**
 | 0100E-18 | Foundation | COMPLETED | technology-neutral Invocation port and ephemeral effect-free input contract |
 | 0100E-19 | Architecture Review | COMPLETED | capability-specific Invocation Adapter approved as first Infrastructure consumer and concrete port implementation; no implementation or side-effect |
 | 0100E-20 | Foundation | COMPLETED | structured-input capability-specific Invocation Adapter, injected Provider contract, validation, public API and in-memory effect tests implemented |
-| 0100E-21 | Architecture Review | PLANNED | review the first downstream boundary after the capability-specific Invocation Adapter; no Provider or transport pre-authorized |
+| 0100E-21 | Architecture Review | COMPLETED | Infrastructure Provider Result approved before any concrete Provider integration |
+| 0100E-22 | Foundation | PLANNED | effect-free Knowledge Acquisition Provider Result boundary and minimum Provider/Adapter return enforcement |
 
 Approved cardinality:
 
@@ -175,6 +176,8 @@ Task 0100E-11 approved and E-12 implemented exactly one declarative `KnowledgeAc
 Task E-15 approves and E-16 implements `KnowledgeAcquisitionExecution` as the Application-owned first direct Session consumer and one integration-neutral semantic attempt for one exact active Session item. Task E-17 approves and E-18 implements the separate `KnowledgeAcquisitionInvocationBoundary` as an Application-owned outbound port with an ephemeral effect-free input contract. E-19 approves a capability-specific Infrastructure Invocation Adapter as the first consumer and concrete port implementation. Adapter and Provider are distinct and are selected or injected by Infrastructure composition/bootstrap before `invoke`; dynamic resolution, registry, generic routing and an additional semantic boundary are excluded. E-19 implements and authorizes no concrete Adapter, Provider or side-effect.
 
 Task E-20 implements the first Adapter for `capability:structured-input-v1`, with a bootstrap-injected Provider exposing only `acquireKnowledge`. The Adapter validates the exact immutable Invocation Input and capability, then delegates without output normalization or upstream mutation. Concrete Providers, transports and operational policy remain deferred to E-21 review.
+
+Task E-21 approves `KnowledgeAcquisitionProviderResult` as the first new downstream boundary. The existing Provider role remains the Adapter's direct consumer; a future Provider returns one Infrastructure-owned technical result causally bound to the Invocation Input fingerprint. Raw response, Invocation Result, acquired knowledge and Knowledge Update remain separate. E-22 may implement only the effect-free result contract and its Provider/Adapter enforcement, with no concrete Provider, transport, error normalization or semantic extraction.
 
 ## Not approved
 

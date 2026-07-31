@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-20**
+Verified through: **Task 0100E-21**
 
 ## Foundation decisions
 
@@ -172,3 +172,9 @@ E-19 is review-only. It implements and authorizes no concrete Adapter, Provider,
 ### ADR-034 — The first invocation adapter targets structured input
 
 Task 0100E-20 implements the Infrastructure-owned `StructuredInputKnowledgeAcquisitionInvocationAdapter` for the repository-established `capability:structured-input-v1`. Bootstrap supplies one Provider compatible with the closed `acquireKnowledge` contract. The Adapter implements the Application port, validates integrity and capability compatibility, and delegates the same immutable invocation input to the Provider. The Provider does not implement the port. No concrete Provider, transport, registry, resolver, routing, discovery, retry, timeout, result, persistence or Knowledge Update is authorized. Task 0100E-21 is the required downstream architecture review.
+
+### ADR-035 — Provider Result precedes concrete Provider integration
+
+Task 0100E-21 determines that the direct downstream consumer already exists as the Infrastructure Structured Input Provider role, but its return semantics are intentionally undefined. The first new boundary is therefore `KnowledgeAcquisitionProviderResult`, owned by Infrastructure and returned by a compatible Provider through the Adapter. It is a closed, immutable, ephemeral technical result causally bound to the originating Invocation Input fingerprint.
+
+Raw vendor response remains private to a future integration. Provider Result is not an Application Invocation Result, acquired knowledge, Evidence, Requirement satisfaction or Knowledge Update. Provider throws/rejections propagate without mapping; retry, timeout, normalization and resilience policies remain excluded. Task 0100E-22 may implement only the effect-free Provider Result Foundation and minimum Provider/Adapter return enforcement. It may not implement a concrete Provider, client, transport, external I/O or semantic transformation.

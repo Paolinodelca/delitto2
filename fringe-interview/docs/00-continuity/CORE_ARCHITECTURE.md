@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-20**
+Verified through: **Task 0100E-21**
 
 ## Principle
 
@@ -137,6 +137,8 @@ Task 0100E-19 approves a capability-specific Infrastructure Invocation Adapter a
 
 Task 0100E-20 implements `StructuredInputKnowledgeAcquisitionInvocationAdapter` in Infrastructure for the exact `capability:structured-input-v1` reference. Its frozen port implementation receives a compatible Provider from bootstrap, validates the Application input and capability, and delegates the unchanged immutable input through the Provider's sole `acquireKnowledge` operation. This is the authorized effect boundary. No concrete Provider or transport is implemented, and no runtime selection, registry, resolver, routing, discovery, retry, timeout, output normalization, persistence or Knowledge Update is introduced.
 
+Task 0100E-21 approves Infrastructure-owned `KnowledgeAcquisitionProviderResult` as the first new boundary after the Adapter and already established Provider role. A future compatible Provider returns one closed, immutable and ephemeral technical result causally bound to the Invocation Input fingerprint; the Adapter validates and passes it through. Raw external response remains integration-private. Provider Result is not an Application Invocation Result, acquired knowledge, Evidence or Knowledge Update. Task E-22 may implement only this effect-free result foundation and minimum Provider/Adapter contract enforcement; concrete Provider, transport, external I/O, error normalization and semantic transformation remain excluded.
+
 ## Not approved or implemented downstream
 
 - acquisition Action or executable Recipe beyond the approved semantic Execution;
@@ -147,7 +149,7 @@ Task 0100E-20 implements `StructuredInputKnowledgeAcquisitionInvocationAdapter` 
 - Knowledge Update;
 - Runtime/Reporting legacy integration.
 
-The next gate is `0100E-21 — Post-Invocation-Adapter Downstream Architecture Review`. It does not pre-authorize a concrete Provider, transport, dynamic selection, registry, generic routing, persistence, results, satisfaction or Knowledge Update.
+The next gate is `0100E-22 — Knowledge Acquisition Provider Result Boundary Foundation`. It does not authorize a concrete Provider, transport, dynamic selection, registry, generic routing, external I/O, error normalization, Invocation Result, persistence, satisfaction or Knowledge Update.
 
 ## Dependency direction
 
