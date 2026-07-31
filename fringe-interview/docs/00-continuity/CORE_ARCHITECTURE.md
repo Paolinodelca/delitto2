@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-19**
+Verified through: **Task 0100E-20**
 
 ## Principle
 
@@ -135,6 +135,8 @@ Task 0100E-18 implements the effect-free Application boundary as a structural `i
 
 Task 0100E-19 approves a capability-specific Infrastructure Invocation Adapter as the first consumer and concrete implementer of the Application-owned port. The Adapter and Provider are distinct responsibility levels: the Adapter translates the technology-neutral input and is the first future location of a real side-effect; the Provider exposes or performs the external mechanism behind it. Composition/bootstrap Infrastructure selects or injects the Adapter and Provider before `invoke`. No dynamic resolution, registry or generic routing occurs during the call, a generic Adapter is excluded, and no additional semantic boundary is required before the Provider. E-19 is review-only and implements or authorizes no concrete Adapter, Provider or side-effect.
 
+Task 0100E-20 implements `StructuredInputKnowledgeAcquisitionInvocationAdapter` in Infrastructure for the exact `capability:structured-input-v1` reference. Its frozen port implementation receives a compatible Provider from bootstrap, validates the Application input and capability, and delegates the unchanged immutable input through the Provider's sole `acquireKnowledge` operation. This is the authorized effect boundary. No concrete Provider or transport is implemented, and no runtime selection, registry, resolver, routing, discovery, retry, timeout, output normalization, persistence or Knowledge Update is introduced.
+
 ## Not approved or implemented downstream
 
 - acquisition Action or executable Recipe beyond the approved semantic Execution;
@@ -145,7 +147,7 @@ Task 0100E-19 approves a capability-specific Infrastructure Invocation Adapter a
 - Knowledge Update;
 - Runtime/Reporting legacy integration.
 
-The next gate is `0100E-20 — Knowledge Acquisition Capability-Specific Invocation Adapter Foundation`. It does not pre-authorize a Provider abstraction, dynamic selection, registry, generic routing, persistence, results, satisfaction or Knowledge Update.
+The next gate is `0100E-21 — Post-Invocation-Adapter Downstream Architecture Review`. It does not pre-authorize a concrete Provider, transport, dynamic selection, registry, generic routing, persistence, results, satisfaction or Knowledge Update.
 
 ## Dependency direction
 

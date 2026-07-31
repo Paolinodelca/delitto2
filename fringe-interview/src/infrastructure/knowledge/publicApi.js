@@ -1,0 +1,8 @@
+import knowledgeInfrastructureApi from './index.js';
+
+export const createStructuredInputKnowledgeAcquisitionInvocationAdapter =
+  knowledgeInfrastructureApi.createStructuredInputKnowledgeAcquisitionInvocationAdapter;
+export const validateStructuredInputKnowledgeAcquisitionProvider =
+  knowledgeInfrastructureApi.validateStructuredInputKnowledgeAcquisitionProvider;
+export const healthStructuredInputKnowledgeAcquisitionInvocationAdapter =
+  knowledgeInfrastructureApi.healthStructuredInputKnowledgeAcquisitionInvocationAdapter;

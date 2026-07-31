@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-19**
+Verified through: **Task 0100E-20**
 
 ## Foundation decisions
 
@@ -168,3 +168,7 @@ Task 0100E-19 approves a capability-specific Infrastructure Invocation Adapter a
 Adapter and Provider remain distinct responsibility levels even if a future technical module co-locates them: the Adapter implements the Application port and protects its semantics, while the Provider exposes or performs the external mechanism. Composition/bootstrap Infrastructure selects or injects both before the call. `invoke` performs no dynamic provider/adapter resolution, registry lookup or generic routing. A generic Adapter is excluded because it would require unapproved dispatch infrastructure, and no additional semantic boundary is required before the Provider.
 
 E-19 is review-only. It implements and authorizes no concrete Adapter, Provider, transport or side-effect. Task 0100E-20 is the next Foundation gate and remains bound by the exclusions for dynamic selection, registry, retry, persistence, Result, Outcome, Requirement satisfaction and Knowledge Update.
+
+### ADR-034 — The first invocation adapter targets structured input
+
+Task 0100E-20 implements the Infrastructure-owned `StructuredInputKnowledgeAcquisitionInvocationAdapter` for the repository-established `capability:structured-input-v1`. Bootstrap supplies one Provider compatible with the closed `acquireKnowledge` contract. The Adapter implements the Application port, validates integrity and capability compatibility, and delegates the same immutable invocation input to the Provider. The Provider does not implement the port. No concrete Provider, transport, registry, resolver, routing, discovery, retry, timeout, result, persistence or Knowledge Update is authorized. Task 0100E-21 is the required downstream architecture review.
