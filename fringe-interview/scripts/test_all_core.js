@@ -192,6 +192,7 @@ const testGroups = [
       "node scripts/test_knowledge_acquisition_runtime_session_regression.js",
       "node scripts/test_knowledge_acquisition_runtime_session_public_api.js",
       "node scripts/test_health_knowledge_acquisition_runtime_session.js",
+      "node scripts/test_knowledge_acquisition_declarative_integrity.js",
     ],
   },
   {

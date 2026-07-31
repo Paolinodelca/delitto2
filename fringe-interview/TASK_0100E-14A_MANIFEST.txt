@@ -1,0 +1,55 @@
+TASK 0100E-14A — DECLARATIVE IMMUTABILITY AND IDENTITY INTEGRITY CONSOLIDATION
+
+OUTCOME
+CONFORMING
+
+BASE
+origin/milestone/0100b-knowledge-foundation
+2ee251661371ac1c0cadc81489ab3e1c2602b371
+
+CREATED
+src/core/knowledge/knowledgeAcquisitionImmutability.js
+src/core/knowledge/knowledgeAcquisitionDeclarativeIdentity.js
+src/app/knowledge/knowledgeAcquisitionSolutionDecisionIdentity.js
+scripts/test_knowledge_acquisition_declarative_integrity.js
+TASK_0100E-14A_IMPLEMENTATION_REPORT.md
+TASK_0100E-14A_MANIFEST.txt
+
+MODIFIED
+src/core/knowledge/buildKnowledgeAcquisitionNeed.js
+src/core/knowledge/validateKnowledgeAcquisitionNeed.js
+src/core/knowledge/buildKnowledgeAcquisitionStrategy.js
+src/core/knowledge/validateKnowledgeAcquisitionStrategy.js
+src/core/knowledge/buildKnowledgeAcquisitionRequirement.js
+src/core/knowledge/validateKnowledgeAcquisitionRequirement.js
+src/core/knowledge/buildKnowledgeAcquisitionDesign.js
+src/core/knowledge/validateKnowledgeAcquisitionDesign.js
+src/core/knowledge/buildKnowledgeAcquisitionCapabilityMatch.js
+src/core/knowledge/healthKnowledgeAcquisitionStrategy.js
+src/core/knowledge/healthKnowledgeAcquisitionRequirement.js
+src/core/knowledge/healthKnowledgeAcquisitionRequirementQuery.js
+src/app/knowledge/buildKnowledgeAcquisitionSolutionDecision.js
+src/app/knowledge/validateKnowledgeAcquisitionSolutionDecision.js
+src/app/knowledge/buildKnowledgeAcquisitionCapabilityCompositionDesign.js
+src/app/knowledge/buildKnowledgeAcquisitionCapabilityConfiguration.js
+scripts/test_knowledge_acquisition_need_regression.js
+scripts/test_knowledge_acquisition_strategy_regression.js
+scripts/test_knowledge_acquisition_requirement.js
+scripts/test_knowledge_acquisition_requirement_query.js
+scripts/test_knowledge_acquisition_requirement_regression.js
+scripts/test_knowledge_acquisition_design_regression.js
+scripts/test_all_core.js
+
+PUBLIC API CHANGES
+None.
+
+CONTINUITY CHANGES
+None. 0100E-15 remains the next planned review-only gate.
+
+EXCLUSIONS
+No Runtime, Execution, Scheduler, Retry, Timeout, Queue, Provider, Adapter,
+Invocation, Event, Result, Persistence, Knowledge Update, Reporting, REST API
+or UI.
+
+GIT
+No staging, commit, push or milestone integration.

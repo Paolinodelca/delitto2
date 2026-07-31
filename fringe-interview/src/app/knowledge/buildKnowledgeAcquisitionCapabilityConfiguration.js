@@ -3,6 +3,7 @@ const { validateKnowledgeAcquisitionCapabilityCompositionDesign } = require('./v
 const { validateKnowledgeAcquisitionCapabilityConfiguration } = require('./validateKnowledgeAcquisitionCapabilityConfiguration');
 const { calculateKnowledgeAcquisitionCapabilityConfigurationId } = require('./knowledgeAcquisitionCapabilityConfigurationIdentity');
 const { validateKnowledgeAcquisitionCapabilityConfigurationContext } = require('./validateKnowledgeAcquisitionCapabilityConfigurationContext');
+const { deepFreezeKnowledgeAcquisitionArtifact } = require('../../core/knowledge/knowledgeAcquisitionImmutability');
 
 function object(v) { return v !== null && typeof v === 'object' && !Array.isArray(v); }
 function string(v) { return typeof v === 'string' && v.trim().length > 0; }
@@ -55,7 +56,7 @@ function buildKnowledgeAcquisitionCapabilityConfiguration(input = {}) {
   if (!validation.valid) fail('INVALID_GENERATED_CAPABILITY_CONFIGURATION', validation.errors.join(' | '), validation);
   const contextValidation = validateKnowledgeAcquisitionCapabilityConfigurationContext({ capabilityConfiguration:output, knowledgeAcquisitionSolutionDecision:decision, capabilityCompositionDesign:compositionDesign, selectedCapabilitySnapshots:snapshots, configurationDefinition:definition, applicationConfigurationInput:applicationInput });
   if (!contextValidation.valid) fail('INVALID_CAPABILITY_CONFIGURATION_CONTEXT', contextValidation.errors.join(' | '), contextValidation);
-  return output;
+  return deepFreezeKnowledgeAcquisitionArtifact(output);
 }
 
 module.exports = { buildKnowledgeAcquisitionCapabilityConfiguration };
