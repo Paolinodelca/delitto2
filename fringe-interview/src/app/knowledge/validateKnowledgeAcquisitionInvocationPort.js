@@ -1,0 +1,2 @@
+function validateKnowledgeAcquisitionInvocationPort(port){const errors=[],warnings=[];if(port===null||typeof port!=='object'||Array.isArray(port))errors.push('KnowledgeAcquisitionInvocationPort must be an object.');else{const keys=Object.keys(port);if(keys.length!==1||keys[0]!=='invoke')errors.push('Invocation Port must expose only invoke.');if(typeof port.invoke!=='function')errors.push('Invocation Port invoke must be callable.')}return{valid:errors.length===0,errors,warnings}}
+module.exports={validateKnowledgeAcquisitionInvocationPort};

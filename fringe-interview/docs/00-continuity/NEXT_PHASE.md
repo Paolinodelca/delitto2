@@ -1,22 +1,26 @@
-# Next Phase — IMAGO 0100E-18
+# Next Phase — IMAGO 0100E-19
 
 Status: **CURRENT**
 
-Task type: **FOUNDATION**
+Task type: **ARCHITECTURE REVIEW**
 
 ## Task
 
 ```text
-0100E-18 — Knowledge Acquisition Invocation Boundary Foundation
+0100E-19 — Post-Invocation-Boundary Downstream Architecture Review
 Status: PLANNED
 ```
 
 ## Purpose
 
-Implement the minimum Application-owned outbound `KnowledgeAcquisitionInvocationBoundary` port and ephemeral input contract approved by Task 0100E-17.
+Review repository-first the first authorized Infrastructure consumer of the implemented Application-owned `KnowledgeAcquisitionInvocationBoundary`.
 
-The Foundation must begin from one valid `ready_for_invocation` `KnowledgeAcquisitionExecution`, accept explicit resolved Runtime Session, Plan, Capability Configuration and selected capability context, and validate exact causality without modifying any upstream artifact.
+The review must determine whether that consumer is an Adapter, capability-specific adapter, provider abstraction, or another boundary. It must preserve the ephemeral input contract, dependency direction `Infrastructure → Application`, and the rule that the first real side effect belongs only to a future concrete Infrastructure implementation.
 
-It may use only an effect-free fake or test double. No concrete Provider, Adapter, Registry, selection, transport, network, HTTP, REST, MCP, plugin, prompt, LLM, model, vendor, retry, timeout, scheduler, queue, orchestration, persistence, event, result, Reporting, satisfaction, Knowledge Update or external invocation is authorized.
+## Current state
 
-`KnowledgeAcquisitionCapabilityConfiguration`, `KnowledgeAcquisitionPlan`, `KnowledgeAcquisitionRuntimeSession` and `KnowledgeAcquisitionExecution` remain IMPLEMENTED and unchanged.
+Task 0100E-18 implements the structural `invoke` port and the deeply immutable `KnowledgeAcquisitionInvocationInput`. The input is constructed only from a valid `ready_for_invocation` Execution with exact Runtime Session, Plan and Plan Item context. It carries causal refs, a resolved technology-neutral acquisition operation and a deterministic integrity fingerprint; it has no autonomous identity, lifecycle, result or outcome.
+
+## Not authorized
+
+E-19 is review-only. It does not authorize concrete Adapters, Providers, transport, network I/O, retry, persistence, invocation results, Requirement satisfaction or Knowledge Update.

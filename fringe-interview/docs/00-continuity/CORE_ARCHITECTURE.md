@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-17**
+Verified through: **Task 0100E-18**
 
 ## Principle
 
@@ -37,7 +37,7 @@ Input / Evidence                                      [Core]
 → KnowledgeAcquisitionPlan                            [Application; implemented]
 → KnowledgeAcquisitionRuntimeSession                  [Application; implemented, stateful, pre-Execution]
 → KnowledgeAcquisitionExecution                       [Application; implemented, pre-invocation]
-→ KnowledgeAcquisitionInvocationBoundary              [Application outbound port; approved, not implemented]
+→ KnowledgeAcquisitionInvocationBoundary              [Application outbound port; implemented, effect-free contract]
 ```
 
 Query Foundations provide deterministic, read-only access for Matrix, Coverage, Opportunity, Need, Strategy and Requirement without reinterpreting upstream semantics.
@@ -130,6 +130,8 @@ Task 0100E-15 approves `KnowledgeAcquisitionExecution` as the Application-owned 
 Task 0100E-16 implements Execution as an immutable, integration-neutral description with stable causal identity and the closed lifecycle `created`, `selected`, `ready_for_invocation`. It never mutates Session or Plan and stops before the separate Knowledge Acquisition Invocation Boundary. Invocation and every external effect require the repository-first Task 0100E-17 architecture review.
 
 Task 0100E-17 approves `KnowledgeAcquisitionInvocationBoundary` as an Application-owned outbound port with an ephemeral, technology-neutral input contract. An Infrastructure Adapter is its first technological consumer; a Provider remains behind the Adapter. Task 0100E-18 may implement only the port, contextual validation and an effect-free test double. Concrete adapters, providers and real external effects remain unapproved.
+
+Task 0100E-18 implements the effect-free Application boundary as a structural `invoke` port contract and an ephemeral, deeply immutable input with causal refs, resolved acquisition semantics and an integrity fingerprint. It introduces no persistent identity, lifecycle, Infrastructure implementation, result or outcome. Task 0100E-19 must review the first authorized downstream Infrastructure component.
 
 ## Not approved or implemented downstream
 

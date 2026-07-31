@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-17**
+Verified through: **Task 0100E-18**
 
 Operational milestone: `origin/milestone/0100b-knowledge-foundation`
 
@@ -101,7 +101,7 @@ Task 0100E-12 implements `KnowledgeAcquisitionPlan` as the first downstream cons
 
 Task 0100E-13 approves and Task 0100E-14 implements `KnowledgeAcquisitionRuntimeSession` as the first operational consumer of the Plan. It is Application-owned, Plan-scoped and stateful, with stable Session identity, closed lifecycle, exact item-state projections and explicit timestamps, but remains pre-Execution. The Plan is never mutated.
 
-Task 0100E-15 approves and Task 0100E-16 implements Application-owned `KnowledgeAcquisitionExecution` as the first direct Session consumer and one semantic attempt for one exact active Session item. Its closed pre-invocation lifecycle is `created`, `selected`, `ready_for_invocation`; it is deeply immutable, identity-safe and effect-neutral. Task 0100E-17 approves `KnowledgeAcquisitionInvocationBoundary` as an Application-owned outbound port with an Infrastructure-owned implementation. The next planned task is `0100E-18 — Knowledge Acquisition Invocation Boundary Foundation`; it may establish only the port and effect-free input contract, not a concrete Adapter or Provider. See `NEXT_PHASE.md`.
+Task 0100E-15 approves and Task 0100E-16 implements Application-owned `KnowledgeAcquisitionExecution` as the first direct Session consumer and one semantic attempt for one exact active Session item. Its closed pre-invocation lifecycle is `created`, `selected`, `ready_for_invocation`; it is deeply immutable, identity-safe and effect-neutral. Task 0100E-17 approves and Task 0100E-18 implements `KnowledgeAcquisitionInvocationBoundary` as an Application-owned structural outbound port plus an ephemeral, immutable and integrity-fingerprinted input. The next planned task is `0100E-19 — Post-Invocation-Boundary Downstream Architecture Review`; it must decide the first authorized Infrastructure consumer without pre-authorizing an Adapter or Provider. See `NEXT_PHASE.md`.
 
 ## Current authoritative documents
 

@@ -22,6 +22,14 @@ export {
 } from "./knowledge/publicApi.js";
 
 export {
+  buildKnowledgeAcquisitionInvocationInput,
+  validateKnowledgeAcquisitionInvocationInput,
+  validateKnowledgeAcquisitionInvocationInputContext,
+  validateKnowledgeAcquisitionInvocationPort,
+  healthKnowledgeAcquisitionInvocationBoundary
+} from "./knowledge/publicApi.js";
+
+export {
   buildKnowledgeAcquisitionCapabilityConfiguration,
   validateKnowledgeAcquisitionCapabilityConfiguration,
   validateKnowledgeAcquisitionCapabilityConfigurationContext,

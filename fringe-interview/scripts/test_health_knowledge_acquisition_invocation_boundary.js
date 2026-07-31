@@ -1,0 +1,1 @@
+const assert=require('assert');const {healthKnowledgeAcquisitionInvocationBoundary}=require('../src/app/knowledge');const fixture=require('./knowledge_acquisition_invocation_boundary_fixture');const result=healthKnowledgeAcquisitionInvocationBoundary(fixture);assert(result.ok,JSON.stringify(result));console.log('Knowledge Acquisition Invocation Boundary health PASSED');
