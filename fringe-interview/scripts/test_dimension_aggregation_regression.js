@@ -38,6 +38,8 @@ const allowed = new Set([
   "buildDimensionKnowledgeState", "DIMENSION_TYPES", "STATE_TYPES", "DIRECTIONS", "validateDimensionKnowledgeState",
   "healthBuildDimensionKnowledgeState", "buildDimensionContribution", "validateDimensionContribution",
   "buildMeasurementDimensionMapping", "validateMeasurementDimensionMapping", "mapMeasurementResultToDimensionContributions",
+  "evaluateMeasurementResultMappingApplicability", "validateMeasurementResultMappingApplicability",
+  "validateMeasurementResultMappingApplicabilityContext", "healthMeasurementResultMappingApplicability",
   "aggregateDimensionContributions",
   "buildKnowledgeLedger", "validateKnowledgeLedger", "appendDimensionContributions",
   "buildKnowledgeSnapshot", "validateKnowledgeSnapshot",

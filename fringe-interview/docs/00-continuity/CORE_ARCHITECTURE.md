@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-33**
+Verified through: **Task 0100E-34**
 
 ## Principle
 
@@ -174,6 +174,8 @@ Task 0100E-27 approves and Task 0100E-28 implements an Application-owned Registe
 Task E-31 approves and Task E-32 implements Core-owned, Application-orchestrated Measurement Result Normalization as the first direct consumer of constructed Observations. The same existing Measurement, one explicit target characteristic, immutable Observations and a closed versioned normalization context yield exactly one existing MeasurementResult. `0..N:1` aggregation is authorized only here; result identity is deterministic, references are canonical, output is deeply immutable and aggregate confidence/quality/reliability come only from explicit versioned rules. Empty or unusable input yields `insufficient_data`, never absence. No intermediate contract or Store is required. Dimension mapping, Contribution and Knowledge remain outside the implemented gate.
 
 Task E-33 determines that `MeasurementDimensionMapping` is pre-existing declarative policy, not an artifact produced by or consuming MeasurementResult. Application must explicitly supply/select exactly one Mapping; the next Core-owned applicability boundary may only validate the E-32 result and Mapping, require calculated status and exact `measurementId` equality, and preserve both unchanged. `insufficient_data` stops explicitly before application. E-34 is the sole planned Foundation; Contribution creation, fan-out, registration, stores and Knowledge remain unapproved.
+
+Task E-34 implements that Core boundary as `evaluateMeasurementResultMappingApplicability({ measurementResult, mapping })`. Invalid input throws a typed validation error; exact-ID calculated input returns `applicable` with a frozen semantic Mapping clone; calculated mismatch returns `not_applicable`; and `insufficient_data` returns `stopped`. The operation has no identity, discovery, fan-out, metric transformation or downstream invocation. A post-applicability architecture review is required before any further implementation gate.
 
 ## Dependency direction
 

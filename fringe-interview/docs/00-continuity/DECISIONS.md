@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-33**
+Verified through: **Task 0100E-34**
 
 ## Foundation decisions
 
@@ -230,3 +230,5 @@ MeasurementResult is a per-Measurement/per-characteristic synthesis, not an atom
 ### ADR-042 — Explicit single-Mapping applicability precedes Contribution creation
 
 Task 0100E-33 establishes that existing `MeasurementDimensionMapping` is declarative policy keyed by `measurementId`; it is not derived from and does not itself consume MeasurementResult. Application owns explicit supply/selection of exactly one existing Mapping. Core owns validation and exact compatibility. A calculated compatible result may expose the unchanged Mapping as applicable; `insufficient_data` stops explicitly as not applicable while the result remains present and valid. No characteristic-to-Dimension inference, discovery, fan-out, registration, store, intermediate domain contract, metric transformation or Contribution is authorized. Task E-34 may implement only this effect-free applicability Foundation.
+
+Task 0100E-34 implements ADR-042 with a minimal ephemeral discriminated operation result. `applicable` carries a deeply frozen semantic clone of the explicitly supplied Mapping; `not_applicable` represents exact `measurementId` mismatch; `stopped` represents valid `insufficient_data`; invalid input throws `INVALID_MEASUREMENT_RESULT_MAPPING_APPLICABILITY`. No domain identity or persistent contract is added. Contribution mapping remains unauthorized pending a repository-first post-applicability review.

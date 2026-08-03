@@ -1,17 +1,19 @@
-# Next Phase — Measurement Result Mapping Applicability — 0100E-34
+# Next Phase — Post-Applicability Architecture Review Required
 
 Status: **CURRENT**
 
-Task `0100E-33 — Post-Measurement-Result Downstream Architecture Review` is **COMPLETED** with outcome **APPROVED WITH NOTES**.
+Task `0100E-34 — Measurement Result Mapping Applicability Foundation` is **COMPLETED** with outcome **CONFORMING**.
 
 `MeasurementDimensionMapping` is pre-existing declarative Core policy keyed by `measurementId`, not an output or direct consumer of MeasurementResult. The historical direct consumer immediately creates `DimensionContribution[]`, beyond the minimum next gate.
 
-## Sole planned task
+## Next gate
 
-`0100E-34 — Measurement Result Mapping Applicability Foundation`
+No downstream implementation task is authorized.
 
-Status: PLANNED
+No task is currently planned or authorized.
 
-E-34 may implement only an effect-free, Application-orchestrated Core applicability operation over one contextually valid E-32 MeasurementResult and one explicitly supplied existing Mapping. It validates both, requires exact `measurementId`, returns/references the unchanged Mapping only for `calculated`, and explicitly stops `insufficient_data` as not applicable without treating it as absence.
+Status: REVIEW REQUIRED
 
-No discovery, candidate, registration, collection/store, batch, aggregation, fan-out, characteristic-to-Dimension inference, contract change, Contribution, Knowledge/Ledger/Snapshot/state/Matrix/Coverage update, satisfaction, persistence, I/O, Provider, Adapter, LLM, Runtime mutation or reporting is authorized.
+E-34 implements an effect-free Core applicability operation over one valid E-32 MeasurementResult and one explicitly supplied existing Mapping. It distinguishes invalid input, calculated mismatch, applicable calculated input and explicit `insufficient_data` stop.
+
+Before Contribution mapping or any later responsibility, a repository-first post-applicability architecture review must explicitly decide the next boundary. No discovery, candidate, registration, collection/store, batch, aggregation, fan-out, characteristic-to-Dimension inference, contract change, Contribution, Knowledge/Ledger/Snapshot/state/Matrix/Coverage update, satisfaction, persistence, I/O, Provider, Adapter, LLM, Runtime mutation or reporting is authorized.

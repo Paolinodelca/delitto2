@@ -1663,6 +1663,15 @@ addCheck("Knowledge Acquisition Solution Decision application", async () => {
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_solution_decision.js"], { stdio: "pipe" });
 });
 
+addCheck("Measurement Result Mapping Applicability core", async () => {
+  const imported = await import("../src/core/dimension/index.js");
+  const fixtures = await import("./measurement_result_mapping_applicability_fixture.js");
+  const api = imported.default || imported;
+  const fixtureApi = fixtures.default || fixtures;
+  const result = api.healthMeasurementResultMappingApplicability(fixtureApi);
+  if (!result || result.ok !== true) throw new Error(result?.error || "Measurement Result Mapping Applicability health failed.");
+});
+
 addCheck("Knowledge Acquisition Capability Composition Design application", async () => {
   const { execFileSync } = await import("child_process");
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_capability_composition_design.js"], { stdio: "pipe" });
