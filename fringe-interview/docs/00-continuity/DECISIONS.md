@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-27**
+Verified through: **Task 0100E-28**
 
 ## Foundation decisions
 
@@ -210,3 +210,5 @@ Task 0100E-27 approves a narrow Application-owned Registered Evidence Selection 
 Observation is a first interpretation, not a structural translation. Registered Evidence does not determine the existing Observation contract's Measurement, characteristic, signal status/type, direction/strength, numeric confidence, quality, reliability, grouping, provenance or deterministic identity. Therefore direct Store-to-Observation, Observation Candidate and Observation Collection/Store alternatives are rejected. Empty/no-match selection remains an empty Evidence array and never means absent or `not_observed`.
 
 Task 0100E-28 may implement only the exact Registered Evidence Selection Foundation, with minimum Application validation/public exposure/health/tests required by convention. Semantic filtering, Evidence deletion/merge, Observation or Measurement creation, confidence assignment, persistence, I/O, Provider/Adapter/LLM work, downstream Knowledge updates, Requirement satisfaction and Runtime mutation remain excluded. Any Evidence-to-Observation transformer requires a later repository-first architecture gate; its semantics are Core-owned and may be Application-orchestrated.
+
+Task 0100E-28 implements ADR-039 as `selectRegisteredKnowledgeAcquisitionEvidence({ evidenceStore, evidenceIds })`. Local validation enforces the closed input and unique non-empty string IDs; contextual validation enforces a valid unambiguous Store and exact membership. The operation returns a cloned, deeply frozen `Evidence[]` in canonical ID order, including a fresh frozen empty array for zero IDs. Core APIs and contracts remain unchanged. Task 0100E-29 must review the next downstream boundary without presuming Observation construction.

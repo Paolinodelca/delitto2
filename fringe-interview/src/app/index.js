@@ -37,6 +37,13 @@ export {
 } from "./knowledge/publicApi.js";
 
 export {
+  selectRegisteredKnowledgeAcquisitionEvidence,
+  validateRegisteredEvidenceSelection,
+  validateRegisteredEvidenceSelectionContext,
+  healthRegisteredEvidenceSelection
+} from "./knowledge/publicApi.js";
+
+export {
   buildKnowledgeAcquisitionCapabilityConfiguration,
   validateKnowledgeAcquisitionCapabilityConfiguration,
   validateKnowledgeAcquisitionCapabilityConfigurationContext,

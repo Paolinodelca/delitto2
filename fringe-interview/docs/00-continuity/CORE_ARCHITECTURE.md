@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-27**
+Verified through: **Task 0100E-28**
 
 ## Principle
 
@@ -40,8 +40,12 @@ Input / Evidence                                      [Core]
 → KnowledgeAcquisitionInvocationBoundary              [Application outbound port; implemented, effect-free contract]
 → Structured Input Invocation Adapter / Provider      [Infrastructure; Adapter implemented, Provider role only]
 → KnowledgeAcquisitionProviderResult                  [Infrastructure; implemented technical boundary]
-→ Provider Result Evidence Extractor                  [Infrastructure; approved, not implemented]
+→ Provider Result Evidence Extractor                  [Infrastructure; implemented]
 → Evidence[]                                          [Core; semantic boundary]
+→ Knowledge Acquisition Evidence Intake               [Application; implemented]
+→ EvidenceStore                                       [Core; populated aggregate/collection]
+→ Registered Evidence Selection                       [Application; implemented, exact/read-only]
+→ Evidence[]                                          [Core values; canonical immutable subset]
 ```
 
 Query Foundations provide deterministic, read-only access for Matrix, Coverage, Opportunity, Need, Strategy and Requirement without reinterpreting upstream semantics.
@@ -163,7 +167,7 @@ Task 0100E-25 approves a narrow Application-owned Knowledge Acquisition Evidence
 
 Task 0100E-26 implements the operation as `intakeKnowledgeAcquisitionEvidence`. It consumes one explicit valid EvidenceStore and a valid `0..N` Evidence batch, rejects any exact identity collision before building, returns a fresh deeply frozen Store, preserves Store metadata/identity semantics and every Evidence property, and updates only canonical Evidence ordering and `statistics.totalEvidence`. Empty input is a valid fresh-store no-op. No Core API or contract is changed.
 
-Task 0100E-27 approves an Application-owned Registered Evidence Selection operation as the first direct consumer of the populated Store. It accepts exact Evidence IDs and returns a fresh immutable canonical subset of unchanged registered Evidence. Selection creates no domain result contract or identity, performs no semantic filtering and preserves nullable Evidence confidence. Observation is a first interpretation rather than a structural translation: its Measurement scope, characteristic, signal, direction/strength, numeric confidence, quality, reliability, provenance and identity rules remain unresolved. Future Evidence-to-Observation semantics remain Core-owned and Application-orchestrated under a separate review. The next gate is `0100E-28 — Registered Evidence Selection Foundation`; it does not authorize persistence, Observation, Measurement, Contribution, Knowledge Update, Requirement satisfaction, concrete Provider integration or Runtime mutation.
+Task 0100E-27 approves and Task 0100E-28 implements an Application-owned Registered Evidence Selection operation as the first direct consumer of the populated Store. `selectRegisteredKnowledgeAcquisitionEvidence({ evidenceStore, evidenceIds })` accepts exact unique Evidence IDs and returns a fresh deeply immutable canonical subset of cloned, otherwise unchanged registered Evidence. Selection creates no domain result contract or identity, performs no semantic filtering and preserves nullable Evidence confidence and provenance. Observation is a first interpretation rather than a structural translation: its Measurement scope, characteristic, signal, direction/strength, numeric confidence, quality, reliability, provenance and identity rules remain unresolved. Future Evidence-to-Observation semantics remain Core-owned and Application-orchestrated under a separate review. The next gate is `0100E-29 — Post-Registered-Evidence-Selection Downstream Architecture Review`; it does not authorize persistence, Observation, Measurement, Contribution, Knowledge Update, Requirement satisfaction, concrete Provider integration or Runtime mutation.
 
 ## Dependency direction
 
