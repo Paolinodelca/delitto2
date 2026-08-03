@@ -1,17 +1,17 @@
-# Next Phase — Post-Dimension-Contribution-Mapping Downstream Architecture Review — 0100E-37
+# Next Phase — Dimension Contribution Ledger Intake Hardening Foundation — 0100E-38
 
 Status: **CURRENT**
 
-Task `0100E-36 — Measurement Result Dimension Contribution Mapping Hardening Foundation` is **COMPLETED**.
+Task `0100E-37 — Post-Dimension-Contribution Downstream Architecture Review` is **COMPLETED**.
 
-The existing Core `mapMeasurementResultToDimensionContributions` is now hardened without changing its responsibility or public API. One calculated Result plus one applicable Mapping still produces exactly one existing deeply immutable Contribution per explicit Mapping target through the established `direct` and `inherit` formulas. Identity, policy fingerprint, causal references and formula provenance are canonical and deterministic.
+The existing Core `appendDimensionContributions` is approved as the first direct consumer of one hardened mapper batch. Application orchestrates; Core atomically registers unchanged Contributions into one explicit Ledger. No aggregation or downstream Knowledge construction is authorized.
 
 ## Next gate
 
-`0100E-37 — Post-Dimension-Contribution-Mapping Downstream Architecture Review`
+`0100E-38 — Dimension Contribution Ledger Intake Hardening Foundation`
 
 Status: PLANNED
 
-This is the sole planned task. It must inspect the repository-first state after Contribution mapping and determine whether any downstream consumer is architecturally justified, where ownership belongs, and which boundary and cardinality are valid.
+This is the sole planned task. It may implement the minimum Application-owned intake operation and harden the existing Core append path for validation, exact collision rejection, atomic copy-on-write registration, canonical ordering, deterministic identity preservation and deep immutability.
 
-It may not implement or modify Ledger, Snapshot, Knowledge, Knowledge Update, Matrix, Coverage, satisfaction, persistence, I/O, Provider, Adapter, LLM, report generation or Runtime. No downstream component is authorized before E-37 reaches an explicit decision.
+It may not change existing contracts, builders, validators or Core API, and may not aggregate Contributions or modify/build Snapshot, Dimension state, derived knowledge, Matrix, Coverage, satisfaction, persistence, I/O, Provider, Adapter, LLM, reporting or Runtime.

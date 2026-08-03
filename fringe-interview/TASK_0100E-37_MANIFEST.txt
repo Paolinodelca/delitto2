@@ -1,0 +1,8 @@
+TASK_0100E-37_POST_DIMENSION_CONTRIBUTION_DOWNSTREAM_ARCHITECTURE_REVIEW.md
+TASK_0100E-37_MANIFEST.txt
+docs/00-continuity/README.md
+docs/00-continuity/CONTINUITY.md
+docs/00-continuity/CORE_ARCHITECTURE.md
+docs/00-continuity/DECISIONS.md
+docs/00-continuity/NEXT_PHASE.md
+docs/15-architecture_specifications/CORE_ROADMAP.md

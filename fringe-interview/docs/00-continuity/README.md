@@ -25,7 +25,7 @@ Last realignment: 2026-07-30 (`GOV-REALIGN-001`)
 | `CONTINUITY.md` | CURRENT | current verified milestone view |
 | `CORE_ARCHITECTURE.md` | CURRENT | architecture and ownership map |
 | `DECISIONS.md` | CURRENT | approved ADR summary |
-| `NEXT_PHASE.md` | CURRENT | E-37 Post-Dimension-Contribution-Mapping Downstream Architecture Review is the sole planned task |
+| `NEXT_PHASE.md` | CURRENT | E-38 Dimension Contribution Ledger Intake Hardening Foundation is the sole planned task |
 | `GIT_BRANCHING_MODEL.md` | CURRENT / DESCRIPTIVE | observed branch topology; not prescriptive policy |
 | `GIT_MILESTONE_GUIDE.md` | HISTORICAL | procedure specific to milestone 0100B |
 | `reviews/REPOSITORY_ARCHITECTURE_REVIEW_2026-07-30.md` | HISTORICAL REVIEW | ARCH-RECOVERY-001 evidence, non-normative |

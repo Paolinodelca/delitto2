@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-36**
+Verified through: **Task 0100E-37**
 
 ## Foundation decisions
 
@@ -240,3 +240,9 @@ Task 0100E-35 approves the existing Core `mapMeasurementResultToDimensionContrib
 The existing Contribution contract is sufficient and no Candidate, context, parallel mapper or Application contract is introduced. The implementation requires local hardening because identity omits semantic values/policy inputs, output is mutable and formula provenance/canonical references are incomplete. E-36 may correct only those guarantees while preserving formulas, ownership, inputs, output contract and cardinality. It may not modify contracts/builders/validators or append to Ledger, build Knowledge, decide satisfaction, perform I/O or mutate Runtime.
 
 Task 0100E-36 implements ADR-043 in the existing mapper only. The public API remains `mapMeasurementResultToDimensionContributions(measurementResult, mapping)`. Identity is derived from the canonical complete Contribution body, including canonical causal refs, exact formula provenance and a content-derived fingerprint of the complete Mapping policy. Formula version `1.0` records the unchanged `direct` magnitude and `inherit` confidence strategies with exact operands. Local validation preserves existing contract validation and rejects hidden or non-canonical policy values; contextual validation preserves calculated status and exact `measurementId`. Results are fresh and deeply immutable. No external contract, builder or validator changes, parallel path or downstream state responsibility are introduced.
+
+### ADR-044 — Register hardened Contributions atomically before aggregation
+
+Task 0100E-37 approves the existing Core `appendDimensionContributions` operation as the first direct consumer of a complete hardened mapper batch. Application supplies one explicit Ledger, one `0..N` batch and an explicit timestamp; Core validates and atomically returns one new Ledger. Exact ID collisions reject the batch. Contributions, metrics and provenance remain unchanged; quality and reliability remain on the referenced MeasurementResult. No selection, intermediate contract, merge, replacement, semantic deduplication or aggregation is introduced.
+
+Task E-38 may add the minimum Application intake boundary and harden the existing append path for canonical, deterministic, deeply immutable copy-on-write output. It may not change contracts/builders/validators/Core API or cross into Snapshot, states, derived knowledge, Matrix, Coverage, persistence, satisfaction or Runtime.

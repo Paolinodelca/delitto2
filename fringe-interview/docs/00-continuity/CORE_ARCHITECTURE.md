@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-36**
+Verified through: **Task 0100E-37**
 
 ## Principle
 
@@ -179,7 +179,9 @@ Task E-34 implements that Core boundary as `evaluateMeasurementResultMappingAppl
 
 Task E-35 approves the existing Core `mapMeasurementResultToDimensionContributions` as the first consumer of the original calculated Result plus the Mapping carried by an `applicable` E-34 outcome. Application owns branching/orchestration; Core emits exactly one existing Contribution per explicit unique Mapping target. Other E-34 outcomes never invoke the mapper. Mapping supplies Dimension, polarity, weight and confidence factor; Result supplies magnitude and confidence inputs; quality and reliability remain on the referenced Result. E-36 is the sole planned gate and may harden only identity, canonical provenance, deep immutability and explicit formula provenance. Ledger and Knowledge remain separate and unauthorized.
 
-Task E-36 hardens that same mapper without changing its API, owner, responsibility, inputs, formulas, output contract or target-driven cardinality. Each Contribution ID hashes its complete canonical semantic body; the body includes a content-derived fingerprint of the complete Mapping policy, canonical Result/Mapping/Observation references and explicit versioned formula strategies, expressions and operands. Local validation rejects invalid or non-canonical inputs, contextual validation requires exact `measurementId` and `calculated`, and the returned Contribution array is freshly deeply frozen. No parallel mapper, contract change, Ledger append, Snapshot, Knowledge, Matrix, Coverage, I/O or Runtime mutation is introduced. E-37 is the sole planned repository-first downstream architecture review.
+Task E-36 hardens that same mapper without changing its API, owner, responsibility, inputs, formulas, output contract or target-driven cardinality. Each Contribution ID hashes its complete canonical semantic body; the body includes a content-derived fingerprint of the complete Mapping policy, canonical Result/Mapping/Observation references and explicit versioned formula strategies, expressions and operands. Local validation rejects invalid or non-canonical inputs, contextual validation requires exact `measurementId` and `calculated`, and the returned Contribution array is freshly deeply frozen. No parallel mapper, contract change, Ledger append, Snapshot, Knowledge, Matrix, Coverage, I/O or Runtime mutation is introduced.
+
+Task E-37 approves the existing Core `appendDimensionContributions` as the first direct consumer of one hardened mapper batch, under Application orchestration. It atomically returns one new Ledger, preserves Contributions and provenance unchanged, rejects exact ID collisions and performs no aggregation. E-38 may harden only this intake/append path. Snapshot, Dimension state, derived knowledge, Matrix and Coverage remain separate and unauthorized.
 
 ## Dependency direction
 
