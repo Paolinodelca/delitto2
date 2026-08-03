@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-34**
+Verified through: **Task 0100E-35**
 
 ## Principle
 
@@ -176,6 +176,8 @@ Task E-31 approves and Task E-32 implements Core-owned, Application-orchestrated
 Task E-33 determines that `MeasurementDimensionMapping` is pre-existing declarative policy, not an artifact produced by or consuming MeasurementResult. Application must explicitly supply/select exactly one Mapping; the next Core-owned applicability boundary may only validate the E-32 result and Mapping, require calculated status and exact `measurementId` equality, and preserve both unchanged. `insufficient_data` stops explicitly before application. E-34 is the sole planned Foundation; Contribution creation, fan-out, registration, stores and Knowledge remain unapproved.
 
 Task E-34 implements that Core boundary as `evaluateMeasurementResultMappingApplicability({ measurementResult, mapping })`. Invalid input throws a typed validation error; exact-ID calculated input returns `applicable` with a frozen semantic Mapping clone; calculated mismatch returns `not_applicable`; and `insufficient_data` returns `stopped`. The operation has no identity, discovery, fan-out, metric transformation or downstream invocation. A post-applicability architecture review is required before any further implementation gate.
+
+Task E-35 approves the existing Core `mapMeasurementResultToDimensionContributions` as the first consumer of the original calculated Result plus the Mapping carried by an `applicable` E-34 outcome. Application owns branching/orchestration; Core emits exactly one existing Contribution per explicit unique Mapping target. Other E-34 outcomes never invoke the mapper. Mapping supplies Dimension, polarity, weight and confidence factor; Result supplies magnitude and confidence inputs; quality and reliability remain on the referenced Result. E-36 is the sole planned gate and may harden only identity, canonical provenance, deep immutability and explicit formula provenance. Ledger and Knowledge remain separate and unauthorized.
 
 ## Dependency direction
 

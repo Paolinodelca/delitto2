@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-34**
+Verified through: **Task 0100E-35**
 
 ## Foundation decisions
 
@@ -232,3 +232,9 @@ MeasurementResult is a per-Measurement/per-characteristic synthesis, not an atom
 Task 0100E-33 establishes that existing `MeasurementDimensionMapping` is declarative policy keyed by `measurementId`; it is not derived from and does not itself consume MeasurementResult. Application owns explicit supply/selection of exactly one existing Mapping. Core owns validation and exact compatibility. A calculated compatible result may expose the unchanged Mapping as applicable; `insufficient_data` stops explicitly as not applicable while the result remains present and valid. No characteristic-to-Dimension inference, discovery, fan-out, registration, store, intermediate domain contract, metric transformation or Contribution is authorized. Task E-34 may implement only this effect-free applicability Foundation.
 
 Task 0100E-34 implements ADR-042 with a minimal ephemeral discriminated operation result. `applicable` carries a deeply frozen semantic clone of the explicitly supplied Mapping; `not_applicable` represents exact `measurementId` mismatch; `stopped` represents valid `insufficient_data`; invalid input throws `INVALID_MEASUREMENT_RESULT_MAPPING_APPLICABILITY`. No domain identity or persistent contract is added. Contribution mapping remains unauthorized pending a repository-first post-applicability review.
+
+### ADR-043 — Harden the existing Contribution mapper; do not create a parallel boundary
+
+Task 0100E-35 approves the existing Core `mapMeasurementResultToDimensionContributions` as the first direct consumer after E-34 `applicable`. Application invokes it with the original calculated Result and applicable Mapping; every other E-34 outcome stops before invocation. The real Mapping's `1..N` explicit unique targets authorize exactly one Contribution per target and no Result aggregation. Mapping owns Dimension, contribution polarity, weight and confidence factor; Result supplies normalized magnitude and confidence; the mapper applies established `direct` and `inherit` formulas. Quality and reliability remain on the causally referenced Result.
+
+The existing Contribution contract is sufficient and no Candidate, context, parallel mapper or Application contract is introduced. The implementation requires local hardening because identity omits semantic values/policy inputs, output is mutable and formula provenance/canonical references are incomplete. E-36 may correct only those guarantees while preserving formulas, ownership, inputs, output contract and cardinality. It may not modify contracts/builders/validators or append to Ledger, build Knowledge, decide satisfaction, perform I/O or mutate Runtime.

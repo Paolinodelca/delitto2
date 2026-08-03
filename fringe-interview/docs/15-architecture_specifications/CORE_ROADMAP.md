@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-34**
+Verified through: **Task 0100E-35**
 
-Next gate: **Post-applicability architecture review required**
+Next gate: **0100E-36 — Measurement Result Dimension Contribution Mapping Hardening Foundation**
 
-Last updated: 2026-08-03 (`0100E-34`)
+Last updated: 2026-08-03 (`0100E-35`)
 
 ## Purpose
 
@@ -163,6 +163,18 @@ Type: **FOUNDATION**
 
 Status: **COMPLETED**
 
+### 0100E-35 — Post-Mapping-Applicability Downstream Architecture Review
+
+Type: **ARCHITECTURE REVIEW**
+
+Status: **COMPLETED**
+
+### 0100E-36 — Measurement Result Dimension Contribution Mapping Hardening Foundation
+
+Type: **FOUNDATION**
+
+Status: **PLANNED**
+
 | Task | Type | Status | Result |
 |---|---|---|---|
 | 0100E-16 | Foundation | COMPLETED | implemented immutable pre-invocation Execution lifecycle |
@@ -184,6 +196,8 @@ Status: **COMPLETED**
 | 0100E-32 | Foundation | COMPLETED | deterministic per-Measurement/per-characteristic normalization only |
 | 0100E-33 | Architecture Review | COMPLETED | single explicit Mapping applicability approved before Contribution creation |
 | 0100E-34 | Foundation | COMPLETED | discriminated applicability for one explicit Result/Mapping pair; no Contribution |
+| 0100E-35 | Architecture Review | COMPLETED | existing Contribution mapper approved after applicable outcome, with local hardening required |
+| 0100E-36 | Foundation | PLANNED | harden existing mapper identity, provenance and immutability; no Ledger/Knowledge update |
 
 Approved cardinality:
 
@@ -205,7 +219,7 @@ Task E-21 approves `KnowledgeAcquisitionProviderResult` as the first new downstr
 
 Task E-22 implements that result with one `succeeded` state, opaque cloned `providerPayload`, exact Invocation Input fingerprint causality and deterministic integrity. The Adapter validates and returns it unchanged. E-23 approves a capability-specific Infrastructure Provider Result Evidence Extractor as the first semantic crossing, producing zero or more existing Core Evidence values. It rejects direct Knowledge, Knowledge Candidate and generic normalized-result layers. E-24 implements the effect-free extractor without modifying existing contracts, implementing a Provider/transport, executing ingestion/update flows or creating Knowledge.
 
-Task E-24 implements the immutable structured-input extractor and returns only Core-owned `Evidence[]`. E-25 approves and E-26 implements a narrow Application-owned Knowledge Acquisition Evidence Intake operation as its first direct consumer. Intake registers Evidence atomically and without mutation into the existing Core-owned EvidenceStore aggregate/collection; the Store is not persistence. Exact ID collisions reject the whole batch, semantic equivalents with distinct IDs coexist, and an empty batch returns a fresh equivalent Store. E-27 approves and E-28 implements exact Application-owned registered-Evidence selection as the first direct Store consumer. It validates exact unique membership, clones and deep-freezes unchanged Evidence, orders by ID and returns a fresh frozen empty array for zero IDs. E-29 approves and E-30 implements explicit Core-owned, Application-orchestrated Observation Construction as the first interpretation. E-31 approves and E-32 implements Core Measurement Result normalization. E-33 approves and E-34 implements a single explicit Result/Mapping applicability check before Contribution. Contribution, Knowledge, persistence, satisfaction and Runtime mutation remain excluded pending a post-applicability architecture review.
+Task E-24 implements the immutable structured-input extractor and returns only Core-owned `Evidence[]`. E-25 approves and E-26 implements a narrow Application-owned Knowledge Acquisition Evidence Intake operation as its first direct consumer. Intake registers Evidence atomically and without mutation into the existing Core-owned EvidenceStore aggregate/collection; the Store is not persistence. Exact ID collisions reject the whole batch, semantic equivalents with distinct IDs coexist, and an empty batch returns a fresh equivalent Store. E-27 approves and E-28 implements exact Application-owned registered-Evidence selection as the first direct Store consumer. It validates exact unique membership, clones and deep-freezes unchanged Evidence, orders by ID and returns a fresh frozen empty array for zero IDs. E-29 approves and E-30 implements explicit Core-owned, Application-orchestrated Observation Construction as the first interpretation. E-31 approves and E-32 implements Core Measurement Result normalization. E-33 approves and E-34 implements a single explicit Result/Mapping applicability check. E-35 approves the historical Core Contribution mapper after `applicable`, subject to the sole planned E-36 local hardening gate. Ledger/Knowledge, persistence, satisfaction and Runtime mutation remain excluded.
 
 ## Not approved
 

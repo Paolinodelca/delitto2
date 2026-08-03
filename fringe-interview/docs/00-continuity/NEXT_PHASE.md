@@ -1,19 +1,17 @@
-# Next Phase — Post-Applicability Architecture Review Required
+# Next Phase — Measurement Result Dimension Contribution Mapping Hardening — 0100E-36
 
 Status: **CURRENT**
 
-Task `0100E-34 — Measurement Result Mapping Applicability Foundation` is **COMPLETED** with outcome **CONFORMING**.
+Task `0100E-35 — Post-Mapping-Applicability Downstream Architecture Review` is **COMPLETED** with outcome **APPROVED WITH NOTES**.
 
-`MeasurementDimensionMapping` is pre-existing declarative Core policy keyed by `measurementId`, not an output or direct consumer of MeasurementResult. The historical direct consumer immediately creates `DimensionContribution[]`, beyond the minimum next gate.
+The existing Core `mapMeasurementResultToDimensionContributions` is the approved first consumer after E-34 `applicable`. It is responsibility- and cardinality-compatible, but identity, canonical provenance, deep immutability and formula provenance require focused hardening before E-series use.
 
 ## Next gate
 
-No downstream implementation task is authorized.
+`0100E-36 — Measurement Result Dimension Contribution Mapping Hardening Foundation`
 
-No task is currently planned or authorized.
+Status: PLANNED
 
-Status: REVIEW REQUIRED
+This is the sole planned task. It may harden only the existing Core mapper and minimum regression/public API/health coverage. It must preserve one calculated Result plus one applicable Mapping as input, one existing Contribution per explicit target as output, established formulas, exact causality and contract boundaries.
 
-E-34 implements an effect-free Core applicability operation over one valid E-32 MeasurementResult and one explicitly supplied existing Mapping. It distinguishes invalid input, calculated mismatch, applicable calculated input and explicit `insufficient_data` stop.
-
-Before Contribution mapping or any later responsibility, a repository-first post-applicability architecture review must explicitly decide the next boundary. No discovery, candidate, registration, collection/store, batch, aggregation, fan-out, characteristic-to-Dimension inference, contract change, Contribution, Knowledge/Ledger/Snapshot/state/Matrix/Coverage update, satisfaction, persistence, I/O, Provider, Adapter, LLM, Runtime mutation or reporting is authorized.
+It may not modify contracts/builders/validators; add Candidate/context/parallel mapper; aggregate Results; infer Dimensions; invoke for non-applicable/stopped; append Ledger; build Snapshot/state/Matrix/Coverage; decide satisfaction; persist; perform I/O; integrate Provider/Adapter/LLM; report; score; or mutate Runtime.
