@@ -14,12 +14,20 @@ const repositoryRoadmap = fs.readFileSync(path.join(applicationRoot, "docs", "15
 const roadmapPlannedTasks = [...repositoryRoadmap.matchAll(/^\| (0100[A-Z]-[^ |]+) \|(?: [^|]+ \|)? PLANNED \|/gm)].map((match) => match[1]);
 const continuityPlannedTasks = [...repositoryContinuity.matchAll(/\bnext planned task is\s+`?(0100[A-Z]-[^\s`â€”]+)/gi)].map((match) => match[1]);
 const nextPhaseTask = repositoryNextPhase.match(/^# Next Phase[^\n]*\b(0100[A-Z]-[^\s]+)\s*$/m)?.[1];
-assert.equal(roadmapPlannedTasks.length, 1, "Current roadmap must contain exactly one PLANNED task.");
-assert.equal(continuityPlannedTasks.length, 1, "Current continuity must identify exactly one next planned task.");
-assert.ok(nextPhaseTask, "Current NEXT_PHASE title must identify the planned task.");
-assert.equal(repositoryResult.plannedTask, roadmapPlannedTasks[0]);
-assert.equal(continuityPlannedTasks[0], roadmapPlannedTasks[0]);
-assert.equal(nextPhaseTask, roadmapPlannedTasks[0]);
+const explicitlyUnplanned = /No task is currently planned or authorized\./i.test(repositoryNextPhase);
+if (explicitlyUnplanned) {
+  assert.equal(roadmapPlannedTasks.length, 0, "Explicit no-task gate must have no PLANNED roadmap task.");
+  assert.equal(continuityPlannedTasks.length, 0, "Explicit no-task gate must have no planned continuity task.");
+  assert.equal(nextPhaseTask, undefined, "Explicit no-task NEXT_PHASE title must not invent a task.");
+  assert.equal(repositoryResult.plannedTask, null);
+} else {
+  assert.equal(roadmapPlannedTasks.length, 1, "Current roadmap must contain exactly one PLANNED task.");
+  assert.equal(continuityPlannedTasks.length, 1, "Current continuity must identify exactly one next planned task.");
+  assert.ok(nextPhaseTask, "Current NEXT_PHASE title must identify the planned task.");
+  assert.equal(repositoryResult.plannedTask, roadmapPlannedTasks[0]);
+  assert.equal(continuityPlannedTasks[0], roadmapPlannedTasks[0]);
+  assert.equal(nextPhaseTask, roadmapPlannedTasks[0]);
+}
 
 function buildFixture({ roadmapRows, nextTask = "0100E-12", nextStatus = "PLANNED", continuityNextTask = "0100E-12", configurationState = "IMPLEMENTED", workflowText = "# Workflow\nContinuity Impact Assessment\n", readmeText = "| `CONTINUITY.md` | CURRENT | state |\n| `NEXT_PHASE.md` | CURRENT | next |\n" }) {
   const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "imago-continuity-check-"));

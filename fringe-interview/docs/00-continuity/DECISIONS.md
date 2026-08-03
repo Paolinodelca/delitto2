@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-31**
+Verified through: **Task 0100E-32**
 
 ## Foundation decisions
 
@@ -225,4 +225,4 @@ Task 0100E-30 implements ADR-040 as `constructObservationsFromRegisteredEvidence
 
 Task 0100E-31 approves the existing Core-owned Measurement Result normalization boundary as the first direct consumer of constructed `Observation[]`. One explicit invocation accepts the same existing Measurement, Observations, one targeted characteristic ID and a closed versioned normalization context, and returns exactly one existing MeasurementResult. Zero, one or many matching Observations may contribute; N:1 aggregation is authorized only inside this boundary. No Observation selection, Measurement Application/Execution, Candidate, collection or store is introduced.
 
-MeasurementResult is a per-Measurement/per-characteristic synthesis, not an atomic Observation, Dimension contribution or Knowledge. Its identity must be deterministic and content-derived; Observation references must be canonical; output must be deeply immutable. Result confidence, evidence quality and source reliability are recalculated only through explicit versioned Core rules and are never transferred implicitly. Empty or unusable input yields `insufficient_data` and never asserts absence. Task 0100E-32 may implement only this normalization Foundation; mapping, Contribution, Knowledge, persistence, I/O and Runtime mutation remain excluded.
+MeasurementResult is a per-Measurement/per-characteristic synthesis, not an atomic Observation, Dimension contribution or Knowledge. Its identity is deterministic and content-derived; Observation references are canonical; output is deeply immutable. Result confidence, evidence quality and source reliability are recalculated only through explicit versioned Core rules and are never transferred implicitly. Empty or unusable input yields `insufficient_data` and never asserts absence. Task 0100E-32 implements only this normalization Foundation; mapping, Contribution, Knowledge, persistence, I/O and Runtime mutation remain excluded pending an explicit architecture review.

@@ -1722,6 +1722,15 @@ addCheck("Registered Evidence Observation Construction core", async () => {
   if (!result?.ok) throw new Error(JSON.stringify(result));
 });
 
+addCheck("Registered Observation Measurement Result Normalization core", async () => {
+  const imported = await import("../src/core/observation/index.js");
+  const api = imported.default || imported;
+  const fixtures = await import("./registered_observation_measurement_result_normalization_fixture.js");
+  const fixtureApi = fixtures.default || fixtures;
+  const result = api.healthRegisteredObservationMeasurementResultNormalization(fixtureApi);
+  if (!result?.ok) throw new Error(JSON.stringify(result));
+});
+
 addCheck("Knowledge Acquisition Boundary Freeze", async () => {
   const { execFileSync } = await import("child_process");
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_boundary.js"], { stdio: "pipe" });

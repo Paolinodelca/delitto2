@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-31**
+Verified through: **Task 0100E-32**
 
-Next gate: **0100E-32 — Registered Observation Measurement Result Normalization Foundation**
+Next gate: **explicit downstream architecture review required; no task authorized**
 
-Last updated: 2026-08-03 (`0100E-31`)
+Last updated: 2026-08-03 (`0100E-32`)
 
 ## Purpose
 
@@ -149,7 +149,7 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 Type: **FOUNDATION**
 
-Status: **PLANNED**
+Status: **COMPLETED**
 
 | Task | Type | Status | Result |
 |---|---|---|---|
@@ -169,7 +169,7 @@ Status: **PLANNED**
 | 0100E-29 | Architecture Review | COMPLETED | explicit Core Observation Construction approved as first interpretation |
 | 0100E-30 | Foundation | COMPLETED | implemented rule-driven atomic Observation construction from selected registered Evidence |
 | 0100E-31 | Architecture Review | COMPLETED | Core Measurement Result Normalization approved as first Observation consumer |
-| 0100E-32 | Foundation | PLANNED | deterministic per-Measurement/per-characteristic normalization only |
+| 0100E-32 | Foundation | COMPLETED | deterministic per-Measurement/per-characteristic normalization only |
 
 Approved cardinality:
 

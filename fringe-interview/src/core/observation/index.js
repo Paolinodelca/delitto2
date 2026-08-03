@@ -6,5 +6,10 @@ module.exports={
  ...require('./constructObservationsFromRegisteredEvidence'),
  ...require('./healthObservationConstruction'),
  ...require('./buildMeasurementResult'),...require('./validateMeasurementResult'),
- ...require('./normalizeMeasurementResult')
+ ...require('./normalizeMeasurementResult'),
+ ...require('./validateRegisteredObservationMeasurementResultNormalizationContext'),
+ ...require('./validateRegisteredObservationMeasurementResultNormalization'),
+ ...require('./normalizeRegisteredObservationMeasurementResult'),
+ ...require('./validateRegisteredObservationMeasurementResult'),
+ ...require('./healthRegisteredObservationMeasurementResultNormalization')
 };
