@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-35**
+Verified through: **Task 0100E-36**
 
 ## Foundation decisions
 
@@ -238,3 +238,5 @@ Task 0100E-34 implements ADR-042 with a minimal ephemeral discriminated operatio
 Task 0100E-35 approves the existing Core `mapMeasurementResultToDimensionContributions` as the first direct consumer after E-34 `applicable`. Application invokes it with the original calculated Result and applicable Mapping; every other E-34 outcome stops before invocation. The real Mapping's `1..N` explicit unique targets authorize exactly one Contribution per target and no Result aggregation. Mapping owns Dimension, contribution polarity, weight and confidence factor; Result supplies normalized magnitude and confidence; the mapper applies established `direct` and `inherit` formulas. Quality and reliability remain on the causally referenced Result.
 
 The existing Contribution contract is sufficient and no Candidate, context, parallel mapper or Application contract is introduced. The implementation requires local hardening because identity omits semantic values/policy inputs, output is mutable and formula provenance/canonical references are incomplete. E-36 may correct only those guarantees while preserving formulas, ownership, inputs, output contract and cardinality. It may not modify contracts/builders/validators or append to Ledger, build Knowledge, decide satisfaction, perform I/O or mutate Runtime.
+
+Task 0100E-36 implements ADR-043 in the existing mapper only. The public API remains `mapMeasurementResultToDimensionContributions(measurementResult, mapping)`. Identity is derived from the canonical complete Contribution body, including canonical causal refs, exact formula provenance and a content-derived fingerprint of the complete Mapping policy. Formula version `1.0` records the unchanged `direct` magnitude and `inherit` confidence strategies with exact operands. Local validation preserves existing contract validation and rejects hidden or non-canonical policy values; contextual validation preserves calculated status and exact `measurementId`. Results are fresh and deeply immutable. No external contract, builder or validator changes, parallel path or downstream state responsibility are introduced.

@@ -9,7 +9,9 @@ const first=dimension.mapMeasurementResultToDimensionContributions(result,mappin
 const second=dimension.mapMeasurementResultToDimensionContributions(result,mapping);
 assert.deepStrictEqual(result,rs);assert.deepStrictEqual(mapping,ms);assert.deepStrictEqual(first,second);
 assert.strictEqual(first.length,2);assert.strictEqual(first[0].dimensionId,"ownership");assert.strictEqual(first[0].contributionValue,0.4);assert.strictEqual(first[0].confidence,0.75);assert.strictEqual(first[1].confidence,0.6);
-assert.strictEqual(first[0].provenance.measurementResultRef,"result_1");assert.ok(first[0].provenance.sourceRefs.includes("mapping:mapping_1"));assert.ok(first[0].provenance.sourceRefs.includes("observation:obs_1"));
+assert.strictEqual(first[0].provenance.measurementResultRef,"measurementResult:result_1");assert.deepStrictEqual(first[0].provenance.sourceRefs,["mapping:mapping_1","observation:obs_1"]);
+assert.strictEqual(Object.isFrozen(first),true);assert.strictEqual(Object.isFrozen(first[0]),true);assert.strictEqual(Object.isFrozen(first[0].extensions.formula),true);
+assert.strictEqual(first[0].extensions.formula.value.strategy,"direct");assert.strictEqual(first[0].extensions.formula.confidence.strategy,"inherit");
 first.forEach(x=>assert.strictEqual(dimension.validateDimensionContribution(x).valid,true));
 assert.throws(()=>dimension.mapMeasurementResultToDimensionContributions(result,{...mapping,measurementId:"other"}),e=>e.code==="INCOMPATIBLE_MEASUREMENT_MAPPING");
 assert.throws(()=>dimension.mapMeasurementResultToDimensionContributions({...result,confidence:2},mapping),e=>e.code==="INVALID_MEASUREMENT_RESULT");

@@ -54,6 +54,7 @@ const testGroups = [
     commands: [
       "node scripts/test_build_measurement_dimension_mapping.js",
       "node scripts/test_map_measurement_result_to_dimension_contributions.js",
+      "node scripts/test_measurement_result_dimension_contribution_mapping_hardening.js",
       "node scripts/test_measurement_dimension_mapping_regression.js",
       "node scripts/test_health_measurement_dimension_mapping.js",
       "node scripts/test_measurement_result_mapping_applicability.js",

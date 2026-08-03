@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-35**
+Verified through: **Task 0100E-36**
 
-Next gate: **0100E-36 — Measurement Result Dimension Contribution Mapping Hardening Foundation**
+Next gate: **0100E-37 — Post-Dimension-Contribution-Mapping Downstream Architecture Review**
 
-Last updated: 2026-08-03 (`0100E-35`)
+Last updated: 2026-08-03 (`0100E-36`)
 
 ## Purpose
 
@@ -173,6 +173,12 @@ Status: **COMPLETED**
 
 Type: **FOUNDATION**
 
+Status: **COMPLETED**
+
+### 0100E-37 — Post-Dimension-Contribution-Mapping Downstream Architecture Review
+
+Type: **ARCHITECTURE REVIEW**
+
 Status: **PLANNED**
 
 | Task | Type | Status | Result |
@@ -197,7 +203,8 @@ Status: **PLANNED**
 | 0100E-33 | Architecture Review | COMPLETED | single explicit Mapping applicability approved before Contribution creation |
 | 0100E-34 | Foundation | COMPLETED | discriminated applicability for one explicit Result/Mapping pair; no Contribution |
 | 0100E-35 | Architecture Review | COMPLETED | existing Contribution mapper approved after applicable outcome, with local hardening required |
-| 0100E-36 | Foundation | PLANNED | harden existing mapper identity, provenance and immutability; no Ledger/Knowledge update |
+| 0100E-36 | Foundation | COMPLETED | hardened existing mapper identity, canonical provenance, formula provenance and deep immutability without contract or downstream changes |
+| 0100E-37 | Architecture Review | PLANNED | repository-first review required before any downstream Contribution consumer |
 
 Approved cardinality:
 

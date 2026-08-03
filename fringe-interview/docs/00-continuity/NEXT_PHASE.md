@@ -1,17 +1,17 @@
-# Next Phase — Measurement Result Dimension Contribution Mapping Hardening — 0100E-36
+# Next Phase — Post-Dimension-Contribution-Mapping Downstream Architecture Review — 0100E-37
 
 Status: **CURRENT**
 
-Task `0100E-35 — Post-Mapping-Applicability Downstream Architecture Review` is **COMPLETED** with outcome **APPROVED WITH NOTES**.
+Task `0100E-36 — Measurement Result Dimension Contribution Mapping Hardening Foundation` is **COMPLETED**.
 
-The existing Core `mapMeasurementResultToDimensionContributions` is the approved first consumer after E-34 `applicable`. It is responsibility- and cardinality-compatible, but identity, canonical provenance, deep immutability and formula provenance require focused hardening before E-series use.
+The existing Core `mapMeasurementResultToDimensionContributions` is now hardened without changing its responsibility or public API. One calculated Result plus one applicable Mapping still produces exactly one existing deeply immutable Contribution per explicit Mapping target through the established `direct` and `inherit` formulas. Identity, policy fingerprint, causal references and formula provenance are canonical and deterministic.
 
 ## Next gate
 
-`0100E-36 — Measurement Result Dimension Contribution Mapping Hardening Foundation`
+`0100E-37 — Post-Dimension-Contribution-Mapping Downstream Architecture Review`
 
 Status: PLANNED
 
-This is the sole planned task. It may harden only the existing Core mapper and minimum regression/public API/health coverage. It must preserve one calculated Result plus one applicable Mapping as input, one existing Contribution per explicit target as output, established formulas, exact causality and contract boundaries.
+This is the sole planned task. It must inspect the repository-first state after Contribution mapping and determine whether any downstream consumer is architecturally justified, where ownership belongs, and which boundary and cardinality are valid.
 
-It may not modify contracts/builders/validators; add Candidate/context/parallel mapper; aggregate Results; infer Dimensions; invoke for non-applicable/stopped; append Ledger; build Snapshot/state/Matrix/Coverage; decide satisfaction; persist; perform I/O; integrate Provider/Adapter/LLM; report; score; or mutate Runtime.
+It may not implement or modify Ledger, Snapshot, Knowledge, Knowledge Update, Matrix, Coverage, satisfaction, persistence, I/O, Provider, Adapter, LLM, report generation or Runtime. No downstream component is authorized before E-37 reaches an explicit decision.

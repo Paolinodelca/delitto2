@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-35**
+Verified through: **Task 0100E-36**
 
 Operational milestone: `origin/milestone/0100b-knowledge-foundation`
 
@@ -23,10 +23,10 @@ Completed task sequence:
 0100B-1 … 0100B-10
 0100C-1 … 0100C-3
 0100D-1 … 0100D-10
-0100E-1 … 0100E-35
+0100E-1 … 0100E-36
 ```
 
-Tasks D-9 and odd E tasks through E-35 are architecture reviews. D-10 is consolidation and freeze. Even E tasks through E-34 are implemented Foundations; E-36 is the sole planned Foundation.
+Tasks D-9 and odd E tasks through E-35 are architecture reviews. D-10 is consolidation and freeze. Even E tasks through E-36 are implemented Foundations; E-37 is the sole planned architecture review.
 
 ## Knowledge Foundation
 
@@ -101,9 +101,9 @@ Task 0100E-12 implements `KnowledgeAcquisitionPlan` as the first downstream cons
 
 Task 0100E-13 approves and Task 0100E-14 implements `KnowledgeAcquisitionRuntimeSession` as the first operational consumer of the Plan. It is Application-owned, Plan-scoped and stateful, with stable Session identity, closed lifecycle, exact item-state projections and explicit timestamps, but remains pre-Execution. The Plan is never mutated.
 
-Task 0100E-15 approves and Task 0100E-16 implements Application-owned `KnowledgeAcquisitionExecution` as the first direct Session consumer and one semantic attempt for one exact active Session item. Its closed pre-invocation lifecycle is `created`, `selected`, `ready_for_invocation`; it is deeply immutable, identity-safe and effect-neutral. Task 0100E-17 approves and Task 0100E-18 implements `KnowledgeAcquisitionInvocationBoundary` as an Application-owned structural outbound port plus an ephemeral, immutable and integrity-fingerprinted input. Task 0100E-19 approves and Task 0100E-20 implements the first capability-specific Infrastructure Invocation Adapter for `capability:structured-input-v1`. Task 0100E-21 approves and Task 0100E-22 implements `KnowledgeAcquisitionProviderResult`. Task 0100E-23 approves and Task 0100E-24 implements the capability-specific Provider Result Evidence Extractor as the crossing into Core `Evidence[]`. Task 0100E-25 approves and E-26 implements Evidence Intake; E-27 approves and E-28 implements exact registered-Evidence selection; E-29 approves and E-30 implements Observation Construction; E-31 approves and E-32 implements MeasurementResult normalization. Task E-33 approves and E-34 implements narrow Mapping Applicability. E-35 approves the existing Core Contribution mapper only after `applicable`, with local identity, canonicalization, immutability and formula-provenance hardening required before use. Contribution remains distinct from Knowledge; Knowledge Update, Matrix/Coverage update, satisfaction, persistence and Runtime mutation remain unauthorized. See `NEXT_PHASE.md`.
+Task 0100E-15 approves and Task 0100E-16 implements Application-owned `KnowledgeAcquisitionExecution` as the first direct Session consumer and one semantic attempt for one exact active Session item. Its closed pre-invocation lifecycle is `created`, `selected`, `ready_for_invocation`; it is deeply immutable, identity-safe and effect-neutral. Task 0100E-17 approves and Task 0100E-18 implements `KnowledgeAcquisitionInvocationBoundary` as an Application-owned structural outbound port plus an ephemeral, immutable and integrity-fingerprinted input. Task 0100E-19 approves and Task 0100E-20 implements the first capability-specific Infrastructure Invocation Adapter for `capability:structured-input-v1`. Task 0100E-21 approves and Task 0100E-22 implements `KnowledgeAcquisitionProviderResult`. Task 0100E-23 approves and Task 0100E-24 implements the capability-specific Provider Result Evidence Extractor as the crossing into Core `Evidence[]`. Task 0100E-25 approves and E-26 implements Evidence Intake; E-27 approves and E-28 implements exact registered-Evidence selection; E-29 approves and E-30 implements Observation Construction; E-31 approves and E-32 implements MeasurementResult normalization. Task E-33 approves and E-34 implements narrow Mapping Applicability. E-35 approves and E-36 hardens the existing Core Contribution mapper after `applicable`: identity now derives from canonical semantic output and complete Mapping policy, references and policy fingerprint are canonical, formula operands/strategies are explicit, and returned Contributions are deeply immutable. Contribution remains distinct from Knowledge; Knowledge Update, Matrix/Coverage update, satisfaction, persistence and Runtime mutation remain unauthorized. See `NEXT_PHASE.md`.
 
-The next planned task is `0100E-36` — Measurement Result Dimension Contribution Mapping Hardening Foundation. It is the sole planned task, may harden only the existing Core mapper, and may not change contracts or update Ledger/Knowledge.
+The next planned task is `0100E-37` — Post-Dimension-Contribution-Mapping Downstream Architecture Review. It is the sole planned task and must review the repository before authorizing any consumer beyond Contribution; Ledger, Snapshot, Knowledge and all other downstream responsibilities remain unauthorized until that review decides otherwise.
 
 ## Current authoritative documents
 
