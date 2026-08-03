@@ -1,0 +1,23 @@
+const assert = require('assert');
+const api = require('../src/app/knowledge');
+const fixture = require('./knowledge_acquisition_evidence_intake_fixture');
+
+const f = fixture.buildFixture();
+const beforeStore = JSON.stringify(f.store);
+const beforeBatch = JSON.stringify(f.evidence);
+const one = api.intakeKnowledgeAcquisitionEvidence({ evidenceStore: f.store, evidence: [f.evidence[1]] });
+const multiple = api.intakeKnowledgeAcquisitionEvidence({ evidenceStore: f.store, evidence: f.evidence });
+const populated = api.intakeKnowledgeAcquisitionEvidence({ evidenceStore: one, evidence: [f.evidence[0]] });
+assert.strictEqual(one.evidence.length, 1);
+assert.strictEqual(multiple.evidence.length, 2);
+assert.strictEqual(populated.evidence.length, 2);
+assert.deepStrictEqual(populated.evidence, multiple.evidence);
+assert.deepStrictEqual(multiple.evidence.map(item => item.id), multiple.evidence.map(item => item.id).sort());
+for (const item of multiple.evidence) assert.deepStrictEqual(item, f.evidence.find(original => original.id === item.id));
+assert(require('../src/core/evidence').validateEvidenceStore(multiple).isValid);
+assert.strictEqual(JSON.stringify(f.store), beforeStore);
+assert.strictEqual(JSON.stringify(f.evidence), beforeBatch);
+assert.notStrictEqual(multiple.evidence[0], f.evidence.find(item => item.id === multiple.evidence[0].id));
+assert(Object.isFrozen(multiple) && Object.isFrozen(multiple.evidence) && Object.isFrozen(multiple.evidence[0].content));
+assert.strictEqual(multiple.evidence[0].confidence, null);
+console.log('Knowledge Acquisition Evidence Intake tests PASSED');

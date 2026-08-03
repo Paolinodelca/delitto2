@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-24**
+Verified through: **Task 0100E-26**
 
 ## Principle
 
@@ -160,6 +160,8 @@ Task 0100E-23 approves a capability-specific Infrastructure Provider Result Evid
 Task 0100E-24 implements that extractor for `capability:structured-input-v1`. It validates Provider Result and originating Invocation Input context, interprets only the closed fixture-backed `structured_input` records schema, and returns a fresh deeply frozen Core `Evidence[]`. Evidence identities are deterministic; source identity and exact Invocation Input/Provider Result fingerprints are preserved as provenance. Empty extraction is valid and is not a failure or satisfaction decision. No I/O, persistence, Provider invocation, state update, scoring, confidence assignment or semantic deduction occurs.
 
 Task 0100E-25 approves a narrow Application-owned Knowledge Acquisition Evidence Intake operation as the first direct consumer of extracted `Evidence[]`. It coordinates Core validation and atomic copy-on-write registration into the existing Core-owned EvidenceStore aggregate/collection. EvidenceStore is an in-memory authoritative domain collection, not persistence and not the Application use-case boundary. No new Evidence Collection contract is introduced.
+
+Task 0100E-26 implements the operation as `intakeKnowledgeAcquisitionEvidence`. It consumes one explicit valid EvidenceStore and a valid `0..N` Evidence batch, rejects any exact identity collision before building, returns a fresh deeply frozen Store, preserves Store metadata/identity semantics and every Evidence property, and updates only canonical Evidence ordering and `statistics.totalEvidence`. Empty input is a valid fresh-store no-op. No Core API or contract is changed. The next gate is `0100E-27 — Post-Evidence-Intake Downstream Architecture Review`, which is review-only.
 
 Observation must not consume the Infrastructure extractor array directly. Future Evidence-to-Observation semantics remain Core-owned and must operate from registered Evidence under an explicit Measurement; Application may orchestrate that later transition. The next gate is `0100E-26 — Knowledge Acquisition Evidence Intake Foundation`, limited to effect-free intake/registration. It does not authorize persistence, Observation, Measurement, Contribution, Knowledge Update, Requirement satisfaction, concrete Provider integration or Runtime mutation.
 

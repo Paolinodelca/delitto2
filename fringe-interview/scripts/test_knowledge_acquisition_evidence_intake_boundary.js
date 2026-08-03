@@ -1,0 +1,12 @@
+const assert = require('assert');
+const fs = require('fs');
+const api = require('../src/app/knowledge');
+const fixture = require('./knowledge_acquisition_evidence_intake_fixture');
+const f = fixture.buildFixture();
+const result = api.intakeKnowledgeAcquisitionEvidence({ evidenceStore: f.store, evidence: f.evidence });
+for (const key of ['observation', 'measurement', 'contribution', 'knowledge', 'ledger', 'snapshot', 'matrix', 'coverage', 'requirement', 'satisfaction', 'persistence', 'event', 'runtime', 'outcome']) assert(!Object.keys(result).some(item => item.toLowerCase().includes(key)), key);
+assert(result.evidence.every(item => item.confidence === null));
+const source = fs.readFileSync('src/app/knowledge/intakeKnowledgeAcquisitionEvidence.js', 'utf8');
+for (const dependency of ['fs', 'http', 'https', 'net', 'child_process']) assert(!source.includes(`require('${dependency}')`));
+assert(!('intakeKnowledgeAcquisitionEvidence' in require('../src/core/evidence')));
+console.log('Knowledge Acquisition Evidence Intake boundary tests PASSED');

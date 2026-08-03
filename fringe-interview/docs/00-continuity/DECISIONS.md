@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-24**
+Verified through: **Task 0100E-26**
 
 ## Foundation decisions
 
@@ -198,5 +198,7 @@ Task 0100E-24 implements ADR-037 with a closed fixture-backed `structured_input`
 ### ADR-038 — Application intake registers Evidence into the Core EvidenceStore before Observation
 
 Task 0100E-25 approves a narrow Application-owned Knowledge Acquisition Evidence Intake operation as the first direct consumer of the Core-owned `Evidence[]` returned by the Infrastructure extractor. The operation coordinates validation and atomic immutable registration into the existing Core-owned EvidenceStore aggregate/collection. EvidenceStore is not persistence, and no new Evidence Collection or intake-result domain contract is introduced.
+
+Task 0100E-26 implements ADR-038 as `intakeKnowledgeAcquisitionEvidence({ evidenceStore, evidence })`. It returns the updated EvidenceStore directly, keeps the existing Store identity model, validates locally and contextually, rejects exact ID collisions within the batch and against the Store before construction, canonically sorts the combined Evidence by ID, deep-clones and deep-freezes the result, and returns a fresh equivalent Store for an empty batch. No Core public contract changes or downstream semantic responsibilities are introduced.
 
 Exact duplicate Evidence IDs are rejected during intake/registration rather than silently merged. Acquisition provenance and `confidence: null` are preserved unchanged. Observation does not consume the extractor array directly: future Evidence-to-Observation semantics remain Core-owned, operate from registered Evidence in the Store/collection, and require a separate architecture gate. E-26 may implement only the effect-free intake Foundation and the minimum Core registration primitive required by it; persistence, semantic deduplication, Observation, Measurement, Contribution, Knowledge updates, Requirement satisfaction and Runtime mutation remain excluded.

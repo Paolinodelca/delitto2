@@ -1,0 +1,10 @@
+const assert = require('assert');
+const api = require('../src/app/knowledge');
+const fixture = require('./knowledge_acquisition_evidence_intake_fixture');
+const f = fixture.buildFixture();
+const result = api.intakeKnowledgeAcquisitionEvidence({ evidenceStore: f.store, evidence: [] });
+assert.notStrictEqual(result, f.store);
+assert.deepStrictEqual(result, f.store);
+assert(Object.isFrozen(result) && Object.isFrozen(result.evidence));
+assert.deepStrictEqual(Object.keys(result).sort(), ['evidence', 'extensions', 'metadata', 'sources', 'statistics']);
+console.log('Knowledge Acquisition Evidence Intake empty-batch tests PASSED');

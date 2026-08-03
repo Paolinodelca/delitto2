@@ -30,6 +30,13 @@ export {
 } from "./knowledge/publicApi.js";
 
 export {
+  intakeKnowledgeAcquisitionEvidence,
+  validateKnowledgeAcquisitionEvidenceIntake,
+  validateKnowledgeAcquisitionEvidenceIntakeContext,
+  healthKnowledgeAcquisitionEvidenceIntake
+} from "./knowledge/publicApi.js";
+
+export {
   buildKnowledgeAcquisitionCapabilityConfiguration,
   validateKnowledgeAcquisitionCapabilityConfiguration,
   validateKnowledgeAcquisitionCapabilityConfigurationContext,
