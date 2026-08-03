@@ -1,13 +1,17 @@
-# Next Phase — Explicit Architecture Review Required
+# Next Phase — Measurement Result Mapping Applicability — 0100E-34
 
 Status: **CURRENT**
 
-## Current State
+Task `0100E-33 — Post-Measurement-Result Downstream Architecture Review` is **COMPLETED** with outcome **APPROVED WITH NOTES**.
 
-Task `0100E-32 — Registered Observation Measurement Result Normalization Foundation` is **COMPLETED** and conforms to the E-31 boundary.
+`MeasurementDimensionMapping` is pre-existing declarative Core policy keyed by `measurementId`, not an output or direct consumer of MeasurementResult. The historical direct consumer immediately creates `DimensionContribution[]`, beyond the minimum next gate.
 
-No task is currently planned or authorized.
+## Sole planned task
 
-## Gate
+`0100E-34 — Measurement Result Mapping Applicability Foundation`
 
-An explicit repository-first downstream architecture review is required before any MeasurementDimensionMapping, DimensionContribution, Knowledge, Ledger, Snapshot, Matrix, Coverage or Requirement-satisfaction work may be planned. E-32 does not authorize any of those responsibilities.
+Status: PLANNED
+
+E-34 may implement only an effect-free, Application-orchestrated Core applicability operation over one contextually valid E-32 MeasurementResult and one explicitly supplied existing Mapping. It validates both, requires exact `measurementId`, returns/references the unchanged Mapping only for `calculated`, and explicitly stops `insufficient_data` as not applicable without treating it as absence.
+
+No discovery, candidate, registration, collection/store, batch, aggregation, fan-out, characteristic-to-Dimension inference, contract change, Contribution, Knowledge/Ledger/Snapshot/state/Matrix/Coverage update, satisfaction, persistence, I/O, Provider, Adapter, LLM, Runtime mutation or reporting is authorized.

@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-32**
+Verified through: **Task 0100E-33**
 
 ## Foundation decisions
 
@@ -226,3 +226,7 @@ Task 0100E-30 implements ADR-040 as `constructObservationsFromRegisteredEvidence
 Task 0100E-31 approves the existing Core-owned Measurement Result normalization boundary as the first direct consumer of constructed `Observation[]`. One explicit invocation accepts the same existing Measurement, Observations, one targeted characteristic ID and a closed versioned normalization context, and returns exactly one existing MeasurementResult. Zero, one or many matching Observations may contribute; N:1 aggregation is authorized only inside this boundary. No Observation selection, Measurement Application/Execution, Candidate, collection or store is introduced.
 
 MeasurementResult is a per-Measurement/per-characteristic synthesis, not an atomic Observation, Dimension contribution or Knowledge. Its identity is deterministic and content-derived; Observation references are canonical; output is deeply immutable. Result confidence, evidence quality and source reliability are recalculated only through explicit versioned Core rules and are never transferred implicitly. Empty or unusable input yields `insufficient_data` and never asserts absence. Task 0100E-32 implements only this normalization Foundation; mapping, Contribution, Knowledge, persistence, I/O and Runtime mutation remain excluded pending an explicit architecture review.
+
+### ADR-042 — Explicit single-Mapping applicability precedes Contribution creation
+
+Task 0100E-33 establishes that existing `MeasurementDimensionMapping` is declarative policy keyed by `measurementId`; it is not derived from and does not itself consume MeasurementResult. Application owns explicit supply/selection of exactly one existing Mapping. Core owns validation and exact compatibility. A calculated compatible result may expose the unchanged Mapping as applicable; `insufficient_data` stops explicitly as not applicable while the result remains present and valid. No characteristic-to-Dimension inference, discovery, fan-out, registration, store, intermediate domain contract, metric transformation or Contribution is authorized. Task E-34 may implement only this effect-free applicability Foundation.
