@@ -8,9 +8,18 @@ import { inspectContinuityGovernance } from "./check_continuity_governance.js";
 const applicationRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repositoryResult = inspectContinuityGovernance(applicationRoot);
 assert.equal(repositoryResult.status, "PASS", repositoryResult.errors.join("\n"));
+const repositoryContinuity = fs.readFileSync(path.join(applicationRoot, "docs", "00-continuity", "CONTINUITY.md"), "utf8");
 const repositoryNextPhase = fs.readFileSync(path.join(applicationRoot, "docs", "00-continuity", "NEXT_PHASE.md"), "utf8");
-assert.match(repositoryNextPhase, /No task is currently planned or authorized\./);
-assert.equal(repositoryResult.plannedTask, null);
+const repositoryRoadmap = fs.readFileSync(path.join(applicationRoot, "docs", "15-architecture_specifications", "CORE_ROADMAP.md"), "utf8");
+const roadmapPlannedTasks = [...repositoryRoadmap.matchAll(/^\| (0100[A-Z]-[^ |]+) \|(?: [^|]+ \|)? PLANNED \|/gm)].map((match) => match[1]);
+const continuityPlannedTasks = [...repositoryContinuity.matchAll(/\bnext planned task is\s+`?(0100[A-Z]-[^\s`â€”]+)/gi)].map((match) => match[1]);
+const nextPhaseTask = repositoryNextPhase.match(/^# Next Phase[^\n]*\b(0100[A-Z]-[^\s]+)\s*$/m)?.[1];
+assert.equal(roadmapPlannedTasks.length, 1, "Current roadmap must contain exactly one PLANNED task.");
+assert.equal(continuityPlannedTasks.length, 1, "Current continuity must identify exactly one next planned task.");
+assert.ok(nextPhaseTask, "Current NEXT_PHASE title must identify the planned task.");
+assert.equal(repositoryResult.plannedTask, roadmapPlannedTasks[0]);
+assert.equal(continuityPlannedTasks[0], roadmapPlannedTasks[0]);
+assert.equal(nextPhaseTask, roadmapPlannedTasks[0]);
 
 function buildFixture({ roadmapRows, nextTask = "0100E-12", nextStatus = "PLANNED", continuityNextTask = "0100E-12", configurationState = "IMPLEMENTED", workflowText = "# Workflow\nContinuity Impact Assessment\n", readmeText = "| `CONTINUITY.md` | CURRENT | state |\n| `NEXT_PHASE.md` | CURRENT | next |\n" }) {
   const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "imago-continuity-check-"));

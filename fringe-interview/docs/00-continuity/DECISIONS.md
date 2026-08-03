@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-30**
+Verified through: **Task 0100E-31**
 
 ## Foundation decisions
 
@@ -220,3 +220,9 @@ Task 0100E-29 approves a Core-owned, Application-orchestrated Observation Constr
 Observation confidence, quality and reliability are assigned only by explicit deterministic rules; Evidence confidence remains unchanged and is neither implicitly transferred nor aggregated. Empty selection or no rule match produces no Observation and never implies `not_observed` or absence. No Observation Candidate or Store is introduced. Task 0100E-30 may implement only this effect-free Foundation using existing Evidence, Measurement and Observation contracts; Measurement creation/result, cross-Evidence synthesis, Contribution, Knowledge, persistence, I/O, LLM and Runtime mutation remain excluded.
 
 Task 0100E-30 implements ADR-040 as `constructObservationsFromRegisteredEvidence({ evidence, measurement, construction })`. The closed versioned construction input supports only exact Evidence `content` equality in this baseline, supplies explicit bounded technical signal fields and an explicit timestamp, and is checked by separate local and contextual validators. The operation uses the existing Observation builder/validator without changing Evidence, Measurement or Observation contracts; output identities are deterministic, ordering is canonical and values are deeply immutable.
+
+### ADR-041 — Measurement Result Normalization is the first Observation consumer
+
+Task 0100E-31 approves the existing Core-owned Measurement Result normalization boundary as the first direct consumer of constructed `Observation[]`. One explicit invocation accepts the same existing Measurement, Observations, one targeted characteristic ID and a closed versioned normalization context, and returns exactly one existing MeasurementResult. Zero, one or many matching Observations may contribute; N:1 aggregation is authorized only inside this boundary. No Observation selection, Measurement Application/Execution, Candidate, collection or store is introduced.
+
+MeasurementResult is a per-Measurement/per-characteristic synthesis, not an atomic Observation, Dimension contribution or Knowledge. Its identity must be deterministic and content-derived; Observation references must be canonical; output must be deeply immutable. Result confidence, evidence quality and source reliability are recalculated only through explicit versioned Core rules and are never transferred implicitly. Empty or unusable input yields `insufficient_data` and never asserts absence. Task 0100E-32 may implement only this normalization Foundation; mapping, Contribution, Knowledge, persistence, I/O and Runtime mutation remain excluded.

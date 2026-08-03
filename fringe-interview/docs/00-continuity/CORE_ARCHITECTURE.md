@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-30**
+Verified through: **Task 0100E-31**
 
 ## Principle
 
@@ -170,6 +170,8 @@ Task 0100E-25 approves a narrow Application-owned Knowledge Acquisition Evidence
 Task 0100E-26 implements the operation as `intakeKnowledgeAcquisitionEvidence`. It consumes one explicit valid EvidenceStore and a valid `0..N` Evidence batch, rejects any exact identity collision before building, returns a fresh deeply frozen Store, preserves Store metadata/identity semantics and every Evidence property, and updates only canonical Evidence ordering and `statistics.totalEvidence`. Empty input is a valid fresh-store no-op. No Core API or contract is changed.
 
 Task 0100E-27 approves and Task 0100E-28 implements an Application-owned Registered Evidence Selection operation as the first direct consumer of the populated Store. `selectRegisteredKnowledgeAcquisitionEvidence({ evidenceStore, evidenceIds })` accepts exact unique Evidence IDs and returns a fresh deeply immutable canonical subset of cloned, otherwise unchanged registered Evidence. Task E-29 approves and Task E-30 implements Core-owned, Application-orchestrated `constructObservationsFromRegisteredEvidence` as its first interpreting consumer. Construction requires one existing Measurement and explicit closed versioned exact-content rules; one Evidence may cause zero or more Observations, while every Observation has one exact Evidence cause through `contentRef` and preserves the original source through `sourceRef`. Local validation proves the closed input; contextual validation proves Measurement method, target and source correspondence. N:1 Observation, Observation Candidate/Store, Measurement creation/result, persistence, Contribution, Knowledge Update, Requirement satisfaction, concrete Provider integration and Runtime mutation remain excluded. No next task is currently authorized.
+
+Task E-31 approves Core-owned, Application-orchestrated Measurement Result Normalization as the first direct consumer of constructed Observations. The same existing Measurement, one explicit target characteristic, immutable Observations and a closed versioned normalization context yield exactly one existing MeasurementResult. `0..N:1` aggregation is authorized only here; result identity is deterministic, references are canonical, output is deeply immutable and aggregate confidence/quality/reliability come only from explicit versioned rules. Empty or unusable input yields `insufficient_data`, never absence. No intermediate contract or Store is required. E-32 is limited to this Foundation; Dimension mapping, Contribution and Knowledge remain outside the gate.
 
 ## Dependency direction
 
