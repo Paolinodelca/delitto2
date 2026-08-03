@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-28**
+Verified through: **Task 0100E-29**
 
 ## Foundation decisions
 
@@ -212,3 +212,9 @@ Observation is a first interpretation, not a structural translation. Registered 
 Task 0100E-28 may implement only the exact Registered Evidence Selection Foundation, with minimum Application validation/public exposure/health/tests required by convention. Semantic filtering, Evidence deletion/merge, Observation or Measurement creation, confidence assignment, persistence, I/O, Provider/Adapter/LLM work, downstream Knowledge updates, Requirement satisfaction and Runtime mutation remain excluded. Any Evidence-to-Observation transformer requires a later repository-first architecture gate; its semantics are Core-owned and may be Application-orchestrated.
 
 Task 0100E-28 implements ADR-039 as `selectRegisteredKnowledgeAcquisitionEvidence({ evidenceStore, evidenceIds })`. Local validation enforces the closed input and unique non-empty string IDs; contextual validation enforces a valid unambiguous Store and exact membership. The operation returns a cloned, deeply frozen `Evidence[]` in canonical ID order, including a fresh frozen empty array for zero IDs. Core APIs and contracts remain unchanged. Task 0100E-29 must review the next downstream boundary without presuming Observation construction.
+
+### ADR-040 — Explicit Core Observation construction is the first interpretation
+
+Task 0100E-29 approves a Core-owned, Application-orchestrated Observation Construction operation as the first legitimate consumer of selected registered Evidence. It requires one valid existing Measurement and an explicit closed versioned construction context/rule set, then returns canonical immutable existing Observation values. One Evidence may cause zero or more Observations; every Observation has exactly one Evidence cause, identified through `contentRef`, and exactly one Measurement. Multiple Evidence values may not be synthesized into one Observation at this gate.
+
+Observation confidence, quality and reliability are assigned only by explicit deterministic rules; Evidence confidence remains unchanged and is neither implicitly transferred nor aggregated. Empty selection or no rule match produces no Observation and never implies `not_observed` or absence. No Observation Candidate or Store is introduced. Task 0100E-30 may implement only this effect-free Foundation using existing Evidence, Measurement and Observation contracts; Measurement creation/result, cross-Evidence synthesis, Contribution, Knowledge, persistence, I/O, LLM and Runtime mutation remain excluded.
