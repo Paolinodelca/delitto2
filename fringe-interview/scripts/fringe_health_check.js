@@ -1713,6 +1713,15 @@ addCheck("Knowledge Acquisition Evidence Intake application", async () => {
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_evidence_intake.js"], { stdio: "pipe" });
 });
 
+addCheck("Registered Evidence Observation Construction core", async () => {
+  const imported = await import("../src/core/observation/index.js");
+  const api = imported.default || imported;
+  const fixtures = await import("./registered_evidence_observation_construction_fixture.js");
+  const fixtureApi = fixtures.default || fixtures;
+  const result = api.healthObservationConstruction(fixtureApi);
+  if (!result?.ok) throw new Error(JSON.stringify(result));
+});
+
 addCheck("Knowledge Acquisition Boundary Freeze", async () => {
   const { execFileSync } = await import("child_process");
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_boundary.js"], { stdio: "pipe" });

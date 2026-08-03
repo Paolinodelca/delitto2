@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-29**
+Verified through: **Task 0100E-30**
 
-Next gate: **0100E-30**
+Next gate: **TO BE DEFINED**
 
-Last updated: 2026-08-03 (`0100E-29`)
+Last updated: 2026-08-03 (`0100E-30`)
 
 ## Purpose
 
@@ -149,7 +149,7 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 Type: **FOUNDATION**
 
-Status: **PLANNED**
+Status: **COMPLETED**
 
 | Task | Type | Status | Result |
 |---|---|---|---|
@@ -167,7 +167,7 @@ Status: **PLANNED**
 | 0100E-27 | Architecture Review | COMPLETED | exact Application-owned registered-Evidence selection approved before Observation construction |
 | 0100E-28 | Foundation | COMPLETED | exact immutable selection of registered Evidence from an explicit EvidenceStore |
 | 0100E-29 | Architecture Review | COMPLETED | explicit Core Observation Construction approved as first interpretation |
-| 0100E-30 | Foundation | PLANNED | implement rule-driven atomic Observation construction from selected registered Evidence |
+| 0100E-30 | Foundation | COMPLETED | implemented rule-driven atomic Observation construction from selected registered Evidence |
 
 Approved cardinality:
 
@@ -189,7 +189,7 @@ Task E-21 approves `KnowledgeAcquisitionProviderResult` as the first new downstr
 
 Task E-22 implements that result with one `succeeded` state, opaque cloned `providerPayload`, exact Invocation Input fingerprint causality and deterministic integrity. The Adapter validates and returns it unchanged. E-23 approves a capability-specific Infrastructure Provider Result Evidence Extractor as the first semantic crossing, producing zero or more existing Core Evidence values. It rejects direct Knowledge, Knowledge Candidate and generic normalized-result layers. E-24 implements the effect-free extractor without modifying existing contracts, implementing a Provider/transport, executing ingestion/update flows or creating Knowledge.
 
-Task E-24 implements the immutable structured-input extractor and returns only Core-owned `Evidence[]`. E-25 approves and E-26 implements a narrow Application-owned Knowledge Acquisition Evidence Intake operation as its first direct consumer. Intake registers Evidence atomically and without mutation into the existing Core-owned EvidenceStore aggregate/collection; the Store is not persistence. Exact ID collisions reject the whole batch, semantic equivalents with distinct IDs coexist, and an empty batch returns a fresh equivalent Store. E-27 approves and E-28 implements exact Application-owned registered-Evidence selection as the first direct Store consumer. It validates exact unique membership, clones and deep-freezes unchanged Evidence, orders by ID and returns a fresh frozen empty array for zero IDs. E-29 approves explicit Core-owned, Application-orchestrated Observation Construction as the first interpretation, requiring one existing Measurement and closed versioned rules. One Evidence may cause zero or more Observations; each Observation has exactly one Evidence cause. E-30 is the sole planned Foundation. N:1 Observation, Measurement creation/result, persistence, Knowledge Update, satisfaction and Runtime mutation remain excluded.
+Task E-24 implements the immutable structured-input extractor and returns only Core-owned `Evidence[]`. E-25 approves and E-26 implements a narrow Application-owned Knowledge Acquisition Evidence Intake operation as its first direct consumer. Intake registers Evidence atomically and without mutation into the existing Core-owned EvidenceStore aggregate/collection; the Store is not persistence. Exact ID collisions reject the whole batch, semantic equivalents with distinct IDs coexist, and an empty batch returns a fresh equivalent Store. E-27 approves and E-28 implements exact Application-owned registered-Evidence selection as the first direct Store consumer. It validates exact unique membership, clones and deep-freezes unchanged Evidence, orders by ID and returns a fresh frozen empty array for zero IDs. E-29 approves and E-30 implements explicit Core-owned, Application-orchestrated Observation Construction as the first interpretation, requiring one existing Measurement and closed versioned exact-content rules. One Evidence may cause zero or more Observations; each Observation has exactly one Evidence cause. No successor task is currently planned. N:1 Observation, Measurement creation/result, persistence, Knowledge Update, satisfaction and Runtime mutation remain excluded.
 
 ## Not approved
 

@@ -9,9 +9,8 @@ const applicationRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)
 const repositoryResult = inspectContinuityGovernance(applicationRoot);
 assert.equal(repositoryResult.status, "PASS", repositoryResult.errors.join("\n"));
 const repositoryNextPhase = fs.readFileSync(path.join(applicationRoot, "docs", "00-continuity", "NEXT_PHASE.md"), "utf8");
-const repositoryNextTask = repositoryNextPhase.match(/\b(0100E-\d+)\s+.+\nStatus:\s+PLANNED/)?.[1];
-assert(repositoryNextTask, "NEXT_PHASE.md must expose one explicitly PLANNED 0100E task.");
-assert.equal(repositoryResult.plannedTask, repositoryNextTask);
+assert.match(repositoryNextPhase, /No task is currently planned or authorized\./);
+assert.equal(repositoryResult.plannedTask, null);
 
 function buildFixture({ roadmapRows, nextTask = "0100E-12", nextStatus = "PLANNED", continuityNextTask = "0100E-12", configurationState = "IMPLEMENTED", workflowText = "# Workflow\nContinuity Impact Assessment\n", readmeText = "| `CONTINUITY.md` | CURRENT | state |\n| `NEXT_PHASE.md` | CURRENT | next |\n" }) {
   const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "imago-continuity-check-"));
@@ -73,7 +72,7 @@ const twoPlanned = inspectFixture({
   roadmapRows: `${validRows}\n| 0100E-13 | Architecture Review | PLANNED | extra |`,
 });
 assert.equal(twoPlanned.status, "FAIL");
-assert(twoPlanned.errors.some((error) => error.includes("exactly one PLANNED next task")));
+assert(twoPlanned.errors.some((error) => error.includes("one PLANNED next task or an explicit no-task gate")));
 
 const missingNextTask = inspectFixture({
   roadmapRows: "| 0100E-9 | Architecture Review | COMPLETED | reviewed |\n| 0100E-10 | Foundation | COMPLETED | implemented |\n| 0100E-11 | Architecture Review | COMPLETED | reviewed |",
@@ -81,7 +80,7 @@ const missingNextTask = inspectFixture({
   configurationState: "IMPLEMENTED",
 });
 assert.equal(missingNextTask.status, "FAIL");
-assert(missingNextTask.errors.some((error) => error.includes("exactly one PLANNED next task")));
+assert(missingNextTask.errors.some((error) => error.includes("one PLANNED next task or an explicit no-task gate")));
 
 const staleConfigurationState = inspectFixture({ roadmapRows:validRows, configurationState:"APPROVED, not implemented" });
 assert.equal(staleConfigurationState.status, "FAIL");

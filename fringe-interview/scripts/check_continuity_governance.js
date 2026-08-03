@@ -78,16 +78,16 @@ export function inspectContinuityGovernance(root = applicationRoot) {
   const plannedTasks = [...taskStatuses.entries()]
     .filter(([, status]) => status === "PLANNED")
     .map(([task]) => task);
-  if (plannedTasks.length !== 1) {
-    errors.push(`Roadmap must contain exactly one PLANNED next task; found ${plannedTasks.length}.`);
-  }
-
   const nextPhase = fs.readFileSync(nextPhasePath, "utf8");
+  const explicitlyUnplanned = plannedTasks.length === 0 && /No task is currently planned or authorized\./i.test(nextPhase);
+  if (plannedTasks.length > 1 || (plannedTasks.length === 0 && !explicitlyUnplanned)) {
+    errors.push(`Roadmap must contain one PLANNED next task or an explicit no-task gate; found ${plannedTasks.length}.`);
+  }
   const nextPhaseHeading = nextPhase.match(/^# Next Phase[^\n]*\b(0100[A-Z]-[^\s]+)\s*$/m);
   const nextPhaseTask = nextPhaseHeading?.[1] || null;
-  if (!nextPhaseTask) {
+  if (!nextPhaseTask && !explicitlyUnplanned) {
     errors.push("NEXT_PHASE.md must identify one task in its title.");
-  } else {
+  } else if (nextPhaseTask) {
     if (plannedTasks.length === 1 && nextPhaseTask !== plannedTasks[0]) {
       errors.push(`NEXT_PHASE task ${nextPhaseTask} does not match roadmap PLANNED task ${plannedTasks[0]}.`);
     }
@@ -98,14 +98,15 @@ export function inspectContinuityGovernance(root = applicationRoot) {
   if (!/^Status:\s*\*\*CURRENT\*\*\s*$/m.test(nextPhase)) {
     errors.push("NEXT_PHASE.md must be marked CURRENT.");
   }
-  if (!/^Status:\s*PLANNED\s*$/m.test(nextPhase)) {
+  if (!explicitlyUnplanned && !/^Status:\s*PLANNED\s*$/m.test(nextPhase)) {
     errors.push("NEXT_PHASE.md must declare its task as PLANNED.");
   }
 
   const continuity = fs.readFileSync(continuityPath, "utf8");
   const continuityNextTasks = [...continuity.matchAll(/\bnext planned task is\s+`?(0100[A-Z]-[^\s`—]+)/gi)]
     .map((match) => match[1]);
-  if (continuityNextTasks.length !== 1) {
+  const continuityExplicitlyUnplanned = /There is no next planned task;/i.test(continuity);
+  if (continuityNextTasks.length !== 1 && !(explicitlyUnplanned && continuityNextTasks.length === 0 && continuityExplicitlyUnplanned)) {
     errors.push(`CONTINUITY.md must identify exactly one next planned task; found ${continuityNextTasks.length}.`);
   } else if (plannedTasks.length === 1 && continuityNextTasks[0] !== plannedTasks[0]) {
     errors.push(`CONTINUITY next task ${continuityNextTasks[0]} does not match roadmap PLANNED task ${plannedTasks[0]}.`);

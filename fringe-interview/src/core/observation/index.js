@@ -1,6 +1,10 @@
 module.exports={
  ...require('./buildMeasurement'),...require('./validateMeasurement'),
  ...require('./buildObservation'),...require('./validateObservation'),
+ ...require('./validateObservationConstruction'),
+ ...require('./validateObservationConstructionContext'),
+ ...require('./constructObservationsFromRegisteredEvidence'),
+ ...require('./healthObservationConstruction'),
  ...require('./buildMeasurementResult'),...require('./validateMeasurementResult'),
  ...require('./normalizeMeasurementResult')
 };

@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-29**
+Verified through: **Task 0100E-30**
 
 ## Foundation decisions
 
@@ -218,3 +218,5 @@ Task 0100E-28 implements ADR-039 as `selectRegisteredKnowledgeAcquisitionEvidenc
 Task 0100E-29 approves a Core-owned, Application-orchestrated Observation Construction operation as the first legitimate consumer of selected registered Evidence. It requires one valid existing Measurement and an explicit closed versioned construction context/rule set, then returns canonical immutable existing Observation values. One Evidence may cause zero or more Observations; every Observation has exactly one Evidence cause, identified through `contentRef`, and exactly one Measurement. Multiple Evidence values may not be synthesized into one Observation at this gate.
 
 Observation confidence, quality and reliability are assigned only by explicit deterministic rules; Evidence confidence remains unchanged and is neither implicitly transferred nor aggregated. Empty selection or no rule match produces no Observation and never implies `not_observed` or absence. No Observation Candidate or Store is introduced. Task 0100E-30 may implement only this effect-free Foundation using existing Evidence, Measurement and Observation contracts; Measurement creation/result, cross-Evidence synthesis, Contribution, Knowledge, persistence, I/O, LLM and Runtime mutation remain excluded.
+
+Task 0100E-30 implements ADR-040 as `constructObservationsFromRegisteredEvidence({ evidence, measurement, construction })`. The closed versioned construction input supports only exact Evidence `content` equality in this baseline, supplies explicit bounded technical signal fields and an explicit timestamp, and is checked by separate local and contextual validators. The operation uses the existing Observation builder/validator without changing Evidence, Measurement or Observation contracts; output identities are deterministic, ordering is canonical and values are deeply immutable.

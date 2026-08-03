@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-29**
+Verified through: **Task 0100E-30**
 
 ## Principle
 
@@ -46,7 +46,7 @@ Input / Evidence                                      [Core]
 → EvidenceStore                                       [Core; populated aggregate/collection]
 → Registered Evidence Selection                       [Application; implemented, exact/read-only]
 → Evidence[]                                          [Core values; canonical immutable subset]
-→ Observation Construction                            [Core semantics; E-30 planned, Application-orchestrated]
+→ Observation Construction                            [Core semantics; implemented, Application-orchestrated]
 → Observation[]                                       [Core values; atomic, one Evidence cause each]
 ```
 
@@ -169,7 +169,7 @@ Task 0100E-25 approves a narrow Application-owned Knowledge Acquisition Evidence
 
 Task 0100E-26 implements the operation as `intakeKnowledgeAcquisitionEvidence`. It consumes one explicit valid EvidenceStore and a valid `0..N` Evidence batch, rejects any exact identity collision before building, returns a fresh deeply frozen Store, preserves Store metadata/identity semantics and every Evidence property, and updates only canonical Evidence ordering and `statistics.totalEvidence`. Empty input is a valid fresh-store no-op. No Core API or contract is changed.
 
-Task 0100E-27 approves and Task 0100E-28 implements an Application-owned Registered Evidence Selection operation as the first direct consumer of the populated Store. `selectRegisteredKnowledgeAcquisitionEvidence({ evidenceStore, evidenceIds })` accepts exact unique Evidence IDs and returns a fresh deeply immutable canonical subset of cloned, otherwise unchanged registered Evidence. Task E-29 approves Core-owned, Application-orchestrated Observation Construction as its first interpreting consumer. Construction requires one existing Measurement and explicit closed versioned rules; one Evidence may cause zero or more Observations, while every Observation has one exact Evidence cause through `contentRef` and preserves the original source through `sourceRef`. N:1 Observation, Observation Candidate/Store, Measurement creation/result, persistence, Contribution, Knowledge Update, Requirement satisfaction, concrete Provider integration and Runtime mutation remain excluded. The next gate is `0100E-30 — Registered Evidence Observation Construction Foundation`.
+Task 0100E-27 approves and Task 0100E-28 implements an Application-owned Registered Evidence Selection operation as the first direct consumer of the populated Store. `selectRegisteredKnowledgeAcquisitionEvidence({ evidenceStore, evidenceIds })` accepts exact unique Evidence IDs and returns a fresh deeply immutable canonical subset of cloned, otherwise unchanged registered Evidence. Task E-29 approves and Task E-30 implements Core-owned, Application-orchestrated `constructObservationsFromRegisteredEvidence` as its first interpreting consumer. Construction requires one existing Measurement and explicit closed versioned exact-content rules; one Evidence may cause zero or more Observations, while every Observation has one exact Evidence cause through `contentRef` and preserves the original source through `sourceRef`. Local validation proves the closed input; contextual validation proves Measurement method, target and source correspondence. N:1 Observation, Observation Candidate/Store, Measurement creation/result, persistence, Contribution, Knowledge Update, Requirement satisfaction, concrete Provider integration and Runtime mutation remain excluded. No next task is currently authorized.
 
 ## Dependency direction
 
