@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-26**
+Verified through: **Task 0100E-27**
 
-Next gate: **0100E-27**
+Next gate: **0100E-28**
 
-Last updated: 2026-08-03 (`0100E-26`)
+Last updated: 2026-08-03 (`0100E-27`)
 
 ## Purpose
 
@@ -145,7 +145,7 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 ## Current gate
 
-### 0100E-27 — Post-Evidence-Intake Downstream Architecture Review
+### 0100E-28 — Registered Evidence Selection Foundation
 
 Type: **FOUNDATION**
 
@@ -164,7 +164,8 @@ Status: **PLANNED**
 | 0100E-24 | Foundation | COMPLETED | deterministic immutable structured-input Provider Result Evidence extraction with exact provenance |
 | 0100E-25 | Architecture Review | COMPLETED | Application-owned Evidence Intake approved before immutable registration into the Core EvidenceStore aggregate |
 | 0100E-26 | Foundation | COMPLETED | effect-free Application Evidence intake with atomic exact-ID-safe immutable EvidenceStore registration |
-| 0100E-27 | Architecture Review | PLANNED | review the first legitimate downstream consumer of registered Evidence |
+| 0100E-27 | Architecture Review | COMPLETED | exact Application-owned registered-Evidence selection approved before Observation construction |
+| 0100E-28 | Foundation | PLANNED | implement exact immutable selection of registered Evidence from an explicit EvidenceStore |
 
 Approved cardinality:
 
@@ -186,7 +187,7 @@ Task E-21 approves `KnowledgeAcquisitionProviderResult` as the first new downstr
 
 Task E-22 implements that result with one `succeeded` state, opaque cloned `providerPayload`, exact Invocation Input fingerprint causality and deterministic integrity. The Adapter validates and returns it unchanged. E-23 approves a capability-specific Infrastructure Provider Result Evidence Extractor as the first semantic crossing, producing zero or more existing Core Evidence values. It rejects direct Knowledge, Knowledge Candidate and generic normalized-result layers. E-24 implements the effect-free extractor without modifying existing contracts, implementing a Provider/transport, executing ingestion/update flows or creating Knowledge.
 
-Task E-24 implements the immutable structured-input extractor and returns only Core-owned `Evidence[]`. E-25 approves and E-26 implements a narrow Application-owned Knowledge Acquisition Evidence Intake operation as its first direct consumer. Intake registers Evidence atomically and without mutation into the existing Core-owned EvidenceStore aggregate/collection; the Store is not persistence. Exact ID collisions reject the whole batch, semantic equivalents with distinct IDs coexist, and an empty batch returns a fresh equivalent Store. E-27 is the sole planned architecture review. Observation, Measurement, persistence, Knowledge Update, satisfaction and Runtime mutation remain excluded.
+Task E-24 implements the immutable structured-input extractor and returns only Core-owned `Evidence[]`. E-25 approves and E-26 implements a narrow Application-owned Knowledge Acquisition Evidence Intake operation as its first direct consumer. Intake registers Evidence atomically and without mutation into the existing Core-owned EvidenceStore aggregate/collection; the Store is not persistence. Exact ID collisions reject the whole batch, semantic equivalents with distinct IDs coexist, and an empty batch returns a fresh equivalent Store. E-27 approves exact Application-owned registered-Evidence selection as the first direct Store consumer and defers Observation construction because the required Measurement, interpretation, identity and numeric confidence semantics are not established. E-28 is the sole planned Foundation. Observation, Measurement, semantic filtering, persistence, Knowledge Update, satisfaction and Runtime mutation remain excluded.
 
 ## Not approved
 

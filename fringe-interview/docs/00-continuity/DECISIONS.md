@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-26**
+Verified through: **Task 0100E-27**
 
 ## Foundation decisions
 
@@ -202,3 +202,11 @@ Task 0100E-25 approves a narrow Application-owned Knowledge Acquisition Evidence
 Task 0100E-26 implements ADR-038 as `intakeKnowledgeAcquisitionEvidence({ evidenceStore, evidence })`. It returns the updated EvidenceStore directly, keeps the existing Store identity model, validates locally and contextually, rejects exact ID collisions within the batch and against the Store before construction, canonically sorts the combined Evidence by ID, deep-clones and deep-freezes the result, and returns a fresh equivalent Store for an empty batch. No Core public contract changes or downstream semantic responsibilities are introduced.
 
 Exact duplicate Evidence IDs are rejected during intake/registration rather than silently merged. Acquisition provenance and `confidence: null` are preserved unchanged. Observation does not consume the extractor array directly: future Evidence-to-Observation semantics remain Core-owned, operate from registered Evidence in the Store/collection, and require a separate architecture gate. E-26 may implement only the effect-free intake Foundation and the minimum Core registration primitive required by it; persistence, semantic deduplication, Observation, Measurement, Contribution, Knowledge updates, Requirement satisfaction and Runtime mutation remain excluded.
+
+### ADR-039 — Exact registered-Evidence selection precedes Observation construction
+
+Task 0100E-27 approves a narrow Application-owned Registered Evidence Selection operation as the first direct consumer of a populated Core EvidenceStore. It accepts an explicitly supplied valid Store and `0..N` unique exact Evidence IDs, proves membership, and returns a fresh deeply immutable canonical `Evidence[]` containing unchanged registered values. The operation has no autonomous identity or domain result wrapper, performs no persistence, and preserves Evidence provenance and nullable confidence exactly.
+
+Observation is a first interpretation, not a structural translation. Registered Evidence does not determine the existing Observation contract's Measurement, characteristic, signal status/type, direction/strength, numeric confidence, quality, reliability, grouping, provenance or deterministic identity. Therefore direct Store-to-Observation, Observation Candidate and Observation Collection/Store alternatives are rejected. Empty/no-match selection remains an empty Evidence array and never means absent or `not_observed`.
+
+Task 0100E-28 may implement only the exact Registered Evidence Selection Foundation, with minimum Application validation/public exposure/health/tests required by convention. Semantic filtering, Evidence deletion/merge, Observation or Measurement creation, confidence assignment, persistence, I/O, Provider/Adapter/LLM work, downstream Knowledge updates, Requirement satisfaction and Runtime mutation remain excluded. Any Evidence-to-Observation transformer requires a later repository-first architecture gate; its semantics are Core-owned and may be Application-orchestrated.

@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-26**
+Verified through: **Task 0100E-27**
 
 ## Principle
 
@@ -161,9 +161,9 @@ Task 0100E-24 implements that extractor for `capability:structured-input-v1`. It
 
 Task 0100E-25 approves a narrow Application-owned Knowledge Acquisition Evidence Intake operation as the first direct consumer of extracted `Evidence[]`. It coordinates Core validation and atomic copy-on-write registration into the existing Core-owned EvidenceStore aggregate/collection. EvidenceStore is an in-memory authoritative domain collection, not persistence and not the Application use-case boundary. No new Evidence Collection contract is introduced.
 
-Task 0100E-26 implements the operation as `intakeKnowledgeAcquisitionEvidence`. It consumes one explicit valid EvidenceStore and a valid `0..N` Evidence batch, rejects any exact identity collision before building, returns a fresh deeply frozen Store, preserves Store metadata/identity semantics and every Evidence property, and updates only canonical Evidence ordering and `statistics.totalEvidence`. Empty input is a valid fresh-store no-op. No Core API or contract is changed. The next gate is `0100E-27 — Post-Evidence-Intake Downstream Architecture Review`, which is review-only.
+Task 0100E-26 implements the operation as `intakeKnowledgeAcquisitionEvidence`. It consumes one explicit valid EvidenceStore and a valid `0..N` Evidence batch, rejects any exact identity collision before building, returns a fresh deeply frozen Store, preserves Store metadata/identity semantics and every Evidence property, and updates only canonical Evidence ordering and `statistics.totalEvidence`. Empty input is a valid fresh-store no-op. No Core API or contract is changed.
 
-Observation must not consume the Infrastructure extractor array directly. Future Evidence-to-Observation semantics remain Core-owned and must operate from registered Evidence under an explicit Measurement; Application may orchestrate that later transition. The next gate is `0100E-26 — Knowledge Acquisition Evidence Intake Foundation`, limited to effect-free intake/registration. It does not authorize persistence, Observation, Measurement, Contribution, Knowledge Update, Requirement satisfaction, concrete Provider integration or Runtime mutation.
+Task 0100E-27 approves an Application-owned Registered Evidence Selection operation as the first direct consumer of the populated Store. It accepts exact Evidence IDs and returns a fresh immutable canonical subset of unchanged registered Evidence. Selection creates no domain result contract or identity, performs no semantic filtering and preserves nullable Evidence confidence. Observation is a first interpretation rather than a structural translation: its Measurement scope, characteristic, signal, direction/strength, numeric confidence, quality, reliability, provenance and identity rules remain unresolved. Future Evidence-to-Observation semantics remain Core-owned and Application-orchestrated under a separate review. The next gate is `0100E-28 — Registered Evidence Selection Foundation`; it does not authorize persistence, Observation, Measurement, Contribution, Knowledge Update, Requirement satisfaction, concrete Provider integration or Runtime mutation.
 
 ## Dependency direction
 
