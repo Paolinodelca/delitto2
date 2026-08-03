@@ -1703,6 +1703,11 @@ addCheck("Knowledge Acquisition Provider Result infrastructure", async () => {
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_provider_result.js"], { stdio: "pipe" });
 });
 
+addCheck("Structured Input Provider Result Evidence Extractor infrastructure", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_health_structured_input_provider_result_evidence_extractor.js"], { stdio: "pipe" });
+});
+
 addCheck("Knowledge Acquisition Boundary Freeze", async () => {
   const { execFileSync } = await import("child_process");
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_boundary.js"], { stdio: "pipe" });

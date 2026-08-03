@@ -1,4 +1,14 @@
 module.exports = {
+  extractEvidenceFromStructuredInputProviderResult:
+    require('./extractEvidenceFromStructuredInputProviderResult').extractEvidenceFromStructuredInputProviderResult,
+  validateStructuredInputProviderResultEvidencePayload:
+    require('./validateStructuredInputProviderResultEvidencePayload').validateStructuredInputProviderResultEvidencePayload,
+  validateStructuredInputProviderResultEvidenceContext:
+    require('./validateStructuredInputProviderResultEvidenceContext').validateStructuredInputProviderResultEvidenceContext,
+  calculateStructuredInputEvidenceIdentity:
+    require('./structuredInputProviderResultEvidenceIdentity').calculateStructuredInputEvidenceIdentity,
+  healthStructuredInputProviderResultEvidenceExtractor:
+    require('./healthStructuredInputProviderResultEvidenceExtractor').healthStructuredInputProviderResultEvidenceExtractor,
   buildKnowledgeAcquisitionProviderResult:
     require('./buildKnowledgeAcquisitionProviderResult').buildKnowledgeAcquisitionProviderResult,
   validateKnowledgeAcquisitionProviderResult:

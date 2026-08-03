@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-23**
+Verified through: **Task 0100E-24**
 
 ## Principle
 
@@ -157,7 +157,9 @@ Task 0100E-22 implements the Infrastructure-owned `KnowledgeAcquisitionProviderR
 
 Task 0100E-23 approves a capability-specific Infrastructure Provider Result Evidence Extractor as the first semantic crossing. It validates the technical result/context, understands only the structured-input payload schema and materializes zero or more existing Core-owned Evidence values. Infrastructure technical processing ends at this anti-corruption crossing; the semantic domain begins at Evidence. Core does not import Provider Result or provider schema. Direct Knowledge, Knowledge Candidate, generic normalization, state updates and Requirement satisfaction are excluded. E-24 may implement only the effect-free extractor Foundation without changing existing Provider, Adapter, Provider Result or Evidence contracts.
 
-The next gate is `0100E-23 — Post-Provider-Result Downstream Architecture Review`. It does not authorize a concrete Provider, transport, dynamic selection, registry, generic routing, external I/O, error normalization, Invocation Result, persistence, satisfaction or Knowledge Update.
+Task 0100E-24 implements that extractor for `capability:structured-input-v1`. It validates Provider Result and originating Invocation Input context, interprets only the closed fixture-backed `structured_input` records schema, and returns a fresh deeply frozen Core `Evidence[]`. Evidence identities are deterministic; source identity and exact Invocation Input/Provider Result fingerprints are preserved as provenance. Empty extraction is valid and is not a failure or satisfaction decision. No I/O, persistence, Provider invocation, state update, scoring, confidence assignment or semantic deduction occurs.
+
+The next gate is the review-only `0100E-25 — Post-Evidence-Extraction Downstream Architecture Review`. It does not authorize Evidence Store ingestion, Observation creation, Knowledge Update, Requirement satisfaction, concrete Provider integration or Runtime mutation.
 
 ## Dependency direction
 

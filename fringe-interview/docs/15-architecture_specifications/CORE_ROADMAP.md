@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-23**
+Verified through: **Task 0100E-24**
 
-Next gate: **0100E-24**
+Next gate: **0100E-25**
 
-Last updated: 2026-07-31 (`0100E-23`)
+Last updated: 2026-08-03 (`0100E-24`)
 
 ## Purpose
 
@@ -145,7 +145,7 @@ Discovery and candidate resolution remain Application-owned. Local and contextua
 
 ## Current gate
 
-### 0100E-24 — Structured Input Provider Result Evidence Extractor Foundation
+### 0100E-25 — Post-Evidence-Extraction Downstream Architecture Review
 
 Type: **ARCHITECTURE REVIEW**
 
@@ -161,7 +161,8 @@ Status: **PLANNED**
 | 0100E-21 | Architecture Review | COMPLETED | Infrastructure Provider Result approved before any concrete Provider integration |
 | 0100E-22 | Foundation | COMPLETED | immutable technical Provider Result, deterministic integrity and Adapter return enforcement |
 | 0100E-23 | Architecture Review | COMPLETED | capability-specific Provider Result Evidence Extractor approved as the crossing into Core Evidence |
-| 0100E-24 | Foundation | PLANNED | effect-free structured-input Provider Result Evidence Extractor using the existing Core Evidence contract |
+| 0100E-24 | Foundation | COMPLETED | deterministic immutable structured-input Provider Result Evidence extraction with exact provenance |
+| 0100E-25 | Architecture Review | PLANNED | determine the first legitimate consumer after extracted Evidence without pre-authorizing ingestion or updates |
 
 Approved cardinality:
 

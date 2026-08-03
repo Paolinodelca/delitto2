@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-23**
+Verified through: **Task 0100E-24**
 
 ## Foundation decisions
 
@@ -192,3 +192,5 @@ Task 0100E-23 approves a capability-specific Provider Result Evidence Extractor 
 Direct Knowledge creation is rejected because Evidence is authoritative and Knowledge is reconstructed through Observation, Measurement, Dimension Contribution, Ledger and Snapshot. A Knowledge Candidate or generic normalized Provider response is also rejected because neither contract exists and both would duplicate or blur established boundaries. Core never imports Provider Result or provider schema; Infrastructure depends inward on the Core Evidence contract.
 
 Task 0100E-24 may implement only an effect-free extractor for `capability:structured-input-v1`, contextual validation, minimal fixture-backed payload decoding and existing Evidence construction/validation. It may not modify Provider/Adapter/Provider Result/Evidence contracts, implement external I/O, update stores/Ledger/Matrix/Coverage, create Knowledge, decide confidence/quality/satisfaction, normalize Provider errors or mutate Runtime artifacts.
+
+Task 0100E-24 implements ADR-037 with a closed fixture-backed `structured_input` payload schema, deterministic Evidence identity, exact source and acquisition provenance, local payload validation and contextual Provider Result/Invocation Input validation. The extractor returns only a deeply frozen `Evidence[]`, including a valid empty array. It assigns no final confidence or scoring and performs no I/O, persistence, ingestion, update or mutation. ADR-037 is unchanged; E-25 must review any downstream consumer.

@@ -1,4 +1,9 @@
 export {
+  extractEvidenceFromStructuredInputProviderResult,
+  validateStructuredInputProviderResultEvidencePayload,
+  validateStructuredInputProviderResultEvidenceContext,
+  calculateStructuredInputEvidenceIdentity,
+  healthStructuredInputProviderResultEvidenceExtractor,
   buildKnowledgeAcquisitionProviderResult,
   validateKnowledgeAcquisitionProviderResult,
   validateKnowledgeAcquisitionProviderResultContext,
