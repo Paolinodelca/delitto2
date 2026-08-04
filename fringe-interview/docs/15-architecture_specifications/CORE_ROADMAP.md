@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-40**
+Verified through: **Task 0100E-41**
 
-Next gate: **0100E-41 — Post-Knowledge-Snapshot-Construction Downstream Architecture Review**
+Next gate: **0100E-42 - Capability Recipe Execution Hardening Foundation**
 
-Last updated: 2026-08-04 (`0100E-40`)
+Last updated: 2026-08-04 (`0100E-41`)
 
 ## Purpose
 
@@ -201,13 +201,21 @@ Type: **FOUNDATION**
 
 Status: **COMPLETED**
 
-Hardened the existing Core Snapshot construction and elementary aggregation path in place: timestamp-independent complete-content identity, canonical lineage, deep immutability and non-canonical-content rejection. No contract, public API, aggregation formula or downstream consumer changed.
+Approved the existing Core Capability Recipe execution boundary as the first direct Snapshot consumer. Rule evaluation remains internal; no intermediate contract or later Knowledge layer is authorized.
 
 ### 0100E-41 — Post-Knowledge-Snapshot-Construction Downstream Architecture Review
 
+Status: **COMPLETED**
+
+Result: existing Core `executeCapabilityRecipe(snapshot, recipe, options)` approved as the first direct Snapshot consumer; rule evaluation remains internal and no intermediate contract is introduced.
+
+### 0100E-42 - Capability Recipe Execution Hardening Foundation
+
+Type: **FOUNDATION**
+
 Status: **PLANNED**
 
-Documentation-only review of the first legitimate direct Snapshot consumer.
+Sole authorized scope: harden the existing execution/evaluation path for deterministic complete-content identity, canonical lineage and deep immutability without contract or public API changes. Derived Dimension State, Matrix, Coverage, satisfaction, persistence, I/O and Runtime mutation remain unauthorized.
 
 | Task | Type | Status | Result |
 |---|---|---|---|
@@ -236,7 +244,8 @@ Documentation-only review of the first legitimate direct Snapshot consumer.
 | 0100E-38 | Foundation | COMPLETED | hardened existing Core Ledger intake identity, validation, atomicity, canonical provenance/order and deep immutability; no downstream Knowledge |
 | 0100E-39 | Architecture Review | COMPLETED | approved whole-Ledger Snapshot construction and internal elementary aggregation |
 | 0100E-40 | Foundation | COMPLETED | hardened existing Snapshot construction boundary |
-| 0100E-41 | Architecture Review | PLANNED | review first legitimate direct Snapshot consumer |
+| 0100E-41 | Architecture Review | COMPLETED | approved existing Capability Recipe execution as first direct Snapshot consumer |
+| 0100E-42 | Foundation | PLANNED | harden existing Capability Recipe execution/evaluation path |
 
 Approved cardinality:
 

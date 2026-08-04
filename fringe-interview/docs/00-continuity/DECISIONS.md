@@ -260,3 +260,9 @@ Task 0100E-39 approves the existing Core `buildKnowledgeSnapshot(ledger, options
 Cardinality is `1 Ledger -> 1 Snapshot`, with exactly one elementary state per Dimension represented by Contributions. An empty Ledger yields an empty Snapshot; unrepresented Dimensions are not synthesized and do not imply absence. Identity and lineage must commit to the complete canonical Ledger and aggregation output without timestamp drift. E-40 may harden only this existing boundary. Derived Knowledge, Matrix, Coverage, satisfaction, persistence, I/O and Runtime mutation remain unauthorized.
 
 Task 0100E-40 implements the approved hardening without a contract or API change. Canonical Snapshot identity uses complete Ledger identity, the established aggregation strategy and timestamp-independent semantic state content. Snapshot and aggregation results are deeply immutable and validation rejects non-canonical content.
+
+### ADR-047 - Capability Recipe execution is the Snapshot's first downstream boundary
+
+Task 0100E-41 approves the existing Core `executeCapabilityRecipe(snapshot, recipe, options)` operation as the first direct consumer of one complete valid Snapshot. It consumes exactly one explicit Recipe and returns exactly one `CapabilityExecutionResult` containing `0..N DerivedKnowledgeResult` values. The existing rule evaluator is internal to this execution responsibility and does not create an intermediate pipeline boundary.
+
+Snapshot and Recipe identities, rule/state dependencies and result references preserve exact causality and provenance. Execution may validate and evaluate each explicit rule once; recursion, chaining, implicit aggregation and mutation are forbidden. Derived Dimension State, Matrix, Coverage, satisfaction, persistence, I/O and Runtime mutation remain downstream and unauthorized. E-42 may harden only the existing execution/evaluation path without changing contracts or public APIs.

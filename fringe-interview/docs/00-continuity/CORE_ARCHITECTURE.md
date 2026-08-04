@@ -213,3 +213,5 @@ Without an explicit implementation task, do not introduce person scoring, rankin
 node scripts/test_all_core.js
 node scripts/fringe_health_check.js
 ```
+
+Task E-41 confirms the existing Core `executeCapabilityRecipe` operation as the first direct consumer of one complete Snapshot and one explicit Recipe. `evaluateDerivedKnowledgeRules` remains an internal execution responsibility. The result cardinality is one `CapabilityExecutionResult` containing zero or more `DerivedKnowledgeResult` values; Derived Dimension aggregation, Matrix and Coverage are not part of this boundary.

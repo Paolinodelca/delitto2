@@ -154,3 +154,5 @@ Expected:
 IMAGO Core all tests PASSED
 All health checks passed
 ```
+
+Task E-41 approves the existing Core `executeCapabilityRecipe(snapshot, recipe, options)` boundary as the first direct Snapshot consumer. Rule evaluation is internal to that execution boundary; Derived Dimension State, Matrix and Coverage remain later consumers. E-42 may harden only this existing execution/evaluation path without changing contracts or public APIs.
