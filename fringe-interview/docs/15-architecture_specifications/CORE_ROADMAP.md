@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-42**
+Verified through: **Task 0100E-43**
 
-Next gate: **0100E-43 - Post-Capability-Recipe-Execution Downstream Architecture Review**
+Next gate: **0100E-44 - Derived Dimension Knowledge State Construction Hardening Foundation**
 
-Last updated: 2026-08-04 (`0100E-42`)
+Last updated: 2026-08-04 (`0100E-43`)
 
 ## Purpose
 
@@ -221,9 +221,17 @@ Result: hardened the existing execution/evaluation path for complete-content ide
 
 Type: **ARCHITECTURE REVIEW**
 
+Status: **COMPLETED**
+
+Result: existing Core `buildDerivedDimensionKnowledgeStates` approved as the first direct consumer of complete execution-result containers plus explicit mappings; repeated-execution lineage requires the E-44 hardening gate.
+
+### 0100E-44 - Derived Dimension Knowledge State Construction Hardening Foundation
+
+Type: **FOUNDATION**
+
 Status: **PLANNED**
 
-Documentation-only review of the first legitimate direct CapabilityExecutionResult consumer.
+Harden only the existing execution-result-to-derived-state construction boundary for exact lineage, deterministic identity/order, deep immutability and empty/non-applicable behavior without contract or cardinality changes.
 
 | Task | Type | Status | Result |
 |---|---|---|---|
@@ -254,7 +262,8 @@ Documentation-only review of the first legitimate direct CapabilityExecutionResu
 | 0100E-40 | Foundation | COMPLETED | hardened existing Snapshot construction boundary |
 | 0100E-41 | Architecture Review | COMPLETED | approved existing Capability Recipe execution as first direct Snapshot consumer |
 | 0100E-42 | Foundation | COMPLETED | hardened existing Capability Recipe execution/evaluation path |
-| 0100E-43 | Architecture Review | PLANNED | review first legitimate direct CapabilityExecutionResult consumer |
+| 0100E-43 | Architecture Review | COMPLETED | approved existing Derived Dimension State construction boundary; E-44 must harden repeated-execution lineage |
+| 0100E-44 | Foundation | PLANNED | harden existing Derived Dimension State construction boundary |
 
 Approved cardinality:
 

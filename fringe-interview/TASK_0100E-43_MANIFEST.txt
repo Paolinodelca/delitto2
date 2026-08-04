@@ -1,0 +1,8 @@
+TASK_0100E-43_MANIFEST.txt
+TASK_0100E-43_POST_CAPABILITY_RECIPE_EXECUTION_DOWNSTREAM_ARCHITECTURE_REVIEW.md
+docs/00-continuity/CONTINUITY.md
+docs/00-continuity/CORE_ARCHITECTURE.md
+docs/00-continuity/DECISIONS.md
+docs/00-continuity/NEXT_PHASE.md
+docs/00-continuity/README.md
+docs/15-architecture_specifications/CORE_ROADMAP.md

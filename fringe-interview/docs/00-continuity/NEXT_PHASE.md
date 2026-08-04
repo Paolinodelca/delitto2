@@ -1,15 +1,15 @@
-# Next Phase - Post-Capability-Recipe-Execution Review - 0100E-43
+# Next Phase - Derived Dimension Knowledge State Construction Hardening - 0100E-44
 
 Status: **CURRENT**
 
 Status: PLANNED
 
-Task `0100E-42 - Capability Recipe Execution Hardening Foundation` is **COMPLETED** with outcome **CONFORMING**.
+Task `0100E-43 - Post-Capability-Recipe-Execution Downstream Architecture Review` is **COMPLETED** with outcome **APPROVED WITH HARDENING GATE**.
 
-The existing Core `executeCapabilityRecipe(snapshot, recipe, options)` boundary is hardened without API, contract or cardinality changes. It returns one immutable `CapabilityExecutionResult` containing `0..N DerivedKnowledgeResult` values; rule evaluation remains internal.
+The existing Core `buildDerivedDimensionKnowledgeStates(executionResults, mappings, options)` boundary is approved as the first direct consumer of complete Capability execution-result containers. It produces `0..N DerivedDimensionKnowledgeState` values from explicit mappings. No intermediate contract, Matrix update or Coverage update is authorized.
 
 ## Sole planned gate
 
-`0100E-43 - Post-Capability-Recipe-Execution Downstream Architecture Review`
+`0100E-44 - Derived Dimension Knowledge State Construction Hardening Foundation`
 
-E-43 is documentation-only and must identify the first legitimate direct consumer of CapabilityExecutionResult. No downstream implementation is authorized automatically.
+E-44 may harden only the existing construction boundary for exact execution/result/mapping lineage, deterministic identity and ordering, deep immutability, contextual validation and empty/non-applicable behavior. It must preserve existing public contracts and cardinality and must not authorize later consumers.

@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-40**
+Verified through: **Task 0100E-43**
 
 ## Principle
 
@@ -217,3 +217,8 @@ node scripts/fringe_health_check.js
 Task E-41 confirms the existing Core `executeCapabilityRecipe` operation as the first direct consumer of one complete Snapshot and one explicit Recipe. `evaluateDerivedKnowledgeRules` remains an internal execution responsibility. The result cardinality is one `CapabilityExecutionResult` containing zero or more `DerivedKnowledgeResult` values; Derived Dimension aggregation, Matrix and Coverage are not part of this boundary.
 
 Task E-42 hardens the same execution path without changing its API or cardinality. The result has complete canonical content identity independent of execution timestamps, exact Snapshot/Recipe/Rule/result lineage and deep immutability. `evaluateDerivedKnowledgeRules` remains internal; later derived-state composition is not part of execution.
+
+
+Task E-43 confirms the existing Core `buildDerivedDimensionKnowledgeStates` operation as the first downstream consumer of complete Capability execution-result containers plus explicit Derived Dimension mappings. It returns zero or more Derived Dimension states and preserves Snapshot, Capability, Recipe, Rule, execution, result and mapping lineage. Detached result-array consumption and an intermediate contract are rejected.
+
+The established N:1 reconstruction is allowed only inside one common Snapshot/Capability/Recipe/version context and only for explicitly mapped positive derived results. E-44 must harden exact repeated-execution lineage, canonical determinism, immutability and empty/non-applicable behavior without extending the boundary to Matrix or Coverage.

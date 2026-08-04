@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-40**
+Verified through: **Task 0100E-43**
 
 Operational milestone: `origin/milestone/0100b-knowledge-foundation`
 
@@ -23,10 +23,10 @@ Completed task sequence:
 0100B-1 … 0100B-10
 0100C-1 … 0100C-3
 0100D-1 … 0100D-10
-0100E-1 … 0100E-40
+0100E-1 … 0100E-43
 ```
 
-Tasks D-9 and odd E tasks through E-39 are architecture reviews. D-10 is consolidation and freeze. Even E tasks through E-40 are implemented Foundations.
+Tasks D-9 and odd E tasks through E-43 are architecture reviews. D-10 is consolidation and freeze. Even E tasks through E-42 are implemented Foundations.
 
 ## Knowledge Foundation
 
@@ -111,8 +111,6 @@ Task E-39 approves the existing Core `buildKnowledgeSnapshot` boundary as the fi
 
 Task E-40 hardens the existing Snapshot boundary in place: identity commits to Ledger identity, aggregation strategy and complete semantic state content without timestamp drift; construction and elementary aggregation return deeply frozen canonical results; validation rejects non-canonical content. Contracts and public exports are unchanged.
 
-The next planned task is `0100E-41 — Post-Knowledge-Snapshot-Construction Downstream Architecture Review`.
-
 ## Current authoritative documents
 
 - `README.md` — authority index and reading order;
@@ -158,3 +156,10 @@ All health checks passed
 Task E-41 approves the existing Core `executeCapabilityRecipe(snapshot, recipe, options)` boundary as the first direct Snapshot consumer. Rule evaluation is internal to that execution boundary; Derived Dimension State, Matrix and Coverage remain later consumers. E-42 may harden only this existing execution/evaluation path without changing contracts or public APIs.
 
 Task E-42 completes that hardening in place. CapabilityExecutionResult identity commits to complete timestamp-independent semantic content and exact causal lineage; execution and derived results are deeply immutable; local and Snapshot/Recipe contextual validation are canonical. API, contracts and cardinality remain unchanged. No downstream consumer is authorized.
+
+
+Task E-43 approves the existing Core `buildDerivedDimensionKnowledgeStates(executionResults, mappings, options)` boundary as the first direct consumer of complete `CapabilityExecutionResult[]` containers. Explicit mappings produce `0..N DerivedDimensionKnowledgeState` values; zero eligible results produce an empty collection and do not imply absence. No intermediate contract is required.
+
+Within one Snapshot/Capability/Recipe/version context, multiple mapped positive results may aggregate N:1 into one Derived Dimension state. Estimate uses the established confidence-weighted mapping mean and state confidence uses the minimum source confidence. Cross-execution aggregation is not approved unless every execution identity is preserved exactly; the current single-execution reference behavior requires E-44 hardening.
+
+The sole planned task is `0100E-44 — Derived Dimension Knowledge State Construction Hardening Foundation`. Matrix, Coverage and all later consumers remain unauthorized.

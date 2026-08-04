@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-40**
+Verified through: **Task 0100E-43**
 
 ## Foundation decisions
 
@@ -272,3 +272,12 @@ Snapshot and Recipe identities, rule/state dependencies and result references pr
 Task 0100E-42 hardens the existing execution/evaluation path in place. `CapabilityExecutionResult` identity commits to its complete canonical timestamp-independent semantic content, summary, dependencies, provenance, metadata and extensions. Validation enforces exact Snapshot/Recipe context and causal references. Execution results, their derived results and nested content are deeply immutable.
 
 The public API, contracts and cardinality remain unchanged. Rule evaluation stays internal to `executeCapabilityRecipe`; no intermediate boundary, derived Dimension aggregation, Matrix/Coverage update, satisfaction, persistence, I/O, Runtime mutation or LLM is authorized.
+
+
+### ADR-049 - Derived Dimension State construction is the first Capability execution consumer
+
+Task 0100E-43 approves the existing Core `buildDerivedDimensionKnowledgeStates(executionResults, mappings, options)` operation as the first direct downstream consumer of complete `CapabilityExecutionResult[]` containers. Explicit `DerivedDimensionMapping[]` values are required to translate eligible positive derived targets into numeric Dimension estimates. No detached `DerivedKnowledgeResult[]` boundary and no intermediate selection, registration or store contract is introduced.
+
+Cardinality is `0..N CapabilityExecutionResult + 0..N Mapping -> 0..N DerivedDimensionKnowledgeState`. Empty, unmatched, unmapped or non-positive result sets return an empty collection and never imply absent knowledge. Within one Snapshot/Capability/Recipe/version context, multiple mapped results may aggregate N:1 using the established confidence-weighted estimate and minimum confidence. Cross-execution aggregation is not authorized unless all contributing execution identities are retained exactly.
+
+E-44 may harden only this existing construction boundary, including exact multi-execution lineage, deterministic identity/order, deep immutability and focused validation/tests. Matrix, Coverage, satisfaction, persistence, I/O, Runtime mutation, LLM and reports remain unauthorized.
