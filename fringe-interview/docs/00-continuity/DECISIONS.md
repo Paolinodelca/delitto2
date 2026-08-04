@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-38**
+Verified through: **Task 0100E-39**
 
 ## Foundation decisions
 
@@ -252,3 +252,9 @@ Task E-38 may add the minimum Application intake boundary and harden the existin
 Task 0100E-38 hardens the existing `appendDimensionContributions(ledger, contributions, options)` path in place. No Application wrapper or intermediate contract is required: Application orchestration calls the existing Core API with one valid Ledger, one `0..N` batch and explicit `options.now`. Core validates all visible and hidden content plus canonical provenance before constructing anything, rejects exact ID collisions atomically, stores Contributions in canonical `createdAt`/ID order and returns a fresh deeply frozen Ledger.
 
 Ledger identity uses a versioned SHA-256 fingerprint of the complete canonical stored Contributions, independent of input and object-key order. The validator recalculates this identity and derived statistics, so stale identity/content combinations are invalid. An empty batch returns a fresh frozen equivalent Ledger with unchanged identity. Contribution values and contracts remain unchanged; Snapshot, aggregation and all later Knowledge consumers remain unauthorized pending explicit architecture review.
+
+### ADR-046 — Snapshot is the complete Ledger's first derived consumer
+
+Task 0100E-39 approves the existing Core `buildKnowledgeSnapshot(ledger, options)` as the first direct downstream consumer of one complete valid Ledger. Snapshot is a reconstructable immutable materialized view, not an authoritative aggregate or operational boundary. Per-Dimension elementary aggregation belongs inside Snapshot construction; a separate Ledger selection/query or intermediate contract is rejected.
+
+Cardinality is `1 Ledger -> 1 Snapshot`, with exactly one elementary state per Dimension represented by Contributions. An empty Ledger yields an empty Snapshot; unrepresented Dimensions are not synthesized and do not imply absence. Identity and lineage must commit to the complete canonical Ledger and aggregation output without timestamp drift. E-40 may harden only this existing boundary. Derived Knowledge, Matrix, Coverage, satisfaction, persistence, I/O and Runtime mutation remain unauthorized.

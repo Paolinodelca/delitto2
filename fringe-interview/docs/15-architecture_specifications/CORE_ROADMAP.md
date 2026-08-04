@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-38**
+Verified through: **Task 0100E-39**
 
-Next gate: **UNPLANNED — explicit downstream architecture review required**
+Next gate: **0100E-40 — Knowledge Snapshot Construction Hardening Foundation**
 
-Last updated: 2026-08-04 (`0100E-38`)
+Last updated: 2026-08-04 (`0100E-39`)
 
 ## Purpose
 
@@ -187,6 +187,20 @@ Type: **FOUNDATION**
 
 Status: **COMPLETED**
 
+### 0100E-39 — Post-Dimension-Contribution-Ledger-Intake Downstream Architecture Review
+
+Type: **ARCHITECTURE REVIEW**
+
+Status: **COMPLETED**
+
+Result: existing whole-Ledger `KnowledgeSnapshot` construction approved as the first direct downstream boundary; elementary per-Dimension aggregation remains internal to Snapshot construction.
+
+### 0100E-40 — Knowledge Snapshot Construction Hardening Foundation
+
+Type: **FOUNDATION**
+
+Status: **PLANNED**
+
 | Task | Type | Status | Result |
 |---|---|---|---|
 | 0100E-16 | Foundation | COMPLETED | implemented immutable pre-invocation Execution lifecycle |
@@ -212,6 +226,8 @@ Status: **COMPLETED**
 | 0100E-36 | Foundation | COMPLETED | hardened existing mapper identity, canonical provenance, formula provenance and deep immutability without contract or downstream changes |
 | 0100E-37 | Architecture Review | COMPLETED | existing atomic Core Ledger append approved as first direct consumer under Application orchestration |
 | 0100E-38 | Foundation | COMPLETED | hardened existing Core Ledger intake identity, validation, atomicity, canonical provenance/order and deep immutability; no downstream Knowledge |
+| 0100E-39 | Architecture Review | COMPLETED | approved whole-Ledger Snapshot construction and internal elementary aggregation |
+| 0100E-40 | Foundation | PLANNED | harden existing Snapshot construction boundary |
 
 Approved cardinality:
 

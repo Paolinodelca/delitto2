@@ -1,15 +1,17 @@
-# Next Phase — Explicit Downstream Architecture Review Required
+# Next Phase — Knowledge Snapshot Construction Hardening — 0100E-40
 
 Status: **CURRENT**
 
-Task `0100E-38 — Dimension Contribution Ledger Intake Hardening Foundation` is **COMPLETED** with outcome **CONFORMING**.
+Status: PLANNED
 
-The existing Core `appendDimensionContributions(ledger, contributions, options)` is hardened in place. It validates the complete Ledger and batch before construction, rejects exact collisions atomically, derives Ledger identity from canonical Contribution content and returns a fresh deeply frozen Ledger. Empty intake is a fresh identity-stable semantic no-op.
+Task `0100E-39 — Post-Dimension-Contribution-Ledger-Intake Downstream Architecture Review` is **COMPLETED** with outcome **APPROVED WITH HARDENING GATE**.
 
-## Next gate
+The existing Core `buildKnowledgeSnapshot(ledger, options)` is approved as the first direct consumer of one complete valid updated Ledger. Snapshot is a reconstructable immutable materialized view and owns elementary per-Dimension aggregation internally. No Ledger selection/query or intermediate contract is required.
 
-There is no next planned task; an explicit repository-first architectural review is required before authorizing any direct downstream consumer.
+## Sole planned gate
 
-No task is currently planned or authorized.
+`0100E-40 — Knowledge Snapshot Construction Hardening Foundation`
 
-Snapshot creation, aggregation, Dimension state, derived knowledge, Matrix, Coverage, satisfaction, persistence, I/O, Provider, Adapter, LLM, reporting and Runtime mutation remain outside this completed gate.
+E-40 may harden only the existing Snapshot construction and directly required elementary aggregation path: complete-Ledger causality, deterministic content identity without timestamp drift, canonical ordering and lineage, deep immutability, empty-Ledger behavior, validation, focused tests and health registration.
+
+It may not change public contracts or aggregation formulas, synthesize Dimensions absent from the Ledger, derive higher Knowledge, build or update derived state, Matrix or Coverage, decide satisfaction, persist, perform I/O or mutate Runtime.
