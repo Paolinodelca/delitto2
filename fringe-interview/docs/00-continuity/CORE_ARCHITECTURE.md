@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-39**
+Verified through: **Task 0100E-40**
 
 ## Principle
 
@@ -186,6 +186,8 @@ Task E-37 approves the existing Core `appendDimensionContributions` as the first
 Task E-38 hardens that same Core append boundary without changing its public signature or responsibility. The complete existing Ledger and `0..N` batch are validated before construction; exact collisions reject the entire intake; canonical stored ordering and provenance are required; Ledger identity hashes complete canonical Contribution content; the validator recalculates identity and derived statistics; and the fresh result is deeply frozen. Empty intake is a fresh identity-stable semantic no-op. Application continues to orchestrate directly through the existing Core operation. No downstream consumer is authorized.
 
 Task E-39 approves `buildKnowledgeSnapshot(ledger, options)` as the first direct consumer of the complete updated Ledger. Snapshot is a Core-owned reconstructable materialized view: construction groups all Contributions by `dimensionId` and performs elementary aggregation inside the boundary. No partial-Ledger query, intermediate contract or higher Knowledge layer is authorized. E-40 may harden only Snapshot identity, lineage, canonical determinism, deep immutability and the established elementary aggregation path.
+
+Task E-40 completes that hardening in place. Snapshot identity excludes construction timestamps while committing to Ledger identity, aggregation strategy and complete semantic state content. Snapshot and elementary aggregation outputs are deeply frozen; canonical lineage and non-canonical-content validation are enforced without changing contracts or exports.
 
 ## Dependency direction
 

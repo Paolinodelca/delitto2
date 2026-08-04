@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-39**
+Verified through: **Task 0100E-40**
 
 Operational milestone: `origin/milestone/0100b-knowledge-foundation`
 
@@ -23,10 +23,10 @@ Completed task sequence:
 0100B-1 … 0100B-10
 0100C-1 … 0100C-3
 0100D-1 … 0100D-10
-0100E-1 … 0100E-39
+0100E-1 … 0100E-40
 ```
 
-Tasks D-9 and odd E tasks through E-39 are architecture reviews. D-10 is consolidation and freeze. Even E tasks through E-38 are implemented Foundations.
+Tasks D-9 and odd E tasks through E-39 are architecture reviews. D-10 is consolidation and freeze. Even E tasks through E-40 are implemented Foundations.
 
 ## Knowledge Foundation
 
@@ -109,7 +109,9 @@ Task E-38 hardens that existing intake in place. Ledger identity now commits to 
 
 Task E-39 approves the existing Core `buildKnowledgeSnapshot` boundary as the first direct consumer of one complete updated Ledger. Snapshot is a reconstructable immutable materialized view and performs elementary per-Dimension aggregation internally; no Ledger selection/query or intermediate contract is introduced. Empty Ledger produces one empty Snapshot and unrepresented Dimensions produce no state. E-40 is the sole planned hardening gate. Derived Knowledge, Matrix, Coverage and satisfaction remain unauthorized.
 
-The next planned task is `0100E-40`.
+Task E-40 hardens the existing Snapshot boundary in place: identity commits to Ledger identity, aggregation strategy and complete semantic state content without timestamp drift; construction and elementary aggregation return deeply frozen canonical results; validation rejects non-canonical content. Contracts and public exports are unchanged.
+
+The next planned task is `0100E-41 — Post-Knowledge-Snapshot-Construction Downstream Architecture Review`.
 
 ## Current authoritative documents
 

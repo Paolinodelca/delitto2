@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const { validateDimensionContribution } = require("./validateDimensionContribution");
 const { buildDimensionKnowledgeState } = require("./buildDimensionKnowledgeState");
 const { validateDimensionKnowledgeState } = require("./validateDimensionKnowledgeState");
+const { deepFreeze } = require("./knowledgeLedgerIntegrity");
 
 function isObject(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
@@ -97,7 +98,7 @@ function aggregateDimensionContributions(dimensionId, contributions, options = {
     if (!validation.valid) {
       fail("INVALID_GENERATED_DIMENSION_KNOWLEDGE_STATE", validation.errors.join(" | "), validation);
     }
-    return unknownState;
+    return deepFreeze(unknownState);
   }
 
   let weightedSignedSum = 0;
@@ -184,7 +185,7 @@ function aggregateDimensionContributions(dimensionId, contributions, options = {
   if (!validation.valid) {
     fail("INVALID_GENERATED_DIMENSION_KNOWLEDGE_STATE", validation.errors.join(" | "), validation);
   }
-  return state;
+  return deepFreeze(state);
 }
 
 module.exports = { aggregateDimensionContributions };

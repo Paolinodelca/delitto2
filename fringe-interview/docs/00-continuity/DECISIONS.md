@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-39**
+Verified through: **Task 0100E-40**
 
 ## Foundation decisions
 
@@ -258,3 +258,5 @@ Ledger identity uses a versioned SHA-256 fingerprint of the complete canonical s
 Task 0100E-39 approves the existing Core `buildKnowledgeSnapshot(ledger, options)` as the first direct downstream consumer of one complete valid Ledger. Snapshot is a reconstructable immutable materialized view, not an authoritative aggregate or operational boundary. Per-Dimension elementary aggregation belongs inside Snapshot construction; a separate Ledger selection/query or intermediate contract is rejected.
 
 Cardinality is `1 Ledger -> 1 Snapshot`, with exactly one elementary state per Dimension represented by Contributions. An empty Ledger yields an empty Snapshot; unrepresented Dimensions are not synthesized and do not imply absence. Identity and lineage must commit to the complete canonical Ledger and aggregation output without timestamp drift. E-40 may harden only this existing boundary. Derived Knowledge, Matrix, Coverage, satisfaction, persistence, I/O and Runtime mutation remain unauthorized.
+
+Task 0100E-40 implements the approved hardening without a contract or API change. Canonical Snapshot identity uses complete Ledger identity, the established aggregation strategy and timestamp-independent semantic state content. Snapshot and aggregation results are deeply immutable and validation rejects non-canonical content.
