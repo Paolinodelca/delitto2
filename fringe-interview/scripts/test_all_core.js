@@ -83,6 +83,7 @@ const testGroups = [
     name: "Knowledge Ledger and Snapshot Core",
     commands: [
       "node scripts/test_knowledge_ledger.js",
+      "node scripts/test_dimension_contribution_ledger_intake_hardening.js",
       "node scripts/test_knowledge_snapshot.js",
       "node scripts/test_knowledge_ledger_snapshot_regression.js",
       "node scripts/test_health_knowledge_ledger_snapshot.js",

@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-37**
+Verified through: **Task 0100E-38**
 
 ## Foundation decisions
 
@@ -246,3 +246,9 @@ Task 0100E-36 implements ADR-043 in the existing mapper only. The public API rem
 Task 0100E-37 approves the existing Core `appendDimensionContributions` operation as the first direct consumer of a complete hardened mapper batch. Application supplies one explicit Ledger, one `0..N` batch and an explicit timestamp; Core validates and atomically returns one new Ledger. Exact ID collisions reject the batch. Contributions, metrics and provenance remain unchanged; quality and reliability remain on the referenced MeasurementResult. No selection, intermediate contract, merge, replacement, semantic deduplication or aggregation is introduced.
 
 Task E-38 may add the minimum Application intake boundary and harden the existing append path for canonical, deterministic, deeply immutable copy-on-write output. It may not change contracts/builders/validators/Core API or cross into Snapshot, states, derived knowledge, Matrix, Coverage, persistence, satisfaction or Runtime.
+
+### ADR-045 — Ledger identity commits to canonical Contribution content
+
+Task 0100E-38 hardens the existing `appendDimensionContributions(ledger, contributions, options)` path in place. No Application wrapper or intermediate contract is required: Application orchestration calls the existing Core API with one valid Ledger, one `0..N` batch and explicit `options.now`. Core validates all visible and hidden content plus canonical provenance before constructing anything, rejects exact ID collisions atomically, stores Contributions in canonical `createdAt`/ID order and returns a fresh deeply frozen Ledger.
+
+Ledger identity uses a versioned SHA-256 fingerprint of the complete canonical stored Contributions, independent of input and object-key order. The validator recalculates this identity and derived statistics, so stale identity/content combinations are invalid. An empty batch returns a fresh frozen equivalent Ledger with unchanged identity. Contribution values and contracts remain unchanged; Snapshot, aggregation and all later Knowledge consumers remain unauthorized pending explicit architecture review.

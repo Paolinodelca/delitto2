@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-37**
+Verified through: **Task 0100E-38**
 
 ## Principle
 
@@ -182,6 +182,8 @@ Task E-35 approves the existing Core `mapMeasurementResultToDimensionContributio
 Task E-36 hardens that same mapper without changing its API, owner, responsibility, inputs, formulas, output contract or target-driven cardinality. Each Contribution ID hashes its complete canonical semantic body; the body includes a content-derived fingerprint of the complete Mapping policy, canonical Result/Mapping/Observation references and explicit versioned formula strategies, expressions and operands. Local validation rejects invalid or non-canonical inputs, contextual validation requires exact `measurementId` and `calculated`, and the returned Contribution array is freshly deeply frozen. No parallel mapper, contract change, Ledger append, Snapshot, Knowledge, Matrix, Coverage, I/O or Runtime mutation is introduced.
 
 Task E-37 approves the existing Core `appendDimensionContributions` as the first direct consumer of one hardened mapper batch, under Application orchestration. It atomically returns one new Ledger, preserves Contributions and provenance unchanged, rejects exact ID collisions and performs no aggregation. E-38 may harden only this intake/append path. Snapshot, Dimension state, derived knowledge, Matrix and Coverage remain separate and unauthorized.
+
+Task E-38 hardens that same Core append boundary without changing its public signature or responsibility. The complete existing Ledger and `0..N` batch are validated before construction; exact collisions reject the entire intake; canonical stored ordering and provenance are required; Ledger identity hashes complete canonical Contribution content; the validator recalculates identity and derived statistics; and the fresh result is deeply frozen. Empty intake is a fresh identity-stable semantic no-op. Application continues to orchestrate directly through the existing Core operation. No downstream consumer is authorized.
 
 ## Dependency direction
 

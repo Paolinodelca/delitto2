@@ -2,7 +2,7 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-37**
+Verified through: **Task 0100E-38**
 
 Operational milestone: `origin/milestone/0100b-knowledge-foundation`
 
@@ -23,10 +23,10 @@ Completed task sequence:
 0100B-1 … 0100B-10
 0100C-1 … 0100C-3
 0100D-1 … 0100D-10
-0100E-1 … 0100E-36
+0100E-1 … 0100E-38
 ```
 
-Tasks D-9 and odd E tasks through E-35 are architecture reviews. D-10 is consolidation and freeze. Even E tasks through E-36 are implemented Foundations; E-37 is the sole planned architecture review.
+Tasks D-9 and odd E tasks through E-37 are architecture reviews. D-10 is consolidation and freeze. Even E tasks through E-38 are implemented Foundations.
 
 ## Knowledge Foundation
 
@@ -105,7 +105,9 @@ Task 0100E-15 approves and Task 0100E-16 implements Application-owned `Knowledge
 
 Task E-37 approves Application-orchestrated atomic registration of one hardened mapper batch through the existing Core `appendDimensionContributions` operation. The existing Ledger is the direct downstream aggregate; registration preserves Contributions unchanged, rejects exact collisions and performs no aggregation. Snapshot, states, derived knowledge, Matrix and Coverage remain unauthorized.
 
-The next planned task is `0100E-38` — Dimension Contribution Ledger Intake Hardening Foundation. It is the sole planned task.
+Task E-38 hardens that existing intake in place. Ledger identity now commits to complete canonical Contribution content rather than IDs alone; the builder and validator reject hidden, cyclic, exotic or non-canonical content and non-canonical Contribution references; append validates the complete Ledger and batch before copy-on-write construction; and every result is deeply frozen. Empty intake returns a fresh frozen equivalent Ledger with stable identity. No Contribution value, contract, public API, aggregation or downstream artifact changes.
+
+There is no next planned task; any downstream consumer requires an explicit repository-first architectural review.
 
 ## Current authoritative documents
 

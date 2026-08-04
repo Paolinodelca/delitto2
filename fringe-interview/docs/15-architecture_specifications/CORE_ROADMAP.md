@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-37**
+Verified through: **Task 0100E-38**
 
-Next gate: **0100E-38 — Dimension Contribution Ledger Intake Hardening Foundation**
+Next gate: **UNPLANNED — explicit downstream architecture review required**
 
-Last updated: 2026-08-03 (`0100E-37`)
+Last updated: 2026-08-04 (`0100E-38`)
 
 ## Purpose
 
@@ -185,7 +185,7 @@ Status: **COMPLETED**
 
 Type: **FOUNDATION**
 
-Status: **PLANNED**
+Status: **COMPLETED**
 
 | Task | Type | Status | Result |
 |---|---|---|---|
@@ -211,7 +211,7 @@ Status: **PLANNED**
 | 0100E-35 | Architecture Review | COMPLETED | existing Contribution mapper approved after applicable outcome, with local hardening required |
 | 0100E-36 | Foundation | COMPLETED | hardened existing mapper identity, canonical provenance, formula provenance and deep immutability without contract or downstream changes |
 | 0100E-37 | Architecture Review | COMPLETED | existing atomic Core Ledger append approved as first direct consumer under Application orchestration |
-| 0100E-38 | Foundation | PLANNED | harden the minimum Application intake and existing Core append path; no aggregation or downstream Knowledge |
+| 0100E-38 | Foundation | COMPLETED | hardened existing Core Ledger intake identity, validation, atomicity, canonical provenance/order and deep immutability; no downstream Knowledge |
 
 Approved cardinality:
 

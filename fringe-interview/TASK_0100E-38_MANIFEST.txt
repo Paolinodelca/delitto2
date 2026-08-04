@@ -1,0 +1,15 @@
+TASK_0100E-38_IMPLEMENTATION_REPORT.md
+TASK_0100E-38_MANIFEST.txt
+src/core/dimension/knowledgeLedgerIntegrity.js
+src/core/dimension/buildKnowledgeLedger.js
+src/core/dimension/validateKnowledgeLedger.js
+src/core/dimension/appendDimensionContributions.js
+src/core/dimension/healthKnowledgeLedgerSnapshot.js
+scripts/test_dimension_contribution_ledger_intake_hardening.js
+scripts/test_all_core.js
+docs/00-continuity/README.md
+docs/00-continuity/CONTINUITY.md
+docs/00-continuity/CORE_ARCHITECTURE.md
+docs/00-continuity/DECISIONS.md
+docs/00-continuity/NEXT_PHASE.md
+docs/15-architecture_specifications/CORE_ROADMAP.md
