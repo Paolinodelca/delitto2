@@ -215,3 +215,5 @@ node scripts/fringe_health_check.js
 ```
 
 Task E-41 confirms the existing Core `executeCapabilityRecipe` operation as the first direct consumer of one complete Snapshot and one explicit Recipe. `evaluateDerivedKnowledgeRules` remains an internal execution responsibility. The result cardinality is one `CapabilityExecutionResult` containing zero or more `DerivedKnowledgeResult` values; Derived Dimension aggregation, Matrix and Coverage are not part of this boundary.
+
+Task E-42 hardens the same execution path without changing its API or cardinality. The result has complete canonical content identity independent of execution timestamps, exact Snapshot/Recipe/Rule/result lineage and deep immutability. `evaluateDerivedKnowledgeRules` remains internal; later derived-state composition is not part of execution.

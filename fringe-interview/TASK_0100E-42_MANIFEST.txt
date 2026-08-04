@@ -1,0 +1,16 @@
+TASK_0100E-42_IMPLEMENTATION_REPORT.md
+TASK_0100E-42_MANIFEST.txt
+docs/00-continuity/CONTINUITY.md
+docs/00-continuity/CORE_ARCHITECTURE.md
+docs/00-continuity/DECISIONS.md
+docs/00-continuity/NEXT_PHASE.md
+docs/15-architecture_specifications/CORE_ROADMAP.md
+scripts/test_all_core.js
+scripts/test_capability_recipe_execution_hardening.js
+src/core/capability/buildCapabilityExecutionResult.js
+src/core/capability/capabilityExecutionIntegrity.js
+src/core/capability/executeCapabilityRecipe.js
+src/core/capability/healthCapabilityRecipeExecution.js
+src/core/capability/validateCapabilityExecutionResult.js
+src/core/dimension/buildDerivedKnowledgeResult.js
+src/core/dimension/evaluateDerivedKnowledgeRules.js

@@ -266,3 +266,9 @@ Task 0100E-40 implements the approved hardening without a contract or API change
 Task 0100E-41 approves the existing Core `executeCapabilityRecipe(snapshot, recipe, options)` operation as the first direct consumer of one complete valid Snapshot. It consumes exactly one explicit Recipe and returns exactly one `CapabilityExecutionResult` containing `0..N DerivedKnowledgeResult` values. The existing rule evaluator is internal to this execution responsibility and does not create an intermediate pipeline boundary.
 
 Snapshot and Recipe identities, rule/state dependencies and result references preserve exact causality and provenance. Execution may validate and evaluate each explicit rule once; recursion, chaining, implicit aggregation and mutation are forbidden. Derived Dimension State, Matrix, Coverage, satisfaction, persistence, I/O and Runtime mutation remain downstream and unauthorized. E-42 may harden only the existing execution/evaluation path without changing contracts or public APIs.
+
+### ADR-048 - Capability execution identity commits to complete semantic output
+
+Task 0100E-42 hardens the existing execution/evaluation path in place. `CapabilityExecutionResult` identity commits to its complete canonical timestamp-independent semantic content, summary, dependencies, provenance, metadata and extensions. Validation enforces exact Snapshot/Recipe context and causal references. Execution results, their derived results and nested content are deeply immutable.
+
+The public API, contracts and cardinality remain unchanged. Rule evaluation stays internal to `executeCapabilityRecipe`; no intermediate boundary, derived Dimension aggregation, Matrix/Coverage update, satisfaction, persistence, I/O, Runtime mutation or LLM is authorized.

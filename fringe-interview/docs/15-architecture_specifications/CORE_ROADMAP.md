@@ -4,11 +4,11 @@ Version: 2.0
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-41**
+Verified through: **Task 0100E-42**
 
-Next gate: **0100E-42 - Capability Recipe Execution Hardening Foundation**
+Next gate: **0100E-43 - Post-Capability-Recipe-Execution Downstream Architecture Review**
 
-Last updated: 2026-08-04 (`0100E-41`)
+Last updated: 2026-08-04 (`0100E-42`)
 
 ## Purpose
 
@@ -201,7 +201,7 @@ Type: **FOUNDATION**
 
 Status: **COMPLETED**
 
-Approved the existing Core Capability Recipe execution boundary as the first direct Snapshot consumer. Rule evaluation remains internal; no intermediate contract or later Knowledge layer is authorized.
+Hardened the existing Core Capability Recipe execution boundary in place: complete timestamp-independent semantic identity, canonical causal lineage, deep immutability and contextual validation. API, contracts and cardinality remain unchanged.
 
 ### 0100E-41 — Post-Knowledge-Snapshot-Construction Downstream Architecture Review
 
@@ -213,9 +213,17 @@ Result: existing Core `executeCapabilityRecipe(snapshot, recipe, options)` appro
 
 Type: **FOUNDATION**
 
+Status: **COMPLETED**
+
+Result: hardened the existing execution/evaluation path for complete-content identity, canonical lineage and deep immutability without contract or public API changes.
+
+### 0100E-43 - Post-Capability-Recipe-Execution Downstream Architecture Review
+
+Type: **ARCHITECTURE REVIEW**
+
 Status: **PLANNED**
 
-Sole authorized scope: harden the existing execution/evaluation path for deterministic complete-content identity, canonical lineage and deep immutability without contract or public API changes. Derived Dimension State, Matrix, Coverage, satisfaction, persistence, I/O and Runtime mutation remain unauthorized.
+Documentation-only review of the first legitimate direct CapabilityExecutionResult consumer.
 
 | Task | Type | Status | Result |
 |---|---|---|---|
@@ -245,7 +253,8 @@ Sole authorized scope: harden the existing execution/evaluation path for determi
 | 0100E-39 | Architecture Review | COMPLETED | approved whole-Ledger Snapshot construction and internal elementary aggregation |
 | 0100E-40 | Foundation | COMPLETED | hardened existing Snapshot construction boundary |
 | 0100E-41 | Architecture Review | COMPLETED | approved existing Capability Recipe execution as first direct Snapshot consumer |
-| 0100E-42 | Foundation | PLANNED | harden existing Capability Recipe execution/evaluation path |
+| 0100E-42 | Foundation | COMPLETED | hardened existing Capability Recipe execution/evaluation path |
+| 0100E-43 | Architecture Review | PLANNED | review first legitimate direct CapabilityExecutionResult consumer |
 
 Approved cardinality:
 

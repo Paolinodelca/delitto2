@@ -106,6 +106,7 @@ const testGroups = [
       "node scripts/test_capability_recipe.js",
       "node scripts/test_capability_execution_result.js",
       "node scripts/test_execute_capability_recipe.js",
+      "node scripts/test_capability_recipe_execution_hardening.js",
       "node scripts/test_capability_recipe_execution_regression.js",
       "node scripts/test_health_capability_recipe_execution.js",
     ],

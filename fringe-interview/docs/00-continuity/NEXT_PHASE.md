@@ -1,15 +1,15 @@
-# Next Phase - Capability Recipe Execution Hardening - 0100E-42
+# Next Phase - Post-Capability-Recipe-Execution Review - 0100E-43
 
 Status: **CURRENT**
 
 Status: PLANNED
 
-Task `0100E-41 - Post-Knowledge-Snapshot-Construction Downstream Architecture Review` is **COMPLETED** with outcome **APPROVED WITH HARDENING GATE**.
+Task `0100E-42 - Capability Recipe Execution Hardening Foundation` is **COMPLETED** with outcome **CONFORMING**.
 
-The existing Core `executeCapabilityRecipe(snapshot, recipe, options)` boundary is the first direct consumer of one complete valid Snapshot. Rule evaluation remains internal to that boundary; no intermediate contract is required.
+The existing Core `executeCapabilityRecipe(snapshot, recipe, options)` boundary is hardened without API, contract or cardinality changes. It returns one immutable `CapabilityExecutionResult` containing `0..N DerivedKnowledgeResult` values; rule evaluation remains internal.
 
 ## Sole planned gate
 
-`0100E-42 - Capability Recipe Execution Hardening Foundation`
+`0100E-43 - Post-Capability-Recipe-Execution Downstream Architecture Review`
 
-E-42 may harden only the existing execution/evaluation path for deterministic complete-content identity, canonical lineage and deep immutability. It may not change contracts or public APIs or implement Derived Dimension State, Matrix, Coverage, satisfaction, persistence, I/O or Runtime mutation.
+E-43 is documentation-only and must identify the first legitimate direct consumer of CapabilityExecutionResult. No downstream implementation is authorized automatically.

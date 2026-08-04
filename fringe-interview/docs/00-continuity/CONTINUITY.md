@@ -156,3 +156,5 @@ All health checks passed
 ```
 
 Task E-41 approves the existing Core `executeCapabilityRecipe(snapshot, recipe, options)` boundary as the first direct Snapshot consumer. Rule evaluation is internal to that execution boundary; Derived Dimension State, Matrix and Coverage remain later consumers. E-42 may harden only this existing execution/evaluation path without changing contracts or public APIs.
+
+Task E-42 completes that hardening in place. CapabilityExecutionResult identity commits to complete timestamp-independent semantic content and exact causal lineage; execution and derived results are deeply immutable; local and Snapshot/Recipe contextual validation are canonical. API, contracts and cardinality remain unchanged. No downstream consumer is authorized.

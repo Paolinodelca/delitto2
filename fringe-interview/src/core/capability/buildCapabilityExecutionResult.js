@@ -1,3 +1,33 @@
-const crypto=require('crypto');function obj(v){return v!==null&&typeof v==='object'&&!Array.isArray(v)}function clone(v){if(Array.isArray(v))return v.map(clone);if(obj(v))return Object.fromEntries(Object.entries(v).map(([k,x])=>[k,clone(x)]));return v}function str(v){return typeof v==='string'&&v.trim()?v.trim():null}function stable(v){if(Array.isArray(v))return `[${v.map(stable).join(',')}]`;if(obj(v))return `{${Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+stable(v[k])).join(',')}}`;return JSON.stringify(v)}function hash(v){return crypto.createHash('sha256').update(v).digest('hex')}
-function buildCapabilityExecutionResult(input={},options={}){const results=(Array.isArray(input.derivedResults)?input.derivedResults:[]).map(clone).sort((a,b)=>a.id.localeCompare(b.id));const refs=[...new Set((Array.isArray(input.dependencyRefs)?input.dependencyRefs:[]).map(str).filter(Boolean))].sort();const summary={ruleCount:input.ruleCount||0,matchedRuleCount:results.length,resultCount:results.length,dependencyCount:refs.length};const executedAt=str(options.now)||str(input.executedAt)||new Date().toISOString();const logical={capabilityId:str(input.capabilityId),recipeRef:str(input.recipeRef),recipeVersion:str(input.recipeVersion),snapshotRef:str(input.snapshotRef),resultIds:results.map(r=>r.id),contractVersion:'1.0'};return{id:`capabilityExecutionResult_${hash(stable(logical)).slice(0,32)}`,capabilityId:logical.capabilityId,recipeRef:logical.recipeRef,recipeVersion:logical.recipeVersion,snapshotRef:logical.snapshotRef,derivedResults:results,summary,dependencyRefs:refs,provenance:{type:'capability_recipe_execution',evaluatorVersion:'1.0'},executedAt,metadata:{contractVersion:'1.0'},extensions:obj(input.extensions)?clone(input.extensions):{}}}
-module.exports={buildCapabilityExecutionResult};
+const { clone, deepFreeze, capabilityExecutionResultId } = require("./capabilityExecutionIntegrity");
+
+function isObject(value) { return value !== null && typeof value === "object" && !Array.isArray(value); }
+function string(value) { return typeof value === "string" && value.trim() ? value.trim() : null; }
+
+function buildCapabilityExecutionResult(input = {}, options = {}) {
+  const derivedResults = (Array.isArray(input.derivedResults) ? input.derivedResults : [])
+    .map(clone)
+    .sort((left, right) => left.id.localeCompare(right.id));
+  const dependencyRefs = [...new Set((Array.isArray(input.dependencyRefs) ? input.dependencyRefs : []).map(string).filter(Boolean))].sort();
+  const summary = {
+    ruleCount: input.ruleCount || 0,
+    matchedRuleCount: derivedResults.length,
+    resultCount: derivedResults.length,
+    dependencyCount: dependencyRefs.length,
+  };
+  const executedAt = string(options.now) || string(input.executedAt) || new Date().toISOString();
+  const content = {
+    capabilityId: string(input.capabilityId),
+    recipeRef: string(input.recipeRef),
+    recipeVersion: string(input.recipeVersion),
+    snapshotRef: string(input.snapshotRef),
+    derivedResults,
+    summary,
+    dependencyRefs,
+    provenance: { type: "capability_recipe_execution", evaluatorVersion: "1.0" },
+    metadata: { contractVersion: "1.0" },
+    extensions: isObject(input.extensions) ? clone(input.extensions) : {},
+  };
+  return deepFreeze({ id: capabilityExecutionResultId(content), ...content, executedAt });
+}
+
+module.exports = { buildCapabilityExecutionResult };

@@ -1,3 +1,53 @@
-const {buildCapabilityExecutionResult}=require('./buildCapabilityExecutionResult');const {validateDerivedKnowledgeResult}=require('../dimension/validateDerivedKnowledgeResult');const TOP=['id','capabilityId','recipeRef','recipeVersion','snapshotRef','derivedResults','summary','dependencyRefs','provenance','executedAt','metadata','extensions'];function obj(v){return v!==null&&typeof v==='object'&&!Array.isArray(v)}function str(v){return typeof v==='string'&&v.trim().length>0}function iso(v){return typeof v==='string'&&!Number.isNaN(Date.parse(v))&&new Date(v).toISOString()===v}
-function validateCapabilityExecutionResult(r={}){const errors=[],warnings=[];if(!obj(r))return{valid:false,errors:['CapabilityExecutionResult must be an object.'],warnings};Object.keys(r).filter(k=>!TOP.includes(k)).forEach(k=>errors.push(`capabilityExecutionResult.${k} is not allowed.`));if(!str(r.id)||!str(r.capabilityId))errors.push('id and capabilityId are required.');if(!str(r.recipeRef)||!r.recipeRef.startsWith('capabilityRecipe:'))errors.push('recipeRef is invalid.');if(!str(r.recipeVersion))errors.push('recipeVersion is required.');if(!str(r.snapshotRef)||!r.snapshotRef.startsWith('knowledgeSnapshot:'))errors.push('snapshotRef is invalid.');if(!Array.isArray(r.derivedResults))errors.push('derivedResults must be an array.');else{const seen=new Set();r.derivedResults.forEach((x,i)=>{const v=validateDerivedKnowledgeResult(x);if(!v.valid)errors.push(`derivedResults[${i}] is invalid.`);if(seen.has(x.id))errors.push('derivedResults must be unique.');seen.add(x.id)});if([...r.derivedResults].sort((a,b)=>a.id.localeCompare(b.id)).map(x=>x.id).join('|')!==r.derivedResults.map(x=>x.id).join('|'))errors.push('derivedResults must be canonically ordered.')}if(!obj(r.summary)||!Number.isInteger(r.summary.ruleCount)||r.summary.matchedRuleCount!==r.derivedResults.length||r.summary.resultCount!==r.derivedResults.length||r.summary.dependencyCount!==r.dependencyRefs.length||Object.keys(r.summary).some(k=>!['ruleCount','matchedRuleCount','resultCount','dependencyCount'].includes(k)))errors.push('summary is inconsistent.');if(!Array.isArray(r.dependencyRefs)||new Set(r.dependencyRefs).size!==r.dependencyRefs.length||[...r.dependencyRefs].sort().join('|')!==r.dependencyRefs.join('|')||r.dependencyRefs.some(x=>!str(x)))errors.push('dependencyRefs are invalid.');if(!obj(r.provenance)||r.provenance.type!=='capability_recipe_execution'||r.provenance.evaluatorVersion!=='1.0')errors.push('provenance is invalid.');if(!iso(r.executedAt))errors.push('executedAt is invalid.');if(!obj(r.metadata)||r.metadata.contractVersion!=='1.0'||Object.keys(r.metadata).some(k=>k!=='contractVersion'))errors.push('metadata is invalid.');if(!obj(r.extensions))errors.push('extensions must be an object.');if(errors.length===0&&r.id!==buildCapabilityExecutionResult({...r,ruleCount:r.summary.ruleCount},{now:r.executedAt}).id)errors.push('id does not match canonical execution identity.');return{valid:errors.length===0,errors,warnings}}
-module.exports={validateCapabilityExecutionResult};
+const { validateDerivedKnowledgeResult } = require("../dimension/validateDerivedKnowledgeResult");
+const { capabilityExecutionResultId } = require("./capabilityExecutionIntegrity");
+
+const TOP = ["id", "capabilityId", "recipeRef", "recipeVersion", "snapshotRef", "derivedResults", "summary", "dependencyRefs", "provenance", "executedAt", "metadata", "extensions"];
+function object(value) { return value !== null && typeof value === "object" && !Array.isArray(value); }
+function string(value) { return typeof value === "string" && value.trim().length > 0; }
+function iso(value) { return typeof value === "string" && !Number.isNaN(Date.parse(value)) && new Date(value).toISOString() === value; }
+function same(left, right) { return JSON.stringify(left) === JSON.stringify(right); }
+
+function validateCapabilityExecutionResult(result = {}, context = {}) {
+  const errors = [], warnings = [];
+  if (!object(result)) return { valid: false, errors: ["CapabilityExecutionResult must be an object."], warnings };
+  Object.keys(result).filter(key => !TOP.includes(key)).forEach(key => errors.push(`capabilityExecutionResult.${key} is not allowed.`));
+  if (!string(result.id) || !string(result.capabilityId)) errors.push("id and capabilityId are required.");
+  if (!string(result.recipeRef) || !result.recipeRef.startsWith("capabilityRecipe:")) errors.push("recipeRef is invalid.");
+  if (!string(result.recipeVersion)) errors.push("recipeVersion is required.");
+  if (!string(result.snapshotRef) || !result.snapshotRef.startsWith("knowledgeSnapshot:")) errors.push("snapshotRef is invalid.");
+
+  const derivedResults = Array.isArray(result.derivedResults) ? result.derivedResults : [];
+  if (!Array.isArray(result.derivedResults)) errors.push("derivedResults must be an array.");
+  else {
+    const seen = new Set();
+    derivedResults.forEach((item, index) => {
+      const validation = validateDerivedKnowledgeResult(item);
+      if (!validation.valid) errors.push(`derivedResults[${index}] is invalid: ${validation.errors.join(" | ")}`);
+      if (seen.has(item.id)) errors.push("derivedResults must be unique.");
+      seen.add(item.id);
+      if (item.snapshotRef !== result.snapshotRef) errors.push(`derivedResults[${index}].snapshotRef is inconsistent.`);
+    });
+    if (!same(derivedResults.map(item => item.id), [...derivedResults].sort((a, b) => a.id.localeCompare(b.id)).map(item => item.id))) errors.push("derivedResults must be canonically ordered.");
+  }
+
+  const dependencyRefs = Array.isArray(result.dependencyRefs) ? result.dependencyRefs : [];
+  if (!Array.isArray(result.dependencyRefs) || new Set(dependencyRefs).size !== dependencyRefs.length || !same(dependencyRefs, [...dependencyRefs].sort()) || dependencyRefs.some(ref => !string(ref))) errors.push("dependencyRefs are invalid.");
+  if (!object(result.summary) || !Number.isInteger(result.summary.ruleCount) || result.summary.ruleCount < 0 || result.summary.matchedRuleCount !== derivedResults.length || result.summary.resultCount !== derivedResults.length || result.summary.dependencyCount !== dependencyRefs.length || Object.keys(result.summary).some(key => !["ruleCount", "matchedRuleCount", "resultCount", "dependencyCount"].includes(key))) errors.push("summary is inconsistent.");
+  if (!object(result.provenance) || result.provenance.type !== "capability_recipe_execution" || result.provenance.evaluatorVersion !== "1.0" || Object.keys(result.provenance).some(key => !["type", "evaluatorVersion"].includes(key))) errors.push("provenance is invalid.");
+  if (!iso(result.executedAt)) errors.push("executedAt is invalid.");
+  if (!object(result.metadata) || result.metadata.contractVersion !== "1.0" || Object.keys(result.metadata).some(key => key !== "contractVersion")) errors.push("metadata is invalid.");
+  if (!object(result.extensions)) errors.push("extensions must be an object.");
+
+  if (object(context.snapshot) && result.snapshotRef !== `knowledgeSnapshot:${context.snapshot.id}`) errors.push("snapshot context is inconsistent.");
+  if (object(context.recipe)) {
+    if (result.capabilityId !== context.recipe.capabilityId || result.recipeRef !== `capabilityRecipe:${context.recipe.id}` || result.recipeVersion !== context.recipe.version) errors.push("recipe context is inconsistent.");
+    if (object(result.summary) && result.summary.ruleCount !== context.recipe.rules.length) errors.push("summary.ruleCount is inconsistent with Recipe context.");
+    const expectedRefs = [result.snapshotRef, result.recipeRef, ...context.recipe.rules.map(rule => `derivedKnowledgeRule:${rule.id}`), ...derivedResults.map(item => `derivedKnowledgeResult:${item.id}`), ...derivedResults.flatMap(item => item.dependencyRefs || [])].filter((ref, index, refs) => refs.indexOf(ref) === index).sort();
+    if (!same(dependencyRefs, expectedRefs)) errors.push("dependencyRefs are inconsistent with Recipe context.");
+  }
+
+  if (errors.length === 0 && result.id !== capabilityExecutionResultId(result)) errors.push("id does not match canonical execution content.");
+  return { valid: errors.length === 0, errors, warnings };
+}
+
+module.exports = { validateCapabilityExecutionResult };
