@@ -1,15 +1,139 @@
-# Next Phase - Derived Dimension Knowledge State Construction Hardening - 0100E-44
+\# Next Phase
 
-Status: **CURRENT**
 
-Status: PLANNED
 
-Task `0100E-43 - Post-Capability-Recipe-Execution Downstream Architecture Review` is **COMPLETED** with outcome **APPROVED WITH HARDENING GATE**.
+Status: CURRENT
 
-The existing Core `buildDerivedDimensionKnowledgeStates(executionResults, mappings, options)` boundary is approved as the first direct consumer of complete Capability execution-result containers. It produces `0..N DerivedDimensionKnowledgeState` values from explicit mappings. No intermediate contract, Matrix update or Coverage update is authorized.
 
-## Sole planned gate
 
-`0100E-44 - Derived Dimension Knowledge State Construction Hardening Foundation`
+\## Current Product Objective
 
-E-44 may harden only the existing construction boundary for exact execution/result/mapping lineage, deterministic identity and ordering, deep immutability, contextual validation and empty/non-applicable behavior. It must preserve existing public contracts and cardinality and must not authorize later consumers.
+
+
+Deliver a credible and usable \*\*IMAGO Interview Private Beta\*\*.
+
+
+
+From this point onward, product priorities drive implementation priorities.
+
+
+
+Architectural downstream dependencies identify what can be implemented, but do not automatically determine the next implementation task.
+
+
+
+\---
+
+
+
+\## Current Roadmap
+
+
+
+The active roadmap is defined in:
+
+
+
+`BETA\_ROADMAP.md`
+
+
+
+Current milestone:
+
+
+
+\*\*Milestone 1 — Beta User Journey Completo\*\*
+
+
+
+\---
+
+
+
+\## Current Implementation Priority
+
+
+
+Repository-first reviews concluded that the current priority is to complete the observable Beta user journey before further Core hardening.
+
+
+
+Current focus:
+
+
+
+\- end-to-end Beta flow;
+
+\- onboarding;
+
+\- privacy and consent;
+
+\- error handling;
+
+\- minimum feedback collection;
+
+\- operational logging.
+
+
+
+\---
+
+
+
+\## Deferred Core Activities
+
+
+
+The following activities are currently classified as \*\*Post-Beta unless consumed by the active Beta path\*\*:
+
+
+
+\- 0100E-44 — Derived Dimension Knowledge State Construction Hardening
+
+\- additional Core hardening not directly consumed by the Beta
+
+\- Coverage / Matrix product integration
+
+\- multi-provider support
+
+\- future dynamic domains
+
+
+
+\---
+
+
+
+\## Engineering Rule
+
+
+
+When two technically valid implementation paths exist, priority is given to the one that produces the greatest observable value for the current product release.
+
+
+
+\---
+
+
+
+Last review:
+
+
+
+2026-08-05
+
+
+
+Current repository state:
+
+
+
+Last completed task:
+
+0100E-43
+
+
+
+Current roadmap:
+
+Private Beta

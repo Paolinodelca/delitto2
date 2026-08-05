@@ -42,25 +42,25 @@ Evidence is authoritative; knowledge and composed views are reconstructable. Run
 
 ### Phase 0100A — Preliminary Foundations
 
-| Task | Status | Result |
-|---|---|---|
-| 0100A-1B | COMPLETED | preliminary Foundation recorded by task report |
-| 0100A-2 | COMPLETED | preliminary Foundation recorded by task report |
+|Task|Status|Result|
+|-|-|-|
+|0100A-1B|COMPLETED|preliminary Foundation recorded by task report|
+|0100A-2|COMPLETED|preliminary Foundation recorded by task report|
 
 ### Phase 0100B — Knowledge Engine Foundation
 
-| Task | Status | Result |
-|---|---|---|
-| 0100B-1 | COMPLETED | Measurement and Capability Foundation |
-| 0100B-2 | COMPLETED | Dimension Knowledge State Foundation |
-| 0100B-3 | COMPLETED | Dimension Contribution Foundation |
-| 0100B-4 | COMPLETED | Measurement-to-Dimension Mapping Foundation |
-| 0100B-5 | COMPLETED | Elementary Dimension Aggregation Foundation |
-| 0100B-6 | COMPLETED | Knowledge Ledger and Snapshot Foundation |
-| 0100B-7 | COMPLETED | Derived Knowledge Foundation |
-| 0100B-8 | COMPLETED | Capability Recipe Execution Foundation |
-| 0100B-9 | COMPLETED | Derived Dimension State Foundation |
-| 0100B-10 | COMPLETED | Person Knowledge Matrix Foundation |
+|Task|Status|Result|
+|-|-|-|
+|0100B-1|COMPLETED|Measurement and Capability Foundation|
+|0100B-2|COMPLETED|Dimension Knowledge State Foundation|
+|0100B-3|COMPLETED|Dimension Contribution Foundation|
+|0100B-4|COMPLETED|Measurement-to-Dimension Mapping Foundation|
+|0100B-5|COMPLETED|Elementary Dimension Aggregation Foundation|
+|0100B-6|COMPLETED|Knowledge Ledger and Snapshot Foundation|
+|0100B-7|COMPLETED|Derived Knowledge Foundation|
+|0100B-8|COMPLETED|Capability Recipe Execution Foundation|
+|0100B-9|COMPLETED|Derived Dimension State Foundation|
+|0100B-10|COMPLETED|Person Knowledge Matrix Foundation|
 
 Verified outcome:
 
@@ -75,28 +75,28 @@ Observation
 
 ### Phase 0100C — Matrix Query and Coverage
 
-| Task | Status | Result |
-|---|---|---|
-| 0100C-1 | COMPLETED | Person Knowledge Matrix Query Foundation |
-| 0100C-2 | COMPLETED | Knowledge Coverage Foundation |
-| 0100C-3 | COMPLETED | Knowledge Coverage Query Foundation |
+|Task|Status|Result|
+|-|-|-|
+|0100C-1|COMPLETED|Person Knowledge Matrix Query Foundation|
+|0100C-2|COMPLETED|Knowledge Coverage Foundation|
+|0100C-3|COMPLETED|Knowledge Coverage Query Foundation|
 
 Queries are deterministic, read-only, allowlisted and non-interpretative. Coverage describes available knowledge without scoring or evaluating the person.
 
 ### Phase 0100D — Declarative Knowledge Acquisition Boundary
 
-| Task | Type | Status | Result |
-|---|---|---|---|
-| 0100D-1 | Foundation | COMPLETED | Knowledge Opportunity |
-| 0100D-2 | Foundation | COMPLETED | Opportunity Query |
-| 0100D-3 | Foundation | COMPLETED | Acquisition Need |
-| 0100D-4 | Foundation | COMPLETED | Need Query |
-| 0100D-5 | Foundation | COMPLETED | Acquisition Strategy |
-| 0100D-6 | Foundation | COMPLETED | Strategy Query |
-| 0100D-7 | Foundation | COMPLETED | Acquisition Requirement |
-| 0100D-8 | Foundation | COMPLETED | Requirement Query |
-| 0100D-9 | Architecture Review | COMPLETED | boundary termination at Requirement confirmed |
-| 0100D-10 | Consolidation / Freeze | COMPLETED | declarative boundary frozen and regression-protected |
+|Task|Type|Status|Result|
+|-|-|-|-|
+|0100D-1|Foundation|COMPLETED|Knowledge Opportunity|
+|0100D-2|Foundation|COMPLETED|Opportunity Query|
+|0100D-3|Foundation|COMPLETED|Acquisition Need|
+|0100D-4|Foundation|COMPLETED|Need Query|
+|0100D-5|Foundation|COMPLETED|Acquisition Strategy|
+|0100D-6|Foundation|COMPLETED|Strategy Query|
+|0100D-7|Foundation|COMPLETED|Acquisition Requirement|
+|0100D-8|Foundation|COMPLETED|Requirement Query|
+|0100D-9|Architecture Review|COMPLETED|boundary termination at Requirement confirmed|
+|0100D-10|Consolidation / Freeze|COMPLETED|declarative boundary frozen and regression-protected|
 
 Frozen pipeline:
 
@@ -113,32 +113,32 @@ Requirement is a declarative post-condition. It has no satisfaction, priority, s
 
 ### Phase 0100E — Post-Requirement Design and Decision
 
-| Task | Type | Status | Result |
-|---|---|---|---|
-| 0100E-1 | Architecture Review | COMPLETED | Design approved as first downstream consumer |
-| 0100E-2 | Foundation | COMPLETED | Knowledge Acquisition Design |
-| 0100E-3 | Architecture Review | COMPLETED | Capability Match direction approved |
-| 0100E-4 | Foundation | COMPLETED | Knowledge Acquisition Capability Match |
-| 0100E-5 | Architecture Review | COMPLETED | Application Solution Decision direction approved |
-| 0100E-6 | Foundation | COMPLETED | Knowledge Acquisition Solution Decision |
-| 0100E-7 | Architecture Review | COMPLETED | composed-only Composition Design direction approved |
-| 0100E-8 | Foundation | COMPLETED | Capability Composition Design |
-| 0100E-9 | Architecture Review | COMPLETED | unified Application Capability Configuration direction approved |
-| 0100E-10 | Foundation | COMPLETED | unified declarative Application Capability Configuration |
-| 0100E-11 | Architecture Review | COMPLETED | declarative Application Knowledge Acquisition Plan direction approved |
-| 0100E-12 | Foundation | COMPLETED | declarative Application Knowledge Acquisition Plan |
-| 0100E-13 | Architecture Review | COMPLETED | Application Runtime Session approved as first operational Plan consumer |
-| 0100E-14 | Foundation | COMPLETED | Application Knowledge Acquisition Runtime Session |
-| 0100E-15 | Architecture Review | COMPLETED | Application Execution approved as first Session consumer; Invocation identified as first side-effect |
+|Task|Type|Status|Result|
+|-|-|-|-|
+|0100E-1|Architecture Review|COMPLETED|Design approved as first downstream consumer|
+|0100E-2|Foundation|COMPLETED|Knowledge Acquisition Design|
+|0100E-3|Architecture Review|COMPLETED|Capability Match direction approved|
+|0100E-4|Foundation|COMPLETED|Knowledge Acquisition Capability Match|
+|0100E-5|Architecture Review|COMPLETED|Application Solution Decision direction approved|
+|0100E-6|Foundation|COMPLETED|Knowledge Acquisition Solution Decision|
+|0100E-7|Architecture Review|COMPLETED|composed-only Composition Design direction approved|
+|0100E-8|Foundation|COMPLETED|Capability Composition Design|
+|0100E-9|Architecture Review|COMPLETED|unified Application Capability Configuration direction approved|
+|0100E-10|Foundation|COMPLETED|unified declarative Application Capability Configuration|
+|0100E-11|Architecture Review|COMPLETED|declarative Application Knowledge Acquisition Plan direction approved|
+|0100E-12|Foundation|COMPLETED|declarative Application Knowledge Acquisition Plan|
+|0100E-13|Architecture Review|COMPLETED|Application Runtime Session approved as first operational Plan consumer|
+|0100E-14|Foundation|COMPLETED|Application Knowledge Acquisition Runtime Session|
+|0100E-15|Architecture Review|COMPLETED|Application Execution approved as first Session consumer; Invocation identified as first side-effect|
 
 Current implemented extension:
 
 ```text
 KnowledgeAcquisitionRequirement
-→ KnowledgeAcquisitionDesign                       [Core]
-→ KnowledgeAcquisitionCapabilityMatch              [Core]
-→ KnowledgeAcquisitionSolutionDecision             [Application]
-→ KnowledgeAcquisitionCapabilityCompositionDesign  [Application; composed only]
+→ KnowledgeAcquisitionDesign                       \[Core]
+→ KnowledgeAcquisitionCapabilityMatch              \[Core]
+→ KnowledgeAcquisitionSolutionDecision             \[Application]
+→ KnowledgeAcquisitionCapabilityCompositionDesign  \[Application; composed only]
 ```
 
 Discovery and candidate resolution remain Application-owned. Local and contextual validation have distinct guarantees. Planning and Execution are excluded.
@@ -233,37 +233,37 @@ Status: **PLANNED**
 
 Harden only the existing execution-result-to-derived-state construction boundary for exact lineage, deterministic identity/order, deep immutability and empty/non-applicable behavior without contract or cardinality changes.
 
-| Task | Type | Status | Result |
-|---|---|---|---|
-| 0100E-16 | Foundation | COMPLETED | implemented immutable pre-invocation Execution lifecycle |
-| 0100E-17 | Architecture Review | COMPLETED | Invocation approved as Application-owned outbound port; Adapter/Provider remain downstream |
-| 0100E-18 | Foundation | COMPLETED | technology-neutral Invocation port and ephemeral effect-free input contract |
-| 0100E-19 | Architecture Review | COMPLETED | capability-specific Invocation Adapter approved as first Infrastructure consumer and concrete port implementation; no implementation or side-effect |
-| 0100E-20 | Foundation | COMPLETED | structured-input capability-specific Invocation Adapter, injected Provider contract, validation, public API and in-memory effect tests implemented |
-| 0100E-21 | Architecture Review | COMPLETED | Infrastructure Provider Result approved before any concrete Provider integration |
-| 0100E-22 | Foundation | COMPLETED | immutable technical Provider Result, deterministic integrity and Adapter return enforcement |
-| 0100E-23 | Architecture Review | COMPLETED | capability-specific Provider Result Evidence Extractor approved as the crossing into Core Evidence |
-| 0100E-24 | Foundation | COMPLETED | deterministic immutable structured-input Provider Result Evidence extraction with exact provenance |
-| 0100E-25 | Architecture Review | COMPLETED | Application-owned Evidence Intake approved before immutable registration into the Core EvidenceStore aggregate |
-| 0100E-26 | Foundation | COMPLETED | effect-free Application Evidence intake with atomic exact-ID-safe immutable EvidenceStore registration |
-| 0100E-27 | Architecture Review | COMPLETED | exact Application-owned registered-Evidence selection approved before Observation construction |
-| 0100E-28 | Foundation | COMPLETED | exact immutable selection of registered Evidence from an explicit EvidenceStore |
-| 0100E-29 | Architecture Review | COMPLETED | explicit Core Observation Construction approved as first interpretation |
-| 0100E-30 | Foundation | COMPLETED | implemented rule-driven atomic Observation construction from selected registered Evidence |
-| 0100E-31 | Architecture Review | COMPLETED | Core Measurement Result Normalization approved as first Observation consumer |
-| 0100E-32 | Foundation | COMPLETED | deterministic per-Measurement/per-characteristic normalization only |
-| 0100E-33 | Architecture Review | COMPLETED | single explicit Mapping applicability approved before Contribution creation |
-| 0100E-34 | Foundation | COMPLETED | discriminated applicability for one explicit Result/Mapping pair; no Contribution |
-| 0100E-35 | Architecture Review | COMPLETED | existing Contribution mapper approved after applicable outcome, with local hardening required |
-| 0100E-36 | Foundation | COMPLETED | hardened existing mapper identity, canonical provenance, formula provenance and deep immutability without contract or downstream changes |
-| 0100E-37 | Architecture Review | COMPLETED | existing atomic Core Ledger append approved as first direct consumer under Application orchestration |
-| 0100E-38 | Foundation | COMPLETED | hardened existing Core Ledger intake identity, validation, atomicity, canonical provenance/order and deep immutability; no downstream Knowledge |
-| 0100E-39 | Architecture Review | COMPLETED | approved whole-Ledger Snapshot construction and internal elementary aggregation |
-| 0100E-40 | Foundation | COMPLETED | hardened existing Snapshot construction boundary |
-| 0100E-41 | Architecture Review | COMPLETED | approved existing Capability Recipe execution as first direct Snapshot consumer |
-| 0100E-42 | Foundation | COMPLETED | hardened existing Capability Recipe execution/evaluation path |
-| 0100E-43 | Architecture Review | COMPLETED | approved existing Derived Dimension State construction boundary; E-44 must harden repeated-execution lineage |
-| 0100E-44 | Foundation | PLANNED | harden existing Derived Dimension State construction boundary |
+|Task|Type|Status|Result|
+|-|-|-|-|
+|0100E-16|Foundation|COMPLETED|implemented immutable pre-invocation Execution lifecycle|
+|0100E-17|Architecture Review|COMPLETED|Invocation approved as Application-owned outbound port; Adapter/Provider remain downstream|
+|0100E-18|Foundation|COMPLETED|technology-neutral Invocation port and ephemeral effect-free input contract|
+|0100E-19|Architecture Review|COMPLETED|capability-specific Invocation Adapter approved as first Infrastructure consumer and concrete port implementation; no implementation or side-effect|
+|0100E-20|Foundation|COMPLETED|structured-input capability-specific Invocation Adapter, injected Provider contract, validation, public API and in-memory effect tests implemented|
+|0100E-21|Architecture Review|COMPLETED|Infrastructure Provider Result approved before any concrete Provider integration|
+|0100E-22|Foundation|COMPLETED|immutable technical Provider Result, deterministic integrity and Adapter return enforcement|
+|0100E-23|Architecture Review|COMPLETED|capability-specific Provider Result Evidence Extractor approved as the crossing into Core Evidence|
+|0100E-24|Foundation|COMPLETED|deterministic immutable structured-input Provider Result Evidence extraction with exact provenance|
+|0100E-25|Architecture Review|COMPLETED|Application-owned Evidence Intake approved before immutable registration into the Core EvidenceStore aggregate|
+|0100E-26|Foundation|COMPLETED|effect-free Application Evidence intake with atomic exact-ID-safe immutable EvidenceStore registration|
+|0100E-27|Architecture Review|COMPLETED|exact Application-owned registered-Evidence selection approved before Observation construction|
+|0100E-28|Foundation|COMPLETED|exact immutable selection of registered Evidence from an explicit EvidenceStore|
+|0100E-29|Architecture Review|COMPLETED|explicit Core Observation Construction approved as first interpretation|
+|0100E-30|Foundation|COMPLETED|implemented rule-driven atomic Observation construction from selected registered Evidence|
+|0100E-31|Architecture Review|COMPLETED|Core Measurement Result Normalization approved as first Observation consumer|
+|0100E-32|Foundation|COMPLETED|deterministic per-Measurement/per-characteristic normalization only|
+|0100E-33|Architecture Review|COMPLETED|single explicit Mapping applicability approved before Contribution creation|
+|0100E-34|Foundation|COMPLETED|discriminated applicability for one explicit Result/Mapping pair; no Contribution|
+|0100E-35|Architecture Review|COMPLETED|existing Contribution mapper approved after applicable outcome, with local hardening required|
+|0100E-36|Foundation|COMPLETED|hardened existing mapper identity, canonical provenance, formula provenance and deep immutability without contract or downstream changes|
+|0100E-37|Architecture Review|COMPLETED|existing atomic Core Ledger append approved as first direct consumer under Application orchestration|
+|0100E-38|Foundation|COMPLETED|hardened existing Core Ledger intake identity, validation, atomicity, canonical provenance/order and deep immutability; no downstream Knowledge|
+|0100E-39|Architecture Review|COMPLETED|approved whole-Ledger Snapshot construction and internal elementary aggregation|
+|0100E-40|Foundation|COMPLETED|hardened existing Snapshot construction boundary|
+|0100E-41|Architecture Review|COMPLETED|approved existing Capability Recipe execution as first direct Snapshot consumer|
+|0100E-42|Foundation|COMPLETED|hardened existing Capability Recipe execution/evaluation path|
+|0100E-43|Architecture Review|COMPLETED|approved existing Derived Dimension State construction boundary; E-44 must harden repeated-execution lineage|
+|0100E-44|Foundation|PLANNED|harden existing Derived Dimension State construction boundary|
 
 Approved cardinality:
 
@@ -285,34 +285,46 @@ Task E-21 approves `KnowledgeAcquisitionProviderResult` as the first new downstr
 
 Task E-22 implements that result with one `succeeded` state, opaque cloned `providerPayload`, exact Invocation Input fingerprint causality and deterministic integrity. The Adapter validates and returns it unchanged. E-23 approves a capability-specific Infrastructure Provider Result Evidence Extractor as the first semantic crossing, producing zero or more existing Core Evidence values. It rejects direct Knowledge, Knowledge Candidate and generic normalized-result layers. E-24 implements the effect-free extractor without modifying existing contracts, implementing a Provider/transport, executing ingestion/update flows or creating Knowledge.
 
-Task E-24 implements the immutable structured-input extractor and returns only Core-owned `Evidence[]`. E-25 approves and E-26 implements a narrow Application-owned Knowledge Acquisition Evidence Intake operation as its first direct consumer. Intake registers Evidence atomically and without mutation into the existing Core-owned EvidenceStore aggregate/collection; the Store is not persistence. Exact ID collisions reject the whole batch, semantic equivalents with distinct IDs coexist, and an empty batch returns a fresh equivalent Store. E-27 approves and E-28 implements exact Application-owned registered-Evidence selection as the first direct Store consumer. It validates exact unique membership, clones and deep-freezes unchanged Evidence, orders by ID and returns a fresh frozen empty array for zero IDs. E-29 approves and E-30 implements explicit Core-owned, Application-orchestrated Observation Construction as the first interpretation. E-31 approves and E-32 implements Core Measurement Result normalization. E-33 approves and E-34 implements a single explicit Result/Mapping applicability check. E-35 approves the historical Core Contribution mapper after `applicable`, subject to the sole planned E-36 local hardening gate. Ledger/Knowledge, persistence, satisfaction and Runtime mutation remain excluded.
+Task E-24 implements the immutable structured-input extractor and returns only Core-owned `Evidence\[]`. E-25 approves and E-26 implements a narrow Application-owned Knowledge Acquisition Evidence Intake operation as its first direct consumer. Intake registers Evidence atomically and without mutation into the existing Core-owned EvidenceStore aggregate/collection; the Store is not persistence. Exact ID collisions reject the whole batch, semantic equivalents with distinct IDs coexist, and an empty batch returns a fresh equivalent Store. E-27 approves and E-28 implements exact Application-owned registered-Evidence selection as the first direct Store consumer. It validates exact unique membership, clones and deep-freezes unchanged Evidence, orders by ID and returns a fresh frozen empty array for zero IDs. E-29 approves and E-30 implements explicit Core-owned, Application-orchestrated Observation Construction as the first interpretation. E-31 approves and E-32 implements Core Measurement Result normalization. E-33 approves and E-34 implements a single explicit Result/Mapping applicability check. E-35 approves the historical Core Contribution mapper after `applicable`, subject to the sole planned E-36 local hardening gate. Ledger/Knowledge, persistence, satisfaction and Runtime mutation remain excluded.
 
 ## Not approved
 
 The following are not roadmap commitments and must not be implemented automatically:
 
-- acquisition Action or executable Recipe beyond the approved declarative Plan;
-- dynamic provider or adapter resolution, registry or generic routing;
-- provider invocation or Runtime orchestration beyond the approved semantic Execution Foundation;
-- Requirement satisfaction;
-- Knowledge Update;
-- integration with Runtime or Reporting legacy;
-- Synthetic Evaluation Platform;
-- Learning Engine.
+* acquisition Action or executable Recipe beyond the approved declarative Plan;
+* dynamic provider or adapter resolution, registry or generic routing;
+* provider invocation or Runtime orchestration beyond the approved semantic Execution Foundation;
+* Requirement satisfaction;
+* Knowledge Update;
+* integration with Runtime or Reporting legacy;
+* Synthetic Evaluation Platform;
+* Learning Engine.
 
 ## Guardrails
 
-- preserve the Phase D freeze;
-- keep Core matching separate from Application discovery and decisions;
-- do not add downstream ambiguity to upstream contracts;
-- keep elementary and derived knowledge separate;
-- preserve deterministic identity, canonical ordering, provenance and caller-owned input immutability;
-- no person score, ranking, recommendation, network, persistence or LLM in deterministic Foundations unless explicitly approved;
-- perform the Continuity Impact Assessment for every task.
+* preserve the Phase D freeze;
+* keep Core matching separate from Application discovery and decisions;
+* do not add downstream ambiguity to upstream contracts;
+* keep elementary and derived knowledge separate;
+* preserve deterministic identity, canonical ordering, provenance and caller-owned input immutability;
+* no person score, ranking, recommendation, network, persistence or LLM in deterministic Foundations unless explicitly approved;
+* perform the Continuity Impact Assessment for every task.
 
 ## Verification baseline
 
 ```powershell
-node scripts/test_all_core.js
-node scripts/fringe_health_check.js
+node scripts/test\_all\_core.js
+node scripts/fringe\_health\_check.js
+
+
+
+NOTA:
+
+Da agosto 2026 la priorità dello sviluppo è guidata dalla roadmap della Private Beta.
+
+
+
+Gli hardening del Core vengono pianificati solo quando consumati dal percorso utente oppure quando costituiscono blocker della roadmap.
+
+
 ```
