@@ -122,6 +122,12 @@ Task `M1-02 — Private Beta User Journey Verification` is implemented. The Appl
 
 Verification: the dedicated verification suite, M1-01 journey assessment, Beta Runtime Session Integration, Beta Session Core and Beta Session hardening tests pass. A real parser-backed offline end-to-end execution remains non-reproducible from this handover archive because the referenced `config/parser_*.json`, sample fixtures, `package.json` and Git metadata are absent.
 
+## Private Beta Milestone 1 status — M1-03
+
+Task M1-03 adds the minimum Application-level error handling boundary consumed by the Private Beta journey. `runPrivateBetaUserJourney` delegates to the M1-02 verifier and always returns a deterministic frozen outcome: completed on success, or a tester-safe failure classified as input, session, service or unexpected. Failure output contains only a stable code, explicit Italian message and safe fallback action; original technical messages and stack details are not propagated. Retry, telemetry, advanced logging, Core hardening and Milestone 2/3 work remain out of scope.
+
+Dedicated M1-03 tests and the M1-01/M1-02 and Beta Session regression suites pass. The handover archive still does not include `package.json`, Git metadata or parser configuration/sample fixtures, so repository-wide npm/Git and real parser-backed offline verification cannot be reproduced from this archive alone.
+
 ## Current authoritative documents
 
 - `README.md` — authority index and reading order;

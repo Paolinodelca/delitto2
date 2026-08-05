@@ -18,7 +18,7 @@
 | Report finale | 85% | Sì | Evidenze + 3 azioni |
 | Role Family / Target | 65% | Sì, scope limitato | Scegliere 2–3 famiglie |
 | Onboarding | 55% | Sì | Completare |
-| Error handling | 50% | Sì | Completare |
+| Error handling | 75% | Sì | Fondazione M1-03 completata; verificare integrazione UI |
 | Privacy e consenso | 35% | Sì | Prima dei tester |
 | Feedback | 30% | Sì | Minimo |
 | Logging e runbook | 35% | Sì | Minimo |
@@ -31,7 +31,7 @@
 1. Percorso end-to-end verificato.
 2. Professional Identity minima e riuso dei dati.
 3. Report calibrato su profili reali.
-4. Gestione errori.
+4. Integrazione UI della gestione errori M1-03.
 5. Privacy e consenso.
 6. Feedback tester.
 7. Golden-ID regression risolta prima del freeze.

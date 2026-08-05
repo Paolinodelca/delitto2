@@ -47,6 +47,12 @@ Status: COMPLETED — 2026-08-05
 
 The Application now exposes a minimal reusable verification wrapper that runs the Beta session runner and accepts the journey only when the M1-01 completion gate, Interview Runtime completion, final report availability and Beta Session closure all agree. Dedicated deterministic tests cover both the successful path and explicit incomplete-output failures without extending the Core.
 
+### M1-03 — Beta Error Handling Foundation
+
+Status: COMPLETED — 2026-08-05
+
+The Application now exposes a minimal Private Beta execution boundary that converts application failures into deterministic tester-safe outcomes. Input failures, incomplete journeys, temporary service unavailability and unexpected failures receive explicit stable codes, coherent Italian messages and safe fallback actions; technical exception details are not exposed. No retry, telemetry, advanced logging or Core hardening was introduced.
+
 ## Candidate Tasks
 
 - end-to-end verification;

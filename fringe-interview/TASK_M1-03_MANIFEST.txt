@@ -1,0 +1,16 @@
+TASK M1-03 — Beta Error Handling Foundation
+Generated: 2026-08-05
+Base declared by user: a551eee...
+Commit/push: NOT PERFORMED
+
+Overlay contents:
+c05457fc836db2871c15a882898260919d4f142b3e56d9fe32b111c0f1abb553  src/app/runPrivateBetaUserJourney.js
+cb9a215510d864b7b27d9006b592ce321f287d29d5ba7f39f60e1489e8d10d4d  src/app/index.js
+7be897f657095a290bed77ec413ef63342984ed916b0c718b3b6708a584f811c  scripts/test_run_private_beta_user_journey.js
+49abfe1d864a7e504906c799f7adc522369b559d0293a81a49bedf12d778c435  docs/00-continuity/BETA_ROADMAP.md
+e69eec7c7d2a42f89ca2b68cafd81f1a85d4336c10b70f1926656aaf5dd49dbb  docs/00-continuity/BETA_READINESS_MATRIX.md
+820966e52f47dd7ff66d8ab7562496d6273ad0f5e6405343d5b03a23c9c96944  docs/00-continuity/CONTINUITY.md
+75c8d2edf8a3f6bf54cb20e5456614604c9c8abcadb8197ddc07ca0bad342386  TASK_M1-03_BETA_ERROR_HANDLING_FOUNDATION.md
+
+Verification: PASS (dedicated M1-03 plus M1-01/M1-02 and Beta Session regressions).
+Archive limitation: package.json, Git metadata, parser config and sample fixtures absent.
