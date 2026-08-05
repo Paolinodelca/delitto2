@@ -1,0 +1,30 @@
+TASK: M1-01 — Beta User Journey Completion Gate
+STATUS: CONFORMING WITH NOTES
+DATE: 2026-08-05
+BASE MILESTONE: bad9ad5d7c1d1c0518f819e1b87039b2233b0d36
+ROADMAP: Private Beta Roadmap
+ACTIVE MILESTONE: Milestone 1 — Beta User Journey
+
+CREATED
+src/app/assessBetaUserJourney.js
+scripts/test_assess_beta_user_journey.js
+TASK_M1-01_BETA_USER_JOURNEY_COMPLETION_GATE.md
+TASK_M1-01_MANIFEST.txt
+
+MODIFIED
+src/app/index.js
+src/app/runFringeInterviewMVPSession.js
+docs/00-continuity/BETA_ROADMAP.md
+docs/00-continuity/CONTINUITY.md
+
+VERIFICATION PASSED
+node --experimental-default-type=module scripts/test_assess_beta_user_journey.js
+node --experimental-default-type=module scripts/test_beta_session_core.js
+node --experimental-default-type=module scripts/test_beta_session_core_hardening.js
+node --experimental-default-type=module scripts/test_beta_runtime_session_integration.js
+node --experimental-default-type=module --check src/app/runFringeInterviewMVPSession.js
+
+VERIFICATION NOTES
+Aggregate Core: pre-existing golden evidence-ID mismatch reproduced.
+Global health: not fully reproducible from archive lacking package.json and mixing ESM/CommonJS assumptions.
+Git metadata: absent from handover archive.

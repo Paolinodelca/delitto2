@@ -111,6 +111,13 @@ Task E-39 approves the existing Core `buildKnowledgeSnapshot` boundary as the fi
 
 Task E-40 hardens the existing Snapshot boundary in place: identity commits to Ledger identity, aggregation strategy and complete semantic state content without timestamp drift; construction and elementary aggregation return deeply frozen canonical results; validation rejects non-canonical content. Contracts and public exports are unchanged.
 
+
+## Private Beta Milestone 1 implementation status
+
+Task `M1-01 — Beta User Journey Completion Gate` is implemented. `runFringeInterviewMVPSession` now derives truthful completion metadata and returns an immutable `betaUserJourney` assessment with stage-level evidence and explicit blockers. The gate is Application-owned and consumes only the existing Beta Session, Interview Runtime and Final Report outputs; no Core contract or deferred Core hardening was introduced.
+
+Verification: dedicated journey assessment, Beta Session Core, Beta Session hardening and Beta Runtime Session Integration tests pass. The aggregate Core and global health commands are not reproducible from this handover archive because the archive has no `package.json`/Git metadata and mixes ESM and CommonJS loading assumptions; the aggregate Core run also reproduces the pre-existing golden evidence-ID mismatch recorded in the Beta Readiness Matrix.
+
 ## Current authoritative documents
 
 - `README.md` — authority index and reading order;

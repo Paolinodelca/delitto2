@@ -5,6 +5,7 @@ import {
   buildFinalCandidateReport
 } from "../interview/index.js";
 
+import { assessBetaUserJourney } from "./assessBetaUserJourney.js";
 import {
   buildBetaRuntimeResumeState,
   completeBetaRuntimeSession,
@@ -260,8 +261,7 @@ export async function runFringeInterviewMVPSession({
     });
   }
 
-  return {
-    fringeInterviewMVPSession: {
+  const sessionOutput = {
       rawInput: {
         cvText: safeCvText,
         jdText: safeJdText,
@@ -292,7 +292,7 @@ export async function runFringeInterviewMVPSession({
         hasCvText: !!safeCvText,
         hasJobDescription: !!safeJdText,
         usedFallbackJobDescription: !safeJdText,
-        completed: true,
+        completed: runtime?.runtimeState?.isCompleted === true,
         answersProvided: ensureArray(answers).length,
         answersRecorded: runtime?.runtimeState?.answers?.length ?? 0,
         sessionCompleted: runtime?.runtimeState?.isCompleted ?? false,
@@ -302,6 +302,14 @@ export async function runFringeInterviewMVPSession({
           mvp.interviewQuestionSet?.contextualSelection?.questionSelectionStrategy?.interviewLengthMode ||
           ""
       }
+  };
+
+  const betaUserJourney = assessBetaUserJourney(sessionOutput);
+
+  return {
+    fringeInterviewMVPSession: {
+      ...sessionOutput,
+      betaUserJourney
     }
   };
 }
