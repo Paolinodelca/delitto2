@@ -7,7 +7,8 @@ export { default as renderFringeInterviewReportHtml } from "./renderFringeInterv
 
 export { default as renderInteractiveInterviewShellHtml } from "./renderInteractiveInterviewShellHtml.js";
 export { buildInteractiveSessionPayload } from "./buildInteractiveSessionPayload.js";
-export { assessBetaUserJourney } from "./assessBetaUserJourney.js";export {
+export { assessBetaUserJourney } from "./assessBetaUserJourney.js";
+export { verifyPrivateBetaUserJourney } from "./verifyPrivateBetaUserJourney.js";export {
   createBetaRuntimeSession,
   resumeBetaRuntimeSession,
   syncBetaRuntimeProgress,

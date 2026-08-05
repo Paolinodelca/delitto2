@@ -118,6 +118,10 @@ Task `M1-01 — Beta User Journey Completion Gate` is implemented. `runFringeInt
 
 Verification: dedicated journey assessment, Beta Session Core, Beta Session hardening and Beta Runtime Session Integration tests pass. The aggregate Core and global health commands are not reproducible from this handover archive because the archive has no `package.json`/Git metadata and mixes ESM and CommonJS loading assumptions; the aggregate Core run also reproduces the pre-existing golden evidence-ID mismatch recorded in the Beta Readiness Matrix.
 
+Task `M1-02 — Private Beta User Journey Verification` is implemented. The Application-owned `verifyPrivateBetaUserJourney` wrapper invokes the existing session runner and returns a small immutable pass summary only when the M1-01 journey gate, runtime completion, final report availability and Beta Session closure are mutually consistent. It rejects incomplete or malformed session outputs with explicit verification errors. No Core contract or deferred E-44 work was changed.
+
+Verification: the dedicated verification suite, M1-01 journey assessment, Beta Runtime Session Integration, Beta Session Core and Beta Session hardening tests pass. A real parser-backed offline end-to-end execution remains non-reproducible from this handover archive because the referenced `config/parser_*.json`, sample fixtures, `package.json` and Git metadata are absent.
+
 ## Current authoritative documents
 
 - `README.md` — authority index and reading order;

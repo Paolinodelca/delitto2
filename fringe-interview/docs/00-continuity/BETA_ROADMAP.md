@@ -41,6 +41,12 @@ Status: COMPLETED — 2026-08-05
 
 The application session output now exposes a deterministic `betaUserJourney` assessment covering session start, interview completion, final report construction and session closure. Partial sessions no longer report `meta.completed: true`; explicit blockers make incomplete journeys observable without extending the Core.
 
+### M1-02 — Private Beta User Journey Verification
+
+Status: COMPLETED — 2026-08-05
+
+The Application now exposes a minimal reusable verification wrapper that runs the Beta session runner and accepts the journey only when the M1-01 completion gate, Interview Runtime completion, final report availability and Beta Session closure all agree. Dedicated deterministic tests cover both the successful path and explicit incomplete-output failures without extending the Core.
+
 ## Candidate Tasks
 
 - end-to-end verification;
