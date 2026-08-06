@@ -178,3 +178,9 @@ Last updated
 ### M1-07 — Private Beta Operational Logging and Runbook Foundation
 
 Status: completed. Minimal immutable operational events and a failure-safe injected sink now distinguish start, completion, safe application error and interruption without recording personal payloads. A concise manual operator runbook is available; production observability, persistence, retention, alerting and dashboards remain outside Milestone 1.
+
+## Milestone 1 Closure Status
+
+- **Status:** COMPLETED_WITH_INTEGRATION_GAP
+- **Foundation status:** COMPLETE
+- **Remaining work:** Beta Experience Integration

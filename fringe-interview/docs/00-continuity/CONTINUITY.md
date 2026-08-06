@@ -206,3 +206,34 @@ Task M1-06 adds the minimum Application-level feedback boundary at the end of a 
 Task M1-07 adds the minimum Application-level operational logging boundary for the Private Beta. Immutable, versioned events cover `session_started`, `session_completed`, `application_error` and `session_interrupted`, with only `eventId`, technical `sessionId`, timestamp, boundary, outcome and an optional safe M1-03 error code. The sink is injected and failure-safe; logging failure never blocks or changes the Beta journey and no Professional Identity data is accepted by the event model.
 
 The operational runbook documents the expected event sequence, manual distinction between application error, incomplete session and service unavailability, forbidden data, manual checks and escalation conditions. No production persistence, retention, analytics, dashboard, tracing, retry or alerting is claimed. Dedicated M1-07 tests and M1-01 through M1-06 plus Beta Runtime Session, Beta Session Core, hardening and Builder readiness regressions pass.
+
+---
+
+## Product Authority Consolidation
+
+Status: IN PROGRESS
+
+The Private Beta application foundations M1-01 through M1-07 are completed.
+
+The current activity is the consolidation of existing product and architectural knowledge into the canonical Product Authority under:
+
+`docs/20-product/`
+
+Introduced or under consolidation:
+
+- canonical Product Decisions;
+- Observation Model;
+- Representation Principles;
+- minimal Representation Model;
+- versioned Dimension Recipes;
+- Private Beta Experience Flow.
+
+Next planned activity:
+
+Consolidate the existing repository knowledge into Product Authority before starting Beta Experience Integration.
+
+Deferred:
+
+- E-44;
+- additional Core hardening not consumed by the Beta;
+- Beta Experience Integration until the product flow is canonically defined.
