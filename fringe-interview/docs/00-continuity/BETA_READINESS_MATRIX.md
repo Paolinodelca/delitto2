@@ -20,7 +20,7 @@
 | Onboarding | 80% | Sì | Fondazione M1-04 completata; integrare nella UI |
 | Error handling | 75% | Sì | Fondazione M1-03 completata; verificare integrazione UI |
 | Privacy e consenso | 75% | Sì | Fondazione M1-05 completata; validazione legale e integrazione UI ancora necessarie |
-| Feedback | 30% | Sì | Minimo |
+| Feedback | 75% | Sì | Fondazione M1-06 completata; integrare nella UI e definire raccolta operativa |
 | Logging e runbook | 35% | Sì | Minimo |
 | Domini dinamici | Visione | No | Post-Beta |
 | Matrix / Coverage nel prodotto | 45% | No, salvo dipendenza | Post-Beta |
@@ -33,7 +33,7 @@
 3. Report calibrato su profili reali.
 4. Integrazione UI della gestione errori M1-03.
 5. Integrazione UI e validazione legale della fondazione privacy/consenso M1-05.
-6. Feedback tester.
+6. Integrazione UI e raccolta operativa del feedback M1-06.
 7. Golden-ID regression risolta prima del freeze.
 8. Scope esplicito di famiglie e funzionalità.
 

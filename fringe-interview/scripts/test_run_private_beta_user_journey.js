@@ -22,6 +22,7 @@ let receivedInput = null;
 const completed = await runPrivateBetaUserJourney({
   sessionInput,
   consentState,
+  feedbackNow: "2026-08-06T11:00:00.000Z",
   journeyVerifier: async ({ sessionInput: input }) => {
     receivedInput = input;
     return {
@@ -37,8 +38,24 @@ assert.equal(completed.status, "completed");
 assert.equal(completed.completed, true);
 assert.equal(completed.reportAvailable, true);
 assert.equal(completed.verification.sessionId, "beta-001");
+assert.equal(completed.feedback.status, "not_started");
+assert.equal(completed.feedback.sessionRef, "beta-001");
+assert.equal(completed.feedback.createdAt, "2026-08-06T11:00:00.000Z");
 assert.equal(Object.isFrozen(completed), true);
 assert.equal(Object.isFrozen(completed.verification), true);
+
+const completedWithoutSessionRef = await runPrivateBetaUserJourney({
+  sessionInput,
+  consentState,
+  journeyVerifier: async () => ({
+    status: "passed",
+    sessionId: null,
+    reportAvailable: true
+  })
+});
+assert.equal(completedWithoutSessionRef.status, "completed");
+assert.equal(completedWithoutSessionRef.completed, true);
+assert.equal(completedWithoutSessionRef.feedback, null);
 
 const invalidInput = await runPrivateBetaUserJourney({
   sessionInput: {},

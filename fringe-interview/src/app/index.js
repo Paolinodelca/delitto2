@@ -21,7 +21,16 @@ export {
   revokePrivateBetaConsent,
   assertPrivateBetaDataUseAllowed,
   PRIVATE_BETA_CONSENT_POLICY_VERSION
-} from "./privateBetaPrivacyConsent.js";export {
+} from "./privateBetaPrivacyConsent.js";
+export {
+  createPrivateBetaFeedback,
+  submitPrivateBetaFeedback,
+  skipPrivateBetaFeedback,
+  assertPrivateBetaFeedbackState,
+  PRIVATE_BETA_FEEDBACK_FORMAT_VERSION,
+  PRIVATE_BETA_FEEDBACK_COMMENT_MAX_LENGTH,
+  PRIVATE_BETA_FEEDBACK_ALLOWED_RESPONSES
+} from "./privateBetaFeedback.js";export {
   createBetaRuntimeSession,
   resumeBetaRuntimeSession,
   syncBetaRuntimeProgress,

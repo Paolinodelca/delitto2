@@ -1,3 +1,4 @@
+import { createPrivateBetaFeedback } from "./privateBetaFeedback.js";
 import { assertPrivateBetaDataUseAllowed } from "./privateBetaPrivacyConsent.js";
 import { verifyPrivateBetaUserJourney } from "./verifyPrivateBetaUserJourney.js";
 
@@ -110,6 +111,7 @@ function buildSafeFailure(error) {
 export async function runPrivateBetaUserJourney({
   sessionInput,
   consentState,
+  feedbackNow,
   journeyVerifier = verifyPrivateBetaUserJourney
 } = {}) {
   try {
@@ -120,12 +122,16 @@ export async function runPrivateBetaUserJourney({
     }
 
     const verification = await journeyVerifier({ sessionInput });
+    const feedback = typeof verification?.sessionId === "string" && verification.sessionId.trim()
+      ? createPrivateBetaFeedback(verification.sessionId, { now: feedbackNow })
+      : null;
 
     return freeze({
       status: "completed",
       completed: true,
       reportAvailable: verification?.reportAvailable === true,
-      verification
+      verification,
+      feedback
     });
   } catch (error) {
     return buildSafeFailure(error);

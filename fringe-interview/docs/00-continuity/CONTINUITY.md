@@ -194,3 +194,9 @@ Task E-43 approves the existing Core `buildDerivedDimensionKnowledgeStates(execu
 Within one Snapshot/Capability/Recipe/version context, multiple mapped positive results may aggregate N:1 into one Derived Dimension state. Estimate uses the established confidence-weighted mapping mean and state confidence uses the minimum source confidence. Cross-execution aggregation is not approved unless every execution identity is preserved exactly; the current single-execution reference behavior requires E-44 hardening.
 
 The sole planned task is `0100E-44 — Derived Dimension Knowledge State Construction Hardening Foundation`. Matrix, Coverage and all later consumers remain unauthorized.
+
+## Private Beta Milestone 1 status — M1-06
+
+Task M1-06 adds the minimum Application-level feedback boundary at the end of a completed Private Beta journey. `createPrivateBetaFeedback`, `submitPrivateBetaFeedback` and `skipPrivateBetaFeedback` expose an immutable, versioned state with `not_started`, `submitted` and `skipped` statuses, deterministic timestamps, a session reference, three compact groups of structured answers and one optional free-text comment limited to 500 characters. The feedback captures clarity, usefulness, report credibility, most valuable part, difficulty, reuse and recommendation intent without technical details, new personal data, analytics, telemetry or persistence claims.
+
+`runPrivateBetaUserJourney` now prepares a `not_started` feedback state only after successful completion when a session identifier is available. Missing or skipped feedback never invalidates completion. The feedback state has no Professional Identity field and does not mutate Representation data. Dedicated M1-06 tests and M1-01 through M1-05 plus Beta Runtime Session, Beta Session Core, hardening and Builder readiness regressions pass. Repository-wide npm/Git verification remains non-reproducible because the handover archive has no `package.json` or Git metadata.
