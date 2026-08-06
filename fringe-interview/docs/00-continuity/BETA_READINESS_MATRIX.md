@@ -17,7 +17,7 @@
 | Professional Identity persistente | 35% | Sì, forma minima | Definire MVP |
 | Report finale | 85% | Sì | Evidenze + 3 azioni |
 | Role Family / Target | 65% | Sì, scope limitato | Scegliere 2–3 famiglie |
-| Onboarding | 55% | Sì | Completare |
+| Onboarding | 80% | Sì | Fondazione M1-04 completata; integrare nella UI |
 | Error handling | 75% | Sì | Fondazione M1-03 completata; verificare integrazione UI |
 | Privacy e consenso | 35% | Sì | Prima dei tester |
 | Feedback | 30% | Sì | Minimo |

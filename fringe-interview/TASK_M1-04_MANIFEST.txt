@@ -1,0 +1,8 @@
+docs/00-continuity/BETA_READINESS_MATRIX.md
+docs/00-continuity/BETA_ROADMAP.md
+docs/00-continuity/CONTINUITY.md
+scripts/test_private_beta_onboarding.js
+src/app/index.js
+src/app/privateBetaOnboarding.js
+TASK_M1-04_MANIFEST.txt
+TASK_M1-04_PRIVATE_BETA_ONBOARDING_FOUNDATION.md

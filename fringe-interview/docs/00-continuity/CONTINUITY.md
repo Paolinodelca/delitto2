@@ -128,6 +128,13 @@ Task M1-03 adds the minimum Application-level error handling boundary consumed b
 
 Dedicated M1-03 tests and the M1-01/M1-02 and Beta Session regression suites pass. The handover archive still does not include `package.json`, Git metadata or parser configuration/sample fixtures, so repository-wide npm/Git and real parser-backed offline verification cannot be reproduced from this archive alone.
 
+
+## Private Beta Milestone 1 status — M1-04
+
+Task M1-04 adds the minimum Application-level onboarding boundary for a new beta tester. `startPrivateBetaOnboarding`, `advancePrivateBetaOnboarding` and `resumePrivateBetaOnboarding` expose a deterministic immutable three-step path: Professional Identity state, working mode and immediate user goal. Every step presents at most three choices, help remains optional metadata, and resume uses a versioned state token. Selecting Tutor mode grants no access and creates no consent or authorization state. No UI framework, persistence, privacy flow, Professional Identity evolution, Core hardening or Milestone 2/3 capability was introduced.
+
+Dedicated M1-04 tests and the M1-01/M1-02/M1-03 plus Beta Session regression suites pass. Repository-wide npm/Git verification remains non-reproducible because the handover archive has no `package.json` or Git metadata.
+
 ## Current authoritative documents
 
 - `README.md` — authority index and reading order;

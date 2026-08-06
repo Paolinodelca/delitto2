@@ -9,7 +9,12 @@ export { default as renderInteractiveInterviewShellHtml } from "./renderInteract
 export { buildInteractiveSessionPayload } from "./buildInteractiveSessionPayload.js";
 export { assessBetaUserJourney } from "./assessBetaUserJourney.js";
 export { verifyPrivateBetaUserJourney } from "./verifyPrivateBetaUserJourney.js";
-export { runPrivateBetaUserJourney } from "./runPrivateBetaUserJourney.js";export {
+export { runPrivateBetaUserJourney } from "./runPrivateBetaUserJourney.js";
+export {
+  startPrivateBetaOnboarding,
+  advancePrivateBetaOnboarding,
+  resumePrivateBetaOnboarding
+} from "./privateBetaOnboarding.js";export {
   createBetaRuntimeSession,
   resumeBetaRuntimeSession,
   syncBetaRuntimeProgress,
