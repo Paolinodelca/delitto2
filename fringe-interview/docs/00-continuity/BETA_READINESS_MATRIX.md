@@ -21,6 +21,7 @@
 | Error handling | 75% | Sì | Fondazione M1-03 completata; verificare integrazione UI |
 | Privacy e consenso | 75% | Sì | Fondazione M1-05 completata; validazione legale e integrazione UI ancora necessarie |
 | Feedback | 75% | Sì | Fondazione M1-06 completata; integrare nella UI e definire raccolta operativa |
+| Operational logging | 75% | Sì | Fondazione M1-07 e runbook manuale completati; persistenza e observability di produzione escluse |
 | Logging e runbook | 35% | Sì | Minimo |
 | Domini dinamici | Visione | No | Post-Beta |
 | Matrix / Coverage nel prodotto | 45% | No, salvo dipendenza | Post-Beta |
@@ -46,3 +47,5 @@
 - feedback per sezione;
 - revisione umana dei primi report;
 - dashboard beta semplice.
+
+7. Integrare il sink operativo M1-07 nell'ambiente Beta reale senza ampliare i dati raccolti.

@@ -174,3 +174,7 @@ Tasks that do not contribute to an active milestone require an explicit product-
 Last updated
 
 2026-08-05
+
+### M1-07 — Private Beta Operational Logging and Runbook Foundation
+
+Status: completed. Minimal immutable operational events and a failure-safe injected sink now distinguish start, completion, safe application error and interruption without recording personal payloads. A concise manual operator runbook is available; production observability, persistence, retention, alerting and dashboards remain outside Milestone 1.

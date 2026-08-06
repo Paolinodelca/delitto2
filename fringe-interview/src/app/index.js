@@ -95,3 +95,14 @@ export {
   validateKnowledgeAcquisitionExecutionContext,
   healthKnowledgeAcquisitionExecution
 } from "./knowledge/publicApi.js";
+
+export {
+  buildPrivateBetaOperationalEvent,
+  emitPrivateBetaOperationalEvent,
+  createInMemoryPrivateBetaOperationalSink,
+  recordPrivateBetaInterruption,
+  PRIVATE_BETA_OPERATIONAL_EVENT_VERSION,
+  PRIVATE_BETA_OPERATIONAL_EVENT_TYPES,
+  PRIVATE_BETA_OPERATIONAL_BOUNDARIES,
+  PRIVATE_BETA_OPERATIONAL_FORBIDDEN_FIELDS
+} from "./privateBetaOperationalLogging.js";

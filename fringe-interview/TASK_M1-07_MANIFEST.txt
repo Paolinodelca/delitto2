@@ -1,0 +1,10 @@
+TASK_M1-07_MANIFEST.txt
+TASK_M1-07_PRIVATE_BETA_OPERATIONAL_LOGGING_AND_RUNBOOK_FOUNDATION.md
+docs/00-continuity/BETA_READINESS_MATRIX.md
+docs/00-continuity/BETA_ROADMAP.md
+docs/00-continuity/CONTINUITY.md
+docs/30-operations/PRIVATE_BETA_OPERATIONAL_RUNBOOK.md
+scripts/test_private_beta_operational_logging.js
+src/app/index.js
+src/app/privateBetaOperationalLogging.js
+src/app/runPrivateBetaUserJourney.js

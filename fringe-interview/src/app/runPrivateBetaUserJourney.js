@@ -1,3 +1,4 @@
+import { buildPrivateBetaOperationalEvent, emitPrivateBetaOperationalEvent } from "./privateBetaOperationalLogging.js";
 import { createPrivateBetaFeedback } from "./privateBetaFeedback.js";
 import { assertPrivateBetaDataUseAllowed } from "./privateBetaPrivacyConsent.js";
 import { verifyPrivateBetaUserJourney } from "./verifyPrivateBetaUserJourney.js";
@@ -112,10 +113,25 @@ export async function runPrivateBetaUserJourney({
   sessionInput,
   consentState,
   feedbackNow,
+  operationalSessionId = "beta-session-unassigned",
+  operationalNow,
+  operationalSink,
+  operationalEventIdFactory = (eventType) => `${operationalSessionId}:${eventType}`,
   journeyVerifier = verifyPrivateBetaUserJourney
 } = {}) {
+  let activeBoundary = "privacy_consent";
   try {
+    await emitPrivateBetaOperationalEvent(buildPrivateBetaOperationalEvent({
+      eventId: operationalEventIdFactory("session_started"),
+      sessionId: operationalSessionId,
+      eventType: "session_started",
+      boundary: "beta_journey",
+      outcome: "started",
+      now: operationalNow
+    }), operationalSink);
+
     assertPrivateBetaDataUseAllowed(consentState);
+    activeBoundary = "beta_journey";
 
     if (typeof journeyVerifier !== "function") {
       throw new Error("runPrivateBetaUserJourney: journeyVerifier must be a function.");
@@ -126,6 +142,15 @@ export async function runPrivateBetaUserJourney({
       ? createPrivateBetaFeedback(verification.sessionId, { now: feedbackNow })
       : null;
 
+    await emitPrivateBetaOperationalEvent(buildPrivateBetaOperationalEvent({
+      eventId: operationalEventIdFactory("session_completed"),
+      sessionId: verification?.sessionId || operationalSessionId,
+      eventType: "session_completed",
+      boundary: "beta_journey",
+      outcome: "completed",
+      now: operationalNow
+    }), operationalSink);
+
     return freeze({
       status: "completed",
       completed: true,
@@ -134,7 +159,21 @@ export async function runPrivateBetaUserJourney({
       feedback
     });
   } catch (error) {
-    return buildSafeFailure(error);
+    const failure = buildSafeFailure(error);
+    try {
+      await emitPrivateBetaOperationalEvent(buildPrivateBetaOperationalEvent({
+        eventId: operationalEventIdFactory("application_error"),
+        sessionId: operationalSessionId,
+        eventType: "application_error",
+        boundary: activeBoundary,
+        outcome: "failed",
+        errorCode: failure.error.code,
+        now: operationalNow
+      }), operationalSink);
+    } catch {
+      // Operational logging is deliberately failure-safe and never changes the journey result.
+    }
+    return failure;
   }
 }
 
