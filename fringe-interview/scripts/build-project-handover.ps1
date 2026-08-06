@@ -1,4 +1,4 @@
-[CmdletBinding()]
+﻿[CmdletBinding()]
 param(
     [string]$OutputDirectory = [Environment]::GetFolderPath('Desktop'),
     [string]$ArchivePrefix = 'imago-builder-handover',
@@ -104,7 +104,18 @@ try {
         Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
 
     Write-Step "Creazione archivio ZIP"
-    Compress-Archive -LiteralPath $stagingRoot -DestinationPath $zipPath -CompressionLevel Optimal -Force
+
+    # Comprimi il CONTENUTO della cartella temporanea, non la cartella stessa.
+    # In questo modo docs/, src/, scripts/, tools/ e bin/ risultano direttamente
+    # alla root dello ZIP e il Builder può risolvere percorsi come docs/20-product/.
+    $stagingContents = Get-ChildItem -LiteralPath $stagingRoot -Force |
+        Select-Object -ExpandProperty FullName
+
+    if (-not $stagingContents) {
+        throw 'La cartella temporanea è vuota.'
+    }
+
+    Compress-Archive -Path $stagingContents -DestinationPath $zipPath -CompressionLevel Optimal -Force
 
     Write-Step "Verifica contenuto"
 
