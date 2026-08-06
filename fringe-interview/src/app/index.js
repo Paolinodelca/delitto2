@@ -14,7 +14,14 @@ export {
   startPrivateBetaOnboarding,
   advancePrivateBetaOnboarding,
   resumePrivateBetaOnboarding
-} from "./privateBetaOnboarding.js";export {
+} from "./privateBetaOnboarding.js";
+export {
+  createPrivateBetaConsent,
+  decidePrivateBetaConsent,
+  revokePrivateBetaConsent,
+  assertPrivateBetaDataUseAllowed,
+  PRIVATE_BETA_CONSENT_POLICY_VERSION
+} from "./privateBetaPrivacyConsent.js";export {
   createBetaRuntimeSession,
   resumeBetaRuntimeSession,
   syncBetaRuntimeProgress,

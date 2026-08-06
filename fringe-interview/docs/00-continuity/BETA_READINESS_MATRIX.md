@@ -19,7 +19,7 @@
 | Role Family / Target | 65% | Sì, scope limitato | Scegliere 2–3 famiglie |
 | Onboarding | 80% | Sì | Fondazione M1-04 completata; integrare nella UI |
 | Error handling | 75% | Sì | Fondazione M1-03 completata; verificare integrazione UI |
-| Privacy e consenso | 35% | Sì | Prima dei tester |
+| Privacy e consenso | 75% | Sì | Fondazione M1-05 completata; validazione legale e integrazione UI ancora necessarie |
 | Feedback | 30% | Sì | Minimo |
 | Logging e runbook | 35% | Sì | Minimo |
 | Domini dinamici | Visione | No | Post-Beta |
@@ -32,7 +32,7 @@
 2. Professional Identity minima e riuso dei dati.
 3. Report calibrato su profili reali.
 4. Integrazione UI della gestione errori M1-03.
-5. Privacy e consenso.
+5. Integrazione UI e validazione legale della fondazione privacy/consenso M1-05.
 6. Feedback tester.
 7. Golden-ID regression risolta prima del freeze.
 8. Scope esplicito di famiglie e funzionalità.

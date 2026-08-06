@@ -1,0 +1,10 @@
+TASK_M1-05_MANIFEST.txt
+TASK_M1-05_PRIVATE_BETA_PRIVACY_AND_CONSENT_FOUNDATION.md
+docs/00-continuity/BETA_READINESS_MATRIX.md
+docs/00-continuity/BETA_ROADMAP.md
+docs/00-continuity/CONTINUITY.md
+scripts/test_private_beta_privacy_consent.js
+scripts/test_run_private_beta_user_journey.js
+src/app/index.js
+src/app/privateBetaPrivacyConsent.js
+src/app/runPrivateBetaUserJourney.js

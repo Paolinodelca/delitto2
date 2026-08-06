@@ -1,3 +1,4 @@
+import { assertPrivateBetaDataUseAllowed } from "./privateBetaPrivacyConsent.js";
 import { verifyPrivateBetaUserJourney } from "./verifyPrivateBetaUserJourney.js";
 
 const ERROR_DEFINITIONS = Object.freeze({
@@ -15,6 +16,21 @@ const ERROR_DEFINITIONS = Object.freeze({
     category: "service",
     message: "Il servizio non è temporaneamente disponibile. La sessione non è stata salvata come completata.",
     fallbackAction: "restart_later"
+  }),
+  CONSENT_REQUIRED: Object.freeze({
+    category: "privacy",
+    message: "Per avviare la Private Beta devi prima accettare l’uso necessario dei dati.",
+    fallbackAction: "review_consent"
+  }),
+  CONSENT_REFUSED: Object.freeze({
+    category: "privacy",
+    message: "Il consenso necessario è stato rifiutato. Nessun dato verrà usato per avviare l’esperienza.",
+    fallbackAction: "review_consent"
+  }),
+  CONSENT_REVOKED: Object.freeze({
+    category: "privacy",
+    message: "Il consenso è stato revocato. Il trattamento non può proseguire.",
+    fallbackAction: "review_consent"
   }),
   UNEXPECTED_ERROR: Object.freeze({
     category: "unexpected",
@@ -47,6 +63,10 @@ function errorText(error) {
 
 function classifyPrivateBetaError(error) {
   const message = errorText(error);
+
+  if (/PRIVATE_BETA_CONSENT_REQUIRED/i.test(message)) return "CONSENT_REQUIRED";
+  if (/PRIVATE_BETA_CONSENT_REFUSED/i.test(message)) return "CONSENT_REFUSED";
+  if (/PRIVATE_BETA_CONSENT_REVOKED/i.test(message)) return "CONSENT_REVOKED";
 
   if (
     /sessionInput is required|cvText is required|provide jdText or targetRole|modelAdapter must be a function|sessionRunner must be a function/i.test(
@@ -89,9 +109,12 @@ function buildSafeFailure(error) {
 
 export async function runPrivateBetaUserJourney({
   sessionInput,
+  consentState,
   journeyVerifier = verifyPrivateBetaUserJourney
 } = {}) {
   try {
+    assertPrivateBetaDataUseAllowed(consentState);
+
     if (typeof journeyVerifier !== "function") {
       throw new Error("runPrivateBetaUserJourney: journeyVerifier must be a function.");
     }

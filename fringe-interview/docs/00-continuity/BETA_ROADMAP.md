@@ -59,10 +59,15 @@ Status: COMPLETED — 2026-08-06
 
 The Application now exposes a minimal deterministic onboarding boundary with three linear steps: create or recover a Professional Identity, work independently or with a Tutor, and select an immediate goal. Each step presents at most three choices, supports versioned resume state and preserves person ownership. Tutor selection does not grant access or implement consent. No UI framework, persistence, privacy flow or Core work was added.
 
+### M1-05 — Private Beta Privacy and Consent Foundation
+
+Status: COMPLETED — 2026-08-06
+
+The Application now exposes a separate deterministic privacy and consent boundary after onboarding and before Beta data use. It records a versioned provisional Private Beta notice, person ownership, purpose, necessary data use, explicit accept/refuse decision and revocation timestamps. Pending, refused and revoked states safely block the journey. Selecting Tutor mode keeps `tutorAccessGranted: false`; Tutor authorization remains a separate future responsibility. No legal-compliance claim, persistence layer, Tutor permission system, telemetry or Core work was added.
+
 ## Candidate Tasks
 
 - end-to-end verification;
-- privacy & consent;
 - error handling;
 - minimum feedback collection;
 - operational logging.

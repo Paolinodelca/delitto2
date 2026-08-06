@@ -135,6 +135,13 @@ Task M1-04 adds the minimum Application-level onboarding boundary for a new beta
 
 Dedicated M1-04 tests and the M1-01/M1-02/M1-03 plus Beta Session regression suites pass. Repository-wide npm/Git verification remains non-reproducible because the handover archive has no `package.json` or Git metadata.
 
+
+## Private Beta Milestone 1 status — M1-05
+
+Task M1-05 adds the minimum Application-level privacy and consent boundary between completed onboarding and any Private Beta data use. `createPrivateBetaConsent`, `decidePrivateBetaConsent`, `revokePrivateBetaConsent` and `assertPrivateBetaDataUseAllowed` expose an immutable versioned state with deterministic timestamps, explicit accept/refuse decisions, revocation and safe blocking for pending, refused or revoked consent. The state records person ownership and the Private Beta purpose, classifies its notice as provisional and does not claim complete legal or GDPR compliance. Tutor mode never grants access automatically: `tutorAccessGranted` remains false and Tutor authorization is not implemented.
+
+`runPrivateBetaUserJourney` now enforces this consent gate before invoking the journey verifier and returns tester-safe privacy errors without processing the supplied session input. Dedicated M1-05 tests and M1-01/M1-02/M1-03/M1-04 plus Beta Session and Builder readiness regressions pass. Repository-wide npm/Git verification remains non-reproducible because the handover archive has no `package.json` or Git metadata.
+
 ## Current authoritative documents
 
 - `README.md` — authority index and reading order;

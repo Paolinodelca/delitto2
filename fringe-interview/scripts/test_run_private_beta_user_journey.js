@@ -1,11 +1,27 @@
 import assert from "assert";
 import { runPrivateBetaUserJourney } from "../src/app/runPrivateBetaUserJourney.js";
+import {
+  startPrivateBetaOnboarding,
+  advancePrivateBetaOnboarding
+} from "../src/app/privateBetaOnboarding.js";
+import { createPrivateBetaConsent, decidePrivateBetaConsent } from "../src/app/privateBetaPrivacyConsent.js";
 
 const sessionInput = { cvText: "CV", jdText: "JD" };
+let onboarding = startPrivateBetaOnboarding();
+onboarding = advancePrivateBetaOnboarding(onboarding, "create");
+onboarding = advancePrivateBetaOnboarding(onboarding, "independent");
+onboarding = advancePrivateBetaOnboarding(onboarding, "prepare_interview");
+const consentState = decidePrivateBetaConsent(
+  createPrivateBetaConsent(onboarding, { now: "2026-08-06T10:00:00.000Z" }),
+  "accept",
+  { now: "2026-08-06T10:01:00.000Z" }
+);
+
 let receivedInput = null;
 
 const completed = await runPrivateBetaUserJourney({
   sessionInput,
+  consentState,
   journeyVerifier: async ({ sessionInput: input }) => {
     receivedInput = input;
     return {
@@ -26,6 +42,7 @@ assert.equal(Object.isFrozen(completed.verification), true);
 
 const invalidInput = await runPrivateBetaUserJourney({
   sessionInput: {},
+  consentState,
   journeyVerifier: async () => {
     throw new Error("runFringeInterviewMVPSession: cvText is required.");
   }
@@ -42,6 +59,7 @@ assert.deepEqual(invalidInput.fallback, {
 
 const incomplete = await runPrivateBetaUserJourney({
   sessionInput,
+  consentState,
   journeyVerifier: async () => {
     throw new Error("PRIVATE_BETA_E2E_JOURNEY_INCOMPLETE: INTERVIEW_NOT_COMPLETED");
   }
@@ -54,6 +72,7 @@ assert.equal(incomplete.reportAvailable, false);
 
 const unavailable = await runPrivateBetaUserJourney({
   sessionInput,
+  consentState,
   journeyVerifier: async () => {
     throw new Error("provider unavailable: 503");
   }
@@ -64,6 +83,7 @@ assert.equal(unavailable.fallback.action, "restart_later");
 
 const unexpected = await runPrivateBetaUserJourney({
   sessionInput,
+  consentState,
   journeyVerifier: async () => {
     throw new Error("opaque internal stack detail /tmp/private-file.js:42");
   }
@@ -78,6 +98,7 @@ assert.equal(Object.isFrozen(unexpected.fallback), true);
 
 const invalidVerifier = await runPrivateBetaUserJourney({
   sessionInput,
+  consentState,
   journeyVerifier: null
 });
 assert.equal(invalidVerifier.error.code, "UNEXPECTED_ERROR");
