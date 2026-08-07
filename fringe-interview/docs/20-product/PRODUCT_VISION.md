@@ -1,30 +1,38 @@
 # IMAGO Product Vision
 
 ## Mission
-IMAGO transforms heterogeneous data into explainable, persistent and evolving representations that help people and organizations understand, decide and develop.
+IMAGO transforms heterogeneous observations into explainable, persistent and evolving Representations that help people and organizations understand, decide and develop.
 
 ## Platform identity
-IMAGO is a general platform. IMAGO Interview is its first application.
+IMAGO is a general Representation Platform. IMAGO Interview is the first application.
 
+The interview is one evidence-acquisition mechanism, not the product itself.
+
+## First professional application
+IMAGO Interview helps:
+- people understand how they emerge professionally, prepare for change and improve positioning;
+- outplacement professionals organize heterogeneous candidate information, reconstruct a credible professional path, identify strengths and gaps, and suggest useful development directions.
+
+The value formula is:
+
+```text
+Recognition
+→ Explanation
+→ Direction
+```
+
+The user should recognize the result, understand why it emerged, and receive a small number of concrete next actions.
+
+## Platform capability
 The platform must support:
-- acquisition of heterogeneous inputs;
-- preservation of source, evidence and provenance;
-- construction of elementary and derived knowledge;
-- creation of reusable representations;
-- controlled evolution over time;
-- application-specific outputs without duplicating the Core.
+- heterogeneous input acquisition;
+- source, evidence and provenance preservation;
+- elementary and derived knowledge;
+- reusable and versioned Representations;
+- application-specific outputs without redefining the Core Representation;
+- evolution over time without silent history loss.
 
-## First product domain
-IMAGO Interview supports:
-- people managing career change or development;
-- outplacement professionals supporting candidates.
-
-Its value is not limited to interview simulation. It helps organize professional history, make strengths and gaps visible, identify plausible directions, support positioning, and suggest useful actions such as training, experience or preparation.
-
-## Future compatibility
-Future domains may include learning, negotiation, decision support, organizational analysis, medicine, biology and dynamic systems.
+## Long-term compatibility
+Future domains may include learning, negotiation, organizational analysis, complex-system observation, medicine and biology.
 
 These are strategic directions, not current product claims.
-
-## Product rule
-When two solutions are architecturally valid, prefer the one that produces greater observable value for the current release without closing reasonable future options.

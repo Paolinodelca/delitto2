@@ -1,24 +1,24 @@
 # IMAGO Validation Strategy
 
 ## Goal
-Verify that IMAGO reconstructs meaningful professional characteristics from inputs and interactions, and that outputs are useful, explainable and non-generic.
+Validate whether IMAGO reconstructs meaningful, explainable and non-generic Representations from incomplete evidence.
 
 ## Track 1 — Real beta users
 Use candidates and outplacement professionals.
 
 Measure:
-- recognition of the resulting profile;
-- usefulness of insights;
-- credibility;
-- actionability;
-- clarity;
+- recognition of the resulting Representation;
+- credibility of conclusions;
+- usefulness and actionability;
+- clarity and cognitive load;
+- important missing or unsupported conclusions;
 - willingness to reuse;
-- failures and missing evidence.
+- value for Tutor/outplacement workflows.
 
 ## Track 2 — Synthetic Validation Lab
-Create controlled synthetic profiles with known characteristics, history, strengths, gaps, aspirations and target compatibility.
+Create controlled synthetic profiles with known professional history, strengths, gaps, aspirations, contradictions and targets.
 
-Provide CV-like data, interview answers, targets, contradictory evidence and simulated evolution.
+Provide structured source material and simulated interview behaviour.
 
 Compare:
 ```text
@@ -26,17 +26,23 @@ Expected profile
 ↔ Reconstructed Representation
 ```
 
-## Core metrics
+## Core validation metrics
 - evidence recall;
 - unsupported inference rate;
-- uncertainty handling;
-- consistency;
+- correct handling of uncertainty;
+- repeated-run consistency;
 - target relevance;
-- role-family sensitivity;
-- reconstruction of strengths, gaps and direction.
+- role-family and context sensitivity;
+- reconstruction of strengths, gaps and plausible direction;
+- stability when irrelevant input changes.
+
+## Recipe validation
+For versioned dimension recipes, compare candidate recipe versions using stable test profiles and real evidence where lawful.
+
+A new recipe version must remain traceable and must not silently rewrite historical results.
 
 ## Pre-Beta suite
-Maintain stable synthetic profiles covering:
+Maintain a small stable synthetic suite covering at least:
 - technical/engineering;
 - operations/business;
 - care/education;
