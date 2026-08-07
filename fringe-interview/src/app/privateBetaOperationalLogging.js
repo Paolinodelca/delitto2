@@ -2,7 +2,7 @@ const OPERATIONAL_EVENT_VERSION = "private-beta-operational-event-1.0";
 const MODEL_VERSION = "1.0";
 
 const EVENT_TYPES = Object.freeze(["session_started", "session_completed", "application_error", "session_interrupted"]);
-const BOUNDARIES = Object.freeze(["privacy_consent", "beta_journey", "feedback", "runtime_session"]);
+const BOUNDARIES = Object.freeze(["onboarding", "privacy_consent", "material_acquisition", "beta_journey", "report", "professional_identity_snapshot", "feedback", "runtime_session"]);
 const OUTCOMES = Object.freeze(["started", "completed", "failed", "interrupted"]);
 const FORBIDDEN_FIELDS = Object.freeze([
   "cv", "cvText", "answers", "responses", "report", "finalCandidateReport", "comment", "prompt",

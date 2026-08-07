@@ -42,6 +42,32 @@ export function createBetaRuntimeSession({
   return { session, resumeToken: created.resumeToken };
 }
 
+
+export function startBetaRuntimeSession(session, {
+  runtime,
+  inputRefs = [],
+  now = () => new Date()
+} = {}) {
+  const validation = validateBetaSession(session);
+  if (!validation.valid) throw new Error(`Invalid beta session: ${validation.errors.join("; ")}`);
+  if (session.status !== "created") {
+    throw new Error("Only created beta sessions can be started.");
+  }
+  const started = transitionBetaSession(session, {
+    toStatus: "in_progress",
+    interviewStatus: "in_progress",
+    currentStep: normalizeStep(runtime),
+    now
+  });
+  return updateBetaSessionProgress(started, {
+    currentStep: normalizeStep(runtime),
+    inputRefs,
+    interviewStatus: "in_progress",
+    runtimeRef: runtimeReference(started.sessionId),
+    now
+  });
+}
+
 export function resumeBetaRuntimeSession(session, { runtime, now = () => new Date() } = {}) {
   const validation = validateBetaSession(session);
   if (!validation.valid) throw new Error(`Invalid beta session: ${validation.errors.join("; ")}`);
@@ -108,6 +134,7 @@ export function buildBetaRuntimeResumeState(session) {
 
 export default {
   createBetaRuntimeSession,
+  startBetaRuntimeSession,
   resumeBetaRuntimeSession,
   syncBetaRuntimeProgress,
   interruptBetaRuntimeSession,

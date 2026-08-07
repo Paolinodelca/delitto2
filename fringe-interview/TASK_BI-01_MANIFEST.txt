@@ -1,0 +1,11 @@
+TASK_BI-01_BETA_JOURNEY_INTEGRATION.md
+TASK_BI-01_MANIFEST.txt
+docs/00-continuity/BETA_READINESS_MATRIX.md
+docs/00-continuity/BETA_ROADMAP.md
+docs/00-continuity/CONTINUITY.md
+scripts/test_beta_journey_integration.js
+src/app/betaRuntimeSessionIntegration.js
+src/app/index.js
+src/app/privateBetaJourneyIntegration.js
+src/app/privateBetaOperationalLogging.js
+src/app/runFringeInterviewMVPSession.js

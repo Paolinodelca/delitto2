@@ -237,3 +237,8 @@ Deferred:
 - E-44;
 - additional Core hardening not consumed by the Beta;
 - Beta Experience Integration until the product flow is canonically defined.
+## Private Beta integration status — BI-01
+
+Task `BI-01 — Beta Journey Integration` integrates the existing Milestone 1 foundations into one Application-owned canonical path. A technical Beta Session is created before onboarding without personal input references; M1-04 onboarding and M1-05 consent are completed before the integration reads or forwards personal materials. The same session is then started in the existing Interview Runtime, completion is assessed and verified through M1-01/M1-02, M1-03 provides tester-safe execution failure handling, the existing Professional Perception reporting layer is materialized for the completed interview, M1-06 feedback remains optional, and M1-07 operational logging remains minimized and failure-safe.
+
+BI-01 does not invent Professional Identity persistence: no existing Application boundary provides a dated persistent Professional Identity snapshot suitable for the canonical Beta journey, so the integrated result exposes `PROFESSIONAL_IDENTITY_SNAPSHOT_CAPABILITY_UNAVAILABLE`. Voice is likewise not implemented because no reusable voice subsystem is present in the handover baseline; text remains supported. Real parser/provider-backed end-to-end regression remains dependent on fixtures/configuration not contained in this handover archive.

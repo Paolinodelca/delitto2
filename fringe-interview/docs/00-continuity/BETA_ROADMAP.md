@@ -184,3 +184,11 @@ Status: completed. Minimal immutable operational events and a failure-safe injec
 - **Status:** COMPLETED_WITH_INTEGRATION_GAP
 - **Foundation status:** COMPLETE
 - **Remaining work:** Beta Experience Integration
+
+## BI-01 — Beta Journey Integration
+
+Status: COMPLETED_WITH_DECLARED_CAPABILITY_GAP — 2026-08-07
+
+The Application now exposes one canonical Private Beta integration path that creates the existing Beta Session before onboarding, consumes M1-04 onboarding, enforces M1-05 consent before reading personal materials, starts the existing Interview Runtime on the same technical session, routes execution failures through M1-03, verifies completion through M1-01/M1-02, materializes the existing Professional Perception report, consumes optional M1-06 feedback and emits minimized M1-07 operational events. The first report view is restricted to three high-value perception messages and at most three actions.
+
+No Professional Identity persistence boundary suitable for a dated personal snapshot is currently integrated in the Application path. BI-01 therefore reports this capability as unavailable instead of simulating persistence. Voice is also reported as unavailable; text remains supported and no speech subsystem was introduced.

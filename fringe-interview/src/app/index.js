@@ -32,6 +32,7 @@ export {
   PRIVATE_BETA_FEEDBACK_ALLOWED_RESPONSES
 } from "./privateBetaFeedback.js";export {
   createBetaRuntimeSession,
+  startBetaRuntimeSession,
   resumeBetaRuntimeSession,
   syncBetaRuntimeProgress,
   interruptBetaRuntimeSession,
@@ -106,3 +107,9 @@ export {
   PRIVATE_BETA_OPERATIONAL_BOUNDARIES,
   PRIVATE_BETA_OPERATIONAL_FORBIDDEN_FIELDS
 } from "./privateBetaOperationalLogging.js";
+
+export {
+  runIntegratedPrivateBetaJourney,
+  PRIVATE_BETA_JOURNEY_INTEGRATION_VERSION,
+  PRIVATE_BETA_PROFESSIONAL_IDENTITY_SNAPSHOT_GAP_CODE
+} from "./privateBetaJourneyIntegration.js";

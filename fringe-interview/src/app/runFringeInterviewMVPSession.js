@@ -6,10 +6,12 @@ import {
 } from "../interview/index.js";
 
 import { assessBetaUserJourney } from "./assessBetaUserJourney.js";
+import buildProReportV2 from "../report/buildProReportV2.js";
 import {
   buildBetaRuntimeResumeState,
   completeBetaRuntimeSession,
   createBetaRuntimeSession,
+  startBetaRuntimeSession,
   resumeBetaRuntimeSession,
   syncBetaRuntimeProgress
 } from "./betaRuntimeSessionIntegration.js";
@@ -199,10 +201,19 @@ export async function runFringeInterviewMVPSession({
   let betaSessionEnvelope;
   let activeBetaSession;
   if (betaSession) {
-    activeBetaSession = resumeBetaRuntimeSession(betaSession, {
-      runtime,
-      now: betaSessionNow
-    });
+    activeBetaSession = betaSession.status === "created"
+      ? startBetaRuntimeSession(betaSession, {
+          runtime,
+          inputRefs: [
+            { type: "candidate_input", id: "cv" },
+            { type: "target_input", id: safeJdText ? "job_description" : "target_role" }
+          ],
+          now: betaSessionNow
+        })
+      : resumeBetaRuntimeSession(betaSession, {
+          runtime,
+          now: betaSessionNow
+        });
     betaSessionEnvelope = { session: activeBetaSession, resumeToken: null };
   } else {
     betaSessionEnvelope = createBetaRuntimeSession({
@@ -250,6 +261,18 @@ export async function runFringeInterviewMVPSession({
     interviewReport: interviewReport.interviewReport
   });
 
+  const professionalPerceptionReport = buildProReportV2({
+    candidate: mvp.parserResult.candidateProfile,
+    role: mvp.parserResult.roleProfile,
+    fit: mvp.parserResult.jobFitAnalysis,
+    report: interviewReport.interviewReport,
+    finalCandidateReport: finalCandidateReport.finalCandidateReport,
+    runtimeAnswers: runtime?.runtimeState?.answers || [],
+    openingPositioning: finalCandidateReport.finalCandidateReport.openingPositioning,
+    localeKey: finalCandidateReport.finalCandidateReport.locale || resolvedSessionLocale,
+    rawInput: { targetRole: safeTargetRole }
+  });
+
   if (runtime?.runtimeState?.isCompleted) {
     activeBetaSession = completeBetaRuntimeSession(activeBetaSession, {
       runtime,
@@ -278,6 +301,7 @@ export async function runFringeInterviewMVPSession({
       interviewRuntime: runtime,
       interviewReport: interviewReport.interviewReport,
       finalCandidateReport: finalCandidateReport.finalCandidateReport,
+      professionalPerceptionReport: professionalPerceptionReport.proReportV2,
       betaSession: activeBetaSession,
       betaSessionResumeState: buildBetaRuntimeResumeState(activeBetaSession),
       resumeToken: betaSessionEnvelope.resumeToken,

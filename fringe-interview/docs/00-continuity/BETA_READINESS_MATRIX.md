@@ -49,3 +49,12 @@
 - dashboard beta semplice.
 
 7. Integrare il sink operativo M1-07 nell'ambiente Beta reale senza ampliare i dati raccolti.
+
+## BI-01 integration status — 2026-08-07
+
+- Canonical Beta journey integration: implemented.
+- Onboarding → consent → authorised material use → Interview Runtime → Professional Perception report → optional feedback: integrated.
+- Operational logging: integrated at experience start/completion and safe failure/interruption boundaries; sink remains failure-safe and minimized.
+- Professional Identity dated snapshot: explicit capability gap; no persistence is simulated.
+- Voice: unavailable in the current Application path; text is the supported BI-01 mode.
+- Remaining Beta Experience Validation blocker: prove the integrated path with the real Beta environment/material/provider configuration and resolve or explicitly scope the Professional Identity snapshot requirement.
