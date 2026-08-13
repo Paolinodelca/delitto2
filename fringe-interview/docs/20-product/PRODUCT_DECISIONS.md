@@ -79,3 +79,15 @@
 ## PD-020 — Product-led sequencing
 **Status:** CANONICAL
 **Decision:** When two solutions are architecturally valid, prefer the one that produces greater observable value for the current release without closing reasonable future options.
+
+## PD-021 — Representation Value Proof
+**Status:** CANONICAL
+**Decision:** The Private Beta must make its principal Professional Representation conclusions understandable through progressive disclosure of what emerges, why IMAGO sees it, what remains insufficiently observed and how the conclusion relates to the current target. User-facing explainability remains distinct from internal technical traceability and does not expose implementation structures. Insufficient observation is not absence or a weakness of the person, and coverage or confidence must not become a person score.
+
+## PD-022 — Dynamic characterization first
+**Status:** CANONICAL
+**Decision:** For the Private Beta, emergent Professional Representation characterization is a dynamically derived view of existing canonical structures. A new persistent characterization object, lifecycle, versioning model or Core contract is not required; future first-class characterization remains an explicit later product decision informed by Beta evidence.
+
+## PD-023 — Representation-to-target comparison is not score-first
+**Status:** CANONICAL
+**Decision:** Professional Representation-to-Target Representation comparison must primarily communicate supporting elements, relevant distances, insufficiently observed areas and significant contradictory evidence when available. It must not reduce the primary user outcome to a Job Fit Score, CV-to-JD Match Score, compatibility percentage or person score; already-authorized technical or secondary indicators remain possible when they do not replace the Representation-first interpretation.
