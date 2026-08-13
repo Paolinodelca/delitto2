@@ -1,106 +1,17 @@
 {
   "candidateProfile": {
-    "summary": "Business analyst with solid experience in reporting, dashboarding, KPI monitoring, and process improvement across digital services, e-commerce, and operations environments. Shows repeated cross-functional collaboration with operations, sales, product, and customer care stakeholders. Profile appears analytically strong and operationally reliable, with some signals of growing ownership but limited evidence of full end-to-end initiative ownership.",
-    "currentPositioning": "Mid-level business analyst moving toward product operations",
+    "summary": "Product Operations specialist con esperienza in analisi, KPI e processi cross-funzionali.",
     "senioritySignal": "mid",
-    "experienceSignals": {
-      "yearsDetected": "6 years",
-      "leadershipExposure": "limited",
-      "ownershipLevel": "medium",
-      "autonomyLevel": "medium",
-      "scopeLevel": "moderate"
-    },
-    "skills": {
-      "technical": [
-        "SQL",
-        "KPI reporting",
-        "dashboarding",
-        "process improvement",
-        "data analysis"
-      ],
-      "tools": [
-        "SQL",
-        "Tableau",
-        "Excel"
-      ],
-      "methodologies": [
-        "performance reporting",
-        "workflow improvement",
-        "issue tracking",
-        "weekly business review support"
-      ],
-      "soft": [
-        "cross-functional collaboration",
-        "stakeholder communication",
-        "structured problem-solving",
-        "training support"
-      ],
-      "languages": [
-        "Italian",
-        "English"
-      ]
-    },
-    "domainSignals": [
-      "digital services",
-      "e-commerce",
-      "delivery operations",
-      "reporting operations"
+    "skills": [
+      "SQL",
+      "process improvement",
+      "stakeholder management",
+      "KPI",
+      "reporting"
     ],
-    "responsibilitySignals": [
-      "built recurring dashboards",
-      "coordinated reporting requirements across teams",
-      "presented KPI updates to managers",
-      "supported prioritization discussions",
-      "improved reporting workflow",
-      "trained junior analysts"
-    ],
-    "careerSignals": {
-      "stakeholderManagement": "partial",
-      "crossFunctionalCollaboration": "strong",
-      "deliveryOwnership": "partial",
-      "peopleLeadership": "weak",
-      "clientExposure": "none",
-      "analyticalRigour": "strong",
-      "communicationClarity": "high"
-    },
-    "evidence": {
-      "overallEvidenceLevel": "high",
-      "evidenceRichAreas": [
-        "reporting",
-        "dashboarding",
-        "SQL-based analysis",
-        "cross-functional collaboration",
-        "process improvement"
-      ],
-      "weaklySupportedAreas": [
-        "end-to-end initiative ownership",
-        "senior stakeholder influence",
-        "people leadership",
-        "SaaS environment exposure"
-      ],
-      "quantifiedAchievementsPresent": true
-    },
-    "education": [
-      "Master's Degree in Management Engineering",
-      "Bachelor's Degree in Economics"
-    ],
-    "certifications": [],
-    "strengthAreas": [
-      "strong analytical reporting foundation",
-      "good cross-functional collaboration signals",
-      "clear operational improvement orientation",
-      "solid BI and SQL relevance for the target role"
-    ],
-    "riskAreas": [
-      "limited direct SaaS evidence",
-      "ownership not yet fully demonstrated",
-      "senior stakeholder scope appears moderate rather than strong",
-      "leadership evidence is limited"
-    ],
-    "ambiguities": [
-      "unclear level of end-to-end ownership on initiatives",
-      "unclear exposure to senior executive stakeholders",
-      "unclear depth of product operations experience beyond reporting support"
+    "experienceHighlights": [
+      "Product Operations Specialist dal 2022",
+      "Business Analyst 2019-2022"
     ]
   }
 }

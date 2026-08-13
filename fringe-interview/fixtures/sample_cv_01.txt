@@ -1,97 +1,16 @@
-Marco Bianchi
+Marco Rinaldi
+Product Operations Specialist
 
-Turin, Italy
-marco.bianchi@email.com
-+39 333 555 2104
-LinkedIn: linkedin.com/in/marco-bianchi-ops-analytics
+Esperienza
+2022–oggi — Product Operations Specialist, azienda SaaS B2B
+- Coordina reporting operativo e KPI per Product e Customer Operations.
+- Ha ridisegnato il processo di prioritizzazione delle richieste riducendo i tempi medi del 25%.
+- Facilita revisioni settimanali con Product, Sales e Support.
+- Gestisce analisi SQL e dashboard per decisioni operative.
 
-Professional Summary
+2019–2022 — Business Analyst
+- Analisi processi, reporting e miglioramento continuo.
+- Supporto a progetti cross-funzionali e definizione KPI.
 
-Cross-functional business and operations professional with 7 years of experience across business analysis, project coordination, reporting and process improvement in digital and service-driven environments. Worked at the intersection of operations, commercial teams, customer support and product-related stakeholders, with strong exposure to KPI tracking, dashboarding, prioritization support and execution follow-up.
-
-Comfortable in roles that require coordination across functions, analytical problem solving and translation of business needs into structured actions. Strong experience in reporting, stakeholder management and process visibility. Looking to move into a Product Operations Manager role where analytical rigor, execution discipline and cross-functional alignment are central.
-
-Core Skills
-Cross-functional coordination
-Business analysis
-KPI reporting and dashboarding
-Process mapping and workflow improvement
-Stakeholder management
-Prioritization support
-Project follow-up and action tracking
-Executive reporting
-Customer and operational insight analysis
-SQL (intermediate)
-Tableau / Power BI
-Excel / Google Sheets
-Jira / Confluence
-Professional Experience
-Senior Business Analyst
-
-Flowdesk Services S.r.l. — Milan / Hybrid
-Jan 2022 – Present
-
-Flowdesk Services is a digital operations company supporting service workflows and client delivery for multi-country B2B programs.
-
-Main responsibilities
-Built and maintained weekly and monthly performance dashboards for operations and leadership teams.
-Coordinated recurring cross-functional reviews involving operations, support, account management and delivery leads.
-Supported prioritization of process improvement initiatives by structuring business issues, dependencies and impact assessments.
-Worked with internal product-related stakeholders to document recurring friction points affecting tooling adoption and workflow consistency.
-Created executive summaries and action-tracking materials for leadership meetings.
-Helped standardize KPI definitions across teams that had previously used inconsistent reporting logic.
-Supported rollout tracking for internal workflow and tooling changes, including follow-up with impacted teams.
-Selected achievements
-Reduced reporting preparation time by approximately 35% by redesigning dashboard logic and automating recurring data pulls.
-Improved visibility on operational bottlenecks by introducing a weekly structured review format adopted by three teams.
-Helped align KPI definitions across operations and customer support, reducing recurring disputes on performance interpretation.
-Contributed to the prioritization and tracking of a service workflow redesign that improved handoff quality between internal teams.
-Business Analyst / Project Coordinator
-
-Netwave Digital Solutions — Turin
-Mar 2019 – Dec 2021
-
-Netwave Digital Solutions delivered digital platforms and workflow tools for internal and external business users.
-
-Main responsibilities
-Gathered requirements from business stakeholders and translated them into structured documentation for product and delivery teams.
-Supported project planning, status tracking and coordination across product, IT and business functions.
-Monitored project milestones, identified blockers and followed up on open decisions.
-Produced weekly reporting for management on delivery status, risks and dependencies.
-Worked with analysts and developers to validate business logic and reporting needs for internal dashboards.
-Facilitated communication between commercial teams, implementation teams and internal technical stakeholders.
-Selected achievements
-Improved project reporting consistency across multiple initiatives by introducing a common status and dependency framework.
-Supported delivery of a workflow digitalization project used by more than 120 internal users.
-Reduced recurring escalation volume by making issue ownership and tracking more visible across teams.
-Operations Reporting Analyst
-
-RetailLog Italia — Turin
-Jun 2016 – Feb 2019
-
-RetailLog Italia supported retail operations with reporting, process support and service coordination activities.
-
-Main responsibilities
-Built recurring performance reports for regional operations teams.
-Analyzed operational issues related to delays, service exceptions and recurring execution gaps.
-Supported root cause reviews with field operations managers and central support teams.
-Consolidated data from multiple sources into management-ready reporting formats.
-Helped maintain operational KPI packs used in monthly review meetings.
-Selected achievements
-Improved monthly KPI pack reliability by cleaning and standardizing multiple source files.
-Introduced a simplified issue classification model that made recurring problems easier to compare over time.
-Education
-MSc in Management Engineering
-
-Politecnico di Torino
-2014 – 2016
-
-BSc in Industrial Engineering
-
-Politecnico di Torino
-2011 – 2014
-
-Additional Information
-Languages: Italian (native), English (professional working proficiency)
-Tools: SQL, Tableau, Power BI, Excel, Google Sheets, Jira, Confluence
-Working style: structured, collaborative, detail-oriented, comfortable in cross-functional environments
+Competenze: SQL, process improvement, stakeholder management, KPI, reporting, Jira.
+Lingue: italiano madrelingua, inglese B2.

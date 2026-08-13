@@ -58,3 +58,15 @@
 - Professional Identity dated snapshot: explicit capability gap; no persistence is simulated.
 - Voice: unavailable in the current Application path; text is the supported BI-01 mode.
 - Remaining Beta Experience Validation blocker: prove the integrated path with the real Beta environment/material/provider configuration and resolve or explicitly scope the Professional Identity snapshot requirement.
+
+## ME-01 real environment validation status — 2026-08-13
+
+- Verdict: **C — REAL BETA JOURNEY BLOCKED** in the supplied repository/environment.
+- BI-01 deterministic integration remains green and the real-material consent guard is verified.
+- Blocker 1 — baseline configuration package is absent: the real parser/runtime path cannot start because required `config/*.json` files are missing.
+- Blocker 2 — the real Groq provider is not configured in the validation environment (`GROQ_API_KEY` absent); no provider call can be validated until environment configuration is supplied.
+- Blocker 3 — the historical HTML shell/report renderer does not consume `runIntegratedPrivateBetaJourney`; the canonical BI-01 flow currently has no real tester-facing entry point in this baseline.
+- Added realistic CV/JD and parser expected-output fixtures only to restore reproducible material-level validation; parser mock remains blocked upstream by missing canonical config.
+- Known non-blocking gaps remain unchanged: voice subsystem unavailable; Professional Identity dated snapshot unavailable.
+- Integrated interruption is observable, while resume exists at Beta Session/Runtime level but is not exposed by the canonical BI-01 orchestrator.
+- Next work must remove the three environment/integration blockers above before ME-02 value-proof implementation is treated as Beta-environment validated.

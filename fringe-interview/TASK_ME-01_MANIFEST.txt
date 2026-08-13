@@ -1,0 +1,9 @@
+fixtures/sample_cv_01.txt
+fixtures/sample_jd_01.txt
+fixtures/expected_candidate_profile_01.json
+fixtures/expected_role_profile_01.json
+fixtures/expected_job_fit_analysis_01.json
+scripts/test_real_beta_environment_validation.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_ME-01_REAL_BETA_ENVIRONMENT_VALIDATION.md
+TASK_ME-01_MANIFEST.txt

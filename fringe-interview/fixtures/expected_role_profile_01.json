@@ -1,106 +1,17 @@
 {
   "roleProfile": {
     "title": "Product Operations Manager",
-    "summary": "Mid-level product operations role focused on reporting ownership, dashboarding, process improvement, and cross-functional coordination in a fast-paced B2B SaaS environment. The role sits between product, operations, and commercial stakeholders and requires structured analysis, communication strength, and the ability to create clarity across multiple teams.",
     "seniorityDetected": "mid",
-    "requirements": {
-      "mustHave": [
-        "experience in operations, business analysis, product operations, or similar roles",
-        "strong SQL skills",
-        "experience with BI tools",
-        "strong stakeholder management",
-        "cross-functional collaboration",
-        "ability to work in fast-paced environments",
-        "strong communication",
-        "structured problem-solving"
-      ],
-      "preferred": [
-        "experience in SaaS or B2B software environments",
-        "experience working closely with Product teams",
-        "experience owning processes or initiatives end-to-end",
-        "familiarity with customer lifecycle or success operations"
-      ],
-      "bonus": [
-        "experience mentoring junior team members",
-        "experience with workflow design",
-        "experience with operational playbooks"
-      ]
-    },
-    "skills": {
-      "technical": [
-        "SQL",
-        "reporting",
-        "dashboarding",
-        "process improvement",
-        "problem-solving"
-      ],
-      "tools": [
-        "Power BI",
-        "Tableau"
-      ],
-      "methodologies": [
-        "cross-functional execution",
-        "workflow improvement",
-        "operational prioritization",
-        "performance reporting"
-      ],
-      "soft": [
-        "stakeholder management",
-        "cross-functional collaboration",
-        "communication",
-        "operational judgment",
-        "accountability driving"
-      ],
-      "languages": []
-    },
+    "requiredSkills": [
+      "SQL",
+      "KPI",
+      "process improvement",
+      "stakeholder management"
+    ],
     "responsibilities": [
-      "own recurring operational and product performance reporting",
-      "build and improve dashboards for internal stakeholders",
-      "partner with Product, Sales, and Customer Success",
-      "translate business needs into reporting and workflow improvements",
-      "support prioritization by identifying inefficiencies",
-      "present insights and updates to senior stakeholders",
-      "help drive accountability across teams"
-    ],
-    "successSignals": [
-      "creates operational visibility",
-      "supports cross-team execution",
-      "improves reporting clarity",
-      "turns friction points into actionable improvements",
-      "works effectively under changing priorities"
-    ],
-    "domainContext": {
-      "industry": [
-        "B2B SaaS",
-        "software"
-      ],
-      "businessModel": [
-        "B2B SaaS"
-      ],
-      "environmentSignals": [
-        "fast-paced",
-        "cross-functional",
-        "data-informed",
-        "multi-stakeholder"
-      ],
-      "pressureSignals": [
-        "changing priorities",
-        "need for clarity across teams",
-        "execution pressure"
-      ]
-    },
-    "contextType": "product operations in B2B SaaS",
-    "languageStyle": "structured, demanding, operational, collaborative",
-    "redFlags": [
-      "lack of SQL capability",
-      "lack of BI tool exposure",
-      "weak stakeholder management",
-      "poor adaptability in fast-paced environments"
-    ],
-    "ambiguities": [
-      "scope of formal ownership is not fully specified",
-      "people management is not clearly required",
-      "level of senior stakeholder exposure expected is implied but not sharply defined"
+      "coordinare processi cross-funzionali",
+      "monitorare KPI",
+      "facilitare prioritizzazione"
     ]
   }
 }
