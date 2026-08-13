@@ -1,0 +1,12 @@
+src/app/privateBetaUiJourneyEntryPoint.js
+src/app/privateBetaUiServer.js
+src/app/renderPrivateBetaUiJourneyHtml.js
+src/app/index.js
+src/i18n/loadPrivateBetaUiMessages.js
+config/private_beta_ui.it.json
+config/private_beta_ui.en.json
+scripts/run_private_beta_ui_server.js
+scripts/test_real_beta_ui_journey_integration.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_ME-01B_REAL_BETA_UI_JOURNEY_INTEGRATION.md
+TASK_ME-01B_MANIFEST.txt

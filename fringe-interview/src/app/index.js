@@ -113,3 +113,6 @@ export {
   PRIVATE_BETA_JOURNEY_INTEGRATION_VERSION,
   PRIVATE_BETA_PROFESSIONAL_IDENTITY_SNAPSHOT_GAP_CODE
 } from "./privateBetaJourneyIntegration.js";
+export { runPrivateBetaUiJourneyEntryPoint } from "./privateBetaUiJourneyEntryPoint.js";
+export { renderPrivateBetaUiJourneyHtml } from "./renderPrivateBetaUiJourneyHtml.js";
+export { createPrivateBetaUiRequestHandler, createPrivateBetaUiServer } from "./privateBetaUiServer.js";

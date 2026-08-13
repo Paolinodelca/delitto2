@@ -70,3 +70,14 @@
 - Known non-blocking gaps remain unchanged: voice subsystem unavailable; Professional Identity dated snapshot unavailable.
 - Integrated interruption is observable, while resume exists at Beta Session/Runtime level but is not exposed by the canonical BI-01 orchestrator.
 - Next work must remove the three environment/integration blockers above before ME-02 value-proof implementation is treated as Beta-environment validated.
+
+## ME-01B real UI journey integration status — 2026-08-13
+
+- Canonical tester-facing entry point: `scripts/run_private_beta_ui_server.js` → `src/app/privateBetaUiServer.js` → `runPrivateBetaUiJourneyEntryPoint` → `runIntegratedPrivateBetaJourney`.
+- The entry point uses the existing BI-01 orchestrator; no second journey state machine was introduced.
+- Onboarding choices, consent, materials, text interview answers, Professional Perception report result, optional feedback, session closure and M1-07 operational logging are reachable through one application flow.
+- UI material fields are gated/disabled unless consent is accepted; the application adapter additionally preserves BI-01 lazy material access, and tests prove refused consent does not read CV/JD getters.
+- New tester-visible copy is externalized in `config/private_beta_ui.it.json` / `.en.json`; no new visible strings are embedded in the renderer.
+- Historical interactive shell/report flow remains in the repository as legacy/demo debt but is no longer the canonical ME-01B Beta entry point.
+- Live-provider validation was not executed because `GROQ_API_KEY` is not available in the Builder environment; this is an environment limitation, not a repository/product blocker.
+- Known gaps remain non-blocking for ME-01B: voice unavailable; Professional Identity dated snapshot unavailable; integrated resume is not exposed by the new entry point.
