@@ -33,6 +33,7 @@ try {
     $scriptsSource = Join-Path $repositoryRoot 'scripts'
     $binSource = Join-Path $repositoryRoot 'bin'
     $docsSource = Join-Path $repositoryRoot 'docs'
+    $configSource = Join-Path $repositoryRoot 'config'
     $srcSource  = Join-Path $repositoryRoot 'src'
 
     if (-not (Test-Path -LiteralPath $builderSource)) {
@@ -78,6 +79,10 @@ try {
 
     Copy-IfExists -Source $docsSource -Destination $stagingRoot
 
+    Write-Step "Copia configurazione"
+
+    Copy-IfExists -Source $configSource -Destination $stagingRoot
+
     Write-Step "Copia sorgenti"
 
     Copy-IfExists -Source $srcSource -Destination $stagingRoot
@@ -106,7 +111,7 @@ try {
     Write-Step "Creazione archivio ZIP"
 
     # Comprimi il CONTENUTO della cartella temporanea, non la cartella stessa.
-    # In questo modo docs/, src/, scripts/, tools/ e bin/ risultano direttamente
+    # In questo modo docs/, config/, src/, scripts/, tools/ e bin/ risultano direttamente
     # alla root dello ZIP e il Builder può risolvere percorsi come docs/20-product/.
     $stagingContents = Get-ChildItem -LiteralPath $stagingRoot -Force |
         Select-Object -ExpandProperty FullName
@@ -119,12 +124,13 @@ try {
 
     Write-Step "Verifica contenuto"
 
-foreach ($folder in @(
+   foreach ($folder in @(
     "tools",
     "scripts",
     "docs",
+    "config",
     "src"
-)) {
+    )) {
 
     $path = Join-Path $stagingRoot $folder
 
