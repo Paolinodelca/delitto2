@@ -1,0 +1,5 @@
+src/app/privateBetaUiJourneyEntryPoint.js
+scripts/test_live_ui_journey_diagnostic.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_ME-01C_LIVE_UI_JOURNEY_DIAGNOSTIC_AND_FIX.md
+TASK_ME-01C_MANIFEST.txt

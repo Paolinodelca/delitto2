@@ -81,3 +81,14 @@
 - Historical interactive shell/report flow remains in the repository as legacy/demo debt but is no longer the canonical ME-01B Beta entry point.
 - Live-provider validation was not executed because `GROQ_API_KEY` is not available in the Builder environment; this is an environment limitation, not a repository/product blocker.
 - Known gaps remain non-blocking for ME-01B: voice unavailable; Professional Identity dated snapshot unavailable; integrated resume is not exposed by the new entry point.
+
+## ME-01C live UI journey diagnostic status — 2026-08-14
+
+- Verdict: **C — LIVE UI INTERVIEW JOURNEY STILL BLOCKED**.
+- Repository diagnosis confirms the runtime already owns a canonical `currentStep`/question before an answer is accepted; the missing question in `/private-beta` is not a Runtime capability gap.
+- ME-01B currently collects a pre-baked list of answers and passes it once to `runIntegratedPrivateBetaJourney` / `runFringeInterviewMVPSession`; the UI never receives the Runtime `currentStep` between answers.
+- Therefore the missing Question→Answer loop and the inability to claim a genuinely live Interview journey share the same application integration boundary: BI-01/session execution is batch-oriented at the UI boundary even though the underlying Interview Runtime is stepwise.
+- The previously observed `SERVICE_UNAVAILABLE` cannot be attributed to missing questions: M1-03 emits that code only for provider/network/timeout/5xx-like technical failures. Historical live evidence already demonstrates Groq/parser/MVP/Professional Perception availability. The safe boundary intentionally discarded the exact technical cause in that run.
+- ME-01C adds a server/test-only diagnostic hook at the UI model-adapter boundary that records only provider task + coarse failure kind; it never records prompts, CV/JD, answers, secrets or raw exception text. A subsequent live run can identify the failing provider subtask without weakening M1-03.
+- No static questionnaire or second Interview orchestrator was introduced. A real staged UI needs a minimum canonical prepare/current-question/submit-answer/next-question/finalize application boundary built over the existing Runtime, then BI-01 continuation to report/feedback/closure.
+- Known non-blocking gaps remain unchanged: voice unavailable; Professional Identity dated snapshot unavailable; integrated resume not exposed in the UI.

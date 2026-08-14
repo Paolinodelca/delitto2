@@ -36,13 +36,30 @@ export async function runPrivateBetaUiJourneyEntryPoint({
   betaSessionTokenFactory,
   operationalEventIdFactory,
   sessionRunner,
-  journeyVerifier
+  journeyVerifier,
+  technicalDiagnosticSink
 } = {}) {
   if (!isObject(uiInput)) throw new Error("PRIVATE_BETA_UI_INPUT_REQUIRED");
   const consentDecision = uiInput.consentDecision === "refuse" ? "refuse" : uiInput.consentDecision === "accept" ? "accept" : null;
-  const effectiveModelAdapter = typeof modelAdapter === "function"
+  const baseModelAdapter = typeof modelAdapter === "function"
     ? modelAdapter
     : ({ task, system, user }) => runGroqParserModel({ task, system, user, temperature: 0.2 }).then((result) => result?.outputText || "");
+  const effectiveModelAdapter = async (request) => {
+    try {
+      return await baseModelAdapter(request);
+    } catch (error) {
+      if (typeof technicalDiagnosticSink === "function") {
+        const message = String(error?.message || "");
+        const failureKind = /429/.test(message) ? "provider_rate_limit"
+          : /5\d\d/.test(message) ? "provider_http_5xx"
+          : /timeout|timed out/i.test(message) ? "provider_timeout"
+          : /fetch failed|network/i.test(message) ? "provider_network"
+          : "provider_or_model_adapter_error";
+        try { technicalDiagnosticSink(Object.freeze({ boundary: "model_adapter", task: String(request?.task || "unknown"), failureKind })); } catch {}
+      }
+      throw error;
+    }
+  };
 
   const materials = {};
   Object.defineProperties(materials, {
