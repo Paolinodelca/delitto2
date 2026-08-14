@@ -92,3 +92,14 @@
 - ME-01C adds a server/test-only diagnostic hook at the UI model-adapter boundary that records only provider task + coarse failure kind; it never records prompts, CV/JD, answers, secrets or raw exception text. A subsequent live run can identify the failing provider subtask without weakening M1-03.
 - No static questionnaire or second Interview orchestrator was introduced. A real staged UI needs a minimum canonical prepare/current-question/submit-answer/next-question/finalize application boundary built over the existing Runtime, then BI-01 continuation to report/feedback/closure.
 - Known non-blocking gaps remain unchanged: voice unavailable; Professional Identity dated snapshot unavailable; integrated resume not exposed in the UI.
+
+## ME-01D staged canonical interview UI integration — 2026-08-14
+
+- Verdict: **B — STAGED LIVE INTERVIEW JOURNEY INTEGRATED WITH NON-BLOCKING GAPS**.
+- `/private-beta` now prepares the authorized interview, renders the authoritative Runtime `currentStep` question, submits exactly one answer, advances through `advanceInterviewRuntime`, and renders the next/adaptive Runtime question.
+- The same server-side staged state preserves the canonical Beta Session and Runtime across successive HTTP requests; the browser receives only an opaque session reference and safe UI state.
+- On Runtime completion the existing report builders are consumed, then feedback is offered, then session closure/logging completes.
+- Consent remains before CV/JD reads. Operational/diagnostic logging does not contain CV, JD, answers, prompts or secrets.
+- Existing BI-01 batch behavior remains green. The staged boundary is re-exported by the BI-01 application module; no UI-side question generator or second Interview state machine was introduced.
+- `GROQ_API_KEY` is unavailable in the Builder environment. Deterministic integration is PASS; previously supplied live evidence remains authoritative for Groq parser/MVP/Professional Perception. One local live staged smoke test remains recommended after overlay application.
+- Known non-blocking gaps remain: voice unavailable, Professional Identity persistent snapshot unavailable, broad tester-facing resume deferred.

@@ -1,0 +1,13 @@
+import assert from 'assert';
+import { readFile } from 'fs/promises';
+import { prepareStagedPrivateBetaJourney, answerStagedPrivateBetaJourney } from '../src/app/privateBetaJourneyIntegration.js';
+const load=async n=>JSON.parse(await readFile(new URL(`../fixtures/${n}`,import.meta.url),'utf8'));
+const adapter=async({task})=>{if(task==='candidateProfile')return JSON.stringify(await load('expected_candidate_profile_01.json'));if(task==='roleProfile')return JSON.stringify(await load('expected_role_profile_01.json'));if(task==='jobFitAnalysis')return JSON.stringify(await load('expected_job_fit_analysis_01.json'));return '{}';};
+const cv=await readFile(new URL('../fixtures/sample_cv_01.txt',import.meta.url),'utf8'),jd=await readFile(new URL('../fixtures/sample_jd_01.txt',import.meta.url),'utf8');
+let reads=0;const refused={identityAction:'create',workingMode:'independent',consentDecision:'refuse'};Object.defineProperty(refused,'cvText',{get(){reads++;return cv;}});Object.defineProperty(refused,'jdText',{get(){reads++;return jd;}});
+const no=await prepareStagedPrivateBetaJourney({uiInput:refused,modelAdapter:adapter});assert.equal(no.publicResult.error.code,'CONSENT_REFUSED');assert.equal(reads,0);
+const prep=await prepareStagedPrivateBetaJourney({uiInput:{identityAction:'create',workingMode:'independent',consentDecision:'accept',cvText:cv,jdText:jd,targetRole:'Product Operations Manager',uiLocale:'it'},modelAdapter:adapter});
+assert.equal(prep.publicResult.phase,'interview');assert.ok(prep.publicResult.currentQuestion?.question);const first=prep.publicResult.currentQuestion;const beforeIndex=prep.state.session.interviewRuntime.runtimeState.currentStepIndex;
+const one=await answerStagedPrivateBetaJourney({state:prep.state,answer:'Presento liberamente il mio percorso professionale, dalle attività di analisi fino alle responsabilità operative più recenti.'});
+assert.equal(one.state.session.interviewRuntime.runtimeState.answers.length,1);assert.equal(one.state.session.interviewRuntime.runtimeState.answers[0].stepType,first.stepType);assert.ok(one.state.session.interviewRuntime.runtimeState.currentStepIndex>beforeIndex);assert.ok(one.publicResult.currentQuestion?.question || one.publicResult.phase==='feedback');
+console.log('ME-01D staged application boundary tests PASSED');

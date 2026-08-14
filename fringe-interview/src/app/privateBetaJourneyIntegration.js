@@ -323,3 +323,5 @@ export const PRIVATE_BETA_JOURNEY_INTEGRATION_VERSION = INTEGRATION_VERSION;
 export const PRIVATE_BETA_PROFESSIONAL_IDENTITY_SNAPSHOT_GAP_CODE = SNAPSHOT_GAP_CODE;
 
 export default runIntegratedPrivateBetaJourney;
+
+export { prepareStagedPrivateBetaJourney, answerStagedPrivateBetaJourney, finalizeStagedPrivateBetaJourney } from "./privateBetaStagedInterviewJourney.js";

@@ -30,5 +30,10 @@
   "safeError": "Non è stato possibile completare l’esperienza. Puoi controllare i dati e riprovare.",
   "completed": "Esperienza completata",
   "report": "Professional Perception Report",
-  "next": "Passo successivo"
+  "next": "Passo successivo",
+  "questionLabel": "Domanda",
+  "answerLabel": "La tua risposta",
+  "continueInterview": "Continua",
+  "interviewProgress": "Intervista in corso",
+  "prepareInterview": "Prepara intervista"
 }

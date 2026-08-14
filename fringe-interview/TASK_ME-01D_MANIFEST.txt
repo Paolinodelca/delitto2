@@ -1,0 +1,12 @@
+TASK_ME-01D_STAGED_CANONICAL_INTERVIEW_UI_INTEGRATION.md
+TASK_ME-01D_MANIFEST.txt
+config/private_beta_ui.en.json
+config/private_beta_ui.it.json
+docs/00-continuity/BETA_READINESS_MATRIX.md
+scripts/test_staged_private_beta_journey.js
+scripts/test_staged_private_beta_ui_journey.js
+src/app/index.js
+src/app/privateBetaJourneyIntegration.js
+src/app/privateBetaStagedInterviewJourney.js
+src/app/privateBetaUiServer.js
+src/app/renderPrivateBetaUiJourneyHtml.js

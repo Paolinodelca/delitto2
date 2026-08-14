@@ -30,5 +30,10 @@
   "safeError": "The experience could not be completed. Check your inputs and try again.",
   "completed": "Experience completed",
   "report": "Professional Perception Report",
-  "next": "Next step"
+  "next": "Next step",
+  "questionLabel": "Question",
+  "answerLabel": "Your answer",
+  "continueInterview": "Continue",
+  "interviewProgress": "Interview in progress",
+  "prepareInterview": "Prepare interview"
 }

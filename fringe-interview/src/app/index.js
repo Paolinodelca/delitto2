@@ -111,7 +111,10 @@ export {
 export {
   runIntegratedPrivateBetaJourney,
   PRIVATE_BETA_JOURNEY_INTEGRATION_VERSION,
-  PRIVATE_BETA_PROFESSIONAL_IDENTITY_SNAPSHOT_GAP_CODE
+  PRIVATE_BETA_PROFESSIONAL_IDENTITY_SNAPSHOT_GAP_CODE,
+  prepareStagedPrivateBetaJourney,
+  answerStagedPrivateBetaJourney,
+  finalizeStagedPrivateBetaJourney
 } from "./privateBetaJourneyIntegration.js";
 export { runPrivateBetaUiJourneyEntryPoint } from "./privateBetaUiJourneyEntryPoint.js";
 export { renderPrivateBetaUiJourneyHtml } from "./renderPrivateBetaUiJourneyHtml.js";
