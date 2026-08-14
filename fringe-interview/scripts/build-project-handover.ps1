@@ -35,6 +35,7 @@ try {
     $docsSource = Join-Path $repositoryRoot 'docs'
     $configSource = Join-Path $repositoryRoot 'config'
     $srcSource  = Join-Path $repositoryRoot 'src'
+    $fixturesSource = Join-Path $repositoryRoot 'fixtures'
 
     if (-not (Test-Path -LiteralPath $builderSource)) {
         throw "Cartella Builder non trovata: $builderSource"
@@ -83,6 +84,10 @@ try {
 
     Copy-IfExists -Source $configSource -Destination $stagingRoot
 
+   Write-Step "Copia fixtures"
+
+   Copy-IfExists -Source $fixturesSource -Destination $stagingRoot
+
     Write-Step "Copia sorgenti"
 
     Copy-IfExists -Source $srcSource -Destination $stagingRoot
@@ -129,6 +134,7 @@ try {
     "scripts",
     "docs",
     "config",
+    "fixtures",
     "src"
     )) {
 
