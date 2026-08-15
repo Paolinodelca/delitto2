@@ -1,0 +1,10 @@
+src/app/privateBetaUiServer.js
+src/app/privateBetaStagedInterviewJourney.js
+src/app/runFringeInterviewMVPSession.js
+src/app/runFringeInterviewMVP.js
+scripts/test_me02c_repeat_interview_variation.js
+scripts/test_me02b_repeat_interview_diagnostic.js
+scripts/test_staged_private_beta_journey.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_ME-02C_REPEAT_INTERVIEW_VARIATION_INTEGRATION.md
+TASK_ME-02C_MANIFEST.txt

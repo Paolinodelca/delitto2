@@ -17,7 +17,9 @@ export async function runFringeInterviewMVP({
   scenarioType = "interview",
   inputMode = "text",
   uiLocale = "it",
-  sessionLocale = "it"
+  sessionLocale = "it",
+  recentQuestionKeys = [],
+  recentQuestionHistory = []
 }) {
 
   if (typeof cvText !== "string" || !cvText.trim()) {
@@ -52,7 +54,9 @@ export async function runFringeInterviewMVP({
     roleProfile: parserResult.roleProfile,
     jobFitAnalysis: parserResult.jobFitAnalysis,
     interviewLengthMode,
-    interviewFocusMode
+    interviewFocusMode,
+    recentQuestionKeys,
+    recentQuestionHistory
   });
 
   const interviewSessionResult = composeInterviewSession({

@@ -131,7 +131,9 @@ export async function runFringeInterviewMVPSession({
   betaSession = null,
   betaSessionNow = () => new Date(),
   betaSessionIdFactory,
-  betaSessionTokenFactory
+  betaSessionTokenFactory,
+  recentQuestionKeys = [],
+  recentQuestionHistory = []
 }) {
   const safeCvText = ensureString(cvText, "");
   const safeJdText = ensureString(jdText, "");
@@ -184,7 +186,9 @@ export async function runFringeInterviewMVPSession({
     roleNotes: enrichedRoleNotes,
     modelAdapter,
     interviewLengthMode,
-    interviewFocusMode
+    interviewFocusMode,
+    recentQuestionKeys,
+    recentQuestionHistory
   });
 
   const mvp = mvpResult.fringeInterviewMVP;

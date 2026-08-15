@@ -121,3 +121,15 @@
 - Repeat-interview diagnostic: question ranking/selection is deterministic when candidate/target and inputs are unchanged. Existing `recentQuestionKeys` / `recentQuestionHistory` avoidance capability is implemented in question ranking/selection, but `runFringeInterviewMVP` does not receive or forward previous-session history.
 - Repeat-interview status: **EXISTING VARIATION CAPABILITY NOT YET CONSUMED**. Enabling meaningful cross-session variation requires a separately authorized session-history handoff; ME-02B does not add persistent interview memory or a second planner.
 - Existing Knowledge Coverage / Opportunity / Acquisition architecture leaves a compatible future path for progressive acquisition, but that cross-session loop is not wired into Interview planning in this task.
+
+## ME-02C — Repeat Interview Variation Integration — 2026-08-15
+
+- Verdict: **B — REPEAT INTERVIEW VARIATION INTEGRATED WITH NON-BLOCKING GAPS**.
+- ME-02B diagnosis is now consumed: `recentQuestionKeys` and `recentQuestionHistory` are forwarded through the existing MVP/session/question-selection path; no second Interview Planner, random shuffle or question-generation redesign was introduced.
+- The Private Beta UI server owns a temporary process-local recent-question store keyed by an opaque `HttpOnly`, `SameSite=Lax` Beta repeat-context cookie. This is explicitly Beta-specific technical memory, not Professional Identity, Representation, Knowledge persistence or long-term candidate history.
+- Only canonical question identity metadata from successfully answered/shown Runtime steps is retained (`key`, category/family context and expected-signal labels). CV, JD, answers, prompts and provider payloads are not retained for variation.
+- History is updated after a successful answer, so planned/unseen questions are not marked consumed. If a session is interrupted after answered questions, those answered questions may still guide the next simulation in the same process/browser context.
+- A successive simulation in the same Beta browser context receives recent question history; unrelated browser contexts receive distinct opaque context IDs and do not share history accidentally.
+- The mechanism is process-local and disappears on server restart. It deliberately does not define future canonical cross-session Representation/Knowledge memory.
+- Existing ranking remains deterministic: no history preserves the prior baseline; supplied recent history changes eligible ranking when alternatives exist, while canonical relevance can still permit legitimate repetition.
+- ME-02B Representation Value Proof behavior remains green. Builder has no live-provider secret; local post-overlay smoke test with the configured Groq environment remains required to validate real successive Simulation A/B behavior.
