@@ -35,5 +35,14 @@
   "answerLabel": "Your answer",
   "continueInterview": "Continue",
   "interviewProgress": "Interview in progress",
-  "prepareInterview": "Prepare interview"
+  "prepareInterview": "Prepare interview",
+  "valueProofTitle": "What emerges from your professional representation",
+  "valueProofIntro": "Open each point to see why it emerges, which signals support it, and what remains insufficiently observed.",
+  "valueProofWhy": "Why does IMAGO see this?",
+  "valueProofStatus": "Observation status",
+  "valueProofEvidence": "Signals supporting this reading",
+  "valueProofUncertain": "What remains insufficiently observed",
+  "valueProofTarget": "Relation to the target",
+  "valueProofStatus_derived": "Reading derived from available signals",
+  "valueProofStatus_insufficiently_observed": "Still insufficiently observed"
 }

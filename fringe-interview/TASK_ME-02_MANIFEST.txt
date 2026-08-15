@@ -1,0 +1,9 @@
+config/private_beta_ui.en.json
+config/private_beta_ui.it.json
+docs/00-continuity/BETA_READINESS_MATRIX.md
+scripts/test_representation_value_proof_projection.js
+src/app/buildRepresentationValueProofProjection.js
+src/app/privateBetaStagedInterviewJourney.js
+src/app/renderPrivateBetaUiJourneyHtml.js
+TASK_ME-02_MANIFEST.txt
+TASK_ME-02_REPRESENTATION_VALUE_PROOF_PROJECTION.md

@@ -1,0 +1,11 @@
+import assert from 'assert';
+import { buildRepresentationValueProofProjection } from '../src/app/buildRepresentationValueProofProjection.js';
+const source={professionalPerception:{emergingImage:{roleTarget:'Engineering Manager'},perceptionV2:{whoEmerges:{narrative:'Emerge un profilo orientato alla responsabilità.'},credibilityAssets:{narrative:'La credibilità si appoggia su ownership e metodo.'},targetDistance:{bridgeNarrative:'La leadership multilivello resta da rendere più osservabile.'}},visibleSignals:[{label:'ownership'},{label:'metodo'}],underVisibleSignals:[{label:'leadership multilivello'}],perceptionGap:[{area:'leadership',narrative:'La leadership multilivello è poco visibile.'}]}};
+const before=JSON.stringify(source);const out=buildRepresentationValueProofProjection({professionalPerceptionReport:source,targetRole:'Engineering Manager'});
+assert(out.claims.length>=2&&out.claims.length<=4);assert.equal(out.persistent,false);assert.equal(out.sourceOfTruth,false);assert.equal(out.hasPrimaryScore,false);assert(out.claims.every(c=>c.traceability.length>0));assert(out.claims.flatMap(c=>c.supportingEvidence).every(e=>e.sourceRef.startsWith('professionalPerception.')));assert(out.claims.some(c=>c.epistemicStatus==='insufficiently_observed'));assert(out.claims.some(c=>c.targetRelation?.target==='Engineering Manager'));assert.equal(JSON.stringify(source),before);assert(Object.isFrozen(out));
+const sparse=buildRepresentationValueProofProjection({professionalPerceptionReport:{professionalPerception:{perceptionV2:{whoEmerges:{narrative:'Segnale emergente.'}}}}});assert.equal(sparse.claims[0].supportingEvidence.length,0);assert.equal(sparse.claims[0].supportStrength,'limited_support');
+console.log('Representation Value Proof Projection tests PASSED');
+import { renderPrivateBetaUiJourneyHtml } from '../src/app/renderPrivateBetaUiJourneyHtml.js';
+const html=renderPrivateBetaUiJourneyHtml({locale:'it',result:{phase:'feedback',report:{available:true,representationValueProof:out}}});
+assert(html.includes('Perché IMAGO vede questo?'));assert(html.includes('ownership'));assert(!html.includes('professionalPerception.visibleSignals[0]'));assert(html.includes('<details>'));
+const rendererSource=(await import('fs')).readFileSync('src/app/renderPrivateBetaUiJourneyHtml.js','utf8');assert(!rendererSource.includes('Perché IMAGO vede questo?'));

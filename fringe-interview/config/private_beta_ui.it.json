@@ -35,5 +35,14 @@
   "answerLabel": "La tua risposta",
   "continueInterview": "Continua",
   "interviewProgress": "Intervista in corso",
-  "prepareInterview": "Prepara intervista"
+  "prepareInterview": "Prepara intervista",
+  "valueProofTitle": "Cosa emerge dalla tua rappresentazione professionale",
+  "valueProofIntro": "Apri ogni punto per vedere perché emerge, quali segnali lo sostengono e cosa resta poco osservato.",
+  "valueProofWhy": "Perché IMAGO vede questo?",
+  "valueProofStatus": "Stato dell’osservazione",
+  "valueProofEvidence": "Segnali che sostengono questa lettura",
+  "valueProofUncertain": "Cosa resta insufficientemente osservato",
+  "valueProofTarget": "Relazione con il target",
+  "valueProofStatus_derived": "Lettura derivata dai segnali disponibili",
+  "valueProofStatus_insufficiently_observed": "Osservazione ancora insufficiente"
 }

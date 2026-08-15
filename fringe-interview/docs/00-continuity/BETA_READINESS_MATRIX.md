@@ -103,3 +103,12 @@
 - Existing BI-01 batch behavior remains green. The staged boundary is re-exported by the BI-01 application module; no UI-side question generator or second Interview state machine was introduced.
 - `GROQ_API_KEY` is unavailable in the Builder environment. Deterministic integration is PASS; previously supplied live evidence remains authoritative for Groq parser/MVP/Professional Perception. One local live staged smoke test remains recommended after overlay application.
 - Known non-blocking gaps remain: voice unavailable, Professional Identity persistent snapshot unavailable, broad tester-facing resume deferred.
+
+## ME-02 Representation Value Proof Projection — 2026-08-15
+
+- Authorized post-ME-01D live evidence records **LIVE SMOKE TEST PASS** for `/private-beta` with real Groq, real CV, staged Runtime questions, completed Professional Perception report and experience completion.
+- ME-02 adds a non-persistent downstream `representation_value_proof_projection`; it consumes the existing Professional Perception `whoEmerges`, `credibilityAssets`, visible/under-visible signals, `perceptionGap`, target-distance narrative and target role without creating a second Representation/Evidence/Knowledge source of truth.
+- The Beta report now presents 2–4 primary claims with progressive disclosure for why the claim emerges, supporting derived signals, insufficient observation and limited target relation. Internal source references remain test-visible but are not rendered as primary user content.
+- No global person/match score, new confidence model, persistent Emergent Characterization, Core contract or snapshot semantics were introduced.
+- Limitation: the live Beta reporting pipeline does not currently carry the Core Evidence Store/Knowledge Ledger/PersonKnowledgeMatrix into claim-specific Professional Perception output. ME-02 therefore uses only explicit report-level derived signals/gaps as evidence and does not fabricate claim-to-raw-evidence relevance. Richer evidence trust/validation remains downstream.
+- Builder environment has no `GROQ_API_KEY`; deterministic regressions are green and the authorized post-ME-01D live smoke evidence is retained. A local post-overlay smoke should confirm the new Value Proof rendering with the real provider.
