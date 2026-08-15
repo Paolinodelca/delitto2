@@ -1,0 +1,10 @@
+TASK_ME-02B_REPRESENTATION_CLAIM_QUALITY_AND_REPEAT_INTERVIEW_DIAGNOSTIC.md
+TASK_ME-02B_MANIFEST.txt
+config/private_beta_ui.en.json
+config/private_beta_ui.it.json
+docs/00-continuity/BETA_READINESS_MATRIX.md
+scripts/test_me02b_repeat_interview_diagnostic.js
+scripts/test_me02b_representation_claim_quality.js
+src/app/buildRepresentationValueProofProjection.js
+src/app/privateBetaStagedInterviewJourney.js
+src/app/renderPrivateBetaUiJourneyHtml.js

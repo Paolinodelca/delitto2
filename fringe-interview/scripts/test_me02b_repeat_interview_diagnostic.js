@@ -1,0 +1,18 @@
+import assert from 'assert';
+import fs from 'fs';
+import { loadStructuredQuestionBank } from '../src/interview/loadStructuredQuestionBank.js';
+import { rankStructuredQuestions } from '../src/interview/rankStructuredQuestions.js';
+const source=fs.readFileSync('src/app/runFringeInterviewMVP.js','utf8');
+assert(source.includes('buildInterviewQuestionSet({'));
+assert(!source.includes('recentQuestionKeys,'),'MVP unexpectedly consumes recent question history');
+assert(!source.includes('recentQuestionHistory,'),'MVP unexpectedly consumes recent question history');
+const {structuredQuestionBank}=loadStructuredQuestionBank();
+const context={seniorityContext:'senior',companyContext:'structured',defaultTone:'direct',roleFamily:'generic_professional'};
+const a=rankStructuredQuestions({interviewContextProfile:context,structuredQuestionBank});
+const b=rankStructuredQuestions({interviewContextProfile:context,structuredQuestionBank});
+assert.deepStrictEqual(a,b,'same inputs should demonstrate deterministic ranking');
+const top=a.rankedStructuredQuestions.rankedQuestions.slice(0,3).map(x=>x.key);
+const rotated=rankStructuredQuestions({interviewContextProfile:context,structuredQuestionBank,recentQuestionKeys:top,recentQuestionHistory:top.map(key=>({key,category:'',signals:[]}))});
+assert.deepStrictEqual(rotated.rankedStructuredQuestions.recentQuestionKeys,top);
+assert(rotated.rankedStructuredQuestions.rankedQuestions.some((x,i)=>x.key!==a.rankedStructuredQuestions.rankedQuestions[i]?.key||x.score!==a.rankedStructuredQuestions.rankedQuestions[i]?.score),'existing recent-history capability must affect ranking');
+console.log(JSON.stringify({repeatInterview:'EXISTING_VARIATION_CAPABILITY_NOT_YET_CONSUMED',deterministicWithoutHistory:true,recentHistoryCapability:true,topBaselineKeys:top},null,2));

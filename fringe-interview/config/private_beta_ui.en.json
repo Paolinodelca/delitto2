@@ -44,5 +44,10 @@
   "valueProofUncertain": "What remains insufficiently observed",
   "valueProofTarget": "Relation to the target",
   "valueProofStatus_derived": "Reading derived from available signals",
-  "valueProofStatus_insufficiently_observed": "Still insufficiently observed"
+  "valueProofStatus_insufficiently_observed": "Still insufficiently observed",
+  "valueProofWhyPattern": "This reading comes from the convergence of the signals shown below.",
+  "valueProofWhyLimited": "The reading remains cautious because there are not enough specific signals available to show.",
+  "valueProofStatus_partially_characterized": "Supported, but still only partially characterized",
+  "valueProofHistorySupported": "Professional history supports this area; depth and specialization still need characterization.",
+  "valueProofInsufficient": "There is not yet enough information to characterize this aspect."
 }

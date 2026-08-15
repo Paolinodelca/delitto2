@@ -44,5 +44,10 @@
   "valueProofUncertain": "Cosa resta insufficientemente osservato",
   "valueProofTarget": "Relazione con il target",
   "valueProofStatus_derived": "Lettura derivata dai segnali disponibili",
-  "valueProofStatus_insufficiently_observed": "Osservazione ancora insufficiente"
+  "valueProofStatus_insufficiently_observed": "Osservazione ancora insufficiente",
+  "valueProofWhyPattern": "Questa lettura deriva dalla convergenza dei segnali mostrati qui sotto.",
+  "valueProofWhyLimited": "La lettura è prudente perché non sono disponibili segnali specifici sufficienti da mostrare.",
+  "valueProofStatus_partially_characterized": "Supporto presente, caratterizzazione ancora parziale",
+  "valueProofHistorySupported": "La storia professionale sostiene questo ambito; profondità e specializzazione restano da caratterizzare.",
+  "valueProofInsufficient": "Non emergono ancora elementi sufficienti per caratterizzare questo aspetto."
 }

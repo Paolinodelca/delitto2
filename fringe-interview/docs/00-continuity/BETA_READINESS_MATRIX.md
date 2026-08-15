@@ -112,3 +112,12 @@
 - No global person/match score, new confidence model, persistent Emergent Characterization, Core contract or snapshot semantics were introduced.
 - Limitation: the live Beta reporting pipeline does not currently carry the Core Evidence Store/Knowledge Ledger/PersonKnowledgeMatrix into claim-specific Professional Perception output. ME-02 therefore uses only explicit report-level derived signals/gaps as evidence and does not fabricate claim-to-raw-evidence relevance. Richer evidence trust/validation remains downstream.
 - Builder environment has no `GROQ_API_KEY`; deterministic regressions are green and the authorized post-ME-01D live smoke evidence is retained. A local post-overlay smoke should confirm the new Value Proof rendering with the real provider.
+
+## ME-02B — Representation claim quality + repeat-interview diagnostic — 2026-08-15
+
+- Live ME-02 evaluation confirmed the Value Proof is technically present but exposed repetitive claims, repeated signal lists and overly coarse insufficient-observation wording.
+- ME-02B refines the downstream projection without changing Core contracts: semantic claim consolidation, non-tautological evidence selection, and bounded professional-history context distinguish historically supported domains from depth/specialization that remains insufficiently characterized.
+- The live optics finding is covered by deterministic regression: multi-source professional-history support is preserved without asserting certified mastery.
+- Repeat-interview diagnostic: question ranking/selection is deterministic when candidate/target and inputs are unchanged. Existing `recentQuestionKeys` / `recentQuestionHistory` avoidance capability is implemented in question ranking/selection, but `runFringeInterviewMVP` does not receive or forward previous-session history.
+- Repeat-interview status: **EXISTING VARIATION CAPABILITY NOT YET CONSUMED**. Enabling meaningful cross-session variation requires a separately authorized session-history handoff; ME-02B does not add persistent interview memory or a second planner.
+- Existing Knowledge Coverage / Opportunity / Acquisition architecture leaves a compatible future path for progressive acquisition, but that cross-session loop is not wired into Interview planning in this task.
