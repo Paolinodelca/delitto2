@@ -133,3 +133,13 @@
 - The mechanism is process-local and disappears on server restart. It deliberately does not define future canonical cross-session Representation/Knowledge memory.
 - Existing ranking remains deterministic: no history preserves the prior baseline; supplied recent history changes eligible ranking when alternatives exist, while canonical relevance can still permit legitimate repetition.
 - ME-02B Representation Value Proof behavior remains green. Builder has no live-provider secret; local post-overlay smoke test with the configured Groq environment remains required to validate real successive Simulation A/B behavior.
+
+## AR-02 Runtime Answer → IMAGO Evidence/Knowledge Integration — 2026-08-16
+
+- AR-01 finding remains confirmed: accepted Runtime answers previously stopped in the interview-local answer/coverage path and did not enter IMAGO Core Evidence/Knowledge.
+- AR-02 now registers only **accepted authoritative Runtime answers** into the canonical Evidence contract, preserving Beta Session, Interview Session, question/currentStep context, answer order and accepted timestamp provenance.
+- Canonical progression beyond Evidence is **blocked**: existing Registered Evidence → Observation construction requires an explicit Measurement plus exact construction rules for a known characteristic. The repository has no authorized semantic mapping from arbitrary Interview answer content to domain/responsibility characteristics such as stakeholder management, budget ownership boundary, cost awareness or software collaboration.
+- The historical Groq Answer Annotation subsystem was not reused because its schema is coaching/answer-quality oriented (`concreteness`, `specificity`, `evidence`, `ownership`, `structure`, `clarity`, `reflection`, `generic`) and does not preserve the professional semantic assertions required by AR-02.
+- Therefore Observation/Measurement, Knowledge Ledger/Snapshot, PersonKnowledgeMatrix and Knowledge Coverage remain unchanged by live Interview answers. AR-03 must not consume Coverage as if this integration were complete.
+- AR-04 remains downstream: Professional Perception/Value Proof still do not consume canonical Interview-derived knowledge.
+- Required next boundary: an authority-compatible semantic Evidence → Observation mapping for Interview answers, reusing existing Observation/Measurement/Knowledge contracts without direct Representation or Coverage writes.

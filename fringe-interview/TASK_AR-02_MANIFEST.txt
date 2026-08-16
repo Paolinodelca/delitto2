@@ -1,0 +1,6 @@
+src/app/registerAcceptedRuntimeAnswerEvidence.js
+src/app/privateBetaStagedInterviewJourney.js
+scripts/test_ar02_runtime_answer_evidence_intake.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_AR-02_RUNTIME_ANSWER_IMAGO_EVIDENCE_KNOWLEDGE_INTEGRATION.md
+TASK_AR-02_MANIFEST.txt
