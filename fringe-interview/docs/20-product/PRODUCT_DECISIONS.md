@@ -1,93 +1,109 @@
 # Product Decisions
 
-## PD-001 — Consent before personal data
+## PD-001 â€” Consent before personal data
 **Status:** CANONICAL
 **Decision:** Explicit consent precedes acquisition or use of personal material.
 
-## PD-002 — Professional Identity ownership
+## PD-002 â€” Professional Identity ownership
 **Status:** CANONICAL
 **Decision:** The Professional Identity always belongs to the person; Tutor access is explicit and revocable.
 
-## PD-003 — Representation first
+## PD-003 â€” Representation first
 **Status:** CANONICAL
 **Decision:** Reports, CVs, interview outputs and coaching are views or products derived from the Representation, not substitutes for it.
 
-## PD-004 — Interview opening
+## PD-004 â€” Interview opening
 **Status:** CANONICAL
 **Decision:** Every interview begins with a free presentation of the candidate's professional journey.
 
-## PD-005 — Adaptive probing
+## PD-005 â€” Adaptive probing
 **Status:** CANONICAL
 **Decision:** Follow-up questions are generated only when additional evidence is needed to reach sufficient target observability.
 
-## PD-006 — Minimum intrusiveness
+## PD-006 â€” Minimum intrusiveness
 **Status:** CANONICAL
 **Decision:** Once a target dimension is sufficiently observable, the interview does not probe it further without a new reason.
 
-## PD-007 — Role-aware questioning
+## PD-007 â€” Role-aware questioning
 **Status:** CANONICAL
 **Decision:** Question selection is primarily driven by target relevance, evidence gaps and seniority expectations.
 
-## PD-008 — Interviewer style as context
+## PD-008 â€” Interviewer style as context
 **Status:** CANONICAL
 **Decision:** Interviewer style changes delivery, pressure and probing behaviour; it does not require a separate duplicated question bank.
 
-## PD-009 — Preferred interaction mode
+## PD-009 â€” Preferred interaction mode
 **Status:** CANONICAL
 **Decision:** Voice is preferred when available; text remains fully supported.
 
-## PD-010 — Behavioural timing
+## PD-010 â€” Behavioural timing
 **Status:** CANONICAL
 **Decision:** Response timing and interaction behaviour are observable signals, never standalone evaluations.
 
-## PD-011 — Continuous primary flow
+## PD-011 â€” Continuous primary flow
 **Status:** CANONICAL
 **Decision:** The main experience remains linear and focused; explanatory detours are deferred until after the task or explicitly requested.
 
-## PD-012 — Contextual feedback
+## PD-012 â€” Contextual feedback
 **Status:** CANONICAL
 **Decision:** Feedback is requested as close as practical to the experience it evaluates; general feedback is requested at the end.
 
-## PD-013 — Progressive reporting
+## PD-013 â€” Progressive reporting
 **Status:** CANONICAL
 **Decision:** The report first communicates a few high-value messages and exposes detailed evidence progressively.
 
-## PD-014 — Professional Perception first
+## PD-014 â€” Professional Perception first
 **Status:** CANONICAL
 **Decision:** The primary Interview outcome is how the candidate currently emerges professionally, not the interview transcript or a list of answer scores.
 
-## PD-015 — Credibility assets
+## PD-015 â€” Credibility assets
 **Status:** CANONICAL
 **Decision:** Professional Perception must identify credible assets already present, not only weaknesses or missing signals.
 
-## PD-016 — Target-relative interpretation
+## PD-016 â€” Target-relative interpretation
 **Status:** CANONICAL
 **Decision:** The same evidence may support different interpretations for different roles, seniority levels, organizations or interviewer contexts.
 
-## PD-017 — Recipe version traceability
+## PD-017 â€” Recipe version traceability
 **Status:** CANONICAL
 **Decision:** Every derived complex-dimension result must preserve the exact recipe and version that produced it.
 
-## PD-018 — No automatic latest recipe
+## PD-018 â€” No automatic latest recipe
 **Status:** CANONICAL
 **Decision:** Multiple recipe versions may coexist; the system never silently selects the newest or most favourable version.
 
-## PD-019 — Feedback does not alter identity
+## PD-019 â€” Feedback does not alter identity
 **Status:** CANONICAL
 **Decision:** Beta feedback evaluates the product experience and never modifies the Professional Identity.
 
-## PD-020 — Product-led sequencing
+## PD-020 â€” Product-led sequencing
 **Status:** CANONICAL
 **Decision:** When two solutions are architecturally valid, prefer the one that produces greater observable value for the current release without closing reasonable future options.
 
-## PD-021 — Representation Value Proof
+## PD-021 â€” Representation Value Proof
 **Status:** CANONICAL
 **Decision:** The Private Beta must make its principal Professional Representation conclusions understandable through progressive disclosure of what emerges, why IMAGO sees it, what remains insufficiently observed and how the conclusion relates to the current target. User-facing explainability remains distinct from internal technical traceability and does not expose implementation structures. Insufficient observation is not absence or a weakness of the person, and coverage or confidence must not become a person score.
 
-## PD-022 — Dynamic characterization first
+## PD-022 â€” Dynamic characterization first
 **Status:** CANONICAL
 **Decision:** For the Private Beta, emergent Professional Representation characterization is a dynamically derived view of existing canonical structures. A new persistent characterization object, lifecycle, versioning model or Core contract is not required; future first-class characterization remains an explicit later product decision informed by Beta evidence.
 
-## PD-023 — Representation-to-target comparison is not score-first
+## PD-023 â€” Representation-to-target comparison is not score-first
 **Status:** CANONICAL
 **Decision:** Professional Representation-to-Target Representation comparison must primarily communicate supporting elements, relevant distances, insufficiently observed areas and significant contradictory evidence when available. It must not reduce the primary user outcome to a Job Fit Score, CV-to-JD Match Score, compatibility percentage or person score; already-authorized technical or secondary indicators remain possible when they do not replace the Representation-first interpretation.
+
+## PD-024 â€” Context-scoped professional relationship observation
+**Status:** CANONICAL
+**Decision:** Professional Evidence may support an Observation of a professional relationship in the specific described event or context without establishing a stable characteristic of the person. The minimum semantic statement identifies, as available from authorised Evidence, the subject, the professional action or contribution, the object or domain, the person's relationship to it, responsibility/accountability scope, context and outcome, with provenance preserved. These elements are semantic roles rather than a competency catalogue and need not all be present when Evidence does not support them. Target relevance is not part of whether the Observation is true.
+
+## PD-025 â€” Professional relationship and responsibility are not interchangeable
+**Status:** CANONICAL
+**Decision:** IMAGO keeps the person's relationship to an activity or domain distinct from responsibility/accountability for it. Participation, collaboration, contribution or influence may be observed without ownership, decision authority or accountability. Explicit non-ownership is positive contextual knowledge that responsibility/accountability was outside the person's described scope; it is not missing Evidence, a negative person characteristic, inability or evidence that the person could never hold that responsibility. Existing `decision_accountability` semantics remain valid only for decision accountability and must not be generalized into unrelated ownership or competence claims.
+
+## PD-026 â€” Domain proximity is not competence
+**Status:** CANONICAL
+**Decision:** Exposure to, collaboration with, or contribution within a professional domain does not by itself establish specialist competence, ownership or responsibility for that domain. Competence or broader capability characterization requires Evidence that directly supports the relevant demonstrated capability and, when generalized beyond one event, sufficient convergence across observations and contexts. Lexical proximity, question intent and target relevance never substitute for such Evidence.
+
+## PD-027 â€” Observation-to-characterization epistemic boundary
+**Status:** CANONICAL
+**Decision:** IMAGO distinguishes context-scoped observed professional relationships from inferred or derived characterization and from insufficient observation. `Observed` means directly supported by authorised Evidence within its supported semantic and contextual scope. `Inferred/derived` means supported by an explicit legitimate relationship among observations with preserved lineage. `Insufficiently observed` means available Evidence does not justify the proposed characterization and never means absence. One event Observation may become elementary Knowledge that the event/relationship was observed; it does not automatically become a stable person trait. Broader Dynamic Characterization may emerge only from sufficient coherent Evidence convergence, source/context diversity where relevant, and explicit derivation semantics. Contradictory or context-dependent observations remain visible rather than being silently collapsed.

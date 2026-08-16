@@ -107,6 +107,38 @@ Coverage, confidence, quality, reliability, independence and consistency are sep
 **Purpose:** Strengthen evidential credibility.
 **Visible:** Partially
 
+
+## Professional semantic scope
+
+A professional Observation describes what authorised Evidence supports about a professional event or relationship before any broader person characterization.
+
+The minimum reusable semantic grammar is:
+
+```text
+Subject
+→ Action / contribution
+→ Object / domain
+→ Professional relationship
+→ Responsibility / accountability scope
+→ Context
+→ Outcome
+→ Evidence provenance
+```
+
+The grammar is descriptive and sparse: only roles supported by Evidence are asserted. It is not a competency catalogue.
+
+Professional relationship and responsibility are separate axes. A person may participate, collaborate, contribute or influence without owning, deciding or being accountable. Explicitly being outside a responsibility in one context is itself observed contextual information and is not a deficiency.
+
+Domain exposure, collaboration and contribution do not establish specialist competence by proximity. Competence requires direct supporting Evidence; a stable or generalized person characterization additionally requires legitimate convergence beyond an isolated event.
+
+An event-scoped Observation may enter elementary Knowledge as knowledge that the described event or relationship was observed. Broader statements about the person belong downstream to explicit derived semantics and Dynamic Characterization. Unknown or insufficiently observed remains distinct from absence.
+
+`OBS-007` through `OBS-010` remain reusable source professional Observation types. They can supply supported semantic roles such as responsibility/contribution, decision criteria, trade-offs and outcomes; they do not themselves authorize a one-answer-to-one-competency mapping.
+
+`decision_accountability` remains a bounded semantic measure for responsibility in decisions, authority, consequence scope and continuity. It may consume compatible decision-accountability observations, but it is not a generic proxy for contribution, budget ownership, domain competence or collaboration.
+
+Observation truth is established independently of target relevance. Target interpretation occurs only after Representation semantics are established.
+
 ## Professional Perception
 Professional Perception interprets how the candidate currently emerges from available evidence. It never claims to describe the person's intrinsic value.
 
