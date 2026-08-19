@@ -27,24 +27,53 @@ export function resolveGroqModelProfile(model = resolveGroqModel()) {
 }
 
 const TASK_CONTRACTS = Object.freeze({
-  candidateProfile: "json_object",
-  roleProfile: "json_object",
-  jobFitAnalysis: "json_object",
-  answerAnnotation: "json_object",
-  professionalPerception: "json_object",
-  adaptiveFollowupQuestion: "text",
-  gapDrivenInterviewQuestion: "text"
+  candidateProfile: Object.freeze({ mode: "json_object" }),
+  roleProfile: Object.freeze({ mode: "json_object" }),
+  jobFitAnalysis: Object.freeze({ mode: "json_object" }),
+  answerAnnotation: Object.freeze({ mode: "json_schema", schemaName: "answer_annotation", strict: true }),
+  professionalPerception: Object.freeze({ mode: "json_object" }),
+  adaptiveFollowupQuestion: Object.freeze({ mode: "text" }),
+  gapDrivenInterviewQuestion: Object.freeze({ mode: "text" })
 });
+
+export function closeJsonSchemaObjects(value) {
+  if (Array.isArray(value)) return value.map(closeJsonSchemaObjects);
+  if (!value || typeof value !== "object") return value;
+  const result = {};
+  for (const [key, child] of Object.entries(value)) result[key] = closeJsonSchemaObjects(child);
+  if (result.type === "object" && result.properties && typeof result.properties === "object") {
+    result.additionalProperties = false;
+  }
+  return result;
+}
+
+function buildStrictSchemaContract(jsonSchema, schemaName) {
+  return {
+    type: "json_schema",
+    json_schema: {
+      name: schemaName || "structured_output",
+      strict: true,
+      schema: closeJsonSchemaObjects(jsonSchema)
+    }
+  };
+}
 
 export function resolveGroqOutputContract({ task, jsonSchema = null, strictSchemaCompatible = false, model } = {}) {
   const profile = resolveGroqModelProfile(model);
-  if (jsonSchema && strictSchemaCompatible && profile.strictJsonSchema) {
-    return { mode: "json_schema", responseFormat: { type: "json_schema", json_schema: jsonSchema } };
+  const taskContract = TASK_CONTRACTS[task] || null;
+  const wantsStrictSchema = taskContract?.mode === "json_schema" || strictSchemaCompatible;
+
+  if (jsonSchema && wantsStrictSchema && profile.strictJsonSchema) {
+    return {
+      mode: "json_schema",
+      responseFormat: buildStrictSchemaContract(jsonSchema, taskContract?.schemaName),
+      strict: true
+    };
   }
-  if ((jsonSchema || TASK_CONTRACTS[task] === "json_object") && profile.jsonObjectMode) {
-    return { mode: "json_object", responseFormat: { type: "json_object" } };
+  if ((jsonSchema || taskContract?.mode === "json_object" || taskContract?.mode === "json_schema") && profile.jsonObjectMode) {
+    return { mode: "json_object", responseFormat: { type: "json_object" }, strict: false };
   }
-  return { mode: "text", responseFormat: null };
+  return { mode: "text", responseFormat: null, strict: false };
 }
 
 export function buildGroqRequestBody({ task, model = resolveGroqModel(), systemText, userText, temperature = 0.2, maxTokens, jsonSchema = null, strictSchemaCompatible = false } = {}) {
@@ -52,5 +81,6 @@ export function buildGroqRequestBody({ task, model = resolveGroqModel(), systemT
   const body = { model, temperature, messages: [{ role: "system", content: systemText }, { role: "user", content: userText }] };
   if (Number.isFinite(maxTokens) && maxTokens > 0) body.max_tokens = maxTokens;
   if (contract.responseFormat) body.response_format = contract.responseFormat;
+  if (contract.mode !== "text" && resolveGroqModelProfile(model).reasoningControl) body.include_reasoning = false;
   return { body, contract, profile: resolveGroqModelProfile(model) };
 }

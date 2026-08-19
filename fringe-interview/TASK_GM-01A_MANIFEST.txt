@@ -1,0 +1,7 @@
+src/infrastructure/groq/groqModelCompatibility.js
+src/infrastructure/groq/runGroqChatCompletion.js
+src/interview/adapters/runGroqAnswerAnnotationModel.js
+scripts/test_gm01a_groq_answer_annotation_compatibility.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_GM-01A_GROQ_ANSWER_ANNOTATION_COMPATIBILITY.md
+TASK_GM-01A_MANIFEST.txt

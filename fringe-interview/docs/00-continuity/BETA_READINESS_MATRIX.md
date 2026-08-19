@@ -166,3 +166,15 @@
 - No hidden model fallback exists. Provider errors expose only task/model/coarse status through errors and do not log API keys, prompts, CV/JD, answers, response bodies or reasoning.
 - Builder has no `GROQ_API_KEY`; deterministic compatibility, parser mock, staged Beta and full health checks pass. Live provider validation remains required for CandidateProfile, RoleProfile, JobFitAnalysis, full MVP/adaptive follow-up, Professional Perception and Answer Annotation.
 - AR-02A remains deferred until that live validation succeeds.
+
+## GM-01A Groq 400 Diagnostic + Answer Annotation Compatibility Fix — 2026-08-19
+
+- GM-01 live validation supplied with this task remains: CandidateProfile PASS, RoleProfile PASS, JobFitAnalysis PASS, full FRINGE MVP session PASS, Professional Perception Groq PASS on `openai/gpt-oss-120b`; the observed 429 was a Free Plan TPM-window event, not a compatibility regression.
+- The historical Answer Annotation HTTP 400 response body cannot be recovered retroactively because the pre-GM-01A shared client discarded it. Builder has no `GROQ_API_KEY`, so the exact historical provider message remains pending one local live reproduction.
+- GM-01A adds sanitized provider diagnostics containing only task, model, HTTP status, whitelisted provider code/type, normalized safe message, retry-after and coarse failure kind. Raw provider bodies, prompts, candidate answers, generated completion and secrets are not attached to errors.
+- Answer Annotation now supplies its existing canonical schema to the centralized compatibility boundary. For GPT-OSS the boundary selects native strict JSON Schema and adds only provider-structural `additionalProperties:false` recursively; all existing required fields, types and enums are preserved. Other structured tasks retain their GM-01 JSON Object Mode contracts; text tasks remain text.
+- GPT-OSS structured requests suppress returned reasoning with `include_reasoning:false`; no hidden reasoning is stored or exposed.
+- HTTP 429/5xx retry behavior is preserved; `retry-after` is honored when numeric. Non-retryable 400 is not retried. Transport connect-timeout retry remains unchanged/not added in GM-01A.
+- Deterministic GM-01A compatibility/security tests PASS; parser mock PASS; staged Beta application/UI PASS; full FRINGE health check PASS.
+- Local live validation still required: `GROQ_MODEL=openai/gpt-oss-120b node scripts/test_answer_annotation_runner_groq.js`. A PASS closes the remaining Answer Annotation provider-validation gate; if it fails, the new sanitized `providerDiagnostic` supplies the provider classification without leaking user data.
+- AR-02A remains deferred until this live provider validation closes GM-01/GM-01A.
