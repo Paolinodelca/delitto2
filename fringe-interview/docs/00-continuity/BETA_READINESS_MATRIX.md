@@ -155,3 +155,14 @@
 - `OBS-007â€¦OBS-010` remain unchanged and reusable as source professional Observation types. `decision_accountability` remains bounded to its existing decision-responsibility semantics.
 - Existing Core contracts are not modified. Their generic Observation/Measurement/Dimension/Knowledge machinery is structurally reusable, but AR-02A must implement the newly authorized semantics through explicit policy/mapping rather than question labels, lexical matching or a new competency catalogue.
 - AR-02A may now be reopened. AR-03 and AR-04 remain unauthorized until AR-02A proves at least one real Interview Evidence item reaches canonical Knowledge/PKM/Coverage with the new semantic scope preserved.
+
+## GM-01 Groq Model Migration & Provider Compatibility Boundary — 2026-08-19
+
+- Verdict: **B — GROQ MIGRATION IMPLEMENTED, LOCAL LIVE VALIDATION REQUIRED**.
+- `llama-3.3-70b-versatile` was decommissioned on 2026-08-16 and is no longer a production default. The canonical Groq default is now `openai/gpt-oss-120b` in one Infrastructure compatibility module; `GROQ_MODEL` remains an explicit override.
+- Parser, Answer Annotation and Professional Perception Groq adapters now delegate request construction/model compatibility to one Infrastructure boundary instead of independently knowing model defaults or request quirks.
+- Current parser tasks (`candidateProfile`, `roleProfile`, `jobFitAnalysis`) and structured interview/report tasks use JSON Object Mode. This addresses the supplied GPT-OSS JobFitAnalysis symptom at the output-contract boundary without changing existing semantic schemas. Adaptive/gap-driven question generation remains text mode.
+- Existing Answer Annotation and Professional Perception JSON Schemas are not strict-mode compatible as written (`additionalProperties:false` is not consistently declared and Professional Perception contains optional properties), so GM-01 does not distort them. The boundary supports strict JSON Schema for a future caller only when the caller explicitly supplies a strict-compatible canonical schema.
+- No hidden model fallback exists. Provider errors expose only task/model/coarse status through errors and do not log API keys, prompts, CV/JD, answers, response bodies or reasoning.
+- Builder has no `GROQ_API_KEY`; deterministic compatibility, parser mock, staged Beta and full health checks pass. Live provider validation remains required for CandidateProfile, RoleProfile, JobFitAnalysis, full MVP/adaptive follow-up, Professional Perception and Answer Annotation.
+- AR-02A remains deferred until that live validation succeeds.

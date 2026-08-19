@@ -1,0 +1,9 @@
+src/infrastructure/groq/groqModelCompatibility.js
+src/infrastructure/groq/runGroqChatCompletion.js
+src/parser/adapters/runGroqParserModel.js
+src/interview/adapters/runGroqAnswerAnnotationModel.js
+src/interview/adapters/runGroqProfessionalPerceptionModel.js
+scripts/test_groq_model_compatibility.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_GM-01_GROQ_MODEL_MIGRATION_AND_PROVIDER_COMPATIBILITY.md
+TASK_GM-01_MANIFEST.txt

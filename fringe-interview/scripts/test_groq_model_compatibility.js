@@ -1,0 +1,16 @@
+import assert from "node:assert/strict";
+import { DEFAULT_GROQ_MODEL, resolveGroqModel, resolveGroqModelProfile, resolveGroqOutputContract, buildGroqRequestBody } from "../src/infrastructure/groq/groqModelCompatibility.js";
+assert.equal(DEFAULT_GROQ_MODEL, "openai/gpt-oss-120b");
+assert.notEqual(DEFAULT_GROQ_MODEL, "llama-3.3-70b-versatile");
+assert.equal(resolveGroqModel({}), DEFAULT_GROQ_MODEL);
+assert.equal(resolveGroqModel({ GROQ_MODEL: "alternate/model" }), "alternate/model");
+assert.equal(resolveGroqModelProfile(DEFAULT_GROQ_MODEL).strictJsonSchema, true);
+assert.equal(resolveGroqOutputContract({task:"jobFitAnalysis",model:DEFAULT_GROQ_MODEL}).mode,"json_object");
+assert.equal(resolveGroqOutputContract({task:"adaptiveFollowupQuestion",model:DEFAULT_GROQ_MODEL}).mode,"text");
+const strict=resolveGroqOutputContract({task:"futureSemanticExtraction",model:DEFAULT_GROQ_MODEL,jsonSchema:{name:"x",strict:true,schema:{type:"object",properties:{},required:[],additionalProperties:false}},strictSchemaCompatible:true});
+assert.equal(strict.mode,"json_schema");
+const alternate=buildGroqRequestBody({task:"jobFitAnalysis",model:"alternate/model",systemText:"s",userText:"u"});
+assert.equal(alternate.body.model,"alternate/model"); assert.equal(alternate.contract.mode,"json_object");
+const text=buildGroqRequestBody({task:"gapDrivenInterviewQuestion",model:DEFAULT_GROQ_MODEL,systemText:"s",userText:"u"});
+assert.equal(text.body.response_format,undefined);
+console.log("Groq model compatibility tests passed.");
