@@ -1,5 +1,5 @@
 import { buildAnswerAnnotationPrompt } from "./buildAnswerAnnotationPrompt.js";
-import { runGroqAnswerAnnotationModel } from "./adapters/runGroqAnswerAnnotationModel.js";
+import { resolveGroqAnswerAnnotationPromptOptions, runGroqAnswerAnnotationModel } from "./adapters/runGroqAnswerAnnotationModel.js";
 import { extractJsonObject } from "../parser/extractJsonObject.js";
 import { normalizeAnswerAnnotation } from "./normalizeAnswerAnnotation.js";
 
@@ -10,12 +10,14 @@ export async function runAnswerAnnotation({
   answerText,
   reviewMode = "interview"
 }) {
+  const promptOptions = await resolveGroqAnswerAnnotationPromptOptions();
   const { answerAnnotationPrompt } = await buildAnswerAnnotationPrompt({
     answerId,
     questionLabel,
     questionPrompt,
     answerText,
-    reviewMode
+    reviewMode,
+    ...promptOptions
   });
 
   const modelResult = await runGroqAnswerAnnotationModel({

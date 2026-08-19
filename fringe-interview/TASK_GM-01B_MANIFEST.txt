@@ -1,0 +1,7 @@
+src/interview/buildAnswerAnnotationPrompt.js
+src/interview/runAnswerAnnotation.js
+src/interview/adapters/runGroqAnswerAnnotationModel.js
+scripts/test_gm01b_native_structured_output_prompt_alignment.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_GM-01B_NATIVE_STRUCTURED_OUTPUT_PROMPT_ALIGNMENT.md
+TASK_GM-01B_MANIFEST.txt

@@ -42,7 +42,8 @@ export async function buildAnswerAnnotationPrompt({
   questionLabel,
   questionPrompt,
   answerText,
-  reviewMode = "interview"
+  reviewMode = "interview",
+  nativeSchemaEnforced = false
 }) {
   const cleanAnswerId = normalizeString(answerId);
   const cleanQuestionLabel = normalizeString(questionLabel);
@@ -66,12 +67,14 @@ export async function buildAnswerAnnotationPrompt({
     throw new Error("buildAnswerAnnotationPrompt: answerText is required.");
   }
 
-  const schema = await loadAnswerAnnotationSchema();
+  const schema = nativeSchemaEnforced ? null : await loadAnswerAnnotationSchema();
   const locale = getActiveLocale();
 
   const systemPrompt = [
     "You are an expert interview-coaching annotation engine.",
-    "Your task is to analyze exactly one candidate answer and produce exactly one JSON object matching the provided schema.",
+    nativeSchemaEnforced
+      ? "Your task is to analyze exactly one candidate answer and populate the provider-enforced structured output contract."
+      : "Your task is to analyze exactly one candidate answer and produce exactly one JSON object matching the provided schema.",
     "Do not include markdown fences.",
     "Do not include explanations outside JSON.",
     "The output must be directly usable in a coaching UI with highlighted text spans.",
@@ -100,9 +103,12 @@ export async function buildAnswerAnnotationPrompt({
     buildLanguageInstruction(locale)
   ].join(" ");
 
+  const structuralInstructions = nativeSchemaEnforced
+    ? ["Return exactly the structured Answer Annotation output required by the native provider contract."]
+    : ["Return one JSON object matching this schema:", safeJsonStringify(schema)];
+
   const userPrompt = [
-    "Return one JSON object matching this schema:",
-    safeJsonStringify(schema),
+    ...structuralInstructions,
     "",
     "Analyze this answer:",
     safeJsonStringify({

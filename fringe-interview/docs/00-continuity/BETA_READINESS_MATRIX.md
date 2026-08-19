@@ -178,3 +178,15 @@
 - Deterministic GM-01A compatibility/security tests PASS; parser mock PASS; staged Beta application/UI PASS; full FRINGE health check PASS.
 - Local live validation still required: `GROQ_MODEL=openai/gpt-oss-120b node scripts/test_answer_annotation_runner_groq.js`. A PASS closes the remaining Answer Annotation provider-validation gate; if it fails, the new sanitized `providerDiagnostic` supplies the provider classification without leaking user data.
 - AR-02A remains deferred until this live provider validation closes GM-01/GM-01A.
+
+## GM-01B Native Structured Output Prompt Alignment — 2026-08-19
+
+- Existing local live evidence remains authoritative: CandidateProfile PASS, RoleProfile PASS, JobFitAnalysis PASS, full FRINGE MVP Session PASS and Professional Perception Groq PASS with `openai/gpt-oss-120b`.
+- GM-01A safe diagnostics identified the remaining real Answer Annotation failure as HTTP 400 / `json_validate_failed` / `invalid_request_error` / `structured_output_rejected`.
+- Two manual direct-provider diagnostics established that GPT-OSS 120B accepts both a minimal strict schema and the complete existing Answer Annotation schema after the provider-side recursive `additionalProperties:false` transformation. The schema/account capability is therefore not the remaining incompatibility.
+- GM-01B removes the duplicate structural contract from the Answer Annotation prompt when the canonical GM-01 compatibility boundary selects native `json_schema` strict mode. The native schema is then the sole structural authority; the prompt retains semantic coaching, evidence fidelity, span/excerpt and locale instructions.
+- Non-native/fallback prompt construction retains the existing embedded-schema structural guidance. The decision is capability/contract-driven and contains no model-name conditional in Answer Annotation application logic.
+- The canonical Answer Annotation schema, provider-side strict-schema transformation, GM-01A safe diagnostics, Parser/Professional Perception JSON Object contracts and adaptive/gap-driven text contracts are unchanged.
+- Deterministic GM-01B, GM-01A, GM-01 compatibility, parser mock, staged Beta and complete health checks PASS. The historical prompt-preview script also PASSes when its expected `tmp/answer-annotation` output directory exists; its fixture-output dependency is unchanged.
+- Builder environment has no live provider secret available for this task. Required closure check remains: `GROQ_MODEL=openai/gpt-oss-120b node scripts/test_answer_annotation_runner_groq.js` (PowerShell environment assignment as documented in the task/report).
+- Until that real Answer Annotation call PASSes, verdict remains `B — PROMPT ALIGNMENT IMPLEMENTED, LOCAL LIVE VALIDATION REQUIRED`; AR-02A remains deferred.
