@@ -1,5 +1,6 @@
 import { loadAnswerAnnotationSchema } from "./loadAnswerAnnotationSchema.js";
 import { getAppLocaleConfig } from "../i18n/getAppLocale.js";
+import { deriveAnswerAnnotationProviderSchema } from "./deriveAnswerAnnotationProviderSchema.js";
 
 function normalizeString(value) {
   if (typeof value !== "string") {
@@ -67,7 +68,7 @@ export async function buildAnswerAnnotationPrompt({
     throw new Error("buildAnswerAnnotationPrompt: answerText is required.");
   }
 
-  const schema = nativeSchemaEnforced ? null : await loadAnswerAnnotationSchema();
+  const schema = nativeSchemaEnforced ? null : deriveAnswerAnnotationProviderSchema(await loadAnswerAnnotationSchema());
   const locale = getActiveLocale();
 
   const systemPrompt = [
@@ -85,7 +86,9 @@ export async function buildAnswerAnnotationPrompt({
     "If a passage is concrete but does not answer the question well enough, mark it as opportunity rather than both strength and weakness.",
     "Prefer meaningful text spans instead of isolated single words whenever possible.",
     "Every annotation excerpt must match the original answerText exactly.",
-    "The start and end positions must be consistent with the excerpt inside answerText.",
+    "Copy every annotation excerpt verbatim from answerText; application code resolves character positions deterministically.",
+    "Do not calculate or return character offsets for annotations.",
+    "Avoid ambiguous very-short excerpts when a more distinctive exact passage is available.",
     "Do not invent facts, metrics, outcomes, impacts, causes, or consequences that are not explicitly supported by answerText.",
     "Judge the answer in relation to the questionPrompt, not in isolation.",
     "The review must explain what the answer is doing well, where it misses the point, and how to improve it.",
@@ -131,7 +134,7 @@ export async function buildAnswerAnnotationPrompt({
     "- tags should capture the main coaching signals only.",
     "- annotations must point to the most useful strong and weak passages.",
     "- An annotation is useful only if a coach could show that excerpt to the user and explain why it helps or hurts.",
-    "- Use annotation spans with start/end positions consistent with answerText.",
+    "- Copy every annotation excerpt verbatim from answerText; do not calculate character offsets.",
 
     "- Prefer 3 to 6 annotations total when the answer is long enough.",
     "- Cover the main meaningful parts of the answer: strong passages, weak passages, and partially useful but improvable passages.",

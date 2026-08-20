@@ -267,14 +267,13 @@ function normalizeTags(tags) {
   );
 }
 
-function findExcerptPosition(answerText, excerpt) {
+function findUniqueExcerptPosition(answerText, excerpt) {
   const cleanExcerpt = normalizeString(excerpt);
-
-  if (!cleanExcerpt) {
-    return -1;
-  }
-
-  return answerText.indexOf(cleanExcerpt);
+  if (!cleanExcerpt) return -1;
+  const firstIndex = answerText.indexOf(cleanExcerpt);
+  if (firstIndex < 0) return -1;
+  const secondIndex = answerText.indexOf(cleanExcerpt, firstIndex + 1);
+  return secondIndex < 0 ? firstIndex : -1;
 }
 
 function isAnnotationTooWide(answerText, start, end) {
@@ -434,7 +433,7 @@ function normalizeAnnotations(answerText, annotations) {
           cleanAnswerText.slice(start, end) === excerpt;
 
         if (!spanLooksValid && excerpt) {
-          const foundIndex = findExcerptPosition(cleanAnswerText, excerpt);
+          const foundIndex = findUniqueExcerptPosition(cleanAnswerText, excerpt);
 
           if (foundIndex >= 0) {
             start = foundIndex;

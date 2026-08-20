@@ -23,7 +23,7 @@ assert.equal(native.userPrompt.includes('"$schema"'), false, "native-schema prom
 for (const semantic of ["answer relative to the actual questionPrompt", "annotations", "strengths", "weaknesses", "coachTip", "improvedAnswerDraft", "Do not invent facts"]) {
   assert.ok((native.systemPrompt + native.userPrompt).includes(semantic), `semantic instruction missing: ${semantic}`);
 }
-for (const fidelity of ["excerpt must match the original answerText exactly", "start and end positions", "Avoid overlapping annotations", "3 to 6 annotations"]) {
+for (const fidelity of ["excerpt must match the original answerText exactly", "do not calculate character offsets", "Avoid overlapping annotations", "3 to 6 annotations"]) {
   assert.ok((native.systemPrompt + native.userPrompt).includes(fidelity), `fidelity instruction missing: ${fidelity}`);
 }
 assert.ok(/italiano|English/.test(native.systemPrompt), "language instruction must remain present");

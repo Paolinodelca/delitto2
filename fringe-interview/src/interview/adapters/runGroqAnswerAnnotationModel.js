@@ -1,9 +1,11 @@
 import { runGroqChatCompletion } from "../../infrastructure/groq/runGroqChatCompletion.js";
 import { loadAnswerAnnotationSchema } from "../loadAnswerAnnotationSchema.js";
 import { resolveGroqModel, resolveGroqOutputContract } from "../../infrastructure/groq/groqModelCompatibility.js";
+import { deriveAnswerAnnotationProviderSchema } from "../deriveAnswerAnnotationProviderSchema.js";
 
 export async function resolveGroqAnswerAnnotationPromptOptions() {
-  const jsonSchema = await loadAnswerAnnotationSchema();
+  const canonicalSchema = await loadAnswerAnnotationSchema();
+  const jsonSchema = deriveAnswerAnnotationProviderSchema(canonicalSchema);
   const contract = resolveGroqOutputContract({
     task: "answerAnnotation",
     model: resolveGroqModel(),
@@ -14,7 +16,8 @@ export async function resolveGroqAnswerAnnotationPromptOptions() {
 }
 
 export async function runGroqAnswerAnnotationModel({ systemPrompt, userPrompt, task = "answerAnnotation" }) {
-  const jsonSchema = await loadAnswerAnnotationSchema();
+  const canonicalSchema = await loadAnswerAnnotationSchema();
+  const jsonSchema = deriveAnswerAnnotationProviderSchema(canonicalSchema);
   const result = await runGroqChatCompletion({
     task,
     systemText: systemPrompt,
