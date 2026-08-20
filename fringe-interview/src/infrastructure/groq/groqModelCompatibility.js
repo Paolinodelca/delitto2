@@ -6,7 +6,8 @@ const GPT_OSS_PROFILE = Object.freeze({
   structuredOutput: true,
   strictJsonSchema: true,
   jsonObjectMode: true,
-  reasoningControl: true
+  reasoningControl: true,
+  completionTokenParameter: "max_completion_tokens"
 });
 
 const GENERIC_GROQ_PROFILE = Object.freeze({
@@ -14,7 +15,8 @@ const GENERIC_GROQ_PROFILE = Object.freeze({
   structuredOutput: false,
   strictJsonSchema: false,
   jsonObjectMode: true,
-  reasoningControl: false
+  reasoningControl: false,
+  completionTokenParameter: "max_tokens"
 });
 
 export function resolveGroqModel(env = process.env) {
@@ -30,11 +32,17 @@ const TASK_CONTRACTS = Object.freeze({
   candidateProfile: Object.freeze({ mode: "json_object" }),
   roleProfile: Object.freeze({ mode: "json_object" }),
   jobFitAnalysis: Object.freeze({ mode: "json_object" }),
-  answerAnnotation: Object.freeze({ mode: "json_schema", schemaName: "answer_annotation", strict: true }),
+  answerAnnotation: Object.freeze({ mode: "json_schema", schemaName: "answer_annotation", strict: true, completionBudget: 2048 }),
   professionalPerception: Object.freeze({ mode: "json_object" }),
   adaptiveFollowupQuestion: Object.freeze({ mode: "text" }),
   gapDrivenInterviewQuestion: Object.freeze({ mode: "text" })
 });
+
+export function resolveGroqTaskCompletionBudget({ task, maxTokens } = {}) {
+  if (Number.isFinite(maxTokens) && maxTokens > 0) return Math.floor(maxTokens);
+  const budget = TASK_CONTRACTS[task]?.completionBudget;
+  return Number.isFinite(budget) && budget > 0 ? Math.floor(budget) : null;
+}
 
 export function closeJsonSchemaObjects(value) {
   if (Array.isArray(value)) return value.map(closeJsonSchemaObjects);
@@ -78,9 +86,11 @@ export function resolveGroqOutputContract({ task, jsonSchema = null, strictSchem
 
 export function buildGroqRequestBody({ task, model = resolveGroqModel(), systemText, userText, temperature = 0.2, maxTokens, jsonSchema = null, strictSchemaCompatible = false } = {}) {
   const contract = resolveGroqOutputContract({ task, jsonSchema, strictSchemaCompatible, model });
+  const profile = resolveGroqModelProfile(model);
   const body = { model, temperature, messages: [{ role: "system", content: systemText }, { role: "user", content: userText }] };
-  if (Number.isFinite(maxTokens) && maxTokens > 0) body.max_tokens = maxTokens;
+  const completionBudget = resolveGroqTaskCompletionBudget({ task, maxTokens });
+  if (completionBudget) body[profile.completionTokenParameter] = completionBudget;
   if (contract.responseFormat) body.response_format = contract.responseFormat;
-  if (contract.mode !== "text" && resolveGroqModelProfile(model).reasoningControl) body.include_reasoning = false;
-  return { body, contract, profile: resolveGroqModelProfile(model) };
+  if (contract.mode !== "text" && profile.reasoningControl) body.include_reasoning = false;
+  return { body, contract, profile, completionBudget };
 }

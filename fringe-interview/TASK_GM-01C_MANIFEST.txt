@@ -1,0 +1,5 @@
+src/infrastructure/groq/groqModelCompatibility.js
+scripts/test_gm01c_structured_output_completion_budget_compatibility.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_GM-01C_STRUCTURED_OUTPUT_COMPLETION_BUDGET_COMPATIBILITY.md
+TASK_GM-01C_MANIFEST.txt
