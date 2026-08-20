@@ -1,0 +1,7 @@
+src/app/runAcceptedRuntimeAnswerKnowledgeVerticalSlice.js
+src/app/privateBetaStagedInterviewJourney.js
+src/app/index.js
+scripts/test_ar02a_runtime_answer_knowledge_vertical_slice.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_AR-02A_RUNTIME_ANSWER_CANONICAL_KNOWLEDGE_VERTICAL_SLICE.md
+TASK_AR-02A_MANIFEST.txt

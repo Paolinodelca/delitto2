@@ -234,3 +234,13 @@
 - Provider call cost changes from one to two requests per Answer Annotation.
 - Deterministic GM-02, relevant GM-01 regressions, parser mock, staged Beta application/UI and full health checks pass. GM-01B's adapter-body test is superseded because it asserts the pre-GM-02 single-call adapter signature; its native-schema/prompt-alignment invariants are covered by GM-02 and later regression tests.
 - Live Groq validation remains required with `scripts/test_answer_annotation_runner_groq.js`; AR-02A remains deferred until GM-02 closes.
+
+## AR-02A Runtime Answer → Canonical Knowledge Vertical Slice — 2026-08-20
+
+- AR-02A is reopened after GM-02 live closure as authorized.
+- The accepted-answer boundary already existed in `privateBetaStagedInterviewJourney.js`: after `advanceInterviewRuntime`, committed `runtimeState.answers` are registered through `buildAcceptedRuntimeAnswerEvidenceStore`.
+- Existing canonical downstream foundations were reused without new Core contracts: Registered Evidence → context-scoped Observation construction → MeasurementResult normalization → MeasurementDimensionMapping → DimensionContribution → KnowledgeLedger/Snapshot → PersonKnowledgeMatrix → KnowledgeCoverage.
+- AR-02A adds only application orchestration and optional staged-runtime wiring. Semantic construction/normalization/mapping authority must be supplied explicitly; answer text is never mapped directly to a dimension, PKM, or Coverage.
+- Unsupported evidence produces no Observation and therefore no invented contribution, PKM, or Coverage effect. `not observed` is not converted into absence.
+- Provenance remains reconstructable through Evidence source/provenance, Observation content/source refs, MeasurementResult observation refs, DimensionContribution measurement/mapping refs, Snapshot/Ledger refs, PKM snapshot lineage, and Coverage matrix refs.
+- Deterministic AR-02A and traversed Core/Application regressions, Beta Runtime/session, staged Beta application/UI and full health checks pass.

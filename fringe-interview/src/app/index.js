@@ -119,3 +119,5 @@ export {
 export { runPrivateBetaUiJourneyEntryPoint } from "./privateBetaUiJourneyEntryPoint.js";
 export { renderPrivateBetaUiJourneyHtml } from "./renderPrivateBetaUiJourneyHtml.js";
 export { createPrivateBetaUiRequestHandler, createPrivateBetaUiServer } from "./privateBetaUiServer.js";
+
+export { runAcceptedRuntimeAnswerKnowledgeVerticalSlice } from "./runAcceptedRuntimeAnswerKnowledgeVerticalSlice.js";
