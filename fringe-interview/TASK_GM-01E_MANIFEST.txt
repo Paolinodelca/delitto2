@@ -1,0 +1,4 @@
+src/interview/buildAnswerAnnotationPrompt.js
+scripts/test_gm01e_answer_annotation_prompt_consolidation.js
+TASK_GM-01E_ANSWER_ANNOTATION_PROMPT_CONSOLIDATION.md
+TASK_GM-01E_MANIFEST.txt
