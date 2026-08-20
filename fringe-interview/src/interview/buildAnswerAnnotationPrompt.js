@@ -77,14 +77,18 @@ export async function buildAnswerAnnotationPrompt({
       ? "Analyze exactly one candidate answer and populate the provider-enforced structured Answer Annotation output."
       : "Analyze exactly one candidate answer and return one JSON object matching the supplied provider schema.",
     "Evaluate the answer relative to the actual questionPrompt.",
-    "Stay faithful to answerText and do not invent facts, metrics, outcomes, impacts, causes, leadership, ownership, achievements, or consequences that are not explicitly supported.",
+    "Stay faithful to answerText. Do not invent facts, metrics, outcomes, impacts, causes, leadership, ownership, achievements, or consequences that are not explicitly supported.",
     "Classify meaningful passages as strength, evidence, weakness, or opportunity according to the existing coaching semantics.",
-    "Select exact excerpts copied verbatim from answerText; do not calculate or return character offsets because application code resolves start/end deterministically.",
+    "Every excerpt must match the original answerText exactly and be copied verbatim; do not calculate character offsets or return start/end because application code resolves them deterministically.",
     "Prefer 3 to 6 annotations when the answer contains enough meaningful material, focusing on the passages that matter most for coaching.",
-    "Avoid substantial overlap and avoid ambiguous very-short excerpts when a more distinctive exact passage is available.",
-    "Strengths and weaknesses must summarize the most useful coaching signals in practical interview terms.",
+    "Avoid overlapping annotations and avoid ambiguous very-short excerpts when a more distinctive exact passage is available.",
+    "Always populate every required Answer Annotation section before completing the response: summary, tags, annotations, strengths, weaknesses, coachTip, upgradeSuggestion, and improvedAnswerDraft.",
+    "tags, strengths, and weaknesses may be empty arrays when no meaningful supported content exists, but the properties must still be returned.",
+    "coachTip and upgradeSuggestion must always be returned as concise, evidence-faithful objects.",
+    "improvedAnswerDraft must always be returned; if no safe improved draft can be provided, set isProvided to false and text to an empty string.",
+    "Strengths and weaknesses must summarize the most useful coaching signals in practical interview terms when supported.",
     "coachTip must be actionable for the next attempt, and upgradeSuggestion must describe a concrete improvement objective and instruction.",
-    "If improvedAnswerDraft is provided, only reorganize, clarify, compress, or strengthen content already supported by answerText; otherwise set isProvided to false and text to an empty string.",
+    "If improvedAnswerDraft is provided, only reorganize, clarify, compress, or strengthen content already supported by answerText.",
     buildLanguageInstruction(locale)
   ].join(" ");
 

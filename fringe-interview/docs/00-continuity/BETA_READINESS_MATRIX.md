@@ -214,3 +214,11 @@
 - Provider now selects semantic annotation fields plus verbatim `excerpt`; application normalization derives `start`/`end`. Canonical schema is unchanged; provider schema is derived by removing only annotation `start`/`end`.
 - Offsets remain JS UTF-16, start-inclusive/end-exclusive. Unique excerpts resolve; missing or repeated ambiguous excerpts are discarded; existing overlap policy is preserved.
 - GM-01A diagnostics, GM-01B prompt alignment and GM-01C budget strategy remain in place. Deterministic regressions and full health pass. Live Groq validation remains local; AR-02A remains deferred.
+
+## GM-01F Answer Annotation Required Section Completion — 2026-08-20
+
+- Verdict: **B — REQUIRED SECTION COMPLETION IMPLEMENTED, LOCAL LIVE VALIDATION REQUIRED**.
+- Authoritative live root cause: real GPT-OSS Answer Annotation returned `HTTP 400 / json_validate_failed`; generated JSON stopped after `annotations` and omitted required `strengths`, `weaknesses`, `coachTip`, `upgradeSuggestion`, and `improvedAnswerDraft`.
+- GM-01F minimally makes completion of `summary`, `tags`, `annotations`, `strengths`, `weaknesses`, `coachTip`, `upgradeSuggestion`, and `improvedAnswerDraft` explicit in the semantic prompt. Empty supported arrays remain valid; required properties remain present; `improvedAnswerDraft` remains present even when `isProvided:false`.
+- Canonical schema, GM-01D provider projection/span reconstruction, provider/model settings and Product Authority are unchanged. Deterministic GM regressions, parser mock, staged Beta and full health pass.
+- Local live validation remains required. AR-02A remains deferred until Groq migration closes.

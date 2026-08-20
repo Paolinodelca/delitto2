@@ -1,0 +1,5 @@
+src/interview/buildAnswerAnnotationPrompt.js
+scripts/test_gm01f_answer_annotation_required_section_completion.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_GM-01F_ANSWER_ANNOTATION_REQUIRED_SECTION_COMPLETION.md
+TASK_GM-01F_MANIFEST.txt

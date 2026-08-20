@@ -1,0 +1,13 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { buildAnswerAnnotationPrompt } from "../src/interview/buildAnswerAnnotationPrompt.js";
+import { deriveAnswerAnnotationProviderSchema } from "../src/interview/deriveAnswerAnnotationProviderSchema.js";
+const input={answerId:"gm01f-1",questionLabel:"Leadership",questionPrompt:"Describe a situation in which you influenced colleagues without formal authority.",answerText:"I aligned Mechanical and Software around conflicting priorities and explained the trade-off before recommending a shared priority.",reviewMode:"interview"};
+const schemaText=await readFile(new URL("../config/answer_annotation_schema.json",import.meta.url),"utf8"); const canonical=JSON.parse(schemaText), before=JSON.stringify(canonical), provider=deriveAnswerAnnotationProviderSchema(canonical);
+const native=(await buildAnswerAnnotationPrompt({...input,nativeSchemaEnforced:true})).answerAnnotationPrompt, combined=`${native.systemPrompt}\n${native.userPrompt}`;
+assert.match(combined,/Always populate every required Answer Annotation section before completing the response/i);
+for(const f of ["summary","tags","annotations","strengths","weaknesses","coachTip","upgradeSuggestion","improvedAnswerDraft"]) assert.ok(combined.includes(f));
+assert.match(combined,/improvedAnswerDraft must always be returned/i); assert.match(combined,/isProvided to false and text to an empty string/i); assert.match(combined,/strengths, and weaknesses may be empty arrays/i); assert.match(combined,/properties must still be returned/i); assert.match(combined,/coachTip and upgradeSuggestion must always be returned/i);
+assert.equal(combined.includes('"$schema"'),false); assert.match(combined,/verbatim/i); assert.match(combined,/Do not invent facts|unsupported/i); assert.match(combined,/do not calculate character offsets|never calculate start\/end/i);
+const ann=provider.properties.answerAnnotation.properties.annotations.items; assert.equal("start" in ann.properties,false); assert.equal("end" in ann.properties,false); for(const f of ["annotationId","type","dimension","label","reason","excerpt"]) assert.ok(ann.required.includes(f)); assert.equal(JSON.stringify(canonical),before);
+console.log("GM-01F Answer Annotation required-section completion tests passed.");
