@@ -139,6 +139,124 @@ An event-scoped Observation may enter elementary Knowledge as knowledge that the
 
 Observation truth is established independently of target relevance. Target interpretation occurs only after Representation semantics are established.
 
+
+## Canonical semantic policy vertical slice — decision accountability
+
+The first authorized production semantic policy is:
+
+```text
+professional_semantic_policy:decision_accountability:v1
+```
+
+### Semantic scope
+
+`decision_accountability` is an elementary professional dimension whose meaning is:
+
+> evidence-backed scope, explicitness and continuity of responsibility for decisions affecting collective outcomes.
+
+It is intentionally narrower than generic ownership and must not be used as a proxy for contribution, collaboration, leadership, budget ownership or specialist competence.
+
+### Evidence eligibility
+
+Evidence is eligible for this policy only when an upstream acquisition definition explicitly associates the acquisition with this semantic policy and targets:
+
+```text
+knowledgeLayer: elementary
+scope: dimension
+scopeRef: decision_accountability
+```
+
+The explicit semantic-policy association is authoritative. Question wording, `questionKey`, question family, `expectedSignals`, target relevance, keywords, Answer Annotation, Professional Perception and capability names are context/provenance only and cannot independently activate this policy.
+
+For Interview acquisition, a question may acquire evidence relevant to decision accountability only when the acquisition definition selected before execution carries the policy association. The association must remain traceable into the resulting Evidence.
+
+### Context-scoped Observation semantics
+
+Eligible Evidence may support context-scoped observations of:
+
+- decision authority: none / recommendation / shared / final, when explicitly supported;
+- consequence scope of the described decision;
+- explicit accountability for the decision and its outcomes;
+- continuity of the described decision responsibility;
+- contextual limits or non-ownership.
+
+Observation remains event/context scoped.
+
+Mere participation, contribution, collaboration, proximity to a decision, or use of ownership-like language does not establish decision accountability.
+
+Explicit contextual non-ownership is an observed boundary. It is not a deficiency and is not a contradicting contribution to the person's capability.
+
+### Characteristic and Measurement
+
+The canonical characteristic is:
+
+```text
+decision_accountability
+```
+
+The canonical Measurement is the existing bounded `decision_accountability` semantic measure. Its purpose remains to estimate observed decision responsibility from decision authority, consequence scope, explicit accountability evidence and responsibility continuity while keeping inference support separate from measured strength.
+
+The measure is applicable only to eligible decision-accountability observations. Evidence that describes contribution/collaboration without supported decision responsibility is outside this Measurement rather than negative evidence.
+
+### Normalization policy
+
+Normalization must:
+
+- aggregate only eligible observations that share this semantic construct;
+- preserve Evidence/Observation provenance and independence;
+- preserve inference support separately from measured strength;
+- return insufficient/not-applicable rather than manufacture a value when evidence is insufficient;
+- never turn explicit contextual non-ownership into a negative person characteristic;
+- never infer cross-context stability from a single event.
+
+The existing versioned `decision_accountability` v1 measurement configuration may operationalize this policy. Its numeric weights, thresholds and benchmarks are versioned measurement configuration, not a redefinition of the Product semantic meaning.
+
+### MeasurementDimensionMapping
+
+The authorized elementary mapping is identity-preserving:
+
+```text
+Measurement: decision_accountability
+→ Dimension: decision_accountability
+```
+
+Semantic relationship:
+
+```text
+measured decision accountability
+→ supporting knowledge about the same decision_accountability construct
+```
+
+The mapping must use the existing direct/inherit mapping semantics without semantic attenuation, amplification or substitution. In implementation terms the effective mapping is one-to-one and neutral (`weight = 1`, `confidenceFactor = 1`) unless a later Product Architecture decision explicitly changes the semantic relationship.
+
+A calculated applicable result may produce a supporting DimensionContribution. Ineligible, insufficient or contextual non-ownership evidence produces no contradicting contribution and does not imply absence.
+
+### Epistemic boundary
+
+A resulting elementary `decision_accountability` state means:
+
+> current canonical evidence supports this degree/scope of decision accountability within the represented snapshot and its traceable contexts.
+
+It does not mean:
+
+> decision accountability is an intrinsic, universal or permanent trait of the person.
+
+Any broader Dynamic Characterization requires explicit downstream derivation from sufficient converging observations and remains subject to PD-027.
+
+### Acquisition association and resolution
+
+The semantic policy is selected before evidence interpretation through an explicit acquisition-definition reference:
+
+```text
+semanticPolicyRef:
+professional_semantic_policy:decision_accountability:v1
+```
+
+The preferred authority anchor is the Knowledge Acquisition Design / equivalent acquisition definition because that boundary already owns target knowledge and causal acquisition intent. Capability Configuration and Plan may carry the selected reference downstream, but capability identity does not create semantic meaning.
+
+The resulting Evidence provenance must make the upstream acquisition/policy association reconstructable. AR-02B may resolve this already-authorized policy only from those canonical references; it must return no applicable authority when they are absent.
+
+
 ## Professional Perception
 Professional Perception interprets how the candidate currently emerges from available evidence. It never claims to describe the person's intrinsic value.
 
