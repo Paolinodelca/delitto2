@@ -122,12 +122,45 @@ export async function buildAnswerAnnotationPrompt({
     "- Preserve useful strengths, weaknesses, coachTip, upgradeSuggestion, and an evidence-faithful improvedAnswerDraft when safe."
   ].join("\n");
 
+  const coachingSystemPrompt = [
+    systemPrompt,
+    "For this provider call, produce only the coaching responsibility: summary, tags, strengths, weaknesses, coachTip, upgradeSuggestion, and improvedAnswerDraft. Do not generate annotations."
+  ].join(" ");
+
+  const annotationSystemPrompt = [
+    "You are an expert interview-coaching annotation engine.",
+    "Analyze exactly one candidate answer relative to questionPrompt and stay faithful to answerText; do not invent unsupported information.",
+    "For this provider call, produce annotations only, plus the provider-required identity/input fields.",
+    "Classify meaningful passages as strength, evidence, weakness, or opportunity.",
+    "Copy every excerpt verbatim from answerText. Do not calculate or return start/end.",
+    "Prefer 3 to 6 meaningful non-overlapping annotations when supported, avoiding ambiguous very-short excerpts.",
+    buildLanguageInstruction(locale)
+  ].join(" ");
+
+  const inputBlock = safeJsonStringify({
+    answerAnnotationInput: {
+      answerId: cleanAnswerId,
+      questionLabel: cleanQuestionLabel,
+      questionPrompt: cleanQuestionPrompt,
+      answerText: cleanAnswerText,
+      reviewMode: cleanReviewMode
+    }
+  });
+
   return {
     answerAnnotationPrompt: {
       task: "answerAnnotation",
       locale,
       systemPrompt,
       userPrompt
+    },
+    coachingPrompt: {
+      systemPrompt: coachingSystemPrompt,
+      userPrompt: ["Analyze this candidate answer:", inputBlock].join("\n")
+    },
+    annotationPrompt: {
+      systemPrompt: annotationSystemPrompt,
+      userPrompt: ["Analyze this candidate answer:", inputBlock].join("\n")
     }
   };
 }

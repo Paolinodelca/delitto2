@@ -3,6 +3,8 @@ import { resolveGroqAnswerAnnotationPromptOptions, runGroqAnswerAnnotationModel 
 import { extractJsonObject } from "../parser/extractJsonObject.js";
 import { normalizeAnswerAnnotation } from "./normalizeAnswerAnnotation.js";
 
+const COACHING_FIELDS = ["summary", "tags", "strengths", "weaknesses", "coachTip", "upgradeSuggestion", "improvedAnswerDraft"];
+
 export async function runAnswerAnnotation({
   answerId,
   questionLabel,
@@ -11,37 +13,37 @@ export async function runAnswerAnnotation({
   reviewMode = "interview"
 }) {
   const promptOptions = await resolveGroqAnswerAnnotationPromptOptions();
-  const { answerAnnotationPrompt } = await buildAnswerAnnotationPrompt({
-    answerId,
-    questionLabel,
-    questionPrompt,
-    answerText,
-    reviewMode,
-    ...promptOptions
+  const prompts = await buildAnswerAnnotationPrompt({
+    answerId, questionLabel, questionPrompt, answerText, reviewMode, ...promptOptions
   });
 
   const modelResult = await runGroqAnswerAnnotationModel({
-    task: "answerAnnotation",
-    systemPrompt: answerAnnotationPrompt.systemPrompt,
-    userPrompt: answerAnnotationPrompt.userPrompt
+    coachingPrompt: prompts.coachingPrompt,
+    annotationPrompt: prompts.annotationPrompt
   });
 
-  const parsed = extractJsonObject(modelResult.rawContent);
-
-  if (!parsed || typeof parsed !== "object" || !parsed.answerAnnotation) {
-    throw new Error(
-      "runAnswerAnnotation: model output did not contain a valid answerAnnotation object."
-    );
+  const coachingParsed = extractJsonObject(modelResult.coaching.rawContent);
+  const annotationParsed = extractJsonObject(modelResult.annotations.rawContent);
+  const coaching = coachingParsed?.answerAnnotation;
+  const annotations = annotationParsed?.answerAnnotation;
+  if (!coaching || !annotations) {
+    throw new Error("runAnswerAnnotation: composed provider output did not contain valid answerAnnotation objects.");
   }
 
-  const normalized = normalizeAnswerAnnotation(parsed);
-
+  const composed = {
+    answerAnnotation: {
+      answerId,
+      questionLabel,
+      questionPrompt,
+      answerText,
+      reviewMode,
+      ...Object.fromEntries(COACHING_FIELDS.map((field) => [field, coaching[field]])),
+      annotations: annotations.annotations
+    }
+  };
+  const normalized = normalizeAnswerAnnotation(composed);
   return {
     answerAnnotation: normalized.answerAnnotation,
-    meta: {
-      task: "answerAnnotation",
-      locale: answerAnnotationPrompt.locale,
-      model: modelResult.model
-    }
+    meta: { task: "answerAnnotation", locale: prompts.answerAnnotationPrompt.locale, model: modelResult.model, providerCallCount: 2 }
   };
 }

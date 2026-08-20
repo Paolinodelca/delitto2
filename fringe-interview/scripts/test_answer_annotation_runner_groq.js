@@ -56,6 +56,20 @@ async function main() {
     "Top improvement area:",
     result?.answerAnnotation?.summary?.topImprovementArea || "—"
   );
+  const aa = result?.answerAnnotation || {};
+  console.log("Provider calls:", result?.meta?.providerCallCount || "—");
+  console.log("Annotation count:", Array.isArray(aa.annotations) ? aa.annotations.length : 0);
+  console.log("Strengths count:", Array.isArray(aa.strengths) ? aa.strengths.length : 0);
+  console.log("Weaknesses count:", Array.isArray(aa.weaknesses) ? aa.weaknesses.length : 0);
+  console.log("Coach tip present:", Boolean(aa.coachTip));
+  console.log("Upgrade suggestion present:", Boolean(aa.upgradeSuggestion));
+  console.log("Improved answer draft:", aa.improvedAnswerDraft?.isProvided === true ? "provided" : "not provided");
+  for (const annotation of aa.annotations || []) {
+    console.log(
+      `Annotation ${annotation.annotationId} span exact:`,
+      aa.answerText.slice(annotation.start, annotation.end) === annotation.excerpt
+    );
+  }
 
   console.log("");
   console.log("=== Output file ===");

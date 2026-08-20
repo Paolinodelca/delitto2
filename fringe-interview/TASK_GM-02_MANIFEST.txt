@@ -1,0 +1,9 @@
+src/interview/deriveAnswerAnnotationProviderSchema.js
+src/interview/buildAnswerAnnotationPrompt.js
+src/interview/adapters/runGroqAnswerAnnotationModel.js
+src/interview/runAnswerAnnotation.js
+scripts/test_gm02_composed_answer_annotation_provider_execution.js
+scripts/test_answer_annotation_runner_groq.js
+docs/00-continuity/BETA_READINESS_MATRIX.md
+TASK_GM-02_COMPOSED_ANSWER_ANNOTATION_PROVIDER_EXECUTION.md
+TASK_GM-02_MANIFEST.txt

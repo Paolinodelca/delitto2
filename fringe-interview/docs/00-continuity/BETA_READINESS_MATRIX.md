@@ -222,3 +222,15 @@
 - GM-01F minimally makes completion of `summary`, `tags`, `annotations`, `strengths`, `weaknesses`, `coachTip`, `upgradeSuggestion`, and `improvedAnswerDraft` explicit in the semantic prompt. Empty supported arrays remain valid; required properties remain present; `improvedAnswerDraft` remains present even when `isProvided:false`.
 - Canonical schema, GM-01D provider projection/span reconstruction, provider/model settings and Product Authority are unchanged. Deterministic GM regressions, parser mock, staged Beta and full health pass.
 - Local live validation remains required. AR-02A remains deferred until Groq migration closes.
+
+## GM-02 Composed Answer Annotation Provider Execution — 2026-08-20
+
+- GM-01F did not resolve the monolithic GPT-OSS structured generation: the latest live failed generation stopped after `summary` / `tags`; an earlier one stopped after `annotations`.
+- The canonical Answer Annotation schema remains unchanged. Monolithic completion is treated as insufficiently reliable for the current provider/model combination.
+- GM-02 replaces the single Answer Annotation provider generation with exactly two strict structured calls derived programmatically from the same canonical schema: coaching sections and annotations.
+- Results are composed deterministically; original identity/input fields are preserved, coaching fields come only from the coaching result, and annotations only from the annotation result.
+- GM-01D deterministic excerpt-to-span reconstruction remains authoritative after composition.
+- Partial provider failure remains explicit; there is no degraded result, model fallback, JSON Object fallback, or text fallback.
+- Provider call cost changes from one to two requests per Answer Annotation.
+- Deterministic GM-02, relevant GM-01 regressions, parser mock, staged Beta application/UI and full health checks pass. GM-01B's adapter-body test is superseded because it asserts the pre-GM-02 single-call adapter signature; its native-schema/prompt-alignment invariants are covered by GM-02 and later regression tests.
+- Live Groq validation remains required with `scripts/test_answer_annotation_runner_groq.js`; AR-02A remains deferred until GM-02 closes.

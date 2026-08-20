@@ -1,11 +1,14 @@
 import { runGroqChatCompletion } from "../../infrastructure/groq/runGroqChatCompletion.js";
 import { loadAnswerAnnotationSchema } from "../loadAnswerAnnotationSchema.js";
 import { resolveGroqModel, resolveGroqOutputContract } from "../../infrastructure/groq/groqModelCompatibility.js";
-import { deriveAnswerAnnotationProviderSchema } from "../deriveAnswerAnnotationProviderSchema.js";
+import {
+  deriveAnswerAnnotationCoachingProviderSchema,
+  deriveAnswerAnnotationAnnotationsProviderSchema
+} from "../deriveAnswerAnnotationProviderSchema.js";
 
 export async function resolveGroqAnswerAnnotationPromptOptions() {
   const canonicalSchema = await loadAnswerAnnotationSchema();
-  const jsonSchema = deriveAnswerAnnotationProviderSchema(canonicalSchema);
+  const jsonSchema = deriveAnswerAnnotationCoachingProviderSchema(canonicalSchema);
   const contract = resolveGroqOutputContract({
     task: "answerAnnotation",
     model: resolveGroqModel(),
@@ -15,11 +18,13 @@ export async function resolveGroqAnswerAnnotationPromptOptions() {
   return Object.freeze({ nativeSchemaEnforced: contract.mode === "json_schema" });
 }
 
-export async function runGroqAnswerAnnotationModel({ systemPrompt, userPrompt, task = "answerAnnotation" }) {
+async function runProjection({ systemPrompt, userPrompt, projection }) {
   const canonicalSchema = await loadAnswerAnnotationSchema();
-  const jsonSchema = deriveAnswerAnnotationProviderSchema(canonicalSchema);
+  const jsonSchema = projection === "coaching"
+    ? deriveAnswerAnnotationCoachingProviderSchema(canonicalSchema)
+    : deriveAnswerAnnotationAnnotationsProviderSchema(canonicalSchema);
   const result = await runGroqChatCompletion({
-    task,
+    task: "answerAnnotation",
     systemText: systemPrompt,
     userText: userPrompt,
     temperature: 0.2,
@@ -28,5 +33,11 @@ export async function runGroqAnswerAnnotationModel({ systemPrompt, userPrompt, t
     jsonSchema,
     strictSchemaCompatible: true
   });
-  return { task, model: result.model, rawContent: result.content, outputMode: result.outputMode };
+  return { model: result.model, rawContent: result.content, outputMode: result.outputMode };
+}
+
+export async function runGroqAnswerAnnotationModel({ coachingPrompt, annotationPrompt }) {
+  const coaching = await runProjection({ ...coachingPrompt, projection: "coaching" });
+  const annotations = await runProjection({ ...annotationPrompt, projection: "annotations" });
+  return { task: "answerAnnotation", model: coaching.model, coaching, annotations };
 }
