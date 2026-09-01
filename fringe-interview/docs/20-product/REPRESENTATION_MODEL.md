@@ -297,6 +297,44 @@ Mere participation, contribution, collaboration, proximity to a decision, or use
 
 Explicit contextual non-ownership is an observed boundary. It is not a deficiency and is not a contradicting contribution to the person's capability.
 
+### Production interpretation ownership
+
+For `professional_semantic_policy:decision_accountability:v1`, semantic interpretation of one eligible Evidence is deliberately narrower than the complete epistemic state consumed downstream.
+
+| Information | Canonical producer / owner | Single Evidence sufficient? | Unknown behaviour |
+| --- | --- | --- | --- |
+| `decisionAuthority` | authorized decision-accountability Evidence interpreter | yes, only when semantically supported | insufficient authority semantics → no valid positive Observation; explicit contextual non-authority may be `none` |
+| `consequenceScope` | authorized decision-accountability Evidence interpreter | yes, when decision/consequence scope is supported | ambiguous → unknown/no valid positive Observation; never promote to highest plausible scope |
+| `accountabilityEvidence` | authorized decision-accountability Evidence interpreter | yes | may remain unknown under corrected contract |
+| responsibility continuity | interpreter identifies supported temporal fact; deterministic temporal normalization derives exact months only when warranted | sometimes | unknown remains unknown; bounds/approximation remain represented |
+| `context` | Evidence semantics plus deterministic source/runtime provenance where applicable | yes/provenance | sparse; unsupported context omitted |
+| `evidenceIds` | deterministic Evidence lineage | yes | required supporting Evidence reference; never model-invented |
+| evidence quality | separate Evidence/provenance assessment authority | not necessarily | not yet available/unknown |
+| source convergence | cross-Evidence/source epistemic derivation | no | not yet determinable; PD-031 applies |
+| consistency | cross-Evidence/Observation epistemic derivation over an explicit comparison set | no | not yet determinable |
+| coverage | canonical Knowledge/acquisition coverage state | no | not yet determinable |
+| `limitations` | interpreter for Evidence-local semantic limits plus deterministic/cross-Evidence producers for their own limits | yes in part | preserve explicit limitations; absence of a limitation is not proof of completeness |
+
+Production classification criteria are semantic, not lexical. `recommendation` requires supported proposal/recommendation with final authority elsewhere; `shared` requires effective joint decision authority; `final` requires final authority for the represented decision. Consultation, influence or collaboration alone do not establish `shared`. `none` is a supported contextual boundary, not the fallback for missing Evidence.
+
+`consequenceScope` describes the supported reach of the represented decision or its consequences: `individual_task`, `team`, `function`, `site`, or `organization`. Explicit scope or episode-supported consequences may establish a level. When consequences cross levels, use the broadest level actually supported by the described causal episode, not the broadest plausible organizational reach. Job title, seniority, company size, target role and generic leadership wording cannot establish scope.
+
+`accountabilityEvidence` distinguishes evidential explicitness: `claimed` is an accountability assertion without a concrete described action/causal episode; `implicit` is accountability supported by the described role/action/consequence without an explicit accountability statement; `explicit` explicitly states responsibility/accountability for the decision or consequence; `explicit_with_outcomes` additionally connects that explicit accountability to an observable described outcome.
+
+Responsibility continuity measures continuity of the described decision responsibility, not generic role tenure. Exact supported durations may normalize deterministically to months. Exact dates may be converted only when the Evidence establishes that responsibility spans that interval. Approximate, lower-bound, upper-bound or interval expressions preserve that qualification; repeated discontinuous episodes are not silently converted into continuous months. Unknown continuity never becomes zero.
+
+The four inference-support concepts are not LLM confidence scores. Evidence quality depends on a separately authorized assessment of Evidence/provenance facts. Source convergence and consistency require explicit cross-Evidence comparison and cannot be manufactured from one Runtime answer. Coverage is owned by Knowledge/acquisition coverage state. Until those producers exist or run, their state is unknown/not-yet-derived.
+
+### Minimum supported Observation rule
+
+A positive Measurement-eligible decision-accountability Observation requires: eligible Evidence under the resolved policy; a concrete represented decision/context; supported decision responsibility with `decisionAuthority` of `recommendation`, `shared`, or `final`; supported `consequenceScope`; deterministic supporting `evidenceIds`; and no semantic contradiction that makes the interpretation invalid. Accountability explicitness and continuity need not be fabricated when unknown. Explicit contextual `decisionAuthority = none` may be retained as contextual knowledge, but it is not a negative Measurement/DimensionContribution. Insufficient Evidence produces no valid Observation and therefore no Measurement or Knowledge effect.
+
+### Minimal specialized contract correction authorized
+
+The current technical contract cannot remain unchanged because it forces missing continuity and all four inference-support inputs into numeric zero/default values. The minimum correction is to make responsibility continuity epistemically nullable/qualified (including exact versus bounded/approximate temporal support) and to make each inference-support input independently nullable/not-yet-derived with provenance of its canonical producer when present. The exact technical shape is an implementation concern, but it must distinguish at least `known`, `unknown`, `not_applicable`, and `not_yet_derived` where semantically relevant.
+
+The specialized Measurement must likewise distinguish unknown from zero. It may score only known applicable strength components according to the existing versioned measurement semantics; it must not insert zero for an unknown component. If the minimum required strength semantics are unavailable, the result is insufficient/not-applicable and cannot produce a DimensionContribution. Inference support remains separate from measured strength and may remain unavailable or partial until its legitimate producers have supplied values. This correction does not authorize new coefficients, a new scoring framework, or model-generated numeric confidence.
+
 ### Characteristic and Measurement
 
 The canonical characteristic is:
