@@ -55,6 +55,117 @@ Elementary and derived knowledge remain distinct unless an explicit model says o
 
 Coverage, confidence, quality, reliability, independence and consistency are separate concepts. More documents or more questions do not automatically mean more evidence.
 
+
+## Multi-source and temporal professional evidence
+
+Professional Identity may be reconstructed from multiple authorised professional sources and from direct user interaction. The source set is intentionally broader than the historical CV + Job Description input pattern and may include current or historical CVs, professional-profile material, reviews, references, certifications, portfolio/project material, Tutor-attributed material, assessments, free narrative and interview interaction.
+
+The user is not required to classify each contribution according to IMAGO's internal Evidence/Knowledge taxonomy. Product interaction may remain conversational and use simple document acquisition while internal acquisition preserves source identity, provenance and semantic structure.
+
+For dated material, IMAGO distinguishes:
+
+```text
+source time
+= when the source/material was produced
+
+event / experience time
+= when the professional event described by the source occurred
+```
+
+The two times may differ and neither may be invented when unknown.
+
+Historical sources have two legitimate evidential roles:
+
+1. they are Evidence of the professional self-representation/material produced at that source time;
+2. they may contain Evidence about professional events that occurred at other times.
+
+Therefore:
+
+```text
+historical-source omission
+≠ historical absence in the person
+```
+
+and:
+
+```text
+Professional Evolution
+≠ Representation Evolution
+```
+
+Professional Evolution concerns supported changes in experience, responsibility, context and Knowledge. Representation Evolution concerns changes in how professional history was represented at different times.
+
+Dated Representation snapshots remain compatible with future Knowledge Timeline / Professional Trajectory views, but those views require later validated semantics and are not prerequisites for the first end-to-end human test.
+
+### Evidence convergence and professional episode identity
+
+Source identity, Evidence identity and professional episode identity are distinct.
+
+Several sources can describe the same underlying professional episode:
+
+```text
+CV
++ professional profile
++ interview
++ review
+→ multiple Evidence items
+→ possibly one professional episode
+```
+
+Such convergence may strengthen reconstruction of that episode, but repeated descriptions must not automatically count as independent professional episodes or independent experience.
+
+Independence and convergence must therefore be evaluated relative to the underlying supported event/context when relevant. If episode identity cannot be established, uncertainty is preserved rather than forcing deduplication or independence.
+
+This is a Product semantic requirement. It does not prescribe a new `episodeRef`, graph or temporal Core contract.
+
+## Person and Target Representation separation
+
+Person Representation and Target Representation are different semantic objects.
+
+### Person side
+
+Person Representation describes what authorised Evidence and reconstructed Knowledge support about the person in the current context/snapshot. It carries epistemic properties and limitations such as observability/coverage, confidence, Evidence quality, source reliability, independence/convergence and consistency where supported.
+
+These properties remain distinct from measured strength. Context breadth and temporal breadth may become relevant to broader characterization, but no universal formula or mandatory scoring rule is authorized.
+
+### Target side
+
+Target Representation describes what an authorised target requires, expects or considers relevant. Depending on the target, a dimension may have a required/expected expression and an importance/relevance, without requiring a universal numeric scale.
+
+Target importance is not epistemic confidence about the person.
+
+### Comparison states
+
+Target-relative interpretation preserves at least these conceptual outcomes:
+
+```text
+SUPPORTED ALIGNMENT
+SUPPORTED / PLAUSIBLE DISTANCE
+INSUFFICIENTLY OBSERVED FOR COMPARISON
+SIGNIFICANT CONTRADICTORY EVIDENCE
+```
+
+The last state is available only when legitimate Evidence supports contradiction.
+
+In particular:
+
+```text
+high target importance
++ insufficient Person Knowledge
+→ priority candidate for further Evidence acquisition
+```
+
+not:
+
+```text
+high target importance
++ insufficient Person Knowledge
+→ negative candidate score
+```
+
+The existing Coverage → Opportunity → Need → Strategy → Requirement → Design → Plan → Runtime → Evidence pipeline remains the canonical direction for additional acquisition. No parallel target-driven acquisition architecture is authorized.
+
+
 ## Observation catalogue
 
 ### OBS-001 — Professional presentation

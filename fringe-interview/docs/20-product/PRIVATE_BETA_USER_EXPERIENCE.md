@@ -44,7 +44,9 @@ Unimplemented capabilities must not be promised.
 ## Material acquisition
 The product accepts available authorised material without requiring unnecessary completeness.
 
-The candidate may start from CV and optionally add target/job material or other useful sources.
+The candidate may start from free/conversational professional input and simple document upload. CV is a common source, not the conceptual boundary of the product; target/job material and other useful authorised professional sources remain optional.
+
+The user is not required to classify material according to IMAGO's internal source, Evidence or Knowledge taxonomy. Internal acquisition remains structured and provenance-preserving.
 
 A lightweight contextual feedback question may follow the material-preparation step.
 
