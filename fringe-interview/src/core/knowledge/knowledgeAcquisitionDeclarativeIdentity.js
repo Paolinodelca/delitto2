@@ -51,14 +51,16 @@ function calculateKnowledgeAcquisitionRequirementId(requirement) {
 }
 
 function calculateKnowledgeAcquisitionDesignId(design) {
-  return fingerprint('knowledgeAcquisitionDesign', {
+  const identity = {
     sourceRequirementRef: design.sourceRequirementRef,
     designType: design.designType,
     targetKnowledge: design.targetKnowledge,
     solutionShape: design.solutionShape,
     capabilityObligations: design.capabilityObligations,
     designVersion: design.designVersion,
-  });
+  };
+  if (design.semanticPolicyRef !== undefined) identity.semanticPolicyRef = design.semanticPolicyRef;
+  return fingerprint('knowledgeAcquisitionDesign', identity);
 }
 
 function calculateKnowledgeAcquisitionCapabilityMatchId(match) {

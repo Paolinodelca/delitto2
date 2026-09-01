@@ -15,7 +15,8 @@ export function buildAcceptedRuntimeAnswerEvidenceStore({
   betaSessionId,
   interviewSessionId,
   answers = [],
-  inputBundleVersion = 'ar-02.1'
+  inputBundleVersion = 'ar-02.1',
+  knowledgeAcquisitionExecutionRef = null
 } = {}) {
   const accepted = Array.isArray(answers) ? answers : [];
   const sources = accepted.map((answerRecord, index) => {
@@ -39,7 +40,8 @@ export function buildAcceptedRuntimeAnswerEvidenceStore({
           betaSessionRef: clean(betaSessionId) ? `betaSession:${clean(betaSessionId)}` : null,
           interviewSessionRef: clean(interviewSessionId) ? `interviewSession:${clean(interviewSessionId)}` : null,
           questionRef: questionIdentity(answerRecord, index),
-          answerRef: `runtimeAnswer:${index + 1}`
+          answerRef: `runtimeAnswer:${index + 1}`,
+          ...(clean(knowledgeAcquisitionExecutionRef) ? { knowledgeAcquisitionExecutionRef: clean(knowledgeAcquisitionExecutionRef) } : {})
         }
       }
     };

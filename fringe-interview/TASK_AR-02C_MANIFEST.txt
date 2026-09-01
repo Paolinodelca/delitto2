@@ -1,0 +1,13 @@
+TASK_AR-02C_DECISION_ACCOUNTABILITY_SEMANTIC_INTEGRATION.md
+TASK_AR-02C_MANIFEST.txt
+docs/00-continuity/CONTINUITY.md
+scripts/test_ar02c_decision_accountability_semantic_integration.js
+src/app/knowledge/constructAuthorizedDecisionAccountabilityObservation.js
+src/app/knowledge/resolveDecisionAccountabilitySemanticAuthority.js
+src/app/knowledge/runDecisionAccountabilitySemanticKnowledgePath.js
+src/app/registerAcceptedRuntimeAnswerEvidence.js
+src/core/dimension/buildDecisionAccountabilityMeasurementDimensionMapping.js
+src/core/knowledge/buildKnowledgeAcquisitionDesign.js
+src/core/knowledge/knowledgeAcquisitionDeclarativeIdentity.js
+src/core/knowledge/validateKnowledgeAcquisitionDesign.js
+src/core/measurement/decisionAccountability/projectDecisionAccountabilityMeasureResult.js

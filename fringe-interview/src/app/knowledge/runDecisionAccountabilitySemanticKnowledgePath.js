@@ -1,0 +1,15 @@
+const {resolveDecisionAccountabilitySemanticAuthority}=require('./resolveDecisionAccountabilitySemanticAuthority');
+const {constructAuthorizedDecisionAccountabilityObservation}=require('./constructAuthorizedDecisionAccountabilityObservation');
+const {buildDecisionAccountabilityMeasureResult}=require('../../core/measurement/decisionAccountability/buildDecisionAccountabilityMeasureResult');
+const {projectDecisionAccountabilityMeasureResult}=require('../../core/measurement/decisionAccountability/projectDecisionAccountabilityMeasureResult');
+const {buildDecisionAccountabilityMeasurementDimensionMapping}=require('../../core/dimension/buildDecisionAccountabilityMeasurementDimensionMapping');
+const {mapMeasurementResultToDimensionContributions,buildKnowledgeLedger,appendDimensionContributions,buildKnowledgeSnapshot}=require('../../core/dimension');
+const {buildPersonKnowledgeMatrix,buildKnowledgeCoverage}=require('../../core/knowledge');
+function empty(authority=null){return Object.freeze({semanticAuthority:authority,observation:null,specializedMeasurementResult:null,measurementResult:null,dimensionContributions:Object.freeze([]),knowledgeLedger:null,knowledgeSnapshot:null,personKnowledgeMatrix:null,knowledgeCoverage:null})}
+function runDecisionAccountabilitySemanticKnowledgePath({evidence,knowledgeAcquisitionExecution,knowledgeAcquisitionPlan,capabilityConfiguration,solutionDecision,knowledgeAcquisitionDesign,observationExecutor,subjectRef,now}={}){
+ const semanticAuthority=resolveDecisionAccountabilitySemanticAuthority({evidence,knowledgeAcquisitionExecution,knowledgeAcquisitionPlan,capabilityConfiguration,solutionDecision,knowledgeAcquisitionDesign});if(!semanticAuthority.resolved)return empty(semanticAuthority);
+ const observation=constructAuthorizedDecisionAccountabilityObservation({evidence,semanticAuthority,executor:observationExecutor});if(!observation)return empty(semanticAuthority);
+ const specializedMeasurementResult=buildDecisionAccountabilityMeasureResult({observation});const measurementResult=projectDecisionAccountabilityMeasureResult(specializedMeasurementResult,{calculatedAt:now});if(!measurementResult)return empty(semanticAuthority);
+ const mapping=buildDecisionAccountabilityMeasurementDimensionMapping({now});const dimensionContributions=mapMeasurementResultToDimensionContributions(measurementResult,mapping);let knowledgeLedger=buildKnowledgeLedger({contributions:[],metadata:{createdAt:now,updatedAt:now}},{now});knowledgeLedger=appendDimensionContributions(knowledgeLedger,dimensionContributions,{now});const knowledgeSnapshot=buildKnowledgeSnapshot(knowledgeLedger,{now});const personKnowledgeMatrix=buildPersonKnowledgeMatrix({subjectRef,knowledgeSnapshot,derivedStates:[]},{now});const knowledgeCoverage=buildKnowledgeCoverage({personKnowledgeMatrix});return Object.freeze({semanticAuthority,observation,specializedMeasurementResult,measurementResult,dimensionContributions,knowledgeLedger,knowledgeSnapshot,personKnowledgeMatrix,knowledgeCoverage});
+}
+module.exports={runDecisionAccountabilitySemanticKnowledgePath};
