@@ -1,0 +1,5 @@
+src/infrastructure/groq/runGroqDecisionAccountabilitySemanticExecutor.js
+scripts/test_ar03a_live_groq_decision_accountability_semantic_verification.js
+scripts/test_ar03c_semantic_candidate_rejection_diagnostics.js
+TASK_AR-03C_LIVE_SEMANTIC_CANDIDATE_REJECTION_DIAGNOSIS.md
+TASK_AR-03C_MANIFEST.txt

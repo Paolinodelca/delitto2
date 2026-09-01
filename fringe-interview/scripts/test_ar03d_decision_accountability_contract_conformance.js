@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url);
+const {DECISION_ACCOUNTABILITY_SEMANTIC_CANDIDATE_SCHEMA,validateDecisionAccountabilityProductionSemanticCandidate}=require('../src/app/knowledge/decisionAccountabilityProductionSemanticCandidate.js');
+const {buildDecisionAccountabilityProductionSemanticPrompt}=require('../src/app/knowledge/buildDecisionAccountabilityProductionSemanticPrompt.js');
+const base={interpretationStatus:'SUPPORTED',decisionAuthority:'final',consequenceScope:'team',accountabilityEvidence:'explicit',responsibilityContinuity:{state:'unknown',qualification:null,months:null,minimumMonths:null,maximumMonths:null},context:{decision:'priorità operative',responsibility:'autorità finale',consequence:'team'},limitations:[]};
+const unsupported={...base,interpretationStatus:'UNSUPPORTED',decisionAuthority:null,consequenceScope:null,accountabilityEvidence:null,context:{decision:null,responsibility:null,consequence:null}};
+const missingScope={...base,consequenceScope:null};
+assert.equal(validateDecisionAccountabilityProductionSemanticCandidate(missingScope).isValid,false);
+assert.equal(validateDecisionAccountabilityProductionSemanticCandidate(unsupported).isValid,true);
+for(const qualification of ['exact','approximate','lower_bound','upper_bound']){
+  const c={...base,responsibilityContinuity:{state:'known',qualification,months:12,minimumMonths:null,maximumMonths:null}};
+  assert.equal(validateDecisionAccountabilityProductionSemanticCandidate(c).isValid,true,qualification);
+}
+const unknown={...base,responsibilityContinuity:{state:'unknown',qualification:null,months:null,minimumMonths:null,maximumMonths:null}};
+assert.equal(validateDecisionAccountabilityProductionSemanticCandidate(unknown).isValid,true);
+assert.equal(unknown.responsibilityContinuity.months,null);
+const contextual={...base,decisionAuthority:'none',consequenceScope:null,accountabilityEvidence:null,context:{decision:'priorità',responsibility:'nessuna autorità decisionale',consequence:null}};
+assert.equal(validateDecisionAccountabilityProductionSemanticCandidate(contextual).isValid,true);
+const relaxedLowerBound={...base,responsibilityContinuity:{state:'known',qualification:'lower_bound',months:null,minimumMonths:12,maximumMonths:null}};
+assert.equal(validateDecisionAccountabilityProductionSemanticCandidate(relaxedLowerBound).isValid,false);
+const schemaText=JSON.stringify(DECISION_ACCOUNTABILITY_SEMANTIC_CANDIDATE_SCHEMA);
+assert.match(schemaText,/lower_bound/); assert.match(schemaText,/minimumMonths/);
+assert.equal(DECISION_ACCOUNTABILITY_SEMANTIC_CANDIDATE_SCHEMA.type,'object');
+assert.ok(DECISION_ACCOUNTABILITY_SEMANTIC_CANDIDATE_SCHEMA.properties.responsibilityContinuity);
+assert.ok(DECISION_ACCOUNTABILITY_SEMANTIC_CANDIDATE_SCHEMA.properties.consequenceScope);
+const {systemText}=buildDecisionAccountabilityProductionSemanticPrompt({evidence:{content:{answerText:'fixture'}}});
+assert.match(systemText,/missing or ambiguous, return UNSUPPORTED/i);
+assert.match(systemText,/lower_bound.*months: 12/i);
+console.log('AR-03D Decision Accountability contract conformance regression: PASS');

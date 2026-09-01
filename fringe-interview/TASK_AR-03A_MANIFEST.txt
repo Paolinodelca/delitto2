@@ -1,0 +1,3 @@
+TASK_AR-03A_LIVE_GROQ_DECISION_ACCOUNTABILITY_SEMANTIC_VERIFICATION.md
+TASK_AR-03A_MANIFEST.txt
+scripts/test_ar03a_live_groq_decision_accountability_semantic_verification.js

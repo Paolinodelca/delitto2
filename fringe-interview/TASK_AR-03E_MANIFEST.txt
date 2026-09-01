@@ -1,0 +1,5 @@
+TASK_AR-03E_GROQ_STRUCTURED_OUTPUT_SCHEMA_COMPATIBILITY_CORRECTION.md
+TASK_AR-03E_MANIFEST.txt
+scripts/test_ar03d_decision_accountability_contract_conformance.js
+scripts/test_ar03e_groq_structured_output_schema_compatibility.js
+src/app/knowledge/decisionAccountabilityProductionSemanticCandidate.js

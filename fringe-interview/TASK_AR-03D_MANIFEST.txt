@@ -1,0 +1,5 @@
+TASK_AR-03D_DECISION_ACCOUNTABILITY_LIVE_SEMANTIC_CONTRACT_CONFORMANCE_CORRECTION.md
+TASK_AR-03D_MANIFEST.txt
+scripts/test_ar03d_decision_accountability_contract_conformance.js
+src/app/knowledge/buildDecisionAccountabilityProductionSemanticPrompt.js
+src/app/knowledge/decisionAccountabilityProductionSemanticCandidate.js
