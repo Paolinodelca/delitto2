@@ -78,7 +78,7 @@ function buildDecisionAccountabilityLeadershipContribution({
     sourceMeasureResult.resultStatus === "invalid";
 
   const measureNotObserved =
-    !measureInvalid && sourceMeasureResult.resultStatus === "not_observed";
+    !measureInvalid && sourceMeasureResult.resultStatus !== "draft";
 
   let derivationStatus = "derived";
   let sourceMeasureValue = sourceMeasureResult.score;
@@ -111,7 +111,7 @@ function buildDecisionAccountabilityLeadershipContribution({
       "Decision accountability contribution was built from an invalid measure result."
     );
   } else if (measureNotObserved) {
-    derivationStatus = "not_observed";
+    derivationStatus = sourceMeasureResult.resultStatus;
     sourceMeasureValue = 0;
     inferenceSupport = 0;
   }

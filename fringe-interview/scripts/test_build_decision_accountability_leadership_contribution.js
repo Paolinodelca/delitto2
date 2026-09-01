@@ -158,7 +158,7 @@ const notObservedContribution =
 expect(notObservedContribution.source.measureValue === 0, "D: value");
 expect(notObservedContribution.direction === "supporting", "D: direction");
 expect(notObservedContribution.inferenceSupport === 0, "D: inference");
-expect(notObservedContribution.metadata.derivationStatus === "not_observed", "D: status");
+expect(notObservedContribution.metadata.derivationStatus === "insufficient", "D: status");
 
 /* Scenario E — invalid measure */
 const invalidMeasure = { ...measureResult };

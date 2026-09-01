@@ -409,8 +409,8 @@ function healthMeasurementCapabilityBridge() {
 
     checks.notObservedSemanticsPreserved =
       notObserved.measureResult.resultStatus ===
-        "not_observed" &&
-      notObserved.measureResult.score === 0 &&
+        "insufficient" &&
+      notObserved.measureResult.score === null &&
       notObserved.contribution.source.measureValue === 0 &&
       notObserved.contribution.direction ===
         "supporting" &&
