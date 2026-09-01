@@ -6,7 +6,7 @@ function constructAuthorizedDecisionAccountabilityObservation({evidence,semantic
  if(!interpreted||typeof interpreted!=='object'||interpreted.supported!==true)return null;
  const observation=buildDecisionAccountabilityObservation({...interpreted.observation,evidenceIds:[evidence.id],extensions:{...(interpreted.observation?.extensions||{}),semanticProvenance:{semanticPolicyRef:semanticAuthority.semanticPolicyRef,knowledgeAcquisitionDesignRef:semanticAuthority.knowledgeAcquisitionDesignRef,knowledgeAcquisitionExecutionRef:semanticAuthority.knowledgeAcquisitionExecutionRef}}});
  const validation=validateDecisionAccountabilityObservation(observation);
- if(!validation.isValid||observation.observationStatus!=='observed')return null;
+ if(!validation.isValid||!['observed','contextual'].includes(observation.observationStatus))return null;
  return observation;
 }
 module.exports={constructAuthorizedDecisionAccountabilityObservation};

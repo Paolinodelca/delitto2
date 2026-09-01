@@ -33,6 +33,7 @@ const TASK_CONTRACTS = Object.freeze({
   roleProfile: Object.freeze({ mode: "json_object" }),
   jobFitAnalysis: Object.freeze({ mode: "json_object" }),
   answerAnnotation: Object.freeze({ mode: "json_schema", schemaName: "answer_annotation", strict: true, completionBudget: 2048 }),
+  decisionAccountabilitySemanticExecutor: Object.freeze({ mode: "json_schema", schemaName: "decision_accountability_semantic_candidate", strict: true, completionBudget: 1200 }),
   professionalPerception: Object.freeze({ mode: "json_object" }),
   adaptiveFollowupQuestion: Object.freeze({ mode: "text" }),
   gapDrivenInterviewQuestion: Object.freeze({ mode: "text" })
