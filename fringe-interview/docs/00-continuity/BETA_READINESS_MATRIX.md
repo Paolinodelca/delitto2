@@ -244,3 +244,13 @@
 - Unsupported evidence produces no Observation and therefore no invented contribution, PKM, or Coverage effect. `not observed` is not converted into absence.
 - Provenance remains reconstructable through Evidence source/provenance, Observation content/source refs, MeasurementResult observation refs, DimensionContribution measurement/mapping refs, Snapshot/Ledger refs, PKM snapshot lineage, and Coverage matrix refs.
 - Deterministic AR-02A and traversed Core/Application regressions, Beta Runtime/session, staged Beta application/UI and full health checks pass.
+
+## PA-05 Acquisition-to-Evidence Semantic Association and Observation Construction Boundary — 2026-09-01
+
+- Verdict: **A — MINIMAL CANONICAL BOUNDARY AUTHORIZED** for the single `professional_semantic_policy:decision_accountability:v1` vertical slice.
+- `KnowledgeAcquisitionDesign` canonically owns `semanticPolicyRef`; Requirement remains declarative and downstream semantic inference is forbidden.
+- Evidence must prove acquisition association by preserving the exact `KnowledgeAcquisitionExecution` reference; existing causal artifacts resolve Execution → Plan → CapabilityConfiguration → SolutionDecision → Design. Broken or ambiguous lineage resolves no authority.
+- Semantic authority resolution is non-interpretive. Authorized Evidence interpretation is a separate decision-accountability Observation Construction responsibility; deterministic or model execution is permitted only under the already-resolved policy and constrained output contract.
+- The existing specialized `DecisionAccountabilityObservation` and specialized decision-accountability Measurement semantics are canonical for this slice. Generic AR-02A Observation semantics are not a competing owner; only a lossless projection of the already-computed specialized Measurement meaning into the existing generic MeasurementResult/DimensionContribution path is authorized.
+- No valid Observation, unresolved authority, or invalid interpretation produces no Knowledge effect.
+- Next technical task: implement the PA-05 contract end-to-end, including Design ownership, execution-to-Design lineage resolution at Evidence, semantic authority resolution, constrained decision-accountability Observation Construction, and the minimum specialized-measurement projection required to enter the existing AR-02A downstream Knowledge path.
