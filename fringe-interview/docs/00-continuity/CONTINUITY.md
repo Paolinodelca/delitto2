@@ -2,11 +2,11 @@
 
 Status: **CURRENT**
 
-Verified through: **Task 0100E-43**
+Verified through: **CONT-AR03 on repository base `5a08d5d`**
 
-Operational milestone: `origin/milestone/0100b-knowledge-foundation`
+Current product objective: **PREPARE AND EXECUTE THE FIRST SUPERVISED HUMAN TEST**
 
-Last realignment: 2026-07-30 (`GOV-REALIGN-001`)
+Last realignment: 2026-09-02 (`CONT-AR03`)
 
 ## Purpose
 
@@ -193,7 +193,7 @@ Task E-43 approves the existing Core `buildDerivedDimensionKnowledgeStates(execu
 
 Within one Snapshot/Capability/Recipe/version context, multiple mapped positive results may aggregate N:1 into one Derived Dimension state. Estimate uses the established confidence-weighted mapping mean and state confidence uses the minimum source confidence. Cross-execution aggregation is not approved unless every execution identity is preserved exactly; the current single-execution reference behavior requires E-44 hardening.
 
-The sole planned task is `0100E-44 — Derived Dimension Knowledge State Construction Hardening Foundation`. Matrix, Coverage and all later consumers remain unauthorized.
+`0100E-44 — Derived Dimension Knowledge State Construction Hardening Foundation` remains **deferred** unless explicitly consumed by the active product path. It is not the current implementation priority.
 
 ## Private Beta Milestone 1 status — M1-06
 
@@ -209,60 +209,51 @@ The operational runbook documents the expected event sequence, manual distinctio
 
 ---
 
-## Product Authority Consolidation
+## Current Product Objective
 
-Status: IN PROGRESS
+Status: **FIRST HUMAN TEST READY WITH SUPERVISED LIMITATIONS**
 
-The Private Beta application foundations M1-01 through M1-07 are completed.
+The Private Beta foundations and the canonical Beta integration path are present. Product Authority remains under `docs/20-product/`.
 
-The current activity is the consolidation of existing product and architectural knowledge into the canonical Product Authority under:
+The current objective is:
 
-`docs/20-product/`
+**PREPARE AND EXECUTE THE FIRST SUPERVISED HUMAN TEST**
 
-Introduced or under consolidation:
+This objective takes priority over further AR-03 semantic hardening or deferred Core hardening. `0100E-44` and other deferred Core work remain deferred unless the First Human Test path explicitly consumes them.
 
-- canonical Product Decisions;
-- Observation Model;
-- Representation Principles;
-- minimal Representation Model;
-- versioned Dimension Recipes;
-- Private Beta Experience Flow.
-
-Next planned activity:
-
-Consolidate the existing repository knowledge into Product Authority before starting Beta Experience Integration.
-
-Deferred:
-
-- E-44;
-- additional Core hardening not consumed by the Beta;
-- Beta Experience Integration until the product flow is canonically defined.
 ## Private Beta integration status — BI-01
 
 Task `BI-01 — Beta Journey Integration` integrates the existing Milestone 1 foundations into one Application-owned canonical path. A technical Beta Session is created before onboarding without personal input references; M1-04 onboarding and M1-05 consent are completed before the integration reads or forwards personal materials. The same session is then started in the existing Interview Runtime, completion is assessed and verified through M1-01/M1-02, M1-03 provides tester-safe execution failure handling, the existing Professional Perception reporting layer is materialized for the completed interview, M1-06 feedback remains optional, and M1-07 operational logging remains minimized and failure-safe.
 
 BI-01 does not invent Professional Identity persistence: no existing Application boundary provides a dated persistent Professional Identity snapshot suitable for the canonical Beta journey, so the integrated result exposes `PROFESSIONAL_IDENTITY_SNAPSHOT_CAPABILITY_UNAVAILABLE`. Voice is likewise not implemented because no reusable voice subsystem is present in the handover baseline; text remains supported. Real parser/provider-backed end-to-end regression remains dependent on fixtures/configuration not contained in this handover archive.
 
-## AR-02C — Decision-accountability semantic authority integration
+## AR-03 closure — Decision Accountability live readiness
 
-AR-02C now implements the deterministic production boundaries authorized by PD-035–PD-039 for `professional_semantic_policy:decision_accountability:v1`: `KnowledgeAcquisitionDesign` owns the policy only for elementary `dimension:decision_accountability`; accepted Runtime Evidence may preserve the exact causing `KnowledgeAcquisitionExecution`; Application resolves authority strictly through Execution → Plan → CapabilityConfiguration → SolutionDecision → Design lineage; and authorized Observation Construction produces the existing specialized `DecisionAccountabilityObservation` only through an explicitly supplied semantic executor.
+Status: **CLOSED**
 
-The existing specialized decision-accountability Measurement remains semantic owner. Its valid observed result is projected losslessly into the generic canonical `MeasurementResult`, then uses the fixed identity mapping `decision_accountability → decision_accountability` with supporting/1/1 semantics before the existing Contribution → Ledger/Snapshot → PKM → Coverage path. Missing authority or no valid Observation stops with no Measurement, Contribution or Knowledge effect.
+AR-03G final verdict:
 
-Verdict: **B — PARTIAL TECHNICAL INTEGRATION; PRODUCTION INTERPRETATION REMAINS EXPLICITLY OPEN.** The repository does not contain an authorized constrained free-form Runtime-answer semantic executor contract. The vertical-slice test therefore uses a deterministic test executor only to prove the production boundaries and does not claim free-form production interpretation readiness. AR-02A and repository health remain green.
+**B — AR-03 CLOSED; FIRST HUMAN TEST MAY PROCEED WITH EXPLICIT SUPERVISED LIMITATIONS.**
 
-## PA-06 — Production decision-accountability Observation interpretation contract
+**FIRST HUMAN TEST GATE: OPEN WITH EXPLICIT TEST LIMITATIONS.**
 
-Verdict: **B — MINIMAL CONTRACT CORRECTION REQUIRED AND AUTHORIZED.** Product authority now assigns single-Evidence semantic interpretation only to supported decision authority, consequence scope, accountability explicitness, Evidence-local context/limitations and supported temporal facts. Evidence IDs/provenance remain deterministic; evidence quality is separately provenance-assessed; source convergence and consistency require explicit cross-Evidence derivation; coverage belongs to Knowledge/acquisition coverage. Unknown and not-yet-derived values must remain epistemically distinct from zero.
+There is no subsequent AR-03 technical task. Residual `contextual-none` and `shared` live failures are classified as **MODEL EXECUTION VARIABILITY**, not as a remaining deterministic contract defect. The canonical authority and validator boundaries remain unchanged.
 
-The current specialized `DecisionAccountabilityObservation` / Measurement contracts therefore cannot remain unchanged: they force missing continuity and inference-support inputs to numeric defaults. The next technical task may minimally correct those contracts and implement the production free-form executor under the already-resolved semantic policy. The executor remains an executor, never semantic authority; explicit contextual non-authority is not negative Evidence, and insufficient Evidence still produces no Knowledge effect.
+Residual failures fail closed: incomplete `SUPPORTED` candidates are rejected; `UNSUPPORTED` does not produce a positive Observation; rejected or incomplete candidates are not repaired, retried, majority-voted, passed through validator relaxation, or converted into Knowledge. The known residual variability can therefore cause missing information acquisition, but current evidence does not demonstrate silent creation of canonically incorrect Knowledge.
 
-## AR-02D REOPEN — Production free-form decision-accountability Observation executor
+The AR-03A `18/18` result remains a strict semantic-stability benchmark, not the gate for the exploratory First Human Test. No fallback, retry, majority voting, validator relaxation or Knowledge repair is authorized as a consequence of AR-03 closure.
 
-Historical continuity is preserved: the original AR-02D attempt remains blocked by the then-missing production semantic-executor contract; PA-06 subsequently authorized that Product meaning, and AR-02E corrected the specialized Observation/Measurement contracts so unknown continuity and not-yet-derived inference support are preserved without fabricated zero/default values.
+### First Human Test operating constraints
 
-AR-02D REOPEN now adds the minimum production executor for `professional_semantic_policy:decision_accountability:v1`. The Groq boundary receives only canonical Evidence text as untrusted data under an already-resolved policy and returns a constrained semantic candidate containing only interpretation status, decision authority, consequence scope, accountability explicitness, qualified/unknown responsibility continuity, sparse decision context and Evidence-local limitations. Evidence IDs, semantic/acquisition provenance, Observation identity and inference-support states remain deterministic Application ownership; the executor cannot generate epistemic scores or Knowledge artifacts.
+The First Human Test must:
 
-SUPPORTED positive candidates require a concrete represented decision/responsibility, supported `recommendation` / `shared` / `final` authority and supported consequence scope. Explicit `none` may produce the existing contextual Observation; ambiguity remains UNSUPPORTED. Provider failure, malformed output, unresolved authority and unsupported semantics produce no Observation. A valid Observation may legitimately produce an insufficient/partial specialized Measurement and no generic projection while canonical inference-support producers remain unavailable. The existing fully supplied AR-02C path remains valid when those inputs are supplied independently.
+- be supervised;
+- preserve `Evidence → semantic executor outcome → Observation` provenance;
+- record provider/model identity and semantic executor outcome;
+- present rejected / `UNSUPPORTED` outcomes as **not enough evidence / not established**, never as weakness;
+- avoid Measurement/Knowledge conclusions when canonical projection is unavailable;
+- collect participant/observer disagreement with IMAGO;
+- treat run-to-run model variability as calibration evidence;
+- not be represented as production reliability validation.
 
-Verdict: **A — PRODUCTION FREE-FORM DECISION ACCOUNTABILITY OBSERVATION EXECUTOR COMPLETE.** Live Groq verification was not executed in the handover environment because `GROQ_API_KEY` was unavailable; deterministic provider-transport/schema tests and repository regressions are green.
+Detailed AR-03A→AR-03G history remains in Git, task reports and manifests; this document records only the consolidated current state.

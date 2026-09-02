@@ -64,7 +64,7 @@ Se tali condizioni non sono soddisfatte, il Builder deve proporre una decisione 
 
 Status: **CURRENT AUTHORITY INDEX**
 
-Last realignment: 2026-08-05 (`GOV-REALIGN-001`)
+Last realignment: 2026-09-02 (`CONT-AR03`)
 
 ## Reading order
 
@@ -87,7 +87,7 @@ Last realignment: 2026-08-05 (`GOV-REALIGN-001`)
 |`CONTINUITY.md`|CURRENT|current verified milestone view|
 |`CORE\_ARCHITECTURE.md`|CURRENT|architecture and ownership map|
 |`DECISIONS.md`|CURRENT|approved ADR summary|
-|`NEXT\_PHASE.md`|CURRENT|E-43 completed; E-44 is the sole planned Derived Dimension State hardening gate|
+|`NEXT\_PHASE.md`|CURRENT|First supervised human test is the next product gate; deferred Core work remains deferred unless explicitly consumed|
 |`GIT\_BRANCHING\_MODEL.md`|CURRENT / DESCRIPTIVE|observed branch topology; not prescriptive policy|
 |`GIT\_MILESTONE\_GUIDE.md`|HISTORICAL|procedure specific to milestone 0100B|
 |`reviews/REPOSITORY\_ARCHITECTURE\_REVIEW\_2026-07-30.md`|HISTORICAL REVIEW|ARCH-RECOVERY-001 evidence, non-normative|
