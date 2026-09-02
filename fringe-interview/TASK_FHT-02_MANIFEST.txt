@@ -1,0 +1,12 @@
+TASK_FHT-02_FIRST_HUMAN_TEST_RUN1_UNDERSTANDING_AND_PROFESSIONAL_UTILITY_INTEGRATION.md
+TASK_FHT-02_MANIFEST.txt
+config/private_beta_ui.en.json
+config/private_beta_ui.it.json
+scripts/test_real_beta_ui_journey_integration.js
+scripts/test_staged_private_beta_journey.js
+scripts/test_staged_private_beta_ui_journey.js
+src/app/privateBetaJourneyIntegration.js
+src/app/privateBetaStagedInterviewJourney.js
+src/app/privateBetaUiJourneyEntryPoint.js
+src/app/privateBetaUiServer.js
+src/app/renderPrivateBetaUiJourneyHtml.js

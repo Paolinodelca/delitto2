@@ -53,7 +53,7 @@ const journeyOptions = {
 const positive = await runPrivateBetaUiJourneyEntryPoint({
   uiInput: {
     identityAction: "create", workingMode: "independent", consentDecision: "accept",
-    targetRole: "Product Operations Manager", cvText: "AUTHORIZED CV", jdText: "AUTHORIZED JD",
+    targetRole: "Product Operations Manager", cvText: "AUTHORIZED CV", userNotes: "AUTHORIZED PERSON NOTES", jdText: "AUTHORIZED JD",
     answers: "Presentazione libera del percorso.\n\nEsempio concreto di responsabilità.", feedbackAction: "skip",
     uiLocale: "it", sessionLocale: "it"
   }, ...journeyOptions
@@ -62,6 +62,7 @@ assert.equal(positive.completed, true);
 assert.equal(sessionRunnerCalls, 1);
 assert.equal(receivedInput.cvText, "AUTHORIZED CV");
 assert.equal(receivedInput.jdText, "AUTHORIZED JD");
+assert.equal(receivedInput.userNotes, "AUTHORIZED PERSON NOTES");
 assert.equal(receivedInput.answers.length, 2);
 assert.equal(positive.report.available, true);
 assert.equal(positive.feedback.status, "skipped");
@@ -108,6 +109,8 @@ assert.equal(page.status, 200);
 assert.ok(html.includes('action="/private-beta/journey"'));
 assert.ok(html.includes('name="consentDecision"'));
 assert.ok(html.includes('name="cvText"'));
+assert.ok(html.includes('name="userNotes"'));
+assert.ok(html.indexOf('name="userNotes"') < html.indexOf('name="jdText"'));
 assert.ok(html.includes('name="feedbackAction"'));
 const response = await fetch(`http://127.0.0.1:${port}/private-beta/journey`, {
   method: "POST",

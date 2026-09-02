@@ -324,4 +324,4 @@ export const PRIVATE_BETA_PROFESSIONAL_IDENTITY_SNAPSHOT_GAP_CODE = SNAPSHOT_GAP
 
 export default runIntegratedPrivateBetaJourney;
 
-export { prepareStagedPrivateBetaJourney, answerStagedPrivateBetaJourney, finalizeStagedPrivateBetaJourney } from "./privateBetaStagedInterviewJourney.js";
+export { prepareStagedPrivateBetaJourney, continueStagedPrivateBetaJourney, answerStagedPrivateBetaJourney, finalizeStagedPrivateBetaJourney } from "./privateBetaStagedInterviewJourney.js";

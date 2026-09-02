@@ -65,6 +65,7 @@ export async function runPrivateBetaUiJourneyEntryPoint({
   Object.defineProperties(materials, {
     cvText: { enumerable: true, get: () => text(uiInput.cvText) },
     jdText: { enumerable: true, get: () => text(uiInput.jdText) },
+    userNotes: { enumerable: true, get: () => text(uiInput.userNotes) },
     targetRole: { enumerable: true, get: () => text(uiInput.targetRole) },
     answers: { enumerable: true, get: () => splitAnswers(uiInput.answers) },
     modelAdapter: { enumerable: true, get: () => effectiveModelAdapter },

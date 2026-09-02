@@ -49,5 +49,18 @@
   "valueProofWhyLimited": "The reading remains cautious because there are not enough specific signals available to show.",
   "valueProofStatus_partially_characterized": "Supported, but still only partially characterized",
   "valueProofHistorySupported": "Professional history supports this area; depth and specialization still need characterization.",
-  "valueProofInsufficient": "There is not yet enough information to characterize this aspect."
+  "valueProofInsufficient": "There is not yet enough information to characterize this aspect.",
+  "userNotes": "Additional professional context (optional)",
+  "userNotesHelp": "Add responsibilities, projects, transitions or achievements that your CV does not represent well.",
+  "understandingTitle": "What IMAGO understands so far",
+  "understandingIntro": "This is a current representation derived from the materials you provided. It is not objective truth about you and can be explored further during the interview.",
+  "understandingPositioning": "Profile emerging from the materials",
+  "understandingRecognized": "Recognized experience, capabilities and themes",
+  "understandingLimited": "What remains insufficiently represented",
+  "understandingLimitedIntro": "These areas are not yet sufficiently described in the material. That does not mean they are absent or weaknesses.",
+  "immediateUtilityTitle": "How to make your professional representation clearer",
+  "understandingTarget": "Target used as context",
+  "understandingAgreementLabel": "How would you like to proceed?",
+  "understandingContinue": "This reading is useful enough: continue to interview",
+  "understandingIncomplete": "This reading is incomplete or does not fully represent me"
 }

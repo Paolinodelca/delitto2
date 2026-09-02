@@ -49,5 +49,18 @@
   "valueProofWhyLimited": "La lettura è prudente perché non sono disponibili segnali specifici sufficienti da mostrare.",
   "valueProofStatus_partially_characterized": "Supporto presente, caratterizzazione ancora parziale",
   "valueProofHistorySupported": "La storia professionale sostiene questo ambito; profondità e specializzazione restano da caratterizzare.",
-  "valueProofInsufficient": "Non emergono ancora elementi sufficienti per caratterizzare questo aspetto."
+  "valueProofInsufficient": "Non emergono ancora elementi sufficienti per caratterizzare questo aspetto.",
+  "userNotes": "Contesto professionale aggiuntivo (opzionale)",
+  "userNotesHelp": "Aggiungi responsabilità, progetti, passaggi o risultati importanti che il CV non rappresenta bene.",
+  "understandingTitle": "Cosa ha capito IMAGO finora",
+  "understandingIntro": "Questa è una rappresentazione corrente ricavata dai materiali che hai fornito: non è una verità oggettiva su di te e potrà essere approfondita durante il colloquio.",
+  "understandingPositioning": "Profilo che emerge dai materiali",
+  "understandingRecognized": "Esperienze, capacità e temi riconosciuti",
+  "understandingLimited": "Cosa resta poco rappresentato",
+  "understandingLimitedIntro": "Questi aspetti non risultano ancora sufficientemente descritti nei materiali: non significa che siano assenti o che siano punti deboli.",
+  "immediateUtilityTitle": "Come rendere più chiara la tua rappresentazione professionale",
+  "understandingTarget": "Target usato come contesto",
+  "understandingAgreementLabel": "Come vuoi procedere?",
+  "understandingContinue": "La lettura è abbastanza utile: continua al colloquio",
+  "understandingIncomplete": "La lettura è incompleta o non mi rappresenta pienamente"
 }

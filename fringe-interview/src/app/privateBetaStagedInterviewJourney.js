@@ -8,6 +8,7 @@ import { createPrivateBetaConsent, decidePrivateBetaConsent, assertPrivateBetaDa
 import { createPrivateBetaFeedback, submitPrivateBetaFeedback, skipPrivateBetaFeedback } from './privateBetaFeedback.js';
 import { runGroqParserModel } from '../parser/adapters/index.js';
 import { buildRepresentationValueProofProjection } from './buildRepresentationValueProofProjection.js';
+import { buildCvReviewReportV1 } from '../report/buildCvReviewReportV1.js';
 import { buildAcceptedRuntimeAnswerEvidenceStore } from './registerAcceptedRuntimeAnswerEvidence.js';
 import { runAcceptedRuntimeAnswerKnowledgeVerticalSlice } from './runAcceptedRuntimeAnswerKnowledgeVerticalSlice.js';
 import { buildPrivateBetaOperationalEvent, emitPrivateBetaOperationalEvent, recordPrivateBetaInterruption } from './privateBetaOperationalLogging.js';
@@ -21,10 +22,19 @@ function code(e){return /429|5\d\d|timeout|network|fetch failed/i.test(String(e?
 export async function prepareStagedPrivateBetaJourney({uiInput={},modelAdapter,operationalSink,now=()=>new Date().toISOString(),technicalDiagnosticSink,recentQuestionKeys=[],recentQuestionHistory=[],knowledgeSemanticAuthority=null,knowledgeSubjectRef=null}={}){
  const ob=onboarding(uiInput);let consent=createPrivateBetaConsent(ob,{now:now()});consent=decidePrivateBetaConsent(consent,uiInput.consentDecision,{now:now()});
  if(consent.status!=='accepted')return{publicResult:{status:'blocked',completed:false,phase:'privacy_consent',error:{code:'CONSENT_REFUSED'}},state:null};assertPrivateBetaDataUseAllowed(consent);
- const cvText=txt(uiInput.cvText),jdText=txt(uiInput.jdText),targetRole=txt(uiInput.targetRole);
+ const cvText=txt(uiInput.cvText),userNotes=txt(uiInput.userNotes),jdText=txt(uiInput.jdText),targetRole=txt(uiInput.targetRole);
  const baseAdapter=typeof modelAdapter==='function'?modelAdapter:({task,system,user})=>runGroqParserModel({task,system,user,temperature:0.2}).then(x=>x?.outputText||'');
  const adapter=async r=>{try{return await baseAdapter(r);}catch(e){if(typeof technicalDiagnosticSink==='function'){const m=String(e?.message||'');const failureKind=/429/.test(m)?'provider_rate_limit':/5\d\d/.test(m)?'provider_http_5xx':/timeout|timed out/i.test(m)?'provider_timeout':/fetch failed|network/i.test(m)?'provider_network':'provider_or_model_adapter_error';try{technicalDiagnosticSink(Object.freeze({boundary:'model_adapter',task:String(r?.task||'unknown'),failureKind}));}catch{}}throw e;}};
- try{const out=await runFringeInterviewMVPSession({cvText,jdText,targetRole,modelAdapter:adapter,answers:[],inputMode:'text',uiLocale:txt(uiInput.uiLocale)||'it',sessionLocale:txt(uiInput.sessionLocale)||txt(uiInput.uiLocale)||'it',inputSource:'manual',recentQuestionKeys,recentQuestionHistory});const session=out.fringeInterviewMVPSession;const state={sessionId:session.betaSession.sessionId,onboarding:ob,consent,session,modelAdapter:adapter,sink:operationalSink,now,seq:0,usedQuestionHistory:[],knowledgeSemanticAuthority,knowledgeSubjectRef};await emit(state,'session_started','beta_journey','started');return{publicResult:{status:'interview',completed:false,phase:'interview',sessionRef:state.sessionId,currentQuestion:q(session.interviewRuntime)},state};}catch(e){return{publicResult:{status:'blocked',completed:false,phase:'interview',error:{code:code(e)}},state:null};}
+ try{const out=await runFringeInterviewMVPSession({cvText,jdText,userNotes,targetRole,modelAdapter:adapter,answers:[],inputMode:'text',uiLocale:txt(uiInput.uiLocale)||'it',sessionLocale:txt(uiInput.sessionLocale)||txt(uiInput.uiLocale)||'it',inputSource:'manual',recentQuestionKeys,recentQuestionHistory});const session=out.fringeInterviewMVPSession;const state={sessionId:session.betaSession.sessionId,onboarding:ob,consent,session,modelAdapter:adapter,sink:operationalSink,now,seq:0,usedQuestionHistory:[],knowledgeSemanticAuthority,knowledgeSubjectRef};await emit(state,'session_started','beta_journey','started');
+ const cvReviewReport=buildCvReviewReportV1({candidateProfile:session.parserResult?.candidateProfile||{},targetRole});
+ state.preInterview=Object.freeze({cvReviewReport,currentQuestion:q(session.interviewRuntime),agreement:null});
+ return{publicResult:{status:'understanding',completed:false,phase:'understanding',sessionRef:state.sessionId,preInterview:{candidateProfile:session.parserResult?.candidateProfile||{},cvReviewReport,targetRole}},state};}catch(e){return{publicResult:{status:'blocked',completed:false,phase:'interview',error:{code:code(e)}},state:null};}
+}
+
+export function continueStagedPrivateBetaJourney({state,representationAgreement='continue'}={}){
+ if(!state?.session?.interviewRuntime||!state?.preInterview?.currentQuestion)throw new Error('PRIVATE_BETA_STAGED_SESSION_REQUIRED');
+ state.preInterview={...state.preInterview,agreement:representationAgreement==='incomplete'?'incomplete':'continue'};
+ return {publicResult:{status:'interview',completed:false,phase:'interview',sessionRef:state.sessionId,currentQuestion:state.preInterview.currentQuestion},state};
 }
 export async function answerStagedPrivateBetaJourney({state,answer,feedbackAction='skip',feedbackComment=''}={}){
  if(!state?.session?.interviewRuntime)throw new Error('PRIVATE_BETA_STAGED_SESSION_REQUIRED');const answerText=txt(answer);if(!answerText)return{publicResult:{status:'interview',completed:false,phase:'interview',sessionRef:state.sessionId,currentQuestion:q(state.session.interviewRuntime),error:{code:'ANSWER_REQUIRED'}},state};
