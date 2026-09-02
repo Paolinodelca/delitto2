@@ -166,3 +166,28 @@ Responsibility continuity is distinct from role tenure. Exact durations and unam
 A valid production `DecisionAccountabilityObservation` requires eligible Evidence plus supported decision responsibility for a concrete represented decision/context, with at least one of `recommendation`, `shared` or `final` decision authority and a supported consequence scope. Accountability explicitness and continuity may be unknown when the corrected contract represents that state. Explicit `none` remains useful contextual Observation outside the positive Measurement/Contribution path; insufficient Evidence yields no valid Observation. The model may execute constrained semantic extraction/classification under already-resolved authority, but may not select policy, infer target/title-based authority, invent numeric epistemic scores, convert unknown to zero, perform unowned cross-Evidence aggregation, or create Knowledge directly.
 
 The current specialized Observation/Measurement technical contracts require minimal correction before production free-form execution: unknown/not-yet-derived must be representable for responsibility continuity and inference-support inputs; bounded/approximate continuity must preserve its temporal semantics rather than force an exact number; Measurement must calculate strength only from known applicable strength components and must not substitute zero for unknown. Inference support must remain separately unavailable/partial until canonical inputs exist and must not gate or depress measured strength by fabricated defaults. No new scoring framework or universal semantic interpreter is authorized.
+
+
+## PD-041 — Professional Identity is the reusable professional profile
+**Status:** CANONICAL
+**Decision:** The existing `Professional Identity` is the canonical person-owned professional Representation that fulfils the Product concept informally described as an IMAGO Professional Profile. The Beta must allow that identity to accumulate authorised professional material and supported Knowledge across meaningful interactions and to be saved, reopened, enriched and reused. A session is an interaction with the Professional Identity, not the identity itself. This decision does not introduce a second persistent profile object, prescribe storage technology or require a new Core Representation contract.
+
+## PD-042 — Person, session and target remain distinct
+**Status:** CANONICAL
+**Decision:** `PERSON ≠ SESSION ≠ TARGET`. Starting another session does not create another person, and changing target does not rewrite person-owned Evidence or Knowledge. Sessions may acquire or consume authorised person knowledge. Targets remain separate interpretive contexts under PD-033/PD-034. The same Professional Identity may therefore be reused across sessions and targets while preserving provenance, uncertainty and dated state.
+
+## PD-043 — Beta professional continuity and reuse
+**Status:** CANONICAL
+**Decision:** For the Private Beta, a tester who has already supplied authorised professional information must be able to return later without being required to supply the same information again, enrich the existing Professional Identity with newly supported material, and reuse the resulting person-owned professional knowledge for a later session or a different target. The minimum Product continuity is `SAVE → REOPEN → ENRICH → REUSE`. The technical solution may initially be minimal and local when consistent with consent, privacy, provenance and existing authority; this decision does not select database, filesystem, cloud, authentication or synchronization architecture. Unsupported or insufficient material never becomes Knowledge merely to preserve continuity.
+
+## PD-044 — One professional knowledge path, multiple user perspectives
+**Status:** CANONICAL
+**Decision:** Candidate/professional and Tutor/outplacement/career-professional experiences are perspectives over the same canonical person-owned Professional Identity and Knowledge path, not separate Knowledge engines. Their views, actions and workflow may differ, but delegated professional access remains explicit, limited and revocable under PD-002 and may not transfer ownership or mutate Evidence/Knowledge to fit the professional's perspective. Human professional judgment and responsibility remain with the human professional.
+
+## PD-045 — Living Professional Identity and report snapshot are distinct
+**Status:** CANONICAL
+**Decision:** A report or export is a shareable snapshot derived from the Professional Identity at a declared state/context; it is not the persistent professional workspace itself. The application earns return use by preserving and developing authorised sources, reusable Knowledge, insufficiently observed areas, sessions, targets and subsequent enrichment, not by withholding prior results. Export remains permitted in principle; its minimum Beta form is a later implementation decision.
+
+## PD-046 — Meaningful interaction should improve reusable knowledge when justified
+**Status:** CANONICAL
+**Decision:** Every meaningful professional interaction should, when epistemically justified, increase or improve the reusable professional knowledge available for the person. This is not a requirement that every interaction create Knowledge: unsupported, insufficient, rejected or otherwise ineligible Evidence remains so and follows existing no-Knowledge-effect rules.

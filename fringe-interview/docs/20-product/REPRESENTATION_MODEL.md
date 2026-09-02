@@ -428,3 +428,34 @@ Questioning and interpretation may depend on:
 - interviewer style.
 
 Perspective changes what is relevant and how evidence is interpreted. It does not rewrite the underlying evidence or knowledge.
+
+
+## Beta Professional Identity continuity and reuse
+
+For the professional Beta, the existing **Professional Identity** is the canonical persistent person Representation. `Professional Profile` is a Product-facing description of this same concept, not a second Representation object.
+
+The Product relationship is:
+
+```text
+Professional Identity (person-owned)
+        |
+        +--> authorised sources / Evidence
+        +--> reusable professional Knowledge
+        +--> dated Representation states
+        +--> Session A
+        +--> Session B
+        +--> Target A
+        +--> Target B
+```
+
+The separation is strict: `PERSON ≠ SESSION ≠ TARGET`. A session may acquire or use information about the person. A target is a separate interpretive context. Neither creates a new person, and target-relative interpretation never rewrites person-owned Evidence or Knowledge.
+
+The minimum Beta continuity requirement is `SAVE → REOPEN → ENRICH → REUSE`. A returning tester must not be required to reconstruct already-authorised professional material merely because a new session or target begins. New supported sources and interaction Evidence may enrich the Professional Identity while preserving source boundaries, provenance, uncertainty and dated state.
+
+The source model remains heterogeneous. Current or historical CVs, free professional narrative, uploaded professional material, interview interaction and other authorised professional sources may contribute where supported. The user should not need to classify them using IMAGO's internal taxonomy.
+
+Candidate and Tutor/outplacement/career-professional use are different Product perspectives over this same person-owned Representation. They do not create separate Knowledge engines. Delegated access remains explicit, limited and revocable.
+
+A report is a **snapshot** of a declared Representation state. The application / Professional Identity is the **living reusable Representation**. Returning value should come from what IMAGO can legitimately do with accumulated supported knowledge, not from withholding an earlier report.
+
+These Product requirements do not prescribe persistence technology, authentication, cloud synchronization, multi-user infrastructure, Knowledge Timeline, or a new persistent characterization contract.

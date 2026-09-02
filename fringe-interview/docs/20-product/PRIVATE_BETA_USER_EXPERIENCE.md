@@ -130,3 +130,36 @@ Prefer one platform with two controlled cohorts:
 - Tutor-assisted Beta: smaller controlled cohort to validate collaboration and outplacement value.
 
 The Tutor path may be enabled incrementally without changing the ownership model.
+
+
+## Professional Identity continuity for the Beta
+
+The First Human Test must treat the experience as more than a one-session `CV + target → interview → report → end` flow. The minimum Product cycle is `ACQUIRE → UNDERSTAND → HELP → PRESERVE → REUSE`.
+
+For the Beta:
+- the person creates or recovers the existing Professional Identity;
+- authorised acquisition may begin from a current CV, free-form professional input and, when available, additional professional material;
+- target/job material is a separate context and is not part of person identity;
+- the user is shown what IMAGO currently understands with provenance-aware explanation and can identify material errors where the implemented experience supports correction;
+- immediate utility prioritizes professional/CV representation feedback and interview preparation/feedback;
+- supported new Evidence from interaction may contribute to reusable person knowledge through authorised semantic paths;
+- the Professional Identity must be preservable and reopenable for later enrichment;
+- already-authorised information should be reusable with another target without requiring reconstruction from zero.
+
+The Beta Product requirement is `SAVE → REOPEN → ENRICH → REUSE`. It does not prescribe persistence technology.
+
+### Candidate and professional-support perspectives
+
+Use one platform and one canonical person-owned Professional Identity with controlled perspectives:
+- **Candidate / Professional:** understand and improve professional representation, prepare materials/interviews and reuse accumulated supported knowledge.
+- **Tutor / Outplacement / Career Professional:** with explicit revocable authorization, organize heterogeneous material, inspect what is supported or insufficiently observed, identify areas to investigate, and support CV/interview/target work.
+
+These perspectives may have different views and actions but do not create separate Knowledge engines. The human professional retains judgment and responsibility.
+
+### Report and living application
+
+A report/export is a dated **snapshot**. The application and Professional Identity are the **living reusable professional representation/workspace**. Export must not be deliberately restricted to force return use. Return value should come from preservation, enrichment and reuse of supported professional knowledge.
+
+### First Human Test product scope
+
+AR-03 opened the technical gate; the First Human Test is now a Product test. It should evaluate minimum utility, acquisition/usability, correctness of understood professional material, useful CV/interview support, continuity/reuse potential, the candidate perspective and, where practical, the Tutor/outplacement perspective. The detailed protocol is defined separately from this Product Authority.
