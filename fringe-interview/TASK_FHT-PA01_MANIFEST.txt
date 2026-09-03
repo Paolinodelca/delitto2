@@ -1,0 +1,12 @@
+src/core/knowledge/validateKnowledgeAcquisitionDesign.js
+src/core/measurement/quantifiedOutcome/buildQuantifiedOutcomeObservation.js
+src/core/measurement/quantifiedOutcome/validateQuantifiedOutcomeObservation.js
+src/core/measurement/quantifiedOutcome/buildQuantifiedOutcomeMeasureResult.js
+src/core/measurement/quantifiedOutcome/validateQuantifiedOutcomeMeasureResult.js
+src/core/measurement/quantifiedOutcome/projectQuantifiedOutcomeMeasureResult.js
+src/core/measurement/quantifiedOutcome/index.js
+src/core/dimension/buildQuantifiedOutcomeMeasurementDimensionMapping.js
+src/app/knowledge/resolveQuantifiedOutcomeSemanticAuthority.js
+src/app/knowledge/constructAuthorizedQuantifiedOutcomeObservation.js
+src/app/knowledge/runQuantifiedOutcomeSemanticKnowledgePath.js
+scripts/test_fht_pa01_quantified_outcome_semantic_authority.js

@@ -1,0 +1,4 @@
+const {buildMeasurementDimensionMapping}=require('./buildMeasurementDimensionMapping');
+const {validateMeasurementDimensionMapping}=require('./validateMeasurementDimensionMapping');
+function buildQuantifiedOutcomeMeasurementDimensionMapping({now}={}){const at=now||new Date().toISOString();const mapping=buildMeasurementDimensionMapping({id:'mapping:quantified_outcome:quantified_outcome:v1',measurementId:'quantified_outcome',targets:[{dimensionId:'quantified_outcome',contributionType:'supporting',weight:1,confidenceFactor:1}],metadata:{version:'1.0',createdAt:at,updatedAt:at},extensions:{semanticPolicyRef:'professional_semantic_policy:quantified_outcome:v1',meaning:'supported_presence_not_magnitude_score'}},{now:at});const v=validateMeasurementDimensionMapping(mapping);if(!v.valid)throw new Error(v.errors.join(' | '));return mapping}
+module.exports={buildQuantifiedOutcomeMeasurementDimensionMapping};

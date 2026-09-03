@@ -1,0 +1,14 @@
+const {resolveQuantifiedOutcomeSemanticAuthority}=require('./resolveQuantifiedOutcomeSemanticAuthority');
+const {constructAuthorizedQuantifiedOutcomeObservation}=require('./constructAuthorizedQuantifiedOutcomeObservation');
+const {buildQuantifiedOutcomeMeasureResult,projectQuantifiedOutcomeMeasureResult}=require('../../core/measurement/quantifiedOutcome');
+const {buildQuantifiedOutcomeMeasurementDimensionMapping}=require('../../core/dimension/buildQuantifiedOutcomeMeasurementDimensionMapping');
+const {mapMeasurementResultToDimensionContributions,buildKnowledgeLedger,appendDimensionContributions,buildKnowledgeSnapshot}=require('../../core/dimension');
+const {buildPersonKnowledgeMatrix,buildKnowledgeCoverage}=require('../../core/knowledge');
+function empty(authority=null){return Object.freeze({semanticAuthority:authority,observation:null,specializedMeasurementResult:null,measurementResult:null,dimensionContributions:Object.freeze([]),knowledgeLedger:null,knowledgeSnapshot:null,personKnowledgeMatrix:null,knowledgeCoverage:null})}
+function runQuantifiedOutcomeSemanticKnowledgePath({evidence,knowledgeAcquisitionExecution,knowledgeAcquisitionPlan,capabilityConfiguration,solutionDecision,knowledgeAcquisitionDesign,observationExecutor,subjectRef,now}={}){
+ const semanticAuthority=resolveQuantifiedOutcomeSemanticAuthority({evidence,knowledgeAcquisitionExecution,knowledgeAcquisitionPlan,capabilityConfiguration,solutionDecision,knowledgeAcquisitionDesign});if(!semanticAuthority.resolved)return empty(semanticAuthority);
+ const observation=constructAuthorizedQuantifiedOutcomeObservation({evidence,semanticAuthority,executor:observationExecutor});if(!observation)return empty(semanticAuthority);
+ const specializedMeasurementResult=buildQuantifiedOutcomeMeasureResult({observation});const measurementResult=projectQuantifiedOutcomeMeasureResult(specializedMeasurementResult,{calculatedAt:now});if(!measurementResult)return Object.freeze({...empty(semanticAuthority),observation,specializedMeasurementResult});
+ const mapping=buildQuantifiedOutcomeMeasurementDimensionMapping({now});const dimensionContributions=mapMeasurementResultToDimensionContributions(measurementResult,mapping);let knowledgeLedger=buildKnowledgeLedger({contributions:[],metadata:{createdAt:now,updatedAt:now}},{now});knowledgeLedger=appendDimensionContributions(knowledgeLedger,dimensionContributions,{now});const knowledgeSnapshot=buildKnowledgeSnapshot(knowledgeLedger,{now});const personKnowledgeMatrix=buildPersonKnowledgeMatrix({subjectRef,knowledgeSnapshot,derivedStates:[]},{now});const knowledgeCoverage=buildKnowledgeCoverage({personKnowledgeMatrix});return Object.freeze({semanticAuthority,observation,specializedMeasurementResult,measurementResult,dimensionContributions,knowledgeLedger,knowledgeSnapshot,personKnowledgeMatrix,knowledgeCoverage});
+}
+module.exports={runQuantifiedOutcomeSemanticKnowledgePath};
