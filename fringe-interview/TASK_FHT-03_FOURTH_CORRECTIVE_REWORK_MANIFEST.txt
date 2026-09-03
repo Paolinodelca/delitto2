@@ -1,0 +1,3 @@
+src/parser/enforceFht03SemanticIntegrity.js
+scripts/test_fht03_corrective_semantic_enforcement.js
+scripts/test_fht03_fourth_corrective_bounded_people_leadership.js

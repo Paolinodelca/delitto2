@@ -30,7 +30,7 @@ export function buildRepresentationValueProofProjection({professionalPerceptionR
  const report=professionalPerceptionReport||{},pp=report?.professionalPerception||{},p=pp?.perceptionV2||{};
  const visible=arr(pp?.visibleSignals).map((x,i)=>ev(x?.label,`professionalPerception.visibleSignals[${i}]`)).filter(x=>x.summary);
  const under=arr(pp?.underVisibleSignals).map((x,i)=>ev(x?.label,`professionalPerception.underVisibleSignals[${i}]`)).filter(x=>x.summary);
- const gaps=arr(pp?.perceptionGap).map((x,i)=>ev(x?.narrative||x?.area,`professionalPerception.perceptionGap[${i}]`)).filter(x=>x.summary);
+ const gaps=arr(pp?.perceptionGap).map((x,i)=>{const area=text(x?.area);const narrative=text(x?.narrative);const generic=/^(questo|questa|tale)\s+(elemento|aspetto|area|segnale)\b/i.test(narrative);const summary=area&&(!narrative||generic)?area:(area&&narrative&&!norm(narrative).includes(norm(area))?`${area}: ${narrative}`:(narrative||area));return ev(summary,`professionalPerception.perceptionGap[${i}]`);}).filter(x=>x.summary);
  const uncertainties=uncertaintyItems(under,candidateProfile);
  const claims=[],usedEvidence=new Set();
  const takeFresh=(items,n=3)=>uniqueEvidence(items.filter(x=>!usedEvidence.has(norm(x.summary)))).slice(0,n).map(x=>(usedEvidence.add(norm(x.summary)),x));

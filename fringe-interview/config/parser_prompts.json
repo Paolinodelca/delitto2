@@ -107,14 +107,28 @@
           "scopeLevel": "narrow | moderate | broad | unclear"
         },
         "skills": {
-          "technical": ["string"],
-          "tools": ["string"],
-          "methodologies": ["string"],
-          "soft": ["string"],
-          "languages": ["string"]
+          "technical": [
+            "string"
+          ],
+          "tools": [
+            "string"
+          ],
+          "methodologies": [
+            "string"
+          ],
+          "soft": [
+            "string"
+          ],
+          "languages": [
+            "string"
+          ]
         },
-        "domainSignals": ["string"],
-        "responsibilitySignals": ["string"],
+        "domainSignals": [
+          "string"
+        ],
+        "responsibilitySignals": [
+          "string"
+        ],
         "careerSignals": {
           "stakeholderManagement": "none | weak | partial | strong | unclear",
           "crossFunctionalCollaboration": "none | weak | partial | strong | unclear",
@@ -126,15 +140,29 @@
         },
         "evidence": {
           "overallEvidenceLevel": "low | medium | high",
-          "evidenceRichAreas": ["string"],
-          "weaklySupportedAreas": ["string"],
+          "evidenceRichAreas": [
+            "string"
+          ],
+          "weaklySupportedAreas": [
+            "string"
+          ],
           "quantifiedAchievementsPresent": true
         },
-        "education": ["string"],
-        "certifications": ["string"],
-        "strengthAreas": ["string"],
-        "riskAreas": ["string"],
-        "ambiguities": ["string"]
+        "education": [
+          "string"
+        ],
+        "certifications": [
+          "string"
+        ],
+        "strengthAreas": [
+          "string"
+        ],
+        "riskAreas": [
+          "string"
+        ],
+        "ambiguities": [
+          "string"
+        ]
       }
     },
     "hardConstraints": [
@@ -142,7 +170,9 @@
       "Do not include fields outside the schema.",
       "Use empty arrays when information is absent.",
       "Use 'unclear' or equivalent allowed enum when evidence is insufficient.",
-      "Do not invent years of experience."
+      "Do not invent years of experience.",
+      "A statement that direct hierarchical or people-management responsibility was not exercised in one described context is bounded evidence about that context. Do not convert it by itself into weak/none peopleLeadership, limited/none leadershipExposure, a person risk, or an insufficient capability; use 'unclear' and/or ambiguities when broader leadership evidence is not established.",
+      "Do not generalize absence of a responsibility in one project, role episode, or example into absence or weakness of that capability across the person unless the source material explicitly supports that broader conclusion."
     ]
   },
   "roleProfilePrompt": {
@@ -199,29 +229,61 @@
         "summary": "2-4 sentence compact role summary",
         "seniorityDetected": "junior | mid | senior | lead | unclear",
         "requirements": {
-          "mustHave": ["string"],
-          "preferred": ["string"],
-          "bonus": ["string"]
+          "mustHave": [
+            "string"
+          ],
+          "preferred": [
+            "string"
+          ],
+          "bonus": [
+            "string"
+          ]
         },
         "skills": {
-          "technical": ["string"],
-          "tools": ["string"],
-          "methodologies": ["string"],
-          "soft": ["string"],
-          "languages": ["string"]
+          "technical": [
+            "string"
+          ],
+          "tools": [
+            "string"
+          ],
+          "methodologies": [
+            "string"
+          ],
+          "soft": [
+            "string"
+          ],
+          "languages": [
+            "string"
+          ]
         },
-        "responsibilities": ["string"],
-        "successSignals": ["string"],
+        "responsibilities": [
+          "string"
+        ],
+        "successSignals": [
+          "string"
+        ],
         "domainContext": {
-          "industry": ["string"],
-          "businessModel": ["string"],
-          "environmentSignals": ["string"],
-          "pressureSignals": ["string"]
+          "industry": [
+            "string"
+          ],
+          "businessModel": [
+            "string"
+          ],
+          "environmentSignals": [
+            "string"
+          ],
+          "pressureSignals": [
+            "string"
+          ]
         },
         "contextType": "string",
         "languageStyle": "string",
-        "redFlags": ["string"],
-        "ambiguities": ["string"]
+        "redFlags": [
+          "string"
+        ],
+        "ambiguities": [
+          "string"
+        ]
       }
     },
     "hardConstraints": [
@@ -365,13 +427,27 @@
             "explanation": "string"
           }
         ],
-        "ambiguities": ["string"],
-        "transferableStrengths": ["string"],
-        "strongSignals": ["string"],
-        "weakSignals": ["string"],
-        "matchedSkills": ["string"],
-        "missingSkills": ["string"],
-        "questionFocusAreas": ["string"],
+        "ambiguities": [
+          "string"
+        ],
+        "transferableStrengths": [
+          "string"
+        ],
+        "strongSignals": [
+          "string"
+        ],
+        "weakSignals": [
+          "string"
+        ],
+        "matchedSkills": [
+          "string"
+        ],
+        "missingSkills": [
+          "string"
+        ],
+        "questionFocusAreas": [
+          "string"
+        ],
         "interviewFocus": [
           {
             "priority": "high | medium | low",
@@ -386,12 +462,22 @@
             "reason": "string"
           }
         ],
-        "cvImprovementHints": ["string"],
+        "cvImprovementHints": [
+          "string"
+        ],
         "reportHighlights": {
-          "strengths": ["string"],
-          "risks": ["string"],
-          "clarificationsNeeded": ["string"],
-          "positioningHints": ["string"]
+          "strengths": [
+            "string"
+          ],
+          "risks": [
+            "string"
+          ],
+          "clarificationsNeeded": [
+            "string"
+          ],
+          "positioningHints": [
+            "string"
+          ]
         }
       }
     },
@@ -402,7 +488,10 @@
       "Use short explanations, not essays.",
       "Use numeric values for scores.",
       "Do not force high confidence when the source material is weak.",
-      "Do not equate overall score with guaranteed job success."
+      "Do not equate overall score with guaranteed job success.",
+      "Only create a gap, missingSkills entry, weakSignals entry, or reportHighlights.risks item for a target item when that target item is supported as a requirement by roleProfile.requirements.mustHave, roleProfile.requirements.preferred, roleProfile.requirements.bonus, or an equivalent explicit requirement authority in the supplied RoleProfile. A methodology or skill that appears only under roleProfile.skills is contextual role knowledge, not automatically a required target item.",
+      "Missing or insufficient candidate evidence must not be amplified into a weak, missing, contradicted, or insufficient person capability unless the CandidateProfile evidence supports that conclusion. Prefer ambiguities, interview clarification, or HELP/CV improvement hints for information that is not established.",
+      "Skills or methodologies that are relevant to the role but are not target requirements may still be used in cvImprovementHints, positioningHints, interview preparation, or other HELP-oriented suggestions, but must not be described as required/preferred by the JD or as a factual deficiency of the person."
     ]
   }
 }

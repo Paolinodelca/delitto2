@@ -820,8 +820,10 @@ function buildProfessionalPerceptionSummary({
       area: risk,
       currentSignal: "poco visibile",
       targetSignal: "più evidente nel racconto e nel CV",
-      narrative:
-      proReportNarratives?.professionalPerception?.riskPerceptionGapNarrative
+      narrative: applyTemplate(
+        proReportNarratives?.professionalPerception?.riskPerceptionGapNarrative,
+        { area: risk }
+      )
     });
   });
 

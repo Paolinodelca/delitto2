@@ -250,7 +250,7 @@
 
 "seniorityGapNarrative": "Il profilo oggi viene letto più vicino a una seniority {candidateSeniority}, mentre il ruolo target richiede segnali più vicini a {targetSeniority}.",
 
-"riskPerceptionGapNarrative": "Questo elemento non va letto necessariamente come assente, ma oggi non emerge con sufficiente forza rispetto al ruolo target.",
+"riskPerceptionGapNarrative": "{{area}} non va letto necessariamente come assente, ma oggi non emerge con sufficiente forza rispetto al ruolo target.",
 
 "credibilityExperienceWhyItMatters": "Questo elemento oggi pesa sulla distanza percepita dal ruolo target: va trasformato in evidenza concreta, non solo dichiarato.",
 
