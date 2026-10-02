@@ -1,0 +1,1 @@
+module.exports={...require('./buildContinuingPeopleResponsibilityObservation'),...require('./validateContinuingPeopleResponsibilityObservation'),...require('./buildContinuingPeopleResponsibilityMeasureResult'),...require('./validateContinuingPeopleResponsibilityMeasureResult'),...require('./projectContinuingPeopleResponsibilityMeasureResult')};

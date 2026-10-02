@@ -39,3 +39,11 @@ Stop the Beta test and contact the technical owner when:
 - any CV, full answer, report, feedback comment, prompt, token, secret, stack trace or Professional Identity content appears in operational data;
 - an error shown to the tester contains technical/internal details;
 - logging changes the session result or blocks the journey.
+
+## Candidate feedback (FB-01)
+
+The Private Beta server started through `scripts/run_private_beta_ui_server.js` persists Candidate product feedback locally as JSONL. The default path is `tmp/private-beta-feedback.jsonl`; set `IMAGO_PRIVATE_BETA_FEEDBACK_PATH` to choose another local path. No remote analytics service is used.
+
+When operator diagnostics are enabled, `GET /private-beta/operator/feedback` returns the structured records as JSON. Optional query filters are `sessionRef` and `contextRef`. Records contain bounded checkpoint/object references, UI/artifact language where relevant, reaction/category and Candidate-submitted feedback text; they do not copy full CV, JD, interview answers, Professional Identity, Professional Representation, Application Package or generated document text.
+
+Feedback is Beta/Product feedback only. Never treat a feedback comment as Evidence, Knowledge, Professional Identity or Application truth; professionally relevant facts mentioned in feedback require the normal acquisition/confirmation path.

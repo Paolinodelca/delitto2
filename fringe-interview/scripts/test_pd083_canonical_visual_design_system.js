@@ -1,0 +1,17 @@
+const fs=require("fs");
+const assert=require("assert");
+const renderer=fs.readFileSync("src/app/renderPrivateBetaUiJourneyHtml.js","utf8");
+const authority=fs.readFileSync("docs/20-product/IMAGO_VISUAL_DESIGN_SYSTEM.md","utf8");
+const required=["--imago-color-page","--imago-color-surface-nested","--imago-color-supported-border","--imago-color-clarify-border","--imago-color-build-border","--imago-color-info-surface","--imago-color-focus","--imago-space-4","--imago-radius-medium","--imago-border-width-default","--imago-font-size-metadata","--imago-elevation-subtle","--imago-layout-page-max"];
+for(const token of required)assert(renderer.includes(token),`missing canonical token ${token}`);
+assert(authority.includes("Product Authority"));
+assert(authority.includes("Unknown != confirmed gap visually"));
+assert(authority.includes("No new raw semantic colors"));
+const css=renderer.slice(renderer.indexOf("<style>"),renderer.indexOf("</style>"));
+const refStart=css.indexOf(".direction-navigation");
+const reference=refStart>=0?css.slice(refStart):css;
+for(const raw of ["#edf7f1","#fff8e8","#f7eef6","#5b8f72","#a97924","#8a5b83"])assert(!reference.includes(raw),`reference surface contains raw semantic color ${raw}`);
+assert(reference.includes("var(--imago-radius-pill)"));
+assert(css.includes("var(--imago-elevation-subtle)"));
+assert(reference.includes("var(--imago-font-size-metadata)"));
+console.log("PD-083 canonical visual design system: PASS");

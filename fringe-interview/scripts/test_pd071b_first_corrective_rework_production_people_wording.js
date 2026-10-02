@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {buildProfessionalRepresentationSynthesisInput,buildDeterministicProfessionalRepresentation,reconcileProfessionalRepresentationRealization} from '../src/app/buildProfessionalRepresentationSynthesis.js';
+const cpr={semanticType:'continuing_people_responsibility',sourceRef:'knowledgeSnapshot:pd056',evidenceIds:['evidence:pd056'],responsibilityPresence:'supported',continuity:'continuing',responsibilityMode:'informal_operational',responsibilityKinds:['work_assignment_or_priority_setting','workload_shift_or_schedule_coordination','performance_follow_up_or_feedback'],peopleScope:{kind:'exact',value:10},professionalContext:{description:'reparto produttivo'},limitations:['formal reporting authority not established']};
+const input=buildProfessionalRepresentationSynthesisInput({authorizedSemanticMaterial:[cpr],locale:'it'});
+const base=buildDeterministicProfessionalRepresentation({synthesisInput:input,locale:'it'});
+assert.equal(base.claims.length,1);assert.match(base.claims[0].professionalClaim,/coordini il lavoro di circa 10 persone/i);assert.doesNotMatch(base.claims[0].professionalClaim,/responsabilit[aà].*(?:10|dieci) persone|gestione di (?:10|dieci) persone/i);
+const proposed={claims:[{id:base.claims[0].id,professionalClaim:'Una responsabilità operativa continuativa è affidata a un gruppo di circa dieci persone per la gestione del lavoro, della programmazione e del follow-up delle performance.',explanation:'Responsabilità sul gruppo.'}]};
+const reconciled=reconcileProfessionalRepresentationRealization({synthesisInput:input,deterministicRepresentation:base,realization:proposed,locale:'it'});
+assert.ok(reconciled);assert.equal(reconciled.claims[0].professionalClaim,base.claims[0].professionalClaim);assert.match(reconciled.claims[0].professionalClaim,/coordini il lavoro di circa 10 persone/i);assert.doesNotMatch(reconciled.claims[0].professionalClaim+' '+reconciled.claims[0].explanation,/responsabilit[aà] operativa continuativa .*gruppo di circa dieci persone|gestione di (?:10|dieci) persone|line management|people leadership/i);
+assert.deepEqual(reconciled.claims[0].supportingSemanticFacts[0].responsibilityMode,'informal_operational');
+console.log('PD-071B First Corrective Rework production people wording: PASS');

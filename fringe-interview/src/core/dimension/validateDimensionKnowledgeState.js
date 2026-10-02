@@ -2,7 +2,7 @@ const { DIMENSION_TYPES, STATE_TYPES, DIRECTIONS } = require("./buildDimensionKn
 
 const TOP_LEVEL_FIELDS = [
   "dimensionId", "dimensionType", "stateType", "estimate", "direction",
-  "coverage", "confidence", "consistency", "stability", "evidenceQuality",
+  "coverage", "confidenceState", "confidence", "consistency", "stability", "evidenceQuality",
   "sourceReliability", "measurementCount", "independentMeasurementCount",
   "resultCount", "sourceDiversity", "contextDistribution", "contradictions",
   "supportingMeasurementResultRefs", "supportingCapabilityResultRefs",
@@ -122,9 +122,11 @@ function validateDimensionKnowledgeState(state = {}) {
     }
   }
 
-  for (const field of ["coverage", "confidence", "consistency"]) {
-    if (!validUnit(state[field])) errors.push(`${field} must be a finite number between 0 and 1.`);
-  }
+  if (!["known", "partial", "not_yet_derived"].includes(state.confidenceState)) errors.push("confidenceState is invalid.");
+  if (!validUnit(state.coverage)) errors.push("coverage must be a finite number between 0 and 1.");
+  if (state.confidenceState === "known") { if (!validUnit(state.confidence)) errors.push("confidence must be a finite number between 0 and 1 when confidenceState is known."); }
+  else if (state.confidence !== null) errors.push("non-known confidenceState requires null confidence.");
+  if (!validUnit(state.consistency)) errors.push("consistency must be a finite number between 0 and 1.");
   for (const field of ["stability", "evidenceQuality", "sourceReliability"]) {
     if (!validNullableUnit(state[field])) errors.push(`${field} must be null or a finite number between 0 and 1.`);
   }

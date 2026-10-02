@@ -422,6 +422,7 @@ function buildPrimaryCoreQuestionBlocks(interviewQuestionSet, locale) {
       blockType: "core_question",
       sequence: index + 1,
       familyKey: normalizeString(item?.familyKey) || `primary_${index + 1}`,
+      canonicalQuestionKey: normalizeString(item?.canonicalQuestionKey),
       familyLabel: normalizeString(item?.familyLabel) || `Tema ${index + 1}`,
       displayLabel: mapNarrativeRoleToDisplayLabel(
         item?.narrativeRole,

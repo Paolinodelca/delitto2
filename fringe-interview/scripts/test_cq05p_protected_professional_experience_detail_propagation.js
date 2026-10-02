@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import { constructBoundedProfessionalResponsibilityScope } from '../src/app/knowledge/constructBoundedProfessionalResponsibilityScope.js';
+import { buildTargetIndependentProfessionalRepresentation } from '../src/app/buildTargetIndependentProfessionalRepresentation.js';
+import { buildOpportunityUnderstanding, buildGroundedApplicationPackage, buildApplicationArtifacts } from '../src/app/opportunityApplication/groundedApplicationPackage.js';
+import { loadPrivateBetaUiMessages } from '../src/i18n/loadPrivateBetaUiMessages.js';
+
+const scope=constructBoundedProfessionalResponsibilityScope({sourceId:'cv1',sourceRole:'current_cv',supportType:'authorised_source',sourceRef:'cv1:followup',exactText:'Responsabilità condivisa sul follow-up operativo.',referent:{activity:'operational follow-up',context:'bounded operational activity'},scope:'shared_non_exclusive'});
+const sources=[{id:'cv1',sourceRole:'current_cv',role:'Production Supervisor',content:'Production Supervisor. Responsabilità condivisa sul follow-up operativo.'},{id:'cv2',sourceRole:'previous_cv',role:'Industrialization Engineer',content:'Industrialization Engineer. Ha partecipato al lancio di una linea.'},{id:'raw',sourceRole:'professional_declaration',content:'Risultato del progetto: circa 20%.'}];
+const projection=sources.slice(0,2).map(s=>({sourceId:s.id,sourceRole:s.sourceRole,facts:[s.role],roleDescriptionFacts:[],domainSignals:[],experienceHighlights:[],sourceFaithfulExperienceExcerpts:[],activitySemantics:[]}));
+const rep=await buildTargetIndependentProfessionalRepresentation({professionalSources:sources,sourceGroundedProjection:projection,responsibilityScopeResults:[scope],reusableKnowledgeResults:[],useModel:false});
+const identity={revision:1,professionalSources:sources,representationSnapshots:[{representation:rep}]};
+const before=JSON.stringify(identity);
+const u=buildOpportunityUnderstanding({opportunityText:'Production Engineer\nResponsibilities\nSupport operational follow-up.',opportunityLabel:'Production Engineer'});
+const pkg=buildGroundedApplicationPackage({professionalIdentity:identity,opportunityUnderstanding:u,documentData:{displayName:'Marco'}});
+const history=pkg.professionalHistory.find(x=>x.sourceRefs.includes('cv1'));
+assert(history);assert.equal(history.protectedDetailRefs.length,1);
+const href=history.protectedDetailRefs[0].candidateApplicationMaterialRef;assert(href);
+const material=pkg.candidateApplicationMaterials.find(x=>x.id===href);assert(material);assert.equal(material.semanticProtection.state,'established');assert.equal(material.semanticProtection.dimensions.find(x=>x.dimension==='responsibility_scope').value,'shared_non_exclusive');assert.equal(material.languageTransformationEligibility,'eligible');
+const arts=buildApplicationArtifacts({applicationPackage:pkg,opportunityUnderstanding:u,documentLanguage:'it',messages:loadPrivateBetaUiMessages('it')});
+const exp=arts.cvContentModel.professionalExperience.find(x=>x.sourceRefs.includes('cv1'));const detail=exp.details.find(x=>typeof x==='object');assert(detail);assert.equal(detail.candidateApplicationMaterialRef,href);assert.equal(detail.semanticProtection.state,'established');assert(detail.protectionProvenance.length>0);assert.equal(detail.languageTransformationEligibility,'eligible');assert.equal(pkg.candidateApplicationMaterials.find(x=>x.id===detail.candidateApplicationMaterialRef),material,'stable identity resolves without text matching');
+assert(arts.targetedCv.content.includes(detail.text));assert(!arts.targetedCv.content.includes('candidateApplicationMaterialRef'));assert(!arts.targetedCv.content.includes('semanticProtection'));
+const raw=pkg.candidateApplicationMaterials.find(x=>x.materialKind==='raw_legacy_source'&&x.sourceRef==='raw');assert(raw);assert.equal(raw.semanticProtection.state,'insufficiently_established');assert.equal(raw.languageTransformationEligibility,'not_eligible');
+assert.equal(JSON.stringify(identity),before);
+assert(pkg.selectedCandidateMaterials.every(x=>x.id));assert(arts.coverLetter.candidateMaterialRefs.every(Boolean));
+console.log('CQ-05P Protected Professional Experience Detail Propagation: PASS');

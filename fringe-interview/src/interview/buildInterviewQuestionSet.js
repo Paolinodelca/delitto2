@@ -525,6 +525,7 @@ function normalizeResolvedQuestionItem(item, index) {
     inferNarrativeRoleFromFamily(familyKey);
 
   return {
+    canonicalQuestionKey: normalizeString(item.key),
     familyKey,
     familyLabel: familyLabel || familyKey || "Structured Question",
     priority,

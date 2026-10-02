@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {buildRepresentationValueProofProjection} from '../src/app/buildRepresentationValueProofProjection.js';
+const authorized={professionalPerception:{authorizedSemanticMaterial:[{semanticType:'quantified_outcome',sourceRef:'runtimeKnowledgeResults[0]',evidenceIds:['e1'],measurableOutcome:'monitored scrap rate decreased',quantitativeValue:{value:20,unit:'percent',approximate:true,direction:'decrease'},contributionRelationship:'contributed to intervention',causalityBoundary:'contribution_only',limitations:['Sole causality not established.']}],visibleSignals:[{label:'autonomous investment management'}],underVisibleSignals:[{label:'capacity planning'},{label:'Lean Six Sigma certification'},{label:'international experience'}]}};
+const role={requirements:{mustHave:['capacity planning'],preferred:[],bonus:[]}};
+const out=buildRepresentationValueProofProjection({professionalPerceptionReport:authorized,targetRole:'Operations Manager',candidateProfile:{},roleProfile:role});
+const positive=out.claims.find(x=>x.id.startsWith('authorized_quantified_outcome'));
+assert(positive);assert.match(positive.claim,/20/);assert.equal(positive.supportingEvidence[0].causalityBoundary,'contribution_only');
+assert(!JSON.stringify(out).includes('autonomous investment management'));
+const target=out.claims.find(x=>x.id==='target_relation');assert(target);assert.deepEqual(target.targetRelation.requirements,['capacity planning']);
+assert.equal(target.supportingEvidence.length,0);assert(!JSON.stringify(target).includes('Six Sigma'));assert(!JSON.stringify(target).includes('international experience'));
+const rawOnly=buildRepresentationValueProofProjection({professionalPerceptionReport:{professionalPerception:{visibleSignals:[{label:'strong leadership'}],underVisibleSignals:[]}},roleProfile:role});
+assert.equal(rawOnly.claims.length,0);
+console.log('FHT-DR02 final representation semantic authority PASSED');

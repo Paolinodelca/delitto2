@@ -59,7 +59,8 @@ function buildDimensionContribution(input = {}, options = {}) {
       ? source.contributionType
       : cleanString(source.contributionType),
     contributionValue: source.contributionValue === undefined ? 0 : source.contributionValue,
-    confidence: source.confidence === undefined ? 0 : source.confidence,
+    confidenceState: ["known", "partial", "not_yet_derived"].includes(source.confidenceState) ? source.confidenceState : "known",
+    confidence: source.confidenceState && source.confidenceState !== "known" ? (source.confidence === undefined ? null : source.confidence) : (source.confidence === undefined ? 0 : source.confidence),
     provenance: normalizeProvenance(source.provenance),
     metadata: {
       version: cleanString(metadataInput.version) || "1.0",

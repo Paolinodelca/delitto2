@@ -66,12 +66,45 @@ export function enforceCandidateProfileSemanticIntegrity({ result, sourceText = 
   return result;
 }
 
-function requirementItems(roleProfile) {
+export function requirementItems(roleProfile) {
   const r=roleProfile?.requirements || {};
   return [r.mustHave,r.preferred,r.bonus].flatMap(x=>Array.isArray(x)?x:[]).filter(x=>clean(x));
 }
-function hasRequirementAuthority(item, requirements) {
+
+export function isTargetRequirementGroundedInSource(requirement, sourceText) {
+  const requirementNorm=norm(requirement);
+  const sourceNorm=norm(sourceText);
+  if (!requirementNorm || !sourceNorm) return false;
+
+  // Narrow lexical grounding only: the target source must carry the requirement's
+  // meaningful terms. This intentionally does not infer adjacent professional
+  // methods (for example continuous improvement -> Lean/Six Sigma).
+  const requirementTokens=tokens(requirement);
+  const sourceTokens=tokens(sourceText);
+  if (!requirementTokens.size || !sourceTokens.size) return false;
+  let common=0;
+  for (const token of requirementTokens) if (sourceTokens.has(token)) common++;
+  return common / requirementTokens.size >= 0.6;
+}
+
+export function groundedRequirementItems(roleProfile, sourceText) {
+  return requirementItems(roleProfile).filter(req=>isTargetRequirementGroundedInSource(req,sourceText));
+}
+
+export function hasRequirementAuthority(item, requirements) {
   return requirements.some(req=>semanticallyMatches(item,req));
+}
+
+export function enforceRoleProfileTargetAuthority({ result, sourceText = "" }) {
+  const roleProfile=result?.roleProfile;
+  const requirements=roleProfile?.requirements;
+  if (!requirements || !clean(sourceText)) return result;
+  for (const key of ["mustHave","preferred","bonus"]) {
+    if (Array.isArray(requirements[key])) {
+      requirements[key]=requirements[key].filter(req=>isTargetRequirementGroundedInSource(req,sourceText));
+    }
+  }
+  return result;
 }
 
 function collectUnclearCandidateSignals(candidateProfile) {

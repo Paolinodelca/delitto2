@@ -281,3 +281,120 @@ Task 0100E-43 approves the existing Core `buildDerivedDimensionKnowledgeStates(e
 Cardinality is `0..N CapabilityExecutionResult + 0..N Mapping -> 0..N DerivedDimensionKnowledgeState`. Empty, unmatched, unmapped or non-positive result sets return an empty collection and never imply absent knowledge. Within one Snapshot/Capability/Recipe/version context, multiple mapped results may aggregate N:1 using the established confidence-weighted estimate and minimum confidence. Cross-execution aggregation is not authorized unless all contributing execution identities are retained exactly.
 
 E-44 may harden only this existing construction boundary, including exact multi-execution lineage, deterministic identity/order, deep immutability and focused validation/tests. Matrix, Coverage, satisfaction, persistence, I/O, Runtime mutation, LLM and reports remain unauthorized.
+
+### ADR-050 — Professional Direction Exploration is a Product/Application hypothesis layer over existing professional knowledge
+
+PDIR-02 canonicalizes Product Decisions PD-054 and PD-055. Professional Direction Exploration uses the same person-owned Living Professional Identity and canonical Professional Knowledge path under explicit Product purpose `professional_direction_explore`; it does not create a second identity, Core Knowledge model, ProfessionalTrajectory, fit/readiness score or employment-decision path. A named Career Direction is a derived Product/Application hypothesis formed from current supported Professional Representation meaning plus a separate externally grounded, provenance-bearing, versioned Role/Career Direction Representation. The exploratory Role/Career Direction Representation remains distinct from a concrete Target/Opportunity Representation.
+
+Conditions to verify remain decision-relevant unknowns rather than capability deficiencies. Direction-driven acquisition may later prioritize only already-authorised semantic dimensions through the existing Knowledge Acquisition chain and cannot manufacture semantic authority or Knowledge. Bridge/development/learning outputs remain bounded options tied to external role requirements and current supported state; course completion is not capability proof. Future Evidence Challenges remain deferred pending separate Product/methodology authority and, if later authorised, must enter through the canonical Evidence → Observation → Measurement → Knowledge path. PDIR-03 may now review the minimum Career Direction Representation and external role knowledge architecture; implementation remains unauthorized until that review is complete.
+
+## PDIR-07 — People Responsibility Product/Semantic Authority Canonicalization
+**Status:** CANONICAL AUTHORITY COMPLETE
+
+PDIR-07 canonicalizes Product Decision PD-056. `continuing_people_responsibility` is now an authorised elementary professional Person Knowledge dimension with Person-side goal `people_responsibility_scope` and semantic policy identity `professional_semantic_policy:continuing_people_responsibility:v1`. The authority was required because PDIR-05/06 established that the human-accepted Career Direction condition concerning continuing people responsibility could not legitimately use Decision Accountability, Quantified Outcome, title, coordination or historical people-leadership projection logic as Person semantic authority.
+
+PD-056 authorises a narrow context/time/provenance-bounded semantic family: positive Evidence must establish people-related responsibility, continuity beyond a one-off episode, at least one concrete responsibility kind and bounded professional context; Observation may retain continuity, responsibility mode, people scope and the minimum v1 responsibility kinds; Measurement remains non-evaluative; canonical Knowledge records documented responsibility only. It explicitly excludes leadership quality/style/potential, management capability/readiness, title-as-proof, generic coordination, Decision Accountability or Quantified Outcome as proxies, team outcome as proof, capability scoring, fit/readiness and development-gap inference. Contextual non-responsibility remains contextual and never becomes global deficiency.
+
+No new generic Core contract is required: the existing Evidence → Observation → Measurement → DimensionContribution → Knowledge path, provenance/temporal/source-multiplicity rules and Knowledge Acquisition architecture remain authoritative. A future acquisition must associate `professional_semantic_policy:continuing_people_responsibility:v1` upstream through `KnowledgeAcquisitionDesign`; Career Direction may motivate acquisition but cannot define Person semantics.
+
+**Next authorised technical scope:** one minimal people-responsibility semantic vertical slice only: accepted answer/source → Evidence → `observed_continuing_people_responsibility_context` → bounded Measurement → DimensionContribution → elementary `continuing_people_responsibility` Knowledge → shared Career Direction Condition resolution. Full Direction-driven acquisition, UI, DevelopmentNeed, BridgeExperience, Training and leadership-capability modelling remain outside this authority.
+
+## BV05-EXP-A — Source-Grounded Professional Episode Meaning Product Authority
+**Status:** CANONICAL AUTHORITY COMPLETE
+
+BV05-EXP-A canonicalizes Product Decision PD-057. IMAGO may now preserve **Source-Grounded Professional Episode Meaning** as Representation/Application material between raw/source Evidence and derived professional views without requiring one canonical Person Knowledge dimension for every professionally meaningful activity. The object describes the documented episode/activity and the person's source-supported participation/contribution in context; it does not generalize the person into capability, trait, fit, readiness or suitability.
+
+The authorised conceptual branch is `authorised source → Evidence → Source-Grounded Professional Episode Meaning → Representation/Application material`. The canonical Person Knowledge branch remains separate and unchanged: where an independent semantic policy exists, the same Evidence may also follow `Evidence → Observation → Measurement → DimensionContribution → Person Knowledge`. Episode Meaning is not canonical Observation or weaker Knowledge and cannot be promoted to Knowledge by repetition, relevance, provider labelling, user selection or Representation prominence.
+
+PD-057 authorises open **source-bounded descriptive vocabulary** while continuing to prohibit open Person-level semantic inference. Provenance, episode/context/time identity and contribution/ownership strength must remain bounded to Evidence; external Role/Target knowledge may affect relevance but may not manufacture Person-side meaning. Provider assistance is candidate-only and application grounding/claim-shape validation remains authoritative. No universal professional ontology is required.
+
+Episode Meaning may later become Person material for the existing BV05A Professional Material Relevance Relation only through separately authorised mappings, and may support Pattern discovery only through separately authorised Pattern rules. BV05A itself is not redesigned by this authority.
+
+PD-057 also canonicalizes the requirement-granularity boundary exposed by BV05A: a human-readable external requirement may be compound, while relevance must operate on sufficiently atomic semantic requirement units so relevance to one component cannot imply support for the others. No universal requirement ontology or decomposition implementation is authorised here.
+
+**Next authorised scope:** a separate repository-first implementation task may define the minimum technical Episode Meaning contract/extraction/materialization vertical slice and prove source grounding, open descriptive meaning with closed epistemic claim shape, provenance, provider non-authority and domain independence. Production extraction, Germany-specific logic, new Person semantic policies, Target/JD relevance, CV tailoring, acquisition and UI expansion remain outside this authority until separately authorised.
+
+## BV05-EXP-D — Representation Informational Contribution & Composition Product Authority
+**Status:** CANONICAL AUTHORITY COMPLETE
+
+BV05-EXP-D canonicalizes Product Decision PD-058. IMAGO now distinguishes source presence, current Representation visibility, Representation-relative informational contribution, independently authorised Connection and purpose-relative relevance. Informational contribution is a derived non-evaluative relation between authorised professional material and one specific Professional Representation; it asks what supported information the material adds beyond what the current composition already materially expresses. It is not intrinsic episode importance, salience, prestige, capability, seniority, fit/readiness or a global score.
+
+PD-058 explicitly authorises partial Representation: one aspect of an Episode Meaning may already support a Pattern while other source-grounded aspects remain compositionally unexpressed. Source-grounded material may expose bounded informational/support units with open descriptive vocabulary for comparison against current Representation composition units, without creating Person Knowledge dimensions or a universal professional ontology. Pattern remains recurrence; Connection remains independently authorised; purpose-relative BV05A relevance remains separate.
+
+The authorised composition direction is `Representation material including Episode Meanings -> derived informational contribution/coverage -> bounded non-redundant selection -> existing Pattern / Connection / Knowledge material -> Professional Meaning -> progressive support/provenance`. Existing Professional Meaning remains the destination. First-reading has a bounded semantic/narrative composition budget but no Top-N ranking or importance score. Visibility/prominence remains derived from the materialised Representation under PD-053; time and source multiplicity remain governed by PD-030/031/032. Provider may later propose bounded grounded relations but is not authority for importance or new Person meaning.
+
+No production composition, provider/runtime, Person Knowledge, Career Direction relevance, Target/JD, UI, atomic Role Requirement or BV05A implementation is changed by this authority task.
+
+**Next authorised scope:** a separate repository-first minimal implementation may prove PD-058 with the Germany Episode Meaning by distinguishing already represented cross-functional collaboration from still-unexpressed line-launch / installation / start-up / stabilization context, feeding only bounded non-redundant material into the existing Professional Meaning composition. It must remain domain-independent and fail closed rather than introduce global scoring, free semantic similarity, Person capability inference or target-relative relevance.
+
+## Candidate Career Preference Context Product Authority
+**Status:** CANONICAL AUTHORITY COMPLETE
+
+Product Decision **PD-059 — Candidate Career Preference Context** is canonical.
+
+PD-059 establishes Career Preference Context as explicit Candidate-declared/confirmed, person-associated Product/Application exploration state. It is reusable across relevant Career Direction Exploration sessions and Candidate-editable, while remaining outside canonical factual Person Knowledge and the factual Professional Identity. The Beta persistence boundary is the current explicitly confirmed preference context with minimal update provenance; no behavioural preference-history/analytics platform is authorised.
+
+Career Preference Context may contain a small extensible set of Candidate-declared interests, activity preferences, exploration orientations, avoidances, practical constraints, uncertainty and explicit Direction exploration requests. `unknown`, `not sure` and `no preference` are legitimate explicit states. The authority does not create a universal preference taxonomy or permit hidden preference inference.
+
+Under `professional_direction_explore`, preference may filter, broaden, prioritise, order or explicitly request exploration, but it cannot manufacture Person-side professional support. Career Direction explanation must keep **professional support**, **Candidate preference** and **unknown / condition to verify** distinct. Existing PD-054/PD-055 Career Direction semantics, Professional Representation authority and authorised acquisition remain unchanged.
+
+PD-059 introduces no Semantic Authority, Person Knowledge dimension, personality/psychometric assessment, fit/readiness scoring, Employer-visible Person truth or Opportunity/Application contract. Sparse academic/early-career material remains subject to existing source-grounded authority and cannot be converted from qualification into professional capability/suitability.
+
+**Next authorised scope:** a separate bounded implementation task may add optional Candidate UI to provide/edit current Career Preference Context, persist/retrieve the current Candidate-controlled state, consume it transparently in Career Direction Exploration without altering existing professional-support relations, and explain professional support / Candidate preference / unknown as separate bases. Opportunity Understanding and Grounded Application Package remain separately authorised future work.
+
+## Grounded Opportunity Application Package Product Authority
+**Status:** CANONICAL AUTHORITY COMPLETE
+
+Product Decision **PD-060 — Grounded Opportunity Application Package** is canonical.
+
+PD-060 establishes the Candidate Beta application boundary:
+
+`authorised Candidate professional material + Concrete Opportunity source / Opportunity Understanding -> target-relative grounded selection, emphasis, composition and wording -> Grounded Application Package -> Targeted CV + Cover Letter -> Candidate review -> copy/export/download`.
+
+A Concrete Opportunity is a specific external application target and remains distinct from exploratory Career Direction. Opportunity Understanding is a source-grounded Application-side Representation of that Opportunity, with reconstructable source provenance, and is separate from Person Knowledge and Career Direction Knowledge.
+
+The Grounded Application Package is a derived Candidate/Application Representation for one Opportunity. Targeting may change selection, omission, ordering, emphasis, composition and wording of supported Candidate material, but cannot manufacture capability, ownership, leadership, experience, outcome, seniority, fit/readiness or Candidate truth from Opportunity wording or Candidate preference.
+
+Every substantive Candidate-side professional claim must remain reconstructably grounded in authorised Candidate material. Application wording is not Person Knowledge or factual Professional Identity, and wording transformation may not increase semantic strength beyond its support. Targeted CV and Cover Letter share the same Grounded Application Package basis rather than maintaining independent truth.
+
+Candidate artifact editing is allowed but does not rewrite Evidence, Person Knowledge or Professional Representation. New/stronger factual claims introduced through editing are not silently promoted to Person truth; they remain unverified/unadopted by IMAGO or require a separately authorised confirmation/acquisition path before becoming supported fact.
+
+The minimal Beta lifecycle is one current Opportunity -> current Opportunity Understanding -> current Grounded Application Package -> CV + Cover Letter -> Candidate review -> copy/export/download, with minimal input identity/provenance and stale-state handling when relevant Candidate or Opportunity grounding changes. No CRM, bulk application management or complex version platform is authorised.
+
+Unsupported Opportunity requirements remain `not sufficiently established from current Candidate information`, not automatic weaknesses/deficiencies/capability gaps. `not established != absent`.
+
+Legacy CV/target code may later contribute mechanically safe formatting/template/rendering components, but legacy candidate-profile/trait/heuristic semantics are not canonical authority and must not bypass the current Professional Identity / Professional Representation / provenance boundary.
+
+**Next authorised scope:** one bounded Candidate Beta implementation slice may support one Candidate + one concrete Opportunity/JD -> bounded Opportunity Understanding -> Grounded Application Package -> Targeted CV + Cover Letter from the same grounded basis -> Candidate review -> copy/export/download. It must preserve Candidate professional truth, Opportunity separation, provenance, semantic-strength boundaries, `not established != absent`, no fit/readiness and no automatic submission.
+
+## PD-061 — Grounded Candidate Application Experience and Professional Document Composition
+**Status:** CANONICAL AUTHORITY COMPLETE
+
+PD-061 extends the closed PD-060 Application semantic foundation into a Candidate-grade Application Experience without changing Candidate truth or PD-060 grounding.
+
+Canonical decisions:
+- Concrete Opportunity/JD remains the first productive target boundary under PD-060 Opportunity Understanding.
+- No-JD Target Role preparation is deferred until a separate Role Understanding / Role Knowledge source-and-provenance authority exists; model prior knowledge alone is not canonical role truth.
+- A non-evaluative Target-Relative Information Map distinguishes `sufficiently_documented`, `related_but_not_established`, `not_sufficiently_established` and explicit `candidate_uncertain`; these are not fit/readiness/capability judgments.
+- Material unknowns may trigger optional targeted acquisition only through existing authorised Evidence/Knowledge paths; unanswered questions are not negative evidence.
+- A canonical CV Content Model is separate from visual templates and preserves coherent professional/educational history while allocating greater detail to target-relevant grounded material.
+- Candidate-controlled contact data is Application/account-side information, distinct from canonical professional Knowledge.
+- Quantitative professional evidence is valuable when supported and must never be invented.
+- Preferred CV budget is approximately one page, with two pages acceptable when needed for material history/evidence; space allocation is composition, not Candidate scoring.
+- CV and Cover Letter use Candidate-owned document voice while preserving semantic strength.
+- Cover Letter is a grounded narrative composition, not a prose copy of the CV and not a source of invented motivation/suitability.
+- Content and presentation are separate. Beta template families are Essential/ATS-friendly, Professional and Compact/Modern.
+- PDF is the required Candidate-grade stable output for the bounded Beta; DOCX is authorised where the same grounded content boundary can be preserved. TXT-only output is insufficient for Candidate-grade completion.
+- UI language, Opportunity/source language and generated-document language are separate dimensions.
+- Application workspace state remains separate from Professional Identity; only canonical acquisition may update Candidate truth.
+- Candidate remains final human authority over review and external use.
+
+Controlled-exploration requirements promoted into the next bounded implementation are: purpose-gated Career Preference controls; visible major-purpose actions at generic entry; distinguishable professional-source labels; corrected IT/EN application/document language routing; coherent Candidate voice; removal of internal grounding jargon from normal Candidate UI; Candidate-grade CV/letter composition; and professional document materialization.
+
+Explicitly deferred:
+1. productive no-JD targeting pending separate Role Understanding / Role Knowledge authority;
+2. BETA-04 Portable Professional Identity export/import/resume;
+3. separate Data & Privacy Architecture exploration.
+
+**Next authorised scope:** one bounded “Marco” + supplied Industrialization Project Engineer JD vertical may implement Opportunity Understanding -> Target-Relative Information Map -> material unknowns -> optional authorised acquisition -> complete CV Content Model -> target-focused Candidate-grade CV + Cover Letter -> template preview -> PDF download (DOCX optional if bounded) -> return to Professional Identity without Opportunity contamination, while addressing the promoted UX/Application findings and preserving all PD-060 semantic-strength/provenance constraints.
+

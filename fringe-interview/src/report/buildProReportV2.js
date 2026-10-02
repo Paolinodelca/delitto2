@@ -1,5 +1,6 @@
 import loadProReportNarrativeData from "./narrativeProfiles/loadProReportNarrativeData.js";
 import { applyTemplate } from "./narrativeProfiles/loadCvReviewNarrativeData.js";
+import { groundedRequirementItems, requirementItems, hasRequirementAuthority } from "../parser/enforceFht03SemanticIntegrity.js";
 
 
 function ensureArray(value) {
@@ -680,12 +681,94 @@ function buildCredibilityAssetsNarrative({
 }
 
 
+export function buildAuthorizedSemanticMaterial(results = []) {
+  const allowed = new Set(['professional_semantic_policy:decision_accountability:v1','professional_semantic_policy:quantified_outcome:v1']);
+  return ensureArray(results).flatMap((result, index) => {
+    const policy = normalizeString(result?.semanticPolicyRef || result?.observation?.extensions?.semanticProvenance?.semanticPolicyRef);
+    const observation = result?.observation;
+    if (!allowed.has(policy) || !observation || !result?.knowledgeSnapshot) return [];
+    if (policy.endsWith(':quantified_outcome:v1') && observation.observationType === 'quantified_outcome') return [{
+      semanticType:'quantified_outcome', sourceRef:`runtimeKnowledgeResults[${index}]`, observationId:observation.observationId,
+      evidenceIds:ensureArray(observation.evidenceIds), measurableOutcome:normalizeString(observation.measurableOutcome),
+      quantitativeValue:observation.quantitativeValue || null, context:observation.context || {},
+      contributionRelationship:normalizeString(observation.contributionRelationship), causalityBoundary:normalizeString(observation.causalityBoundary),
+      limitations:ensureArray(observation.limitations), confidenceState:result?.measurementResult?.confidenceState || null, inferenceSupport:result?.measurementResult?.extensions?.inferenceSupport || null
+    }];
+    if (policy.endsWith(':decision_accountability:v1') && observation.observationType === 'decision_accountability' && observation.observationStatus === 'observed') return [{
+      semanticType:'decision_accountability', sourceRef:`runtimeKnowledgeResults[${index}]`, observationId:observation.observationId,
+      evidenceIds:ensureArray(observation.evidenceIds), decisionAuthority:observation.decisionAuthority, consequenceScope:observation.consequenceScope,
+      accountabilityEvidence:observation.accountabilityEvidence ?? null, responsibilityContinuity:observation.responsibilityContinuity || { state:'unknown' },
+      context:observation.context || {}, limitations:ensureArray(observation.limitations), confidenceState:result?.measurementResult?.confidenceState || null, inferenceSupport:result?.measurementResult?.extensions?.inferenceSupport || null
+    }];
+    return [];
+  });
+}
+
+
+function hasAuthorizedSemanticType(authorizedSemanticMaterial = [], semanticType = "") {
+  return ensureArray(authorizedSemanticMaterial).some(
+    (item) => item?.semanticType === semanticType
+  );
+}
+
+function legacySignalContradictsAuthorizedKnowledge(
+  signal,
+  authorizedSemanticMaterial = []
+) {
+  const text = normalizeString(signal).toLowerCase();
+  if (!text) return false;
+
+  if (
+    hasAuthorizedSemanticType(
+      authorizedSemanticMaterial,
+      "decision_accountability"
+    )
+  ) {
+    return [
+      "decision",
+      "responsabil",
+      "accountab",
+      "trade-off",
+      "tradeoff"
+    ].some((pattern) => text.includes(pattern));
+  }
+
+  return false;
+}
+
+function buildAuthorizedPerceptionNarratives({
+  authorizedSemanticMaterial = [],
+  proReportNarratives = {}
+} = {}) {
+  const templates = proReportNarratives?.professionalPerception || {};
+
+  if (
+    hasAuthorizedSemanticType(
+      authorizedSemanticMaterial,
+      "decision_accountability"
+    )
+  ) {
+    return {
+      whoEmerges: templates.authorizedDecisionAccountabilityWhoEmerges || "",
+      credibilityAssets:
+        templates.authorizedDecisionAccountabilityCredibilityAssets || ""
+    };
+  }
+
+  return {
+    whoEmerges: "",
+    credibilityAssets: ""
+  };
+}
+
 function buildProfessionalPerceptionSummary({
   proReportNarratives = {},
   runtimeAnswers = [],
+  runtimeKnowledgeResults = [],
   finalCandidateReport = {},
   rawInput = {},
   candidateProfile = {},
+  roleProfile = {},
   roleFamily = "generic_professional",
   roleFamilyConfidence = 0
 }) {
@@ -733,6 +816,16 @@ function buildProfessionalPerceptionSummary({
     .map(normalizeString)
     .filter(Boolean);
 
+  const targetSourceText = normalizeString(
+    rawInput?.targetSourceText || rawInput?.resolvedJdText || rawInput?.jdText
+  );
+  const canonicalTargetRequirements = targetSourceText
+    ? groundedRequirementItems(roleProfile, targetSourceText)
+    : requirementItems(roleProfile);
+
+  const authorizedSemanticMaterial =
+    buildAuthorizedSemanticMaterial(runtimeKnowledgeResults);
+
   const risks = [
     ...ensureArray(roleFit?.risks),
     ...ensureArray(cvAdvice?.risks),
@@ -740,14 +833,31 @@ function buildProfessionalPerceptionSummary({
     ...ensureArray(cvAdvice?.missingSkills)
   ]
     .map(normalizeString)
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter((risk) =>
+      hasRequirementAuthority(risk, canonicalTargetRequirements)
+    )
+    .filter(
+      (risk) =>
+        !legacySignalContradictsAuthorizedKnowledge(
+          risk,
+          authorizedSemanticMaterial
+        )
+    );
 
   const clarifications = [
     ...ensureArray(roleFit?.clarificationsNeeded),
     ...ensureArray(cvAdvice?.clarificationsNeeded)
   ]
     .map(normalizeString)
-    .filter(Boolean);
+    .filter(Boolean)
+    .filter(
+      (signal) =>
+        !legacySignalContradictsAuthorizedKnowledge(
+          signal,
+          authorizedSemanticMaterial
+        )
+    );
 
   const positioningHints = ensureArray(cvAdvice?.positioningHints)
     .map(normalizeString)
@@ -759,8 +869,21 @@ function buildProfessionalPerceptionSummary({
 
   const unique = (items) => [...new Set(items.filter(Boolean))];
 
-  const visibleSignals = unique([...strengths, ...matchedSkills]).slice(0, 8);
+  const visibleSignals = authorizedSemanticMaterial.length
+    ? []
+    : unique([...strengths, ...matchedSkills]).slice(0, 8);
   const underVisibleSignals = unique([...risks, ...clarifications]).slice(0, 8);
+
+  const authorizedPerceptionNarratives =
+    buildAuthorizedPerceptionNarratives({
+      authorizedSemanticMaterial,
+      proReportNarratives
+    });
+
+  const hasPerceptionEvidence =
+    authorizedSemanticMaterial.length > 0 ||
+    visibleSignals.length > 0 ||
+    underVisibleSignals.length > 0;
 
   const professionalSignals = buildProfessionalSignals({
   visibleSignals,
@@ -798,9 +921,17 @@ function buildProfessionalPerceptionSummary({
   });
   const perceptionGap = [];
 
-  
+  const comparableSeniorityStates = new Set(["junior", "mid", "senior", "lead"]);
+  const normalizedCandidateSeniority = candidateSeniority.toLowerCase();
+  const normalizedTargetSeniority = targetSeniority.toLowerCase();
+  const hasComparableSeniorityPair =
+    comparableSeniorityStates.has(normalizedCandidateSeniority) &&
+    comparableSeniorityStates.has(normalizedTargetSeniority);
 
-  if (candidateSeniority && targetSeniority && candidateSeniority !== targetSeniority) {
+  if (
+    hasComparableSeniorityPair &&
+    normalizedCandidateSeniority !== normalizedTargetSeniority
+  ) {
     perceptionGap.push({
       area: "Seniorità percepita",
       currentSignal: candidateSeniority,
@@ -867,6 +998,7 @@ possibleEvidence: applyTemplate(
   return {
     roleFamily,
     roleFamilyConfidence,
+    authorizedSemanticMaterial,
     professionalSignals,
     professionalArchetype,
     professionalTraits,
@@ -905,21 +1037,32 @@ possibleEvidence: applyTemplate(
     proReportNarratives?.professionalPerception?.whoEmergesTitle ||
     "Chi emerge",
     narrative:
-    professionalArchetype?.narrative
-      ? applyTemplate(
-          proReportNarratives?.professionalPerception?.whoEmergesWithArchetype,
-          {
-            archetypeNarrative: professionalArchetype.narrative
-          }
-        )
-      : proReportNarratives?.professionalPerception?.whoEmergesFallback
+    authorizedPerceptionNarratives.whoEmerges ||
+    (
+      !hasPerceptionEvidence
+        ? proReportNarratives?.professionalPerception?.insufficientKnowledgeWhoEmerges
+        : professionalArchetype?.narrative
+          ? applyTemplate(
+              proReportNarratives?.professionalPerception?.whoEmergesWithArchetype,
+              {
+                archetypeNarrative: professionalArchetype.narrative
+              }
+            )
+          : proReportNarratives?.professionalPerception?.whoEmergesFallback
+    )
       },
 
 
 
     credibilityAssets: {
   title: "Il tuo bagaglio di credibilità",
-  narrative: credibilityAssetsNarrative
+  narrative:
+    authorizedPerceptionNarratives.credibilityAssets ||
+    (
+      !hasPerceptionEvidence
+        ? proReportNarratives?.professionalPerception?.insufficientKnowledgeCredibilityAssets
+        : credibilityAssetsNarrative
+    )
   },
   
 
@@ -934,28 +1077,25 @@ possibleEvidence: applyTemplate(
     "Dove nasce la distanza dal ruolo target",
 
   currentSignals:
-    professionalArchetype?.narrative
+    hasPerceptionEvidence && professionalArchetype?.narrative
       ? applyTemplate(
           proReportNarratives?.professionalPerception?.targetDistanceCurrentSignalsWithArchetype,
           {
             archetypeNarrative: professionalArchetype.narrative
           }
         )
-      : (
-          proReportNarratives?.professionalPerception?.targetDistanceCurrentSignalsFallback ||
-          "Emergono alcuni segnali professionali utili, ma ancora poco strutturati."
-        ),
+      : proReportNarratives?.professionalPerception?.targetDistanceCurrentSignalsNoEvidence,
 
   targetSignals:
-    describeTargetSignalsGap(professionalSignals,proReportNarratives)
+    perceptionGap.length > 0
       ? applyTemplate(
           proReportNarratives?.professionalPerception?.targetDistanceTargetSignalsWithGap,
           {
-            targetSignalsGap: describeTargetSignalsGap(professionalSignals,proReportNarratives)
+            gapArea: perceptionGap[0].area,
+            targetSignal: perceptionGap[0].targetSignal
           }
         )
-      :  proReportNarratives?.professionalPerception?.        targetDistanceTargetSignalsFallback,
-        
+      : proReportNarratives?.professionalPerception?.targetDistanceTargetSignalsNoGap,
 
   bridgeNarrative:
     perceptionGap.length > 0
@@ -965,7 +1105,7 @@ possibleEvidence: applyTemplate(
             gapNarrative: perceptionGap[0].narrative
           }
         )
-      : proReportNarratives?.professionalPerception?.targetDistanceBridgeFallback 
+      : proReportNarratives?.professionalPerception?.targetDistanceNoGapNarrative
         
 },
 
@@ -1090,6 +1230,7 @@ export default function buildProReportV2({
   report,
   finalCandidateReport,
   runtimeAnswers = [],
+  runtimeKnowledgeResults = [],
   openingPositioning,
   localeKey,
   rawInput = {},
@@ -1159,11 +1300,16 @@ export default function buildProReportV2({
       professionalPerception: buildProfessionalPerceptionSummary({
      proReportNarratives,
      runtimeAnswers,
+     runtimeKnowledgeResults,
      finalCandidateReport,
      rawInput,
       candidateProfile:
        candidate?.candidateProfile ||
        candidate ||
+      {},
+      roleProfile:
+       role?.roleProfile ||
+       role ||
       {},
       roleFamily,
      roleFamilyConfidence
@@ -1375,6 +1521,7 @@ const scoredAnswers = answers
 
 function buildOperationalActionPlan({
   runtimeAnswers = [],
+  runtimeKnowledgeResults = [],
   finalCandidateReport = {},
   rawInput = {},
   proReportNarratives = {}

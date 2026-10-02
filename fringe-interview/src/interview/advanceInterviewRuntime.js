@@ -1,8 +1,13 @@
 import { analyzeAnswerShape } from "./analyzeAnswerShape.js";
 import { injectAdaptiveFollowup } from "./injectAdaptiveFollowup.js";
 import { selectAdaptiveFollowup } from "./selectAdaptiveFollowup.js";
+import { buildGroundedConversationalContext, groundAdaptiveFollowupPack } from "./groundAdaptiveFollowup.js";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const { selectFhtAdaptiveAcquisitionDecision } = require("../app/knowledge/selectFhtAdaptiveAcquisitionDecision.js");
 import { generateAdaptiveFollowupQuestion } from "./generateAdaptiveFollowupQuestion.js";
 import { detectProblematicAnswerType } from "./detectProblematicAnswerType.js";
+import { evaluateDecisionTradeoffQuestionNecessity } from "./evaluateDecisionTradeoffQuestionNecessity.js";
 
 
 
@@ -34,7 +39,7 @@ const PHASE_SEQUENCE = [
 ];
 
 const PHASE_CONFIG = {
-  
+
   OPENING: {
   pressureLevel: 0,
   frictionType: "career_walkthrough",
@@ -1069,7 +1074,7 @@ async function enrichAnswerRecordWithGeneratedFollowup({
   answerRecord.generatedAdaptiveFollowup = safeGeneratedFollowup;
 
 
-  
+
   return answerRecord;
 }
 
@@ -1079,6 +1084,52 @@ function maybeInjectAdaptiveFollowup({
   answerRecord
 }) {
   const interviewState = runtime?.runtimeState?.interviewState || null;
+  const phaseName = currentStep?.phaseName || interviewState?.phaseName || "CASE_1";
+  const decisionContext = runtime?.meta?.fhtAcquisitionDecisionContext || null;
+  const availableBlocks = ensureArray(runtime?.availableFollowupBlocks);
+  const availableActionKeys = availableBlocks.map((pack) => normalizeString(pack?.triggerType)).filter(Boolean);
+  const usedActionKeys = [
+    ...ensureArray(runtime?.runtimeState?.answers).map((item) => normalizeString(item?.questionContext?.questionKey)).filter(Boolean),
+    ...ensureArray(runtime?.runtimeState?.usedAdaptiveTriggerTypes).map(normalizeString).filter(Boolean)
+  ];
+  const acquisitionDecision = decisionContext && phaseAllowsAdaptiveFollowup(phaseName) && hasAdaptiveBudgetLeft(runtime)
+    ? selectFhtAdaptiveAcquisitionDecision({
+        planning: decisionContext.planning,
+        runtimeKnowledgeResults: decisionContext.runtimeKnowledgeResults,
+        usedActionKeys,
+        availableActionKeys,
+        acceptedAnswerText: answerRecord?.answerText || "",
+        persistedCues: decisionContext?.acquisitionCues || []
+      })
+    : null;
+
+  if (acquisitionDecision?.trace) {
+    runtime.runtimeState.lastAdaptiveAcquisitionDecisionTrace = acquisitionDecision.trace;
+  }
+
+  if (acquisitionDecision?.applicable) {
+    const selectedPack = availableBlocks.find((pack) => normalizeString(pack?.triggerType) === acquisitionDecision.actionKey);
+    const groundedContext = buildGroundedConversationalContext({
+      answerText: answerRecord?.answerText || "",
+      explicitReferents: decisionContext?.groundedReferents || []
+    });
+    const grounded = groundAdaptiveFollowupPack({ followupPack: selectedPack, groundedContext });
+    runtime.runtimeState.lastAdaptiveAcquisitionDecisionTrace = {
+      ...acquisitionDecision.trace,
+      selectedGroundedReferents: grounded.selectedGroundedReferents || [],
+      realizationSource: "configured_followup_pack",
+      groundingValidationOutcome: grounded.validationOutcome
+    };
+    if (grounded.valid && grounded.pack) {
+      return injectAdaptiveFollowup({
+        interviewRuntime: runtime,
+        followupPack: {
+          ...grounded.pack,
+          fhtAdaptiveDecision: { purpose: acquisitionDecision.purpose, actionKey: acquisitionDecision.actionKey }
+        }
+      });
+    }
+  }
 
   if (!shouldInjectAdaptiveFollowup(currentStep, answerRecord, interviewState, runtime)) {
     return runtime;
@@ -1138,9 +1189,26 @@ function maybeInjectAdaptiveFollowup({
 
 
 
+  const groundedContext = buildGroundedConversationalContext({
+    answerText: answerRecord?.answerText || "",
+    explicitReferents: runtime?.meta?.fhtAcquisitionDecisionContext?.groundedReferents || []
+  });
+  const groundedLegacy = groundAdaptiveFollowupPack({
+    followupPack: contextualFollowupPack,
+    groundedContext
+  });
+  if (!groundedLegacy.valid || !groundedLegacy.pack) {
+    return runtime;
+  }
+  runtime.runtimeState.lastAdaptiveGroundingTrace = {
+    selectedAction: normalizeString(contextualFollowupPack?.triggerType),
+    selectedGroundedReferents: groundedLegacy.selectedGroundedReferents || [],
+    realizationSource: "legacy_configured_followup_pack",
+    groundingValidationOutcome: groundedLegacy.validationOutcome
+  };
   const updatedRuntime = injectAdaptiveFollowup({
   interviewRuntime: runtime,
-  followupPack: contextualFollowupPack
+  followupPack: groundedLegacy.pack
 });
 
 if (
@@ -1259,7 +1327,8 @@ export async function advanceInterviewRuntime({
   interviewSession,
   interviewRuntime,
   answerText = "",
-  modelAdapter = null
+  modelAdapter = null,
+  beforeAdaptiveDecision = null
 }) {
   if (!interviewSession || typeof interviewSession !== "object") {
     throw new Error("advanceInterviewRuntime: interviewSession is required.");
@@ -1409,6 +1478,13 @@ backfillPhaseCoverageFromSignals(
 
   }
 
+  if (typeof beforeAdaptiveDecision === "function") {
+    const decisionContextUpdate = await beforeAdaptiveDecision({ runtime, currentStep, answerRecord });
+    if (decisionContextUpdate && typeof decisionContextUpdate === "object") {
+      runtime = decisionContextUpdate.runtime || runtime;
+    }
+  }
+
   runtime = maybeInjectAdaptiveFollowup({
     runtime,
     currentStep,
@@ -1416,6 +1492,30 @@ backfillPhaseCoverageFromSignals(
   });
 
   runtime.runtimeState.currentStepIndex += 1;
+
+  // PD-049 / PD-050: evaluate the bounded Core necessity immediately before presentation.
+  // The timeline is preserved; a satisfied step is advanced over, with no replacement.
+  while (runtime.runtimeState.currentStepIndex < ensureArray(runtime.runtimeState.timeline).length) {
+    const candidate = buildCurrentStepPayload(interviewSession, runtime.runtimeState, runtime.adaptiveFollowupBlocks).currentStep;
+    const questionKey = normalizeString(
+      candidate?.payload?.canonicalQuestionKey ||
+      candidate?.payload?.questionKey ||
+      candidate?.payload?.familyKey
+    );
+    const necessity = evaluateDecisionTradeoffQuestionNecessity({
+      questionKey,
+      planning: runtime?.meta?.fhtAcquisitionDecisionContext?.planning,
+      runtimeKnowledgeResults: runtime?.meta?.fhtAcquisitionDecisionContext?.runtimeKnowledgeResults
+    });
+    if (necessity.decision !== "suppress") break;
+    runtime.runtimeState.extensions = runtime.runtimeState.extensions || {};
+    const previous = ensureArray(runtime.runtimeState.extensions?.fhtRuntimeNecessity?.suppressedQuestionKeys);
+    runtime.runtimeState.extensions.fhtRuntimeNecessity = {
+      ...(runtime.runtimeState.extensions.fhtRuntimeNecessity || {}),
+      suppressedQuestionKeys: [...previous, questionKey]
+    };
+    runtime.runtimeState.currentStepIndex += 1;
+  }
 
   if (
     runtime.runtimeState.currentStepIndex >=

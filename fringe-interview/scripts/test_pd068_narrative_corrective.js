@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {renderPrivateBetaUiJourneyHtml} from '../src/app/renderPrivateBetaUiJourneyHtml.js';
+const pattern={kind:'documented_cross_functional_coordination_recurrence',supportCount:4,episodeRefs:['e1','e2','e3','e4'],supports:[1,2,3,4].map(i=>({sourceId:`s${i}`,supportExcerpt:`Estratto esatto ${i}`}))};
+const assets=[1,2,3,4].map(i=>({supportClass:'source_grounded',sourceId:`s${i}`,sourceRole:'professional_declaration',sourceFaithfulExperienceExcerpts:[`Estratto esatto ${i}`]}));
+const rep={professionalMeaning:{supportedPatterns:[pattern],selectedEpisodeContributions:[{episodeMeaningRef:'ep1',description:'Contributo di analisi e dati a supporto di interventi o investimenti',sourceId:'s1'}],knowledgeContribution:[{semanticType:'decision_accountability',primaryProfessionalMeaning:{kind:'bounded_decision_accountability',observedContext:'Atlas',personContribution:'coordinamento operativo',sharedAuthority:true},supportingEvidence:[{summary:'Decisione condivisa osservata con conseguenze nel perimetro individuale.'}]},{semanticType:'quantified_outcome',primaryProfessionalMeaning:{kind:'bounded_measurable_outcome_contribution',quantification:'circa 20%',personContribution:'contributo'},supportingEvidence:[{summary:'Risultato misurabile osservato: circa 20%; contributo personale delimitato come contributo.'}]}]},episodeMeanings:[{episodeMeaningId:'ep1',description:'Contributo di analisi e dati a supporto di interventi o investimenti',sourceId:'s1'}],assets};
+const html=renderPrivateBetaUiJourneyHtml({locale:'it',result:{phase:'purpose_understand',sessionRef:'x',preInterview:{targetIndependentProfessionalRepresentation:rep}}});
+assert.match(html,/Questa esperienza rende visibile un altro aspetto del tuo percorso/);
+assert.doesNotMatch(html,/<blockquote>Decisione condivisa osservata/);
+assert.match(html,/Supporto strutturato: Decisione condivisa osservata/);
+const firstWhy=html.split('</details>')[0];assert.equal((firstWhy.match(/<blockquote>Estratto esatto [123]<\/blockquote>/g)||[]).length,3);assert.doesNotMatch(firstWhy,/Estratto esatto 4/);assert.equal((html.match(/<blockquote>Estratto esatto 4<\/blockquote>/g)||[]).length,1);
+assert.match(html,/Vedi fonti e dettagli/);
+const en=renderPrivateBetaUiJourneyHtml({locale:'en',result:{phase:'purpose_understand',sessionRef:'x',preInterview:{targetIndependentProfessionalRepresentation:rep}}});
+assert.match(en,/This experience makes another aspect of your professional path visible/);assert.match(en,/Structured support:/);
+console.log('PD-068 narrative corrective focused: PASS');

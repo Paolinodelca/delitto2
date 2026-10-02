@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {evaluateCareerDirections} from '../src/app/careerDirection/evaluateCareerDirections.js';
+import {renderPrivateBetaUiJourneyHtml} from '../src/app/renderPrivateBetaUiJourneyHtml.js';
+const rep={professionalMeaning:{supportedPatterns:[{kind:'documented_cross_functional_coordination_recurrence',sourceRefs:['a','b'],episodeRefs:['a','b'],traitInference:false}],professionalSynthesis:{hasDocumentedRoleContinuity:true,currentRole:'Production Supervisor',previousRoles:['Industrialization Engineer'],domains:['manufacturing']},knowledgeContribution:[{semanticType:'decision_accountability',primaryProfessionalMeaning:{kind:'bounded_decision_accountability',observedContext:'Atlas',personContribution:'shared bounded decision'}}]}};
+const ev=evaluateCareerDirections({professionalRepresentation:rep,professionalRepresentationRef:'rep:pd072e',explorationContext:{preferenceState:'declared',preferredThemes:['operations_coordination']},now:'2026-09-25T13:00:00.000Z'});
+assert.equal(ev.hypotheses.length,2);
+const h=ev.hypotheses[0],people=h.conditionsToVerify.find(x=>x.reason==='people_responsibility_scope');assert(people);
+const absence={careerDirectionHypothesisRef:h.id,conditionRef:people.id,roleRequirementRef:people.roleRequirementRef,resolutionState:'target_relative_confirmed_absence',bridgeEligible:true,targetRelativeConfirmedAbsence:{stateKind:'TARGET_RELATIVE_CONFIRMED_ABSENCE',requirementRef:people.roleRequirementRef,limitations:['bounded']}};
+const html=renderPrivateBetaUiJourneyHtml({locale:'it',result:{phase:'purpose_direction_explore',sessionRef:'s',preInterview:{careerDirectionEvaluation:ev,directionResolutions:[absence]}}});
+assert.equal((html.match(/class="career-direction direction-overview-card"/g)||[]).length,2,'two directions must render as overview/detail cards');
+assert.match(html,/Cosa richiede questa direzione/);assert.match(html,/Da approfondire/);assert.match(html,/Da costruire/);assert.match(html,/Fonti e dettagli/);assert.match(html,/Preferenze usate in questa esplorazione/);assert.match(html,/Modifica preferenze/);assert.match(html,/responsabilità formale su un piccolo team/i);
+assert.doesNotMatch(html,/Supportato in parte/,'partial support must not be fabricated');
+assert.match(html,/direction-requirement-row-build/);assert.match(html,/direction-requirement-row-clarify/);
+assert(!/fit score|readiness score|percentuale di idoneità|migliore direzione/i.test(html));
+assert(html.indexOf('O*NET')>html.indexOf('Fonti e dettagli'),'external traceability must remain secondary');
+assert(!html.includes('supported_relevance'));
+const noAbs=renderPrivateBetaUiJourneyHtml({locale:'it',result:{phase:'purpose_direction_explore',sessionRef:'s',preInterview:{careerDirectionEvaluation:ev,directionResolutions:[]}}});assert.doesNotMatch(noAbs,/Da costruire/);assert.match(noAbs,/Da approfondire/);
+console.log('PD-072E Career Direction support map: PASS');

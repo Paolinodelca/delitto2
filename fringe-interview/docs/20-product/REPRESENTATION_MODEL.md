@@ -406,6 +406,22 @@ The preferred authority anchor is the Knowledge Acquisition Design / equivalent 
 The resulting Evidence provenance must make the upstream acquisition/policy association reconstructable. AR-02B may resolve this already-authorized policy only from those canonical references; it must return no applicable authority when they are absent.
 
 
+## Canonical semantic policy vertical slice — quantified outcome
+
+The second bounded production professional semantic policy is:
+
+```text
+professional_semantic_policy:quantified_outcome:v1
+```
+
+It targets elementary `dimension:quantified_outcome` and gives canonical semantic effect to the measurable-outcome role already defined by `OBS-010`, under PD-048.
+
+Eligible Evidence may support event/context-scoped Knowledge about a measurable outcome, scale or impact only when that outcome is connected to the person's supported contribution. The policy preserves the supported quantitative meaning but does not by itself establish sole causality, ownership, leadership, execution responsibility, project autonomy, stable result orientation or any other stable person trait. Quantitative magnitude is not a universal person score.
+
+As with the first professional semantic policy, authority must be established before Evidence interpretation through the canonical acquisition lineage. Insufficient or ineligible Evidence produces no Measurement, DimensionContribution or Knowledge effect and never implies absence.
+
+
+
 ## Professional Perception
 Professional Perception interprets how the candidate currently emerges from available evidence. It never claims to describe the person's intrinsic value.
 

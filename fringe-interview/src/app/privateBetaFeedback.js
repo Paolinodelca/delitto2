@@ -68,6 +68,7 @@ function assertFeedbackState(state) {
 }
 
 function assertAllowed(field, value) {
+  if (value === undefined || value === null || value === "") return null;
   if (!ALLOWED[field].includes(value)) {
     throw new Error(`PRIVATE_BETA_FEEDBACK_INVALID_${field.toUpperCase()}`);
   }

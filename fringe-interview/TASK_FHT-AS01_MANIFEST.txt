@@ -1,0 +1,9 @@
+# FHT-AS01 exact overlay manifest
+
+config/adaptive_acquisition_policy.json
+scripts/test_fht_as01_adaptive_acquisition_decision_grounding.js
+src/app/knowledge/selectFhtAdaptiveAcquisitionDecision.js
+src/app/privateBetaStagedInterviewJourney.js
+src/app/runFringeInterviewMVP.js
+src/interview/advanceInterviewRuntime.js
+src/interview/groundAdaptiveFollowup.js

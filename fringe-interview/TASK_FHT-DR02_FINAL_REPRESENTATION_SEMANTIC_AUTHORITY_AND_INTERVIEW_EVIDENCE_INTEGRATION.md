@@ -1,118 +1,120 @@
 # IMAGO — FHT-DR02 FINAL REPRESENTATION SEMANTIC AUTHORITY AND INTERVIEW EVIDENCE INTEGRATION
 
-## Status
+## Verdict
 
-**C — IMPLEMENTATION BLOCKED BY MISSING CANONICAL AUTHORITY**
+**B — IMPLEMENTATION COMPLETE; CONTROLLED LIVE VERIFICATION REQUIRED**
 
-Review/analysis only after the stop condition was reached. No implementation files were modified. No commit. No push.
+Resumed FHT-DR02 after FHT-PA01. No new task identity. No commit. No push.
 
-## Repository-first dataflow
+## Actual integration boundary
 
-The current staged Beta path is:
+The staged journey now accumulates successful current-session semantic results in `runtimeKnowledgeResults` instead of exposing only the latest result. The existing `runtimeKnowledge` field is retained for compatibility.
 
-`accepted Runtime answer`
-→ `buildAcceptedRuntimeAnswerEvidenceStore`
-→ optionally `runAcceptedRuntimeAnswerKnowledgeVerticalSlice`
-→ Observation
-→ Measurement
-→ DimensionContribution
-→ KnowledgeLedger / KnowledgeSnapshot
-→ PersonKnowledgeMatrix / KnowledgeCoverage.
+`buildProReportV2` receives that collection. `buildProfessionalPerceptionSummary` deterministically extracts positive semantic material only from current-session results backed by a KnowledgeSnapshot and one of the two FHT-authorized policies:
 
-At interview completion, however, the user-visible path is separately:
+- `professional_semantic_policy:decision_accountability:v1`
+- `professional_semantic_policy:quantified_outcome:v1`
 
-`CandidateProfile + RoleProfile + sanitized JobFit + InterviewReport`
-→ `buildFinalCandidateReport`
-→ `buildProReportV2`
-→ `buildProfessionalPerceptionSummary`
-→ `buildRepresentationValueProofProjection`.
+Raw answers, CandidateProfile, JobFit and CV advice are not used by this consumer as positive person-claim authority.
 
-`runtimeAnswers` is passed into `buildProReportV2`, but `buildProfessionalPerceptionSummary` does not use it as semantic authority.
+When authorized current-session material exists, legacy `visibleSignals` are fail-closed from positive Professional Perception material.
 
-The staged Runtime stores only the latest optional `runtimeKnowledge` result and only when `knowledgeSemanticAuthority` and `knowledgeSubjectRef` are externally supplied. The normal staged preparation path has no repository-owned general professional semantic authority to supply there.
+## Quantified Outcome
 
-## Exact blocking authority gap
+The consumer preserves semantic identity and event provenance:
 
-The generic accepted-answer vertical slice is deliberately non-interpretive. Repository continuity explicitly states that semantic construction / normalization / mapping authority **must be supplied explicitly** and that answer text must never be mapped directly to a dimension, PKM or Coverage.
+- measurable outcome;
+- quantitative value/unit/approximation;
+- context;
+- supported contribution relationship;
+- causality boundary;
+- limitations;
+- Evidence IDs and current-session semantic-result reference.
 
-The only current canonical production semantic policy found for professional Runtime evidence is the narrow:
+The final projection surfaces this material without adding sole causality, ownership, leadership, autonomous management or a stable results trait.
 
-`professional_semantic_policy:decision_accountability:v1`
+## Decision Accountability
 
-Decision Accountability vertical slice.
+Decision Accountability is accepted through the same identity-preserving consumption boundary and remains semantically independent.
 
-That authority cannot legitimately be generalized to:
+No Decision Accountability policy/interpreter/measurement implementation was changed.
 
-- cross-functional coordination;
-- implementation responsibility;
-- measurable result;
-- investment-project autonomy;
-- people leadership;
-- capacity planning;
-- arbitrary Professional Perception supporting signals.
+## Target authority
 
-Doing so inside FHT-DR02 would invent exactly the new semantic interpretation/authority that the task's stop condition forbids.
+`buildRepresentationValueProofProjection` now receives the canonical RoleProfile and derives target authority only from:
 
-Moreover, existing Knowledge structures preserve dimension/measurement provenance but do not provide a canonical general-purpose person-claim narrative authority from which the final Professional Perception can safely derive the controlled case's required semantic claims.
+- `requirements.mustHave`
+- `requirements.preferred`
+- `requirements.bonus`.
 
-## Why a partial downstream fix is not sufficient
+A target-relative insufficient item is emitted only when an uncertainty item matches an actual canonical requirement.
 
-It would be technically possible to harden some final projection mechanics independently, for example:
+JobFit gaps, missing skills, CV advice, Professional Perception risks and generic report prose do not create target authority.
 
-- filter target relation against explicit RoleProfile requirements;
-- stop uncertainty items from populating `supportingEvidence`;
-- suppress known legacy Professional Perception signals.
+## Slot separation
 
-But FHT-DR02 requires all four failures to converge on an authoritative final Representation boundary, including **observable enrichment from current-session canonical Knowledge**.
+`supportingEvidence` now contains only authorized positive semantic material.
 
-Implementing only the filtering portions while current-session Knowledge cannot canonically authorize the required professional semantic material would create a partial solution and falsely imply that the central blocker is closed.
+Uncertainty is not supporting evidence.
 
-Raw `runtimeAnswers`, lexical matching, JobFit/CV-advice reuse, or a new summarization prompt are not acceptable substitutes for missing authority.
+Target relation is a separate structure derived from canonical requirement membership × uncertainty and carries no person-support evidence.
 
-## Person-claim amplification finding
+Legacy positive report prose is not promoted into final Representation positive claims when no authorized current-session semantic material supports it.
 
-The current projection consumes already-derived Professional Perception `visibleSignals` as supporting evidence. It does not possess source-level semantic authority capable of proving that a stronger downstream person claim is entailed by the person's authoritative source/current-session Knowledge.
+## Deterministic verification
 
-Therefore the controlled regression:
+PASS:
 
-`support to investment projects`
-≠
-`autonomous investment project management`
+- focused FHT-DR02 adversarial regression;
+- FHT-PA01 Quantified Outcome regression;
+- AR-02C Decision Accountability semantic integration;
+- AR-03D Decision Accountability conformance;
+- Representation Value Proof projection regression;
+- FHT-03 semantic integrity;
+- all four FHT-03 corrective regressions;
+- `scripts/fringe_health_check.js`.
 
-cannot be enforced generally without either:
+Health result:
 
-1. an existing canonical person-claim semantic authority that the repository does not currently expose at this boundary; or
-2. phrase/domain-specific filtering, which the task explicitly forbids as the implementation mechanism.
+**All health checks passed.**
 
-## Target-authority / slot findings
+Adversarial coverage proves:
 
-The repository also confirms two deterministic projection defects:
+- authorized Knowledge is consumed;
+- raw/legacy material alone does not create positive Representation claims;
+- stronger legacy amplification fails closed;
+- ~20% outcome preserves `contribution_only`;
+- canonical target membership is required;
+- non-required methodology/certification and background attributes are excluded from target relation;
+- uncertainty/target items cannot become supporting evidence;
+- Decision Accountability and Quantified Outcome regressions remain intact.
 
-- `target_relation` currently constructs evidence from `[...]gaps, ...under`, without requiring canonical RoleProfile requirement membership;
-- uncertainty/under-visible material can therefore be used as `supportingEvidence` and repeated as uncertainty/target relation.
+## Files modified
 
-These are real defects, but correcting them alone does not satisfy FHT-DR02 because the required authoritative interview-evidence integration remains unavailable.
+Exactly the six implementation/test files listed in `TASK_FHT-DR02_MANIFEST.txt`.
 
-## Stop-condition decision
+Overlay excludes report, manifest, tmp, diagnostics and logs.
 
-The task requires stopping if correct integration requires a new semantic authority, new semantic interpretation engine, or new Representation authority.
+## Live verification
 
-That condition is met.
+No live verification is claimed from this environment.
 
-The missing boundary is:
+### Minimal repository-owner verification
 
-**canonical professional semantic authority from accepted current-session Evidence/Knowledge to claim-level Professional Perception semantics beyond the existing Decision Accountability slice.**
+Run the existing controlled Marco staged Private Beta journey using the same controlled CV, additional narrative and Operations Manager target.
 
-FHT-DR02 must not invent it.
+Verify only:
 
-## Verification status
+1. current-session authorized Decision Accountability material can reach final Representation when its semantic path is exercised;
+2. the ~20% outcome reaches final Representation only through authorized Quantified Outcome Knowledge and remains contribution-bounded;
+3. support to investment projects does not become autonomous investment management;
+4. Six Sigma certification and international experience do not become target deficiencies when absent from canonical RoleProfile requirements;
+5. uncertainty/target-relative material is not rendered as supporting evidence.
 
-No implementation was made, so implementation regressions were not added and no live verification is claimed.
+If these five checks pass, FHT-DR02 can be considered live-verified.
 
-Existing FHT-03 protections in the supplied repository remain untouched.
+## Gate
 
-## Deliverable / overlay
+FHT-DR02 deterministic implementation is complete.
 
-`FHT-DR02_OVERLAY.zip` is intentionally empty because the stop condition was reached before any implementation/test file modification.
-
-`TASK_FHT-DR02_MANIFEST.txt` is correspondingly empty, exactly matching the overlay implementation/test contents.
+The First Human Test gate remains **CLOSED** because the independent feedback operational blocker identified by FHT-DR01 remains queued even after FHT-DR02 live verification.

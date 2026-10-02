@@ -8,7 +8,10 @@ const PREREQUISITE_MODES=['none','all_required'];
 const CAPABILITY_OBLIGATIONS=['must_produce_elementary_contribution','must_preserve_source_traceability','must_support_prerequisite_composition','must_produce_derived_output'];
 const AUTHORIZED_SEMANTIC_POLICIES=Object.freeze({
  'professional_semantic_policy:decision_accountability:v1':'decision_accountability',
- 'professional_semantic_policy:quantified_outcome:v1':'quantified_outcome'
+ 'professional_semantic_policy:quantified_outcome:v1':'quantified_outcome',
+ 'professional_semantic_policy:continuing_people_responsibility:v1':'continuing_people_responsibility',
+ 'professional_semantic_policy:resource_budget_responsibility_scope:v1':'resource_budget_responsibility_scope',
+ 'professional_semantic_policy:production_planning_scheduling_responsibility_scope:v1':'production_planning_scheduling_responsibility_scope'
 });
 const AUTHORIZED_SEMANTIC_POLICY='professional_semantic_policy:decision_accountability:v1';
 const TOP=['id','designVersion','type','designType','sourceRequirementType','sourceRequirementRef','semanticPolicyRef','targetKnowledge','solutionShape','capabilityObligations','traceability','provenance','dependencyRefs','metadata','extensions'];

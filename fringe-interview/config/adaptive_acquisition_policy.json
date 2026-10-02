@@ -1,0 +1,18 @@
+{
+  "policyVersion": "fht-as01.1",
+  "behavioralParameters": {
+    "unresolvedPurposePriority": 100,
+    "representedPurposePriority": 25,
+    "conversationalOpeningBonus": 35,
+    "repeatedActionPenalty": 30,
+    "switchThreshold": 1
+  },
+  "boundedConversationalCues": {
+    "quantified_outcome": [
+      "miglioramento misurabile",
+      "risultato misurabile",
+      "measurable improvement",
+      "measurable result"
+    ]
+  }
+}

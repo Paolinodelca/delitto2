@@ -6,6 +6,7 @@ const TOP_LEVEL_FIELDS = [
   "dimensionId",
   "contributionType",
   "contributionValue",
+  "confidenceState",
   "confidence",
   "provenance",
   "metadata",
@@ -77,9 +78,9 @@ function validateDimensionContribution(contribution = {}) {
   if (!validUnit(contribution.contributionValue)) {
     errors.push("contributionValue must be a finite number between 0 and 1.");
   }
-  if (!validUnit(contribution.confidence)) {
-    errors.push("confidence must be a finite number between 0 and 1.");
-  }
+  if (!["known", "partial", "not_yet_derived"].includes(contribution.confidenceState)) { errors.push("confidenceState is invalid."); }
+  if (contribution.confidenceState === "known") { if (!validUnit(contribution.confidence)) errors.push("confidence must be a finite number between 0 and 1 when confidenceState is known."); }
+  else if (contribution.confidence !== null) errors.push("non-known confidenceState requires null confidence.");
 
   if (!isObject(contribution.provenance)) {
     errors.push("provenance must be an object.");
@@ -107,7 +108,7 @@ function validateDimensionContribution(contribution = {}) {
   if (containsRawPayload(contribution)) errors.push("DimensionContribution must not contain raw source payloads.");
 
   if (contribution.contributionValue === 0) warnings.push("contributionValue is 0.");
-  if (typeof contribution.confidence === "number" && contribution.confidence < 0.5) warnings.push("confidence is below 0.5.");
+  if (contribution.confidenceState === "known" && typeof contribution.confidence === "number" && contribution.confidence < 0.5) warnings.push("confidence is below 0.5.");
   if (isObject(contribution.provenance) && contribution.provenance.sourceRefs.length === 0) warnings.push("provenance.sourceRefs is empty.");
 
   return { valid: errors.length === 0, errors, warnings };

@@ -313,7 +313,7 @@ export async function runIntegratedPrivateBetaJourney({
     feedback: feedbackResult.feedback,
     feedbackError: feedbackResult.error,
     capabilityGaps: freeze([
-      freeze({ code: SNAPSHOT_GAP_CODE, blockingForBetaValidation: true }),
+      freeze({ code: SNAPSHOT_GAP_CODE, blockingForBetaValidation: false }),
       freeze({ code: "VOICE_SUBSYSTEM_UNAVAILABLE", blockingForBetaValidation: false })
     ])
   });

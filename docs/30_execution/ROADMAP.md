@@ -1,4 +1,4 @@
-# ROADMAP.md
+﻿# ROADMAP.md
 
 ## Scopo
 
@@ -264,3 +264,5 @@ Verrà misurato dalla capacità del progetto di trasformare il primo prodotto in
 Il Core continuerà ad evolvere.
 
 L'espansione verso nuovi domini inizierà solo dopo aver dimostrato il valore del primo prodotto.
+---
+

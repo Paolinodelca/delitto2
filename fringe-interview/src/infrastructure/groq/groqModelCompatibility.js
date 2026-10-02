@@ -29,14 +29,17 @@ export function resolveGroqModelProfile(model = resolveGroqModel()) {
 }
 
 const TASK_CONTRACTS = Object.freeze({
-  candidateProfile: Object.freeze({ mode: "json_object" }),
+  candidateProfile: Object.freeze({ mode: "json_object", completionBudget: 4096, reasoningEffort: "low" }),
   roleProfile: Object.freeze({ mode: "json_object" }),
   jobFitAnalysis: Object.freeze({ mode: "json_object" }),
   answerAnnotation: Object.freeze({ mode: "json_schema", schemaName: "answer_annotation", strict: true, completionBudget: 2048 }),
   decisionAccountabilitySemanticExecutor: Object.freeze({ mode: "json_schema", schemaName: "decision_accountability_semantic_candidate", strict: true, completionBudget: 1200 }),
+  continuingPeopleResponsibilitySemanticSupportRepair: Object.freeze({ mode: "json_object", completionBudget: 2000, reasoningEffort: "low" }),
   professionalPerception: Object.freeze({ mode: "json_object" }),
   adaptiveFollowupQuestion: Object.freeze({ mode: "text" }),
-  gapDrivenInterviewQuestion: Object.freeze({ mode: "text" })
+  gapDrivenInterviewQuestion: Object.freeze({ mode: "text" }),
+  groundedRelationshipProposal: Object.freeze({ mode: "json_schema", schemaName: "grounded_relationship_proposal", strict: true, completionBudget: 5000, reasoningEffort: "low" }),
+  higherOrderProfessionalSynthesis: Object.freeze({ mode: "json_schema", schemaName: "higher_order_professional_synthesis", strict: true, completionBudget: 4000, reasoningEffort: "low" })
 });
 
 export function resolveGroqTaskCompletionBudget({ task, maxTokens } = {}) {
@@ -85,6 +88,10 @@ export function resolveGroqOutputContract({ task, jsonSchema = null, strictSchem
   return { mode: "text", responseFormat: null, strict: false };
 }
 
+function taskContractReasoningEffort(task) {
+  return TASK_CONTRACTS[task]?.reasoningEffort || null;
+}
+
 export function buildGroqRequestBody({ task, model = resolveGroqModel(), systemText, userText, temperature = 0.2, maxTokens, jsonSchema = null, strictSchemaCompatible = false } = {}) {
   const contract = resolveGroqOutputContract({ task, jsonSchema, strictSchemaCompatible, model });
   const profile = resolveGroqModelProfile(model);
@@ -93,5 +100,6 @@ export function buildGroqRequestBody({ task, model = resolveGroqModel(), systemT
   if (completionBudget) body[profile.completionTokenParameter] = completionBudget;
   if (contract.responseFormat) body.response_format = contract.responseFormat;
   if (contract.mode !== "text" && profile.reasoningControl) body.include_reasoning = false;
+  if (taskContractReasoningEffort(task) && profile.reasoningControl) body.reasoning_effort = taskContractReasoningEffort(task);
   return { body, contract, profile, completionBudget };
 }

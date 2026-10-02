@@ -252,6 +252,14 @@
 
 "riskPerceptionGapNarrative": "{{area}} non va letto necessariamente come assente, ma oggi non emerge con sufficiente forza rispetto al ruolo target.",
 
+"authorizedDecisionAccountabilityWhoEmerges": "Nel colloquio emergono evidenze contestualizzate di responsabilità decisionale: decisioni e responsabilità risultano più leggibili nel perimetro effettivamente supportato dalla Knowledge acquisita, senza estendere il significato oltre gli episodi osservati.",
+
+"authorizedDecisionAccountabilityCredibilityAssets": "La credibilità osservata si rafforza sulle decisioni e responsabilità effettivamente supportate dalla Knowledge corrente, entro i limiti dei contesti rappresentati e senza trasformarle in una caratteristica generale non dimostrata.",
+
+"insufficientKnowledgeWhoEmerges": "La Knowledge disponibile non è sufficiente per formulare una percezione professionale più specifica senza introdurre inferenze non supportate.",
+
+"insufficientKnowledgeCredibilityAssets": "Non viene formulata una lettura specifica della credibilità professionale quando le evidenze disponibili non supportano ancora una conclusione sufficientemente delimitata.",
+
 "credibilityExperienceWhyItMatters": "Questo elemento oggi pesa sulla distanza percepita dal ruolo target: va trasformato in evidenza concreta, non solo dichiarato.",
 
 "credibilityExperiencePossibleEvidence": "Progetti, responsabilità, risultati o contesti in cui il candidato abbia mostrato {risk} in modo osservabile.",
@@ -304,10 +312,13 @@
         "targetDistanceTitle": "Dove nasce la distanza dal ruolo target",
         "targetDistanceCurrentSignalsWithArchetype": "Oggi emerge soprattutto {{archetypeNarrative}}. Questa combinazione costruisce una percezione di credibilità professionale e aiuta a capire sia i punti di forza già visibili sia gli aspetti che potrebbero essere resi più evidenti durante il colloquio.",
         "targetDistanceCurrentSignalsFallback": "Emergono alcuni segnali professionali utili, ma ancora poco strutturati.",
-        "targetDistanceTargetSignalsWithGap": "Il ruolo target cerca soprattutto {{targetSignalsGap}}, oltre a una maggiore evidenza di responsabilità, impatto e capacità di guidare risultati.",
+"targetDistanceCurrentSignalsNoEvidence": "La Knowledge disponibile non supporta una lettura più specifica dei segnali correnti.",
+        "targetDistanceTargetSignalsWithGap": "Il confronto target riguarda {{gapArea}}: {{targetSignal}}.",
         "targetDistanceTargetSignalsFallback": "Il ruolo target richiede soprattutto evidenze di responsabilità, impatto, autonomia decisionale e capacità di guidare risultati.",
-        "targetDistanceBridgeWithGap": "{{gapNarrative}} In altre parole, il colloquio racconta bene cosa hai fatto, ma meno chiaramente quale peso abbiano avuto le tue scelte sul risultato finale.",
+"targetDistanceTargetSignalsNoGap": "Il target resta un contesto di confronto; in assenza di un gap autorizzato non viene formulata una distanza specifica.",
+        "targetDistanceBridgeWithGap": "{{gapNarrative}}",
         "targetDistanceBridgeFallback": "La distanza principale non sembra nascere dalla mancanza di competenze, ma dalla difficoltà nel rendere immediatamente visibili contributo personale, decisioni e impatto.",
+"targetDistanceNoGapNarrative": "Non è stata stabilita una distanza target significativa sulla base del materiale semanticamente autorizzato disponibile.",
         "emergingImageFallback": "Il profilo mostra alcuni segnali professionali utili, ma la percezione complessiva richiede ancora una lettura più strutturata.",
         "whoEmergesTitle": "Chi emerge",
         "whoEmergesWithArchetype": "Emerge soprattutto {{archetypeNarrative}}. Il profilo non viene letto solo come somma di competenze o attività svolte: ciò che conta è il modo in cui questi segnali costruiscono una certa immagine professionale. Nel colloquio questa immagine inizia a emergere, anche se alcuni aspetti devono ancora essere sostenuti da esempi più concreti e riconoscibili.",

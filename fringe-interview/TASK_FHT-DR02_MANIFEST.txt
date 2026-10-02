@@ -1,0 +1,6 @@
+src/app/privateBetaStagedInterviewJourney.js
+src/app/buildRepresentationValueProofProjection.js
+src/report/buildProReportV2.js
+scripts/test_fht_dr02_final_representation_semantic_authority.js
+scripts/test_representation_value_proof_projection.js
+scripts/test_fht03_semantic_integrity.js

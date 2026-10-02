@@ -1,0 +1,7 @@
+src/core/knowledge/validateKnowledgeOpportunity.js
+src/core/knowledge/validateKnowledgeAcquisitionNeed.js
+src/core/knowledge/buildKnowledgeAcquisitionNeed.js
+src/app/knowledge/buildFhtLiveAcquisitionPurposePlanning.js
+src/app/privateBetaStagedInterviewJourney.js
+scripts/test_fht_ap01_live_acquisition_purpose_planning.js
+scripts/test_staged_private_beta_journey.js

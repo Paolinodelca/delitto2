@@ -8,17 +8,43 @@
       "leadershipExposure": "none | limited | moderate | strong | unclear",
       "ownershipLevel": "low | medium | high | unclear",
       "autonomyLevel": "low | medium | high | unclear",
-      "scopeLevel": "narrow | moderate | broad | unclear"
+      "scopeLevel": "narrow | moderate | broad | unclear",
+      "highlights": [
+        "string"
+      ],
+      "supportExcerpts": [
+        "string"
+      ],
+      "activityModes": [
+        {
+          "kind": "cross_functional_coordination | other",
+          "supportExcerpt": "string"
+        }
+      ]
     },
     "skills": {
-      "technical": ["string"],
-      "tools": ["string"],
-      "methodologies": ["string"],
-      "soft": ["string"],
-      "languages": ["string"]
+      "technical": [
+        "string"
+      ],
+      "tools": [
+        "string"
+      ],
+      "methodologies": [
+        "string"
+      ],
+      "soft": [
+        "string"
+      ],
+      "languages": [
+        "string"
+      ]
     },
-    "domainSignals": ["string"],
-    "responsibilitySignals": ["string"],
+    "domainSignals": [
+      "string"
+    ],
+    "responsibilitySignals": [
+      "string"
+    ],
     "careerSignals": {
       "stakeholderManagement": "none | weak | partial | strong | unclear",
       "crossFunctionalCollaboration": "none | weak | partial | strong | unclear",
@@ -30,44 +56,90 @@
     },
     "evidence": {
       "overallEvidenceLevel": "low | medium | high",
-      "evidenceRichAreas": ["string"],
-      "weaklySupportedAreas": ["string"],
+      "evidenceRichAreas": [
+        "string"
+      ],
+      "weaklySupportedAreas": [
+        "string"
+      ],
       "quantifiedAchievementsPresent": true
     },
-    "education": ["string"],
-    "certifications": ["string"],
-    "strengthAreas": ["string"],
-    "riskAreas": ["string"],
-    "ambiguities": ["string"]
+    "education": [
+      "string"
+    ],
+    "certifications": [
+      "string"
+    ],
+    "strengthAreas": [
+      "string"
+    ],
+    "riskAreas": [
+      "string"
+    ],
+    "ambiguities": [
+      "string"
+    ]
   },
   "roleProfile": {
     "title": "string",
     "summary": "string",
     "seniorityDetected": "junior | mid | senior | lead | unclear",
     "requirements": {
-      "mustHave": ["string"],
-      "preferred": ["string"],
-      "bonus": ["string"]
+      "mustHave": [
+        "string"
+      ],
+      "preferred": [
+        "string"
+      ],
+      "bonus": [
+        "string"
+      ]
     },
     "skills": {
-      "technical": ["string"],
-      "tools": ["string"],
-      "methodologies": ["string"],
-      "soft": ["string"],
-      "languages": ["string"]
+      "technical": [
+        "string"
+      ],
+      "tools": [
+        "string"
+      ],
+      "methodologies": [
+        "string"
+      ],
+      "soft": [
+        "string"
+      ],
+      "languages": [
+        "string"
+      ]
     },
-    "responsibilities": ["string"],
-    "successSignals": ["string"],
+    "responsibilities": [
+      "string"
+    ],
+    "successSignals": [
+      "string"
+    ],
     "domainContext": {
-      "industry": ["string"],
-      "businessModel": ["string"],
-      "environmentSignals": ["string"],
-      "pressureSignals": ["string"]
+      "industry": [
+        "string"
+      ],
+      "businessModel": [
+        "string"
+      ],
+      "environmentSignals": [
+        "string"
+      ],
+      "pressureSignals": [
+        "string"
+      ]
     },
     "contextType": "string",
     "languageStyle": "string",
-    "redFlags": ["string"],
-    "ambiguities": ["string"]
+    "redFlags": [
+      "string"
+    ],
+    "ambiguities": [
+      "string"
+    ]
   },
   "jobFitAnalysis": {
     "fitSummary": {
@@ -106,13 +178,27 @@
         "explanation": "string"
       }
     ],
-    "ambiguities": ["string"],
-    "transferableStrengths": ["string"],
-    "strongSignals": ["string"],
-    "weakSignals": ["string"],
-    "matchedSkills": ["string"],
-    "missingSkills": ["string"],
-    "questionFocusAreas": ["string"],
+    "ambiguities": [
+      "string"
+    ],
+    "transferableStrengths": [
+      "string"
+    ],
+    "strongSignals": [
+      "string"
+    ],
+    "weakSignals": [
+      "string"
+    ],
+    "matchedSkills": [
+      "string"
+    ],
+    "missingSkills": [
+      "string"
+    ],
+    "questionFocusAreas": [
+      "string"
+    ],
     "interviewFocus": [
       {
         "priority": "high | medium | low",
@@ -127,12 +213,22 @@
         "reason": "string"
       }
     ],
-    "cvImprovementHints": ["string"],
+    "cvImprovementHints": [
+      "string"
+    ],
     "reportHighlights": {
-      "strengths": ["string"],
-      "risks": ["string"],
-      "clarificationsNeeded": ["string"],
-      "positioningHints": ["string"]
+      "strengths": [
+        "string"
+      ],
+      "risks": [
+        "string"
+      ],
+      "clarificationsNeeded": [
+        "string"
+      ],
+      "positioningHints": [
+        "string"
+      ]
     }
   }
 }

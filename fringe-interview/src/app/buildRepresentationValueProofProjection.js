@@ -26,21 +26,29 @@ function uncertaintyItems(under,candidateProfile){return under.slice(0,3).map(it
 
 // Dynamic downstream projection only. It consumes canonical report/parser outputs,
 // adds no persistence or confidence score, and never mutates its sources.
-export function buildRepresentationValueProofProjection({professionalPerceptionReport,targetRole='',candidateProfile=null,jobFitAnalysis=null}={}){
- const report=professionalPerceptionReport||{},pp=report?.professionalPerception||{},p=pp?.perceptionV2||{};
- const visible=arr(pp?.visibleSignals).map((x,i)=>ev(x?.label,`professionalPerception.visibleSignals[${i}]`)).filter(x=>x.summary);
+export function buildRepresentationValueProofProjection({professionalPerceptionReport,targetRole='',candidateProfile=null,jobFitAnalysis=null,roleProfile=null}={}){
+ const report=professionalPerceptionReport||{},pp=report?.professionalPerception||{};
+ const authorized=arr(pp?.authorizedSemanticMaterial);
  const under=arr(pp?.underVisibleSignals).map((x,i)=>ev(x?.label,`professionalPerception.underVisibleSignals[${i}]`)).filter(x=>x.summary);
- const gaps=arr(pp?.perceptionGap).map((x,i)=>{const area=text(x?.area);const narrative=text(x?.narrative);const generic=/^(questo|questa|tale)\s+(elemento|aspetto|area|segnale)\b/i.test(narrative);const summary=area&&(!narrative||generic)?area:(area&&narrative&&!norm(narrative).includes(norm(area))?`${area}: ${narrative}`:(narrative||area));return ev(summary,`professionalPerception.perceptionGap[${i}]`);}).filter(x=>x.summary);
  const uncertainties=uncertaintyItems(under,candidateProfile);
- const claims=[],usedEvidence=new Set();
- const takeFresh=(items,n=3)=>uniqueEvidence(items.filter(x=>!usedEvidence.has(norm(x.summary)))).slice(0,n).map(x=>(usedEvidence.add(norm(x.summary)),x));
- const addClaim=(claim)=>{if(claim?.claim&&semanticDistinct(claim,claims))claims.push(frozen(claim));};
- const who=text(p?.whoEmerges?.narrative);
- if(who){const evidence=takeFresh(visible);addClaim({id:'what_emerges',claim:who,epistemicStatus:'derived',supportStrength:evidence.length?'supported_by_derived_signals':'limited_support',supportingEvidence:evidence,uncertainty:uncertainties.slice(0,2),targetRelation:null,traceability:uniqueEvidence([ev(who,'professionalPerception.perceptionV2.whoEmerges.narrative'),...evidence,...uncertainties.flatMap(x=>x.supportingEvidence)]).map(x=>x.sourceRef)});}
- const cred=text(p?.credibilityAssets?.narrative);
- if(cred&&claims.length<3){const evidence=takeFresh(visible);if(evidence.length||!claims.length)addClaim({id:'credibility_assets',claim:cred,epistemicStatus:'derived',supportStrength:evidence.length?'supported_by_derived_signals':'limited_support',supportingEvidence:evidence,uncertainty:uncertainties.slice(0,2),targetRelation:null,traceability:uniqueEvidence([ev(cred,'professionalPerception.perceptionV2.credibilityAssets.narrative'),...evidence]).map(x=>x.sourceRef)});}
- const target=text(p?.targetDistance?.bridgeNarrative);
- if(target&&claims.length<4){const targetEvidence=uniqueEvidence([...gaps,...under]).filter(x=>norm(x.summary)!==norm(target)).slice(0,3);const contextual=uncertainties.flatMap(x=>x.supportingEvidence);const evidence=uniqueEvidence([...targetEvidence,...contextual]).filter(x=>norm(x.summary)!==norm(target));addClaim({id:'target_relation',claim:target,epistemicStatus:under.length?'insufficiently_observed':'derived',supportStrength:evidence.length?'limited_or_contextual_evidence':'limited_support',supportingEvidence:evidence,uncertainty:uncertainties,targetRelation:frozen({status:under.length?'relevant_distance_or_partial_characterization':'context_only',target:text(targetRole)||text(pp?.emergingImage?.roleTarget),summary:target}),traceability:uniqueEvidence([ev(target,'professionalPerception.perceptionV2.targetDistance.bridgeNarrative'),...evidence]).map(x=>x.sourceRef)});}
- return frozen({type:'representation_value_proof_projection',version:'1.1',persistent:false,sourceOfTruth:false,claims:claims.slice(0,4),hasPrimaryScore:false,limitations:frozen({claimSpecificEvidenceRelevance:'Professional Perception and parser context support bounded contextual projection; deep Core Evidence/Knowledge provenance is not propagated claim-by-claim to the live report.'})});
+ const requirements=[...arr(roleProfile?.requirements?.mustHave),...arr(roleProfile?.requirements?.preferred),...arr(roleProfile?.requirements?.bonus)].map(text).filter(Boolean);
+ const claims=[];
+ for(const [i,item] of authorized.entries()){
+  if(item?.semanticType==='quantified_outcome'&&text(item.measurableOutcome)){
+   const q=item.quantitativeValue||{};
+   const detail=[q.approximate?'~':'',typeof q.value==='number'?String(q.value):'',text(q.unit)].join('').trim();
+   const summary=[text(item.measurableOutcome),detail].filter(Boolean).join(' — ');
+   claims.push(frozen({id:`authorized_quantified_outcome_${i}`,claim:summary,epistemicStatus:'observed',supportStrength:'authorized_current_session_knowledge',supportingEvidence:[ev(summary,item.sourceRef,'authorized_knowledge',{semanticType:item.semanticType,evidenceIds:arr(item.evidenceIds),causalityBoundary:text(item.causalityBoundary),limitations:arr(item.limitations)})],uncertainty:[],targetRelation:null,traceability:[item.sourceRef,...arr(item.evidenceIds)]}));
+  }else if(item?.semanticType==='decision_accountability'){
+   const summary=[text(item.decisionAuthority),text(item.consequenceScope)].filter(Boolean).join(' / ');
+   if(summary)claims.push(frozen({id:`authorized_decision_accountability_${i}`,claim:summary,epistemicStatus:'observed',supportStrength:'authorized_current_session_knowledge',supportingEvidence:[ev(summary,item.sourceRef,'authorized_knowledge',{semanticType:item.semanticType,evidenceIds:arr(item.evidenceIds),limitations:arr(item.limitations)})],uncertainty:[],targetRelation:null,traceability:[item.sourceRef,...arr(item.evidenceIds)]}));
+  }
+ }
+ const targetItems=uncertainties.filter(u=>requirements.some(r=>overlapsSignal(u.label,r))).slice(0,3);
+ if(targetItems.length){
+  const labels=targetItems.map(x=>x.label).join('; ');
+  claims.push(frozen({id:'target_relation',claim:labels,epistemicStatus:'insufficiently_observed',supportStrength:'not_person_support',supportingEvidence:[],uncertainty:targetItems,targetRelation:frozen({status:'insufficiently_observed_against_canonical_requirement',target:text(targetRole),requirements:requirements.filter(r=>targetItems.some(x=>overlapsSignal(x.label,r)))}),traceability:targetItems.map(x=>x.sourceRef)}));
+ }
+ return frozen({type:'representation_value_proof_projection',version:'1.2',persistent:false,sourceOfTruth:false,claims:claims.slice(0,4),hasPrimaryScore:false,limitations:frozen({claimSpecificEvidenceRelevance:'Positive person claims require authorized current-session semantic Knowledge; target relation uses canonical RoleProfile requirements only.'})});
 }
 export default buildRepresentationValueProofProjection;

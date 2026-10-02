@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import { buildPd069lLiveDiagnosticProjection } from './run_pd069l_live_verification.js';
+
+const out={providerStatus:'controlled_boundary',descriptors:[{status:'accepted',descriptorId:'descriptor:d1',provenance:{proposalRef:'d1'}}],descriptorRejections:[{status:'rejected',proposalRef:'d2',errors:['claim_scope_exceeds_authority']}],relationships:[],relationshipRejections:[{status:'rejected',proposalRef:'r1',errors:['relationship_continuity_prohibited']}]};
+const lastRun={status:'ok',result:{structured:{descriptorProposals:[{proposalRef:'d1',materialRef:'fixture:a',descriptorRole:'work_phase',descriptiveValue:'avviamento linea',claimShape:{subjectScope:'source_material',descriptiveRole:'work_phase'},grounding:{supportRef:'fixture:a:support:1'}},{proposalRef:'d2',materialRef:'fixture:b',descriptorRole:'involved_function',descriptiveValue:'engineering',claimShape:{subjectScope:'person',descriptiveRole:'involved_function'},grounding:{supportRef:'fixture:b:support:1'}}],relationshipHypotheses:[{proposalRef:'r1',descriptorProposalRefs:['d1','d2'],relationshipWording:'Le esperienze documentano una relazione tra fasi operative distinte.',relationshipBasis:'bounded_open_semantic_relationship',claimShape:{subjectScope:'material_relationship',relationshipClaim:'recurrence',continuityAssertion:'authorised'}}]}}};
+const projection=buildPd069lLiveDiagnosticProjection({out,lastRun,call:{model:'controlled-model',elapsedMs:123},inputMaterials:2});
+assert.equal(projection.relationships[0].relationshipWording,'Le esperienze documentano una relazione tra fasi operative distinte.');
+assert.equal(projection.relationships[0].claimShape.continuityAssertion,'authorised');
+assert.equal(projection.relationships[0].accepted,false);
+assert.deepEqual(projection.relationships[0].rejectionReasons,['relationship_continuity_prohibited']);
+assert.equal(projection.descriptors[0].accepted,true);
+assert.deepEqual(projection.descriptors[0].rejectionReasons,[]);
+assert.equal(projection.descriptors[0].supportRef,'fixture:a:support:1');
+const serialised=JSON.stringify(projection);
+assert(!serialised.includes('systemPrompt'));
+assert(!serialised.includes('userPrompt'));
+assert(!serialised.includes('GROQ_API_KEY'));
+assert(!serialised.includes('secret-api-key'));
+assert.equal(out.relationships.length,0);
+assert.deepEqual(out.relationshipRejections[0].errors,['relationship_continuity_prohibited']);
+console.log('PD-069L live diagnostic completion: PASS');

@@ -200,25 +200,24 @@ function formulaProvenance(measurementResult, mapping, target, policyFingerprint
         weight: target.weight,
       },
     },
-    confidence: {
+    confidence: measurementResult.confidenceState === "known" ? {
       strategy: mapping.confidenceStrategy,
       expression: "measurementResult.confidence * mappingTarget.confidenceFactor",
-      operands: {
-        confidence: measurementResult.confidence,
-        confidenceFactor: target.confidenceFactor,
-      },
-    },
+      operands: { confidence: measurementResult.confidence, confidenceFactor: target.confidenceFactor },
+    } : { state: measurementResult.confidenceState, strategy: "preserve_non_known_v1", expression: null, operands: { confidence: null, confidenceFactor: target.confidenceFactor } },
   };
 }
 
 function buildCanonicalContribution(measurementResult, mapping, target, policyFingerprint) {
   const contributionValue = roundUnit(Math.abs(measurementResult.normalizedValue) * target.weight);
-  const confidence = roundUnit(measurementResult.confidence * target.confidenceFactor);
+  const confidenceState = measurementResult.confidenceState;
+  const confidence = confidenceState === "known" ? roundUnit(measurementResult.confidence * target.confidenceFactor) : null;
   const contributionBody = {
     measurementId: measurementResult.measurementId,
     dimensionId: target.dimensionId,
     contributionType: target.contributionType,
     contributionValue,
+    confidenceState,
     confidence,
     provenance: {
       measurementResultRef: `measurementResult:${measurementResult.id}`,

@@ -15,7 +15,7 @@ const schemaText = await readFile(new URL("../config/answer_annotation_schema.js
 const schema = JSON.parse(schemaText);
 
 assert.equal(resolveGroqTaskCompletionBudget({ task: "answerAnnotation" }), 2048);
-assert.equal(resolveGroqTaskCompletionBudget({ task: "candidateProfile" }), null);
+assert.equal(resolveGroqTaskCompletionBudget({ task: "candidateProfile" }), 4096);
 assert.equal(resolveGroqTaskCompletionBudget({ task: "answerAnnotation", maxTokens: 1536 }), 1536);
 
 const current = buildGroqRequestBody({

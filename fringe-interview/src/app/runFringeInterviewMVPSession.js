@@ -116,6 +116,9 @@ export async function runFringeInterviewMVPSession({
   cvText,
   jdText = "",
   userNotes = "",
+  professionalSources = [],
+  precomputedCandidateProfile = null,
+  precomputedCandidateSourceProfiles = null,
   roleNotes = "",
   targetRole = "",
   modelAdapter,
@@ -183,6 +186,9 @@ export async function runFringeInterviewMVPSession({
     cvText: safeCvText,
     jdText: resolvedJdText,
     userNotes: safeUserNotes,
+    professionalSources,
+    precomputedCandidateProfile,
+    precomputedCandidateSourceProfiles,
     roleNotes: enrichedRoleNotes,
     modelAdapter,
     interviewLengthMode,
@@ -274,7 +280,7 @@ export async function runFringeInterviewMVPSession({
     runtimeAnswers: runtime?.runtimeState?.answers || [],
     openingPositioning: finalCandidateReport.finalCandidateReport.openingPositioning,
     localeKey: finalCandidateReport.finalCandidateReport.locale || resolvedSessionLocale,
-    rawInput: { targetRole: safeTargetRole }
+    rawInput: { targetRole: safeTargetRole, targetSourceText: resolvedJdText }
   });
 
   if (runtime?.runtimeState?.isCompleted) {

@@ -121,3 +121,4 @@ export { renderPrivateBetaUiJourneyHtml } from "./renderPrivateBetaUiJourneyHtml
 export { createPrivateBetaUiRequestHandler, createPrivateBetaUiServer } from "./privateBetaUiServer.js";
 
 export { runAcceptedRuntimeAnswerKnowledgeVerticalSlice } from "./runAcceptedRuntimeAnswerKnowledgeVerticalSlice.js";
+export * from './careerDirection/index.js';

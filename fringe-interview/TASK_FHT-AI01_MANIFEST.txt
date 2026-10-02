@@ -1,0 +1,21 @@
+FHT-AI01 — SECOND CORRECTIVE REWORK
+VERDICT: B — IMPLEMENTATION COMPLETE; CONTROLLED LIVE VERIFICATION REQUIRED
+
+OWNED/MODIFIED FILES:
+src/app/knowledge/buildFhtLiveAcquisitionPurposePlanning.js
+src/app/privateBetaStagedInterviewJourney.js
+scripts/test_fht_ai01_live_acquisition_semantic_authority_integration.js
+scripts/test_fht_ap01_live_acquisition_purpose_planning.js
+scripts/test_staged_private_beta_journey.js
+TASK_FHT-AI01_LIVE_ACQUISITION_SEMANTIC_AUTHORITY_INTEGRATION.md
+TASK_FHT-AI01_MANIFEST.txt
+
+NOT MODIFIED:
+src/app/knowledge/runFhtLiveAcquisitionSemanticBridge.js
+FHT-KC01 confidence semantics
+FHT-DR02 Representation semantics
+docs/20-product/*
+
+NO COMMIT
+NO PUSH
+FIRST HUMAN TEST GATE: CLOSED

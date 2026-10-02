@@ -1,0 +1,6 @@
+scripts/test_ar02d_reopen_decision_accountability_production_semantic_executor.js
+scripts/test_fht_da01_measurement_and_semantic_failure_trace.js
+src/app/knowledge/runDecisionAccountabilityProductionSemanticObservation.js
+src/app/knowledge/runFhtLiveAcquisitionSemanticBridge.js
+src/app/privateBetaStagedInterviewJourney.js
+src/core/measurement/decisionAccountability/buildDecisionAccountabilityMeasureResult.js

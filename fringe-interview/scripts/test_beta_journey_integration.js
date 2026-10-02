@@ -126,6 +126,7 @@ assert.equal(positive.report.firstView.messages.length, 3);
 assert.equal(positive.report.firstView.nextActions.length, 3);
 assert.equal(positive.professionalIdentitySnapshot.status, "unavailable");
 assert.equal(positive.professionalIdentitySnapshot.persisted, false);
+assert.equal(positive.capabilityGaps.find((gap) => gap.code === "PROFESSIONAL_IDENTITY_SNAPSHOT_CAPABILITY_UNAVAILABLE")?.blockingForBetaValidation, false);
 assert.equal(positive.feedback.status, "submitted");
 assert.equal(positive.feedback.comment, "Esperienza utile.");
 assert.equal(positive.capabilityGaps.some((gap) => gap.code === "VOICE_SUBSYSTEM_UNAVAILABLE"), true);

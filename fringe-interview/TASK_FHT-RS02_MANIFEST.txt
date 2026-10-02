@@ -1,0 +1,14 @@
+config/private_beta_ui.en.json
+config/private_beta_ui.it.json
+config/professional_representation_synthesis.en.json
+config/professional_representation_synthesis.it.json
+scripts/test_fht_rs02_professional_representation_synthesis.js
+src/app/buildProfessionalRepresentationSynthesis.js
+src/app/knowledge/runFhtLiveAcquisitionSemanticBridge.js
+src/app/privateBetaStagedInterviewJourney.js
+src/app/renderPrivateBetaUiJourneyHtml.js
+src/app/runProfessionalRepresentationSynthesis.js
+src/i18n/loadProfessionalRepresentationSynthesisMessages.js
+src/interview/adapters/runGroqProfessionalRepresentationSynthesisModel.js
+src/interview/buildProfessionalRepresentationSynthesisPrompt.js
+src/report/buildProReportV2.js

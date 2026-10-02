@@ -14,11 +14,11 @@ assert(fitPrompt.modelInput.system.includes('appears only under roleProfile.skil
 assert(fitPrompt.modelInput.system.includes('may still be used in cvImprovementHints'));
 
 const report={professionalPerception:{perceptionV2:{targetDistance:{bridgeNarrative:'La leadership resta da caratterizzare.'}},underVisibleSignals:[{label:'Leadership gerarchica diretta'}],perceptionGap:[{area:'Leadership gerarchica diretta',narrative:'Questo elemento non va letto necessariamente come assente, ma oggi non emerge con sufficiente forza rispetto al ruolo target.'}]}};
-const projection=buildRepresentationValueProofProjection({professionalPerceptionReport:report,targetRole:'Operations Manager'});
+const projection=buildRepresentationValueProofProjection({professionalPerceptionReport:report,targetRole:'Operations Manager',roleProfile:{requirements:{mustHave:['Leadership gerarchica diretta'],preferred:[],bonus:[]}}});
 const target=projection.claims.find(x=>x.id==='target_relation');
 assert(target);
-assert(target.supportingEvidence.some(x=>x.summary==='Leadership gerarchica diretta'));
-assert(!target.supportingEvidence.some(x=>/^Questo elemento/i.test(x.summary)));
+assert.equal(target.supportingEvidence.length,0);
+assert(target.uncertainty.some(x=>x.label==='Leadership gerarchica diretta'));
 
 const generic=await readFile('src/report/narrativeData/proReport/generic_professional.json','utf8');
 assert(generic.includes('{{area}} non va letto necessariamente come assente'));

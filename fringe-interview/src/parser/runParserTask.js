@@ -57,6 +57,7 @@ export async function runParserTask({ promptPayload, modelAdapter }) {
   return {
     task,
     rawText,
-    parsed
+    parsed,
+    modelMeta: rawResponse && typeof rawResponse === "object" && rawResponse.meta && typeof rawResponse.meta === "object" ? rawResponse.meta : null
   };
 }

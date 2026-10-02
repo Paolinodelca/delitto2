@@ -101,29 +101,46 @@ function aggregateDimensionContributions(dimensionId, contributions, options = {
     return deepFreeze(unknownState);
   }
 
-  let weightedSignedSum = 0;
-  let confidenceSum = 0;
+  const allConfidenceKnown = sorted.every((item) => item.confidenceState === "known");
+  const anyConfidenceKnown = sorted.some((item) => item.confidenceState === "known");
+  const confidenceState = allConfidenceKnown ? "known" : (anyConfidenceKnown || sorted.some((item) => item.confidenceState === "partial") ? "partial" : "not_yet_derived");
+  let signedEstimate;
+  let confidence;
   let supportingWeight = 0;
   let contradictingWeight = 0;
-  let confidenceTotal = 0;
 
-  for (const contribution of sorted) {
-    const sign = contribution.contributionType === "supporting" ? 1 : -1;
-    const effectiveWeight = contribution.confidence;
-    weightedSignedSum += sign * contribution.contributionValue * effectiveWeight;
-    confidenceSum += effectiveWeight;
-    confidenceTotal += contribution.confidence;
-    if (sign > 0) supportingWeight += contribution.contributionValue * effectiveWeight;
-    else contradictingWeight += contribution.contributionValue * effectiveWeight;
+  if (allConfidenceKnown) {
+    let weightedSignedSum = 0;
+    let confidenceSum = 0;
+    let confidenceTotal = 0;
+    for (const contribution of sorted) {
+      const sign = contribution.contributionType === "supporting" ? 1 : -1;
+      const effectiveWeight = contribution.confidence;
+      weightedSignedSum += sign * contribution.contributionValue * effectiveWeight;
+      confidenceSum += effectiveWeight;
+      confidenceTotal += contribution.confidence;
+      if (sign > 0) supportingWeight += contribution.contributionValue * effectiveWeight;
+      else contradictingWeight += contribution.contributionValue * effectiveWeight;
+    }
+    signedEstimate = confidenceSum === 0 ? 0 : weightedSignedSum / confidenceSum;
+    confidence = roundUnit(confidenceTotal / sorted.length);
+  } else {
+    // Confidence is epistemic metadata, not semantic weight. When it is not derived,
+    // preserve supported semantic contributions without manufacturing a numeric weight.
+    let signedSemanticSum = 0;
+    for (const contribution of sorted) {
+      const sign = contribution.contributionType === "supporting" ? 1 : -1;
+      signedSemanticSum += sign * contribution.contributionValue;
+      if (sign > 0) supportingWeight += contribution.contributionValue;
+      else contradictingWeight += contribution.contributionValue;
+    }
+    signedEstimate = signedSemanticSum / sorted.length;
+    confidence = null;
   }
 
-  const signedEstimate = confidenceSum === 0 ? 0 : weightedSignedSum / confidenceSum;
   const estimate = roundUnit((signedEstimate + 1) / 2);
-  const confidence = roundUnit(confidenceTotal / sorted.length);
   const totalDirectionalWeight = supportingWeight + contradictingWeight;
-  const consistency = totalDirectionalWeight === 0
-    ? 0
-    : roundUnit(Math.abs(supportingWeight - contradictingWeight) / totalDirectionalWeight);
+  const consistency = totalDirectionalWeight === 0 ? 0 : roundUnit(Math.abs(supportingWeight - contradictingWeight) / totalDirectionalWeight);
   const hasSupporting = sorted.some((item) => item.contributionType === "supporting" && item.contributionValue > 0);
   const hasContradicting = sorted.some((item) => item.contributionType === "contradicting" && item.contributionValue > 0);
   let direction;
@@ -134,9 +151,10 @@ function aggregateDimensionContributions(dimensionId, contributions, options = {
   // Foundation coverage is deliberately conservative: available contributions establish
   // partial observation, but their count alone never implies complete dimensional coverage.
   const coverage = 0.5;
+  const aggregationStrategy = allConfidenceKnown ? "confidence_weighted_signed_mean_v1" : "semantic_signed_mean_with_explicit_unknown_confidence_v1";
   const fingerprint = stableFingerprint([
     normalizedDimensionId,
-    "confidence_weighted_signed_mean_v1",
+    aggregationStrategy,
     ...sorted.map((item) => item.id),
   ]);
 
@@ -147,6 +165,7 @@ function aggregateDimensionContributions(dimensionId, contributions, options = {
     estimate,
     direction,
     coverage,
+    confidenceState,
     confidence,
     consistency,
     stability: null,
@@ -171,9 +190,10 @@ function aggregateDimensionContributions(dimensionId, contributions, options = {
     metadata: { version: "1.0", createdAt: options.now, updatedAt: options.now },
     extensions: {
       aggregation: {
-        strategy: "confidence_weighted_signed_mean_v1",
+        strategy: aggregationStrategy,
+        confidenceStrategy: allConfidenceKnown ? "mean_v1" : "not_derived_no_numeric_weight_v1",
         signedEstimate: Math.round(signedEstimate * 1e12) / 1e12,
-        zeroConfidenceBehavior: confidenceSum === 0 ? "neutral_midpoint" : "not_applied",
+        zeroConfidenceBehavior: allConfidenceKnown && confidence === 0 ? "neutral_midpoint" : "not_applied",
         coveragePolicy: "conservative_partial_fixed_v1",
         contributionRefs,
         fingerprint,

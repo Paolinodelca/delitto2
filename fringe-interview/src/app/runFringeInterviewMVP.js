@@ -3,13 +3,17 @@ import {
   deriveInterviewPlanFromJobFit,
   buildInterviewQuestionSet,
   composeInterviewSession,
-  createInterviewRuntime
+  createInterviewRuntime,
+  loadFollowupPacks
 } from "../interview/index.js";
 
 export async function runFringeInterviewMVP({
   cvText,
   jdText,
   userNotes = "",
+  professionalSources = [],
+  precomputedCandidateProfile = null,
+  precomputedCandidateSourceProfiles = null,
   roleNotes = "",
   modelAdapter,
   interviewLengthMode = "",
@@ -38,6 +42,9 @@ export async function runFringeInterviewMVP({
     cvText,
     jdText,
     userNotes,
+    professionalSources,
+    precomputedCandidateProfile,
+    precomputedCandidateSourceProfiles,
     roleNotes,
     modelAdapter
   });
@@ -83,6 +90,9 @@ export async function runFringeInterviewMVP({
 
   runtime.sessionFollowupBlocks =
     questionSetResult.interviewQuestionSet?.selectedFollowupPacks || [];
+
+  const followupPackConfig = await loadFollowupPacks();
+  runtime.availableFollowupBlocks = Object.values(followupPackConfig?.packs || {});
 
   return {
     fringeInterviewMVP: {

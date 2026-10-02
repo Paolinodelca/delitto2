@@ -57,7 +57,9 @@
       "identify domain exposure",
       "detect responsibility and career signals",
       "estimate evidence strength",
-      "identify strengths, risks, and ambiguities"
+      "identify strengths, risks, and ambiguities",
+      "preserve materially meaningful professional history such as major projects, launches, start-ups, cross-functional episodes, and result-bearing experiences as source-grounded experience highlights when explicitly supported by the source",
+      "retain short exact source excerpts for materially meaningful professional experiences so downstream source-grounded Representation can verify semantic support without treating generated summaries as authority"
     ],
     "heuristics": {
       "senioritySignals": [
@@ -172,7 +174,10 @@
       "Use 'unclear' or equivalent allowed enum when evidence is insufficient.",
       "Do not invent years of experience.",
       "A statement that direct hierarchical or people-management responsibility was not exercised in one described context is bounded evidence about that context. Do not convert it by itself into weak/none peopleLeadership, limited/none leadershipExposure, a person risk, or an insufficient capability; use 'unclear' and/or ambiguities when broader leadership evidence is not established.",
-      "Do not generalize absence of a responsibility in one project, role episode, or example into absence or weakness of that capability across the person unless the source material explicitly supports that broader conclusion."
+      "Do not generalize absence of a responsibility in one project, role episode, or example into absence or weakness of that capability across the person unless the source material explicitly supports that broader conclusion.",
+      "Preserve explicitly supported major projects, launches, start-ups, cross-functional episodes, result-bearing experiences, and other materially meaningful professional history in experienceSignals.highlights; keep them source-grounded and do not infer competence, ownership, authority, or success causality.",
+      "For each materially meaningful experience retained in experienceSignals.highlights, include a short exact verbatim source substring in experienceSignals.supportExcerpts when available. supportExcerpts must be copied from the input source without strengthening, paraphrasing, or inventing responsibility; use an empty array when no exact supporting excerpt is available.",
+      "When a materially meaningful experience explicitly describes coordination or collaboration across named functions, departments, disciplines, suppliers, or operational groups, add an experienceSignals.activityModes item with kind 'cross_functional_coordination' and an exact verbatim supportExcerpt from that same source. Do not add it for generic teamwork, co-presence, or unsupported responsibility. Use only the bounded enum and source text; do not infer a stable coordination capability."
     ]
   },
   "roleProfilePrompt": {

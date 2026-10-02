@@ -1,0 +1,6 @@
+config/professional_representation_synthesis.en.json
+config/professional_representation_synthesis.it.json
+scripts/test_fht_rr01_professional_representation_semantic_richness.js
+scripts/test_fht_rs02_professional_representation_synthesis.js
+src/app/buildProfessionalRepresentationSynthesis.js
+src/report/buildProReportV2.js

@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import {composeProfessionalThreads,selectLevel1ProfessionalThreads} from '../src/app/professionalThreadComposition.js';
+import {renderPrivateBetaUiJourneyHtml} from '../src/app/renderPrivateBetaUiJourneyHtml.js';
+
+const relationship={status:'accepted',relationshipId:'R1',relationshipWording:'Relazione documentata.',materialRefs:['m1','m2'],descriptorRefs:['d1','d2'],sourceRefs:['cv','decl'],support:[{sourceId:'cv',grounding:{exactText:'Coordinamento tra produzione e qualità.'}},{sourceId:'decl',grounding:{exactText:'Coordinamento con manutenzione durante il ramp-up.'}}]};
+const pattern={kind:'documented_cross_functional_coordination_recurrence',sourceRefs:['cv','decl'],episodeRefs:['e1','e2'],supportCount:2,supports:[{sourceId:'cv',supportExcerpt:'Coordinamento tra produzione e qualità.'},{sourceId:'decl',supportExcerpt:'Coordinamento con manutenzione durante il ramp-up.'}]};
+const higher={status:'accepted',structureId:'H1',structureWording:'Il candidato ha lavorato in configurazioni cross-funzionali rel1, senza attribuire proprietà personali o autonomia generale.',compositionBasis:'bounded',contributorRefs:['relationship:R1','pattern:documented_cross_functional_coordination_recurrence:cv|decl'],materialRefs:['m1','m2'],sourceRefs:['cv','decl'],persistent:false};
+const pm={higherOrderDescriptiveProfessionalStructures:[higher],groundedDescriptiveRelationships:[relationship],supportedPatterns:[pattern],selectedEpisodeContributions:[],knowledgeContribution:[{semanticType:'decision_accountability',sourceRef:'K1',professionalMeaning:'Decisione condivisa',primaryProfessionalMeaning:{kind:'bounded_decision_accountability',observedContext:'ramp-up',personContribution:'una decisione operativa',sharedAuthority:true},supportingEvidence:[{summary:'Decisione condivisa nel ramp-up.'}]}]};
+const threads=composeProfessionalThreads({professionalMeaning:pm});
+const level1=selectLevel1ProfessionalThreads(threads);
+assert.equal(level1[0].kind,'higher_order_descriptive_structure');
+assert.equal(level1.some(x=>x.kind==='grounded_descriptive_relationship'),false);
+assert.equal(level1.some(x=>x.kind==='recurring_pattern'),false,'explicitly consumed Pattern must not compete with Higher-Order primary');
+const representation={professionalMeaning:{...pm,professionalThreads:threads,level1ProfessionalThreads:level1},assets:[{supportClass:'source_grounded',sourceId:'cv',sourceRole:'current_cv',formalRole:'Production Supervisor',sourceFaithfulExperienceExcerpts:['Coordinamento tra produzione e qualità.']},{supportClass:'source_grounded',sourceId:'decl',sourceRole:'professional_declaration',sourceLabel:'Progetto Atlas',sourceFaithfulExperienceExcerpts:['Coordinamento con manutenzione durante il ramp-up.']}]};
+const html=renderPrivateBetaUiJourneyHtml({locale:'it',result:{phase:'purpose_understand',preInterview:{targetIndependentProfessionalRepresentation:representation}}});
+assert.match(html,/Hai lavorato in configurazioni cross-funzionali/);
+assert.doesNotMatch(html,/\brel1\b|descriptor|contributor|threadId|sourceRef|claimShape/i);
+assert.doesNotMatch(html,/il candidato|senza attribuire proprietà personali o autonomia generale/i);
+assert.match(html,/Da dove emerge/);
+assert.match(html,/Dal tuo CV — Production Supervisor/);
+assert.match(html,/Da una tua descrizione — Progetto Atlas/);
+assert.match(html,/<blockquote>Coordinamento tra produzione e qualità\.<\/blockquote>/);
+assert.match(html,/Supporto strutturato: Decisione condivisa nel ramp-up\./);
+assert.match(html,/Vedi fonti e dettagli/);
+assert.doesNotMatch(html,/Relazione documentata\./,'subsumed lower-order meaning must not be repeated in details');
+assert.match(html,/I dettagli restano legati alle fonti/);
+
+const unconsumedHigher={...higher,contributorRefs:['relationship:R1']};
+const unresolvedThreads=composeProfessionalThreads({professionalMeaning:{...pm,higherOrderDescriptiveProfessionalStructures:[unconsumedHigher]}});
+const unresolved=selectLevel1ProfessionalThreads(unresolvedThreads);
+assert.equal(unresolved.some(x=>x.kind==='recurring_pattern'),true,'without explicit contributor/subsumption identity the Pattern must be preserved; PD-071 must not infer redundancy lexically');
+console.log('PD-071 candidate-facing composition tests passed.');

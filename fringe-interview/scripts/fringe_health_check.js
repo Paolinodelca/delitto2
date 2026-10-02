@@ -1745,6 +1745,141 @@ addCheck("Knowledge Acquisition Boundary Freeze", async () => {
   execFileSync(process.execPath, ["scripts/test_health_knowledge_acquisition_boundary.js"], { stdio: "pipe" });
 });
 
+addCheck("BETA-VALUE-02 supported Pattern explainability and Connection", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_beta_value_02_supported_pattern_explainability_and_connection.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_beta_value_02b_professional_representation_narrative_composition.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_beta_value_02c_human_narrative_voice_and_consolidated_caution.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_beta_value_03_pd056_professional_representation_reuse.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_beta_value_03_first_corrective_real_persisted_pd056_reopen.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_beta_value_04_professional_meaning_and_representation_compression.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_beta_value_04_candidate_profile_provider_compatibility_blocker.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_beta_value_05a_career_direction_professional_material_relevance.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_beta_value_06a_explainable_career_direction_composition.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd059_career_preference_context_beta_integration.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_bv05_exp_b_source_grounded_professional_episode_meaning.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_bv05_exp_e_germany_informational_contribution.js"], { stdio: "pipe" });
+});
+
+addCheck("PDIR-11 continuing people responsibility production semantic adapter", async () => {
+  const { execFileSync } = await import("child_process");
+  execFileSync(process.execPath, ["scripts/test_pd072b_bounded_contextual_non_responsibility_knowledge.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd072d_formal_people_requirement_authority.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd072c_target_relative_confirmed_absence.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd072e_career_direction_support_map.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd072f_career_direction_candidate_actionability.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd072g_career_direction_visual_hierarchy.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd073_career_direction_clarification_acquisition_runtime_completion.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd073_first_corrective_live_diagnostic_completion.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd073_second_corrective_operator_diagnostic_exposure.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd073_third_corrective_candidate_rejection_diagnostic_completion.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd073_fourth_corrective_cpr_semantic_candidate_grounding_alignment.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd073_fifth_corrective_cpr_canonical_knowledge_production_completion.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd074_career_direction_clarification_queue_shared_composition.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd074_first_corrective_resolved_clarification_projection_alignment.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd074_second_corrective_current_resolution_state_rehydration_alignment.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd074_third_corrective_initial_career_direction_current_resolution_projection.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd075_career_direction_information_hierarchy_action_surface.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd076_career_direction_overview_detail_navigation.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd077_career_direction_candidate_hierarchy_semantic_visual_tokens.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd079_rich_requirement_support_integration.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pd079l_live_requirement_support_proposal_integration.js"], { stdio: "pipe" });
+  console.log("PD-072B bounded contextual non-responsibility knowledge contract passed.");
+  execFileSync(process.execPath, ["scripts/test_pdir11_continuing_people_responsibility_production_semantic_adapter.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir11_first_corrective_evidence_support_repair.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir11_second_corrective_deterministic_evidence_span_support.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir11_third_corrective_provider_compatible_source_span_repair.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir11_fourth_corrective_groq_flat_source_span_schema.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir11_fifth_corrective_provider_light_support_repair.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir11_sixth_corrective_json_object_prompt_and_provider_diagnostics.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir11_seventh_corrective_grounding_priority_and_cardinality_skeleton.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir11_eighth_corrective_explicit_grounding_map_and_repair_execution_stabilization.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir11_ninth_corrective_deterministic_application_source_span_materialization.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir11_tenth_corrective_application_owned_evidence_candidate_selection.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir11_direction_production_wiring.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir12_post_acquisition_return_to_directions.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir12_experience_value_visible_knowledge_change.js"], { stdio: "pipe" });
+  execFileSync(process.execPath, ["scripts/test_pdir12_reopen_failure_and_terminal_navigation.js"], { stdio: "pipe" });
+});
+
+checks.push({name:"PD-060 grounded application package beta implementation",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd060_grounded_application_package_beta_implementation.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-061I Candidate Application Experience",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd061i_candidate_application_experience_beta_implementation.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-064I Protected Candidate Application Material Integration",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd064i_protected_candidate_application_material_integration.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-065I Bounded Professional Responsibility Scope",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd065i_bounded_professional_responsibility_scope.js"],{stdio:"pipe"});}});
+checks.push({name:"QO-01 Quantified Outcome Application Material Routing",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_qo01_quantified_outcome_application_material_routing.js"],{stdio:"pipe"});}});
+checks.push({name:"CQ-05P Protected Professional Experience Detail Propagation",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_cq05p_protected_professional_experience_detail_propagation.js"],{stdio:"pipe"});}});
+checks.push({name:"CQ-05P2 Direct Protected Detail Identity Propagation",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_cq05p2_direct_protected_detail_identity_propagation.js"],{stdio:"pipe"});}});
+checks.push({name:"CQ-05I Protected Candidate Artifact Language Materialization",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_cq05i_protected_candidate_artifact_language_materialization.js"],{stdio:"pipe"});}});
+checks.push({name:"CQ-05I-R1 Cross-Language Materialization Gate Completion",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_cq05ir1_cross_language_materialization_gate_completion.js"],{stdio:"pipe"});}});
+checks.push({name:"CQ-05I-R2 PD-066 Language-Basis Integration",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_cq05ir2_resumed_language_basis_integration.js"],{stdio:"pipe"});}});
+checks.push({name:"FB-01 Candidate-facing Private Beta Feedback",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_fb01_candidate_facing_private_beta_feedback.js"],{stdio:"pipe"});execFileSync(process.execPath,["scripts/test_bvl06_contextual_beta_feedback_operator_retrieval.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-062I Second Corrective Candidate Quality",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd062i_second_corrective_candidate_quality.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-062I Candidate Application Document Composition",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd062i_candidate_application_document_composition.js"],{stdio:"pipe"});}});
+
+checks.push({name:"PD-068 Candidate-facing Representation / Home",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd068_candidate_representation_home_experience.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-068C Professional Meaning Composition",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd068c_professional_meaning_composition.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-068C First Corrective Thread Eligibility",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd068c_first_corrective_professional_thread_eligibility.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-069 Grounded Descriptive Relationship Authority",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd069_grounded_descriptive_relationship_authority.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-069I First Corrective Self-Attestation Removal",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd069i_grounded_relationship_vertical_slice.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-069L Live Grounded Relationship Proposal Integration",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd069l_live_grounded_relationship_proposal_integration.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+checks.push({name:"PD-069L Live Diagnostic Completion",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd069l_live_diagnostic_completion.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+
+checks.push({name:"PD-071B Candidate-facing Wording and Support Alignment",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd071b_candidate_facing_wording_support_alignment.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-071B First Corrective Rework Production People Wording",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd071b_first_corrective_rework_production_people_wording.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-071A Explicit Cross-Type Primary Composition Subsumption",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd071a_explicit_cross_type_primary_composition_subsumption.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-071 Candidate-facing Professional Representation Composition",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd071_candidate_facing_professional_representation_composition.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-070 Higher-Order Descriptive Professional Structure Authority",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd070_higher_order_descriptive_professional_structure_authority.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-070I Controlled Higher-Order Vertical Slice",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd070i_higher_order_descriptive_professional_structure_vertical_slice.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-070L Live Higher-Order Synthesis Integration",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd070l_live_higher_order_professional_synthesis_integration.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+checks.push({name:"PD-070O Real Professional Synthesis Observability",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd070o_real_professional_synthesis_observability.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+checks.push({name:"PD-070O2 Second-Order Provider Failure Diagnostic",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd070o2_second_order_provider_failure_diagnostic.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+checks.push({name:"PD-070I2 Multi-Type Higher-Order Composition Input",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd070i2_multi_type_higher_order_composition_input.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+checks.push({name:"GM-02I Representation Reuse / Rate-Limit Resilience",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_gm02i_private_beta_representation_reuse_rate_limit_resilience.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+checks.push({name:"GM-02I Second Corrective Token Headroom Pacing",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_gm02i_second_corrective_token_headroom_pacing.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+checks.push({name:"GM-02V Fresh Representation Verification / Snapshot State",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_gm02v_fresh_representation_verification_snapshot_state.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+checks.push({name:"GM-03I CandidateProfile Derived Preparation Reuse",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_gm03i_candidate_profile_derived_preparation_reuse.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+checks.push({name:"PD-090 Fresh Representation Progressive Resume / Token Headroom",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd090_fresh_representation_provider_resilience.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+checks.push({name:"GM-04 Representation Completion Provenance / Supersession",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_gm04_representation_completion_provenance.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+
+checks.push({name:"PD-080 Target Requirement Priority Authority",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd080_target_requirement_priority_authority.js"],{stdio:"pipe"});}});
+
+checks.push({name:"PD-081 Sustained Role Exposure / Temporal Requirement Support Authority",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd081_sustained_role_exposure_temporal_requirement_support.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-081L Live Role Chronology Integration",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd081l_live_role_chronology_integration.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-082 Candidate-facing Requirement Map Composition",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd082_candidate_facing_requirement_map_composition.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-083 Canonical Visual Design System",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd083_canonical_visual_design_system.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-085 Opportunity-Specific Rich Requirement Support Authority",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd085_opportunity_specific_rich_requirement_support_authority.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-085 Application Requirement Support Persistence",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd085_application_requirement_support_persistence.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-086 Pending Professional Responsibility Acquisition Authority",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd086_pending_professional_responsibility_acquisition_authority.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-087 Candidate Application Artifact Delivery",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd087_candidate_application_artifact_delivery.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-088 Portable Professional Profile Backup",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd088_portable_professional_profile_backup.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-088A Original Uploaded Source Asset Portability",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd088a_original_uploaded_source_asset_portability.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-088B Portable Backup Security Envelope",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd088b_portable_backup_security_envelope.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-088B First Corrective Real Candidate Backup Download Delivery",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd088b_first_corrective_real_candidate_backup_download_delivery.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-088B Second Corrective Real Profile Backup Export UI Event Wiring",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd088b_second_corrective_real_profile_backup_export_ui_event_wiring.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-088B Third Corrective Real Backup Export Client Validation -> Fetch Completion",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd088b_third_corrective_real_backup_export_client_validation_fetch_completion.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-091 Candidate-facing Profile Material Transparency / Continuity UX",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd091_candidate_facing_profile_material_transparency.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-092 Professional Identity Profile / Candidate Representation Human-Test Completion",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd092_professional_identity_profile_and_candidate_representation_human_test_completion.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-092 First Corrective Structured Contributor Semantic Alignment",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd092_first_corrective_structured_contributor_higher_order_semantic_alignment.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-092 Second Corrective Structured Higher-Order Support Completion",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd092_second_corrective_structured_higher_order_support_completion.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-092 Third Corrective PD-069 Live Request Diagnostics",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd092_third_corrective_pd069_live_request_diagnostics.js"],{stdio:"pipe",env:{...process.env,GROQ_API_KEY:""}});}});
+checks.push({name:"PD-089 Application First Human-Test Corrective",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd089_application_first_human_test_corrective.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-089 First Corrective Rework",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd089_first_corrective_rework.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-093 Persistent Candidate Navigation / Processing / Wording Cleanup",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd093_persistent_candidate_navigation_processing_wording_cleanup.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-093 First Corrective Global Navigation / Function Entry / Provenance",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd093_first_corrective_global_navigation_function_entry_provenance.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-093 Second Corrective Representation Footer / Knowledge Provenance Origin",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd093_second_corrective_representation_footer_knowledge_provenance_origin.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-094 Product Landing / Orientation Home",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd094_product_landing_orientation_home.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-094 First Corrective Landing Information Compression",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd094_first_corrective_landing_information_compression.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-094 Second Corrective Function Explorer Centrality",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd094_second_corrective_function_explorer_centrality.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-094 Third Corrective Beta Landing Voice / Contextual Intro",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd094_third_corrective_beta_landing_voice_contextual_intro.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-094 Fourth Corrective Landing Copy Coherence / Readability",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd094_fourth_corrective_landing_copy_readability.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-095 Private Beta Feedback Experience",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd095_private_beta_feedback_experience.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-096 Private Beta Candidate Flow Recovery",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd096_private_beta_candidate_flow_recovery.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-096 First Corrective Human-Test Flow Recovery Completion",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd096_first_corrective_human_test_flow_recovery_completion.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-096 Second Corrective Rework",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd096_second_corrective_rework.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-096 Third Corrective Live Recovery and Interview De-duplication",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd096_third_corrective_live_recovery_and_interview_dedup.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-096 Fourth Corrective Exact Exit-Path Completion",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd096_fourth_corrective_exact_exit_path.js"],{stdio:"pipe"});}});
+checks.push({name:"PD-096 Fifth Corrective PD-086 Semantic Candidate Contract Alignment",fn:async()=>{const {execFileSync}=await import("child_process");execFileSync(process.execPath,["scripts/test_pd096_fifth_corrective_pd086_contract_alignment.js"],{stdio:"pipe"});}});
+
 let failed = 0;
 
 console.log("\nFRINGE Health Check\n");
@@ -1768,3 +1903,8 @@ if (failed > 0) {
 }
 
 console.log("All health checks passed.");
+
+addCheck("PD-067 interview training / acquisition boundary", async () => {
+  await import("./test_pd067_interview_training_acquisition_boundary.js");
+});
+

@@ -1,0 +1,35 @@
+import assert from 'node:assert/strict';
+import { buildPrivateBetaSourceGroundedProjection } from '../src/app/buildPrivateBetaSourceGroundedProjection.js';
+import { buildTargetIndependentProfessionalRepresentation } from '../src/app/buildTargetIndependentProfessionalRepresentation.js';
+import { TARGET_INDEPENDENT_REPRESENTATION_RECIPE, buildTargetIndependentRepresentationSnapshotState, materializeTargetIndependentRepresentationSnapshot, attachRepresentationSnapshotToProfessionalIdentity, findReusableTargetIndependentRepresentationSnapshot } from '../src/app/privateBetaProfessionalRepresentationSnapshots.js';
+
+const sources=[
+{id:'current',sourceRole:'current_cv',content:'Production Supervisor. Operations / Manufacturing. Circa 12 anni. Coordinamento operativo, monitoraggio performance e priorità di produzione.',provenance:{label:'CV attuale'}},
+{id:'previous',sourceRole:'previous_cv',content:'Industrialization Engineer. Esperienza in industrializzazione e startup. Ha partecipato al lancio di una nuova linea produttiva in Germany collaborando con engineering, production e quality.',provenance:{label:'CV precedente'}},
+{id:'atlas',sourceRole:'professional_declaration',content:'Supplier ramp-up con supply chain, quality e production per problema di continuità.',provenance:{label:'Esperienza aggiunta'}},
+{id:'delta',sourceRole:'professional_declaration',content:'Coordinamento produzione-manutenzione durante interventi pianificati per ridurre interruzioni; nessun risultato quantitativo consolidato.',provenance:{label:'Esperienza aggiunta'}}];
+const profiles=[
+{sourceId:'current',sourceRole:'current_cv',provenance:sources[0].provenance,candidateProfile:{summary:'Professionista Operations/Manufacturing con circa 12 anni di esperienza industriale',currentPositioning:'Production Supervisor responsabile del coordinamento operativo, monitoraggio delle performance e gestione delle priorità di produzione',domainSignals:['Operations','Manufacturing'],experienceSignals:{highlights:['Partecipazione a progetti di miglioramento dei processi produttivi'],supportExcerpts:['Coordinamento operativo, monitoraggio performance e priorità di produzione.']}}},
+{sourceId:'previous',sourceRole:'previous_cv',provenance:sources[1].provenance,candidateProfile:{summary:'Industrialization Engineer con esperienza in progetti di industrializzazione e avviamento produttivo',currentPositioning:'Industrialization Engineer',domainSignals:['Industrialization'],experienceSignals:{highlights:['Lanciatore industriale di una nuova linea produttiva in uno stabilimento tedesco, gestendo installazione, avviamento e stabilizzazione del processo','Ha partecipato al lancio di una nuova linea produttiva in Germany collaborando con engineering, production e quality'],supportExcerpts:['Ha partecipato al lancio di una nuova linea produttiva in Germany collaborando con engineering, production e quality.']}}},
+{sourceId:'atlas',sourceRole:'professional_declaration',provenance:sources[2].provenance,candidateProfile:{summary:'Supplier ramp-up con coordinamento cross-functional',experienceSignals:{highlights:['Supplier ramp-up con supply chain, quality e production'],supportExcerpts:['Supplier ramp-up con supply chain, quality e production per problema di continuità.']}}},
+{sourceId:'delta',sourceRole:'professional_declaration',provenance:sources[3].provenance,candidateProfile:{summary:'Coordinamento produzione-manutenzione durante interventi pianificati',experienceSignals:{highlights:['Coordinamento produzione-manutenzione finalizzato a ridurre interruzioni, senza risultato quantitativo consolidato'],supportExcerpts:['Coordinamento produzione-manutenzione durante interventi pianificati per ridurre interruzioni; nessun risultato quantitativo consolidato.']}}}];
+const projection=buildPrivateBetaSourceGroundedProjection({candidateSourceProfiles:profiles,professionalSources:sources});
+let calls=0; const realizer=async()=>{calls++;return {claims:[]}};
+const rep=await buildTargetIndependentProfessionalRepresentation({professionalSources:sources,sourceGroundedProjection:projection,reusableKnowledgeResults:[],narrativeRealizer:realizer,useModel:false});
+assert.deepEqual(rep.roleHistory.map(x=>x.role),['Industrialization Engineer','Production Supervisor']);
+assert.match(rep.roleHistory[0].detail,/Industrialization Engineer|industrializzazione|avviamento/i);
+assert.doesNotMatch(rep.roleHistory[0].detail,/Lanciatore|gestendo installazione|stabilizzazione/i);
+assert.match(rep.roleHistory[1].detail,/Production Supervisor|coordinamento operativo|performance|priorità/i);
+assert.doesNotMatch(rep.roleHistory[1].detail,/Partecipazione a progetti di miglioramento/i);
+const germany=rep.supportingExperiences.find(x=>x.sourceId==='previous'); assert(germany); assert(germany.experienceHighlights.some(x=>/Germany|tedesco/i.test(x))); assert.equal(germany.sourceRole,'previous_cv');
+assert(rep.supportingExperiences.some(x=>x.sourceId==='atlas')); assert(rep.supportingExperiences.some(x=>x.sourceId==='delta'));
+const all=JSON.stringify(rep); for(const bad of ['Project Manager','Supplier Manager','Maintenance Coordinator','Operations Manager readiness','international leadership']) assert(!all.includes(bad));
+assert(!rep.roleHistory.some(x=>/Lanciatore|Germany|tedesco/i.test(x.role)));
+assert.equal(rep.target,null);
+const pi={personRef:{type:'person',id:'p1'},professionalIdentityRef:'pi1',representationSnapshots:[]};
+const state13=buildTargetIndependentRepresentationSnapshotState({professionalIdentity:pi,professionalSources:sources,reusableKnowledgeResults:[],recipe:{...TARGET_INDEPENDENT_REPRESENTATION_RECIPE,version:'1.3'}});
+const old=materializeTargetIndependentRepresentationSnapshot({professionalIdentity:pi,state:state13,representation:rep,now:'2026-09-10T07:00:00Z'}); const withOld=attachRepresentationSnapshotToProfessionalIdentity({professionalIdentity:pi,snapshot:old});
+const state14=buildTargetIndependentRepresentationSnapshotState({professionalIdentity:withOld,professionalSources:sources,reusableKnowledgeResults:[]}); assert.equal(TARGET_INDEPENDENT_REPRESENTATION_RECIPE.version,'2.0'); assert.equal(findReusableTargetIndependentRepresentationSnapshot({professionalIdentity:withOld,state:state14}),null);
+const fresh=materializeTargetIndependentRepresentationSnapshot({professionalIdentity:withOld,state:state14,representation:rep,now:'2026-09-10T07:01:00Z'}); assert.equal(fresh.changeCause,'representation_recipe_change'); const withFresh=attachRepresentationSnapshotToProfessionalIdentity({professionalIdentity:withOld,snapshot:fresh}); assert.equal(withFresh.representationSnapshots.length,2); assert.equal(withFresh.representationSnapshots[0].snapshotId,old.snapshotId); assert.equal(findReusableTargetIndependentRepresentationSnapshot({professionalIdentity:withFresh,state:state14}).snapshotId,fresh.snapshotId);
+const repeat=attachRepresentationSnapshotToProfessionalIdentity({professionalIdentity:withFresh,snapshot:fresh}); assert.equal(repeat.representationSnapshots.length,2);
+console.log('EAR-03 second corrective formal role history integrity: PASS');

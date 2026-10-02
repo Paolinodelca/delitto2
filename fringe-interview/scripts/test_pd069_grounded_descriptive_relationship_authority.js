@@ -1,0 +1,28 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+
+const decisions = fs.readFileSync(new URL('../docs/20-product/PRODUCT_DECISIONS.md', import.meta.url), 'utf8');
+const section = decisions.split('## PD-069 — Grounded Descriptive Professional Relationship Authority')[1] || '';
+assert(section, 'PD-069 canonical Product Decision must exist');
+assert.match(section, /\*\*Status:\*\* CANONICAL \/ CLOSED/);
+for (const role of ['situation_context','activity','involved_function','work_phase','problem_object','contribution_participation']) assert.match(section, new RegExp(`\\b${role}\\b`));
+assert.match(section, /open-vocabulary/i);
+assert.match(section, /Representation-only/i);
+assert.match(section, /model-assisted proposal/i);
+assert.match(section, /Model output is not final semantic authority/i);
+assert.match(section, /Deterministic validation/i);
+assert.match(section, /must not pretend to prove open semantic equivalence/i);
+assert.match(section, /two or more accepted source-grounded descriptors\/materials/i);
+assert.match(section, /genuinely distinct/i);
+assert.match(section, /fails closed/i);
+assert.match(section, /not automatically enter Person Knowledge/i);
+assert.match(section, /Candidate confirmation is not required merely/i);
+assert.match(section, /lexical equality, embedding similarity or unchecked LLM similarity as final semantic authority/i);
+assert.match(section, /chronology alone as professional continuity/i);
+assert.match(section, /Runtime\/acquisition lineage as professional episode identity/i);
+assert.match(section, /participated -> contributed -> coordinated -> owned/i);
+assert.match(section, /shared-to-exclusive responsibility strengthening/i);
+assert.match(section, /project-result-to-Candidate-caused-result strengthening/i);
+assert.match(section, /PD-058 remains the authority/i);
+assert.match(section, /Target-Relative Conditional Knowledge Gap concept remains explicitly outside PD-069/i);
+console.log('PD-069 grounded descriptive relationship Product Authority: PASS');
